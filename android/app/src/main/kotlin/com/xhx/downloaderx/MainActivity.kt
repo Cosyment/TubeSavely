@@ -1,4 +1,4 @@
-package com.xhx.downloadx.downloadx
+package com.xhx.downloaderx
 
 import io.flutter.embedding.android.FlutterActivity
 

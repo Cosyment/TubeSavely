@@ -93,11 +93,11 @@ BEGIN
 "040904e4"
 BEGIN
         VALUE
-"CompanyName", "com.xhx.downloadx" "\0"
+"CompanyName", "com.xhx.downloaderx" "\0"
 VALUE "FileDescription", "downloadx" "\0"
 VALUE "FileVersion", VERSION_AS_STRING "\0"
 VALUE "InternalName", "downloadx" "\0"
-VALUE "LegalCopyright", "Copyright (C) 2023 com.xhx.downloadx. All rights reserved." "\0"
+VALUE "LegalCopyright", "Copyright (C) 2023 com.xhx.downloaderx. All rights reserved." "\0"
 VALUE "OriginalFilename", "downloadx.exe" "\0"
 VALUE "ProductName", "downloadx" "\0"
 VALUE "ProductVersion", VERSION_AS_STRING "\0"

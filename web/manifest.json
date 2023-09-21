@@ -1,6 +1,6 @@
 {
-  "name": "downloadx",
-  "short_name": "downloadx",
+  "name": "DownloaderX",
+  "short_name": "DownloaderX",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#0175C2",

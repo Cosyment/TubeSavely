@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:youtube_explode_dart/youtube_explode_dart.dart';
+
+// import 'package:youtube_explode_dart/youtube_explode_dart.dart';
+import 'package:savely/savely.dart';
 
 import 'detail.dart';
 
@@ -37,16 +39,16 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController textController = TextEditingController();
-  List<VideoStreamInfo> videoList = [];
+
+  // List<VideoStreamInfo> videoList = [];
+
+  List<String> videoList = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme
-            .of(context)
-            .colorScheme
-            .inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
       body: Column(
@@ -55,17 +57,13 @@ class _MyHomePageState extends State<MyHomePage> {
           Row(
             children: [
               Container(
-                margin: const EdgeInsets.only(
-                    bottom: 15, top: 25, left: 15, right: 15),
+                margin: const EdgeInsets.only(bottom: 15, top: 25, left: 15, right: 15),
                 color: Colors.orange,
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width - 30,
+                width: MediaQuery.of(context).size.width - 30,
                 padding: const EdgeInsets.symmetric(horizontal: 5),
                 child: TextField(
                   maxLines: null,
-                  controller: textController,
+                  controller: textController..value = TextEditingValue(text: 'https://www.youtube.com/watch?v=Ek1QD7AH9XQ'),
                   textInputAction: TextInputAction.done,
                   onSubmitted: (value) => startParse(),
                   style: const TextStyle(color: Colors.white),
@@ -86,10 +84,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         )
                       ],
                     ),
-                    border:
-                    const OutlineInputBorder(borderSide: BorderSide.none),
-                    focusedBorder:
-                    const OutlineInputBorder(borderSide: BorderSide.none),
+                    border: const OutlineInputBorder(borderSide: BorderSide.none),
+                    focusedBorder: const OutlineInputBorder(borderSide: BorderSide.none),
                     enabledBorder: const OutlineInputBorder(
                       borderSide: BorderSide.none,
                     ),
@@ -102,10 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
             height: 400,
             child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  crossAxisSpacing: 10.0,
-                  mainAxisSpacing: 10.0,
-                  childAspectRatio: 0.8),
+                  crossAxisCount: 4, crossAxisSpacing: 10.0, mainAxisSpacing: 10.0, childAspectRatio: 0.8),
               itemCount: videoList.length,
               itemBuilder: (BuildContext context, int index) {
                 return gridItemWidget(context, videoList[index]);
@@ -117,29 +110,56 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  gridItemWidget(BuildContext context, VideoStreamInfo info) {
+  gridItemWidget(BuildContext context, String url) {
     return InkWell(
-      child: Column(children: [Text(info.qualityLabel),Text(info.size.totalMegaBytes.floorToDouble().toString()+'M'),  Text(info.container.name)]),
+      child: Column(children: [
+        Text('info.qualityLabel'),
+        Text('info.size.totalMegaBytes.floorToDouble().toString()' + 'M'),
+        Text('info.container.name')
+      ]),
       onTap: () {
         Navigator.pushNamed(context, "/detail", arguments: <String, String>{
-          'url': info.url.toString(),
+          'url': url,
         });
       },
     );
   }
 
   Future<void> startParse() async {
-    final yt = YoutubeExplode();
-    var manifest =
-    await yt.videos.streamsClient.getManifest(textController.text);
-    setState(() {
-      videoList.addAll(manifest.muxed);
-    });
-    yt.close();
+    Savely savely = Savely();
+    await savely.down(textController.text);
+    await savely.down("https://vimeo.com/846209095");
+    print('source : ${savely.source}');
+    print('title : ${savely.title}');
+    print('duration : ${savely.duration}');
+    print('thumbnail : ${savely.thumbnail}');
+    print('website : ${savely.website}');
+    print('data : ${savely.data}');
   }
 
-  Future<void> download() async {
-    final yt = YoutubeExplode();
-    yt.close();
-  }
+// gridItemWidget(BuildContext context, VideoStreamInfo info) {
+//   return InkWell(
+//     child: Column(children: [Text(info.qualityLabel),Text(info.size.totalMegaBytes.floorToDouble().toString()+'M'),  Text(info.container.name)]),
+//     onTap: () {
+//       Navigator.pushNamed(context, "/detail", arguments: <String, String>{
+//         'url': info.url.toString(),
+//       });
+//     },
+//   );
+// }
+//
+// Future<void> startParse() async {
+//   final yt = YoutubeExplode();
+//   var manifest =
+//   await yt.videos.streamsClient.getManifest(textController.text);
+//   setState(() {
+//     videoList.addAll(manifest.muxed);
+//   });
+//   yt.close();
+// }
+//
+// Future<void> download() async {
+//   final yt = YoutubeExplode();
+//   yt.close();
+// }
 }

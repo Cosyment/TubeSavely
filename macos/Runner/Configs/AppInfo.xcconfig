@@ -8,7 +8,7 @@
 PRODUCT_NAME = downloadx
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.xhx.downloadx.downloadx
+PRODUCT_BUNDLE_IDENTIFIER = com.xhx.downloaderx
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2023 com.xhx.downloadx. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2023 com.xhx.downloaderx. All rights reserved.

@@ -39,7 +39,9 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  youtube_explode_dart: ^2.0.2
+    #  youtube_explode_dart: ^2.0.2
+  http: ^0.13.5
+  savely: ^0.0.7
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
