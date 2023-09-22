@@ -39,9 +39,12 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-    #  youtube_explode_dart: ^2.0.2
-  http: ^0.13.5
-  savely: ^0.0.7
+  youtube_explode_dart: ^2.0.2
+  #  http: ^0.13.5
+  #  savely: ^0.0.7
+  animated_notch_bottom_bar: ^1.0.0
+  flutter_downloader: ^1.11.2
+  video_player: ^2.7.2
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
@@ -54,7 +57,8 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
+  assets:
+    - assets/
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
