@@ -5,11 +5,8 @@ import 'package:downloaderx/pages/DownloadPage.dart';
 import 'package:downloaderx/pages/HomePage.dart';
 import 'package:downloaderx/pages/MinePage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await FlutterDownloader.initialize(debug: true, ignoreSsl: true);
   runApp(const MyApp());
 }
 
@@ -54,6 +51,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         body: PageView(
           controller: _pageController,
           physics: const NeverScrollableScrollPhysics(),

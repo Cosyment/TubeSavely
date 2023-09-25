@@ -1,5 +1,7 @@
+import 'package:downloaderx/data/VideoParse.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
+
+import '../data/DbManager.dart';
 
 class DownloadPage extends StatefulWidget {
   const DownloadPage({Key? key}) : super(key: key);
@@ -9,21 +11,35 @@ class DownloadPage extends StatefulWidget {
 }
 
 class _DownloadPageState extends State<DownloadPage> {
+  List<VideoParse> dataList = [];
+
   @override
   void initState() {
     super.initState();
-    getDownloadList();
+    loadList();
   }
 
-  void getDownloadList() async {
-    List<DownloadTask>? tasks = await FlutterDownloader.loadTasks();
-    print("tasks>>>>>${tasks}");
+  void loadList() async {
+    var list = await DbManager.instance().getAllType<VideoParse>();
+    dataList.addAll(list);
+    setState(() {
+
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.green, child: const Center(child: Text('Page 2')));
+        child: ListView.builder(
+          controller: ScrollController(),
+          itemCount: dataList.length,
+          itemBuilder: (context, index) {
+            var parse = dataList[index];
+            return Row(
+              children: [Text(parse.title), Text(parse.totalBytes.toString())],
+            );
+          },
+        ));
   }
 // final TextEditingController textController = TextEditingController();
 }
