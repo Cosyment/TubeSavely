@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:downloaderx/constants/colors.dart';
 import 'package:downloaderx/data/DbManager.dart';
 import 'package:downloaderx/utils/DownloadUtils.dart';
@@ -10,6 +12,7 @@ import 'package:video_player/video_player.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import '../data/VideoParse.dart';
+import '../models/CoverInfo.dart';
 import '../models/ParseInfo.dart';
 
 class HomePage extends StatefulWidget {
@@ -58,11 +61,6 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(
             height: 20,
           ),
-          // const Image(
-          //   width: 400,
-          //   height: 140,
-          //   image: AssetImage('assets/banner.png'),
-          // ),
           Row(
             children: [
               Container(
@@ -130,8 +128,8 @@ class _HomePageState extends State<HomePage> {
                 alignment: Alignment.center,
                 child: isLoading
                     ? const CircularProgressIndicator(
-                      strokeWidth: 3.0,
-                    )
+                        strokeWidth: 3.0,
+                      )
                     : InkWell(
                         child: Container(
                           width: 120,
@@ -156,10 +154,17 @@ class _HomePageState extends State<HomePage> {
               )
             ],
           ),
+
+          // const Image(
+          //   width: 400,
+          //   height: 140,
+          //   image: AssetImage('assets/banner.png'),
+          // ),
           Container(
               margin: EdgeInsets.all(15),
               child:
                   VideoXWidget(isLoading: isLoading, controller: _controller)),
+
           Container(
             height: 85,
             margin: const EdgeInsets.all(15),
@@ -184,7 +189,7 @@ class _HomePageState extends State<HomePage> {
                   percent: percent,
                   backgroundColor: primaryColor,
                   center: Text(
-                    "${(percent * 100).toStringAsFixed(2)}%",
+                    "${(percent * 100).toStringAsFixed(0)}%",
                     style: const TextStyle(color: primaryColor),
                   ),
                   progressColor: progressColor,
@@ -271,7 +276,17 @@ class _HomePageState extends State<HomePage> {
       videoList.clear();
       isLoading = true;
     });
+
     final yt = YoutubeExplode();
+
+    var video =
+        await yt.videos.get(textController.text); // Returns a Video instance.
+    var title = video.title;
+    var author = video.author;
+    var thumbnails = video?.watchPage?.playerResponse?.root['videoDetails']
+        ['thumbnail']['thumbnails'];
+    print(">>>>>>>>>>${title}>>>>${author}>>${thumbnails}>>");
+    var coverInfo =json.decode(thumbnails);
     var manifest =
         await yt.videos.streamsClient.getManifest(textController.text);
     var list = manifest.streams
@@ -303,8 +318,10 @@ class _HomePageState extends State<HomePage> {
     VideoStreamInfo info = manifest.muxed.bestQuality;
 
     DbManager.instance().add(VideoParse(
-        title: info.url.authority,
+        title: video.title,
+        author: video.author,
         totalBytes: info.size.totalBytes,
+        cover: "",
         url: info.url.toString()));
     setState(() {
       _controller = VideoPlayerController.networkUrl(
