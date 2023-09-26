@@ -286,7 +286,12 @@ class _HomePageState extends State<HomePage> {
     var thumbnails = video?.watchPage?.playerResponse?.root['videoDetails']
         ['thumbnail']['thumbnails'];
     print(">>>>>>>>>>${title}>>>>${author}>>${thumbnails}>>");
-    var coverInfo =json.decode(thumbnails);
+    List<dynamic> itemList = thumbnails;
+    List<CoverInfo> coverInfoList = [];
+    for (var element in itemList) {
+      var coverInfo = CoverInfo.fromJson(element);
+      coverInfoList.add(coverInfo);
+    }
     var manifest =
         await yt.videos.streamsClient.getManifest(textController.text);
     var list = manifest.streams
