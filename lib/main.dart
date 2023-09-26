@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:downloaderx/pages/DownloadPage.dart';
 import 'package:downloaderx/pages/HomePage.dart';
@@ -33,12 +31,11 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final _pageController = PageController(initialPage: 0);
   final _controller = NotchBottomBarController(index: 0);
+  var currentPageIndex = 0;
 
   @override
   void dispose() {
-    _pageController.dispose();
     super.dispose();
   }
 
@@ -52,9 +49,8 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        body: PageView(
-          controller: _pageController,
-          physics: const NeverScrollableScrollPhysics(),
+        body: IndexedStack(
+          index: currentPageIndex,
           children: List.generate(
               bottomBarPages.length, (index) => bottomBarPages[index]),
         ),
@@ -103,8 +99,8 @@ class _MainPageState extends State<MainPage> {
             ),
           ],
           onTap: (index) {
-            log('current selected index $index');
-            _pageController.jumpToPage(index);
+            currentPageIndex = index;
+            setState(() {});
           },
         ));
   }

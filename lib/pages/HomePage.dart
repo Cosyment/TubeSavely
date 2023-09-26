@@ -285,7 +285,6 @@ class _HomePageState extends State<HomePage> {
     var author = video.author;
     var thumbnails = video?.watchPage?.playerResponse?.root['videoDetails']
         ['thumbnail']['thumbnails'];
-    print(">>>>>>>>>>${title}>>>>${author}>>${thumbnails}>>");
     List<dynamic> itemList = thumbnails;
     List<CoverInfo> coverInfoList = [];
     for (var element in itemList) {
@@ -326,7 +325,7 @@ class _HomePageState extends State<HomePage> {
         title: video.title,
         author: video.author,
         totalBytes: info.size.totalBytes,
-        cover: "",
+        cover: coverInfoList.last.url,
         url: info.url.toString()));
     setState(() {
       _controller = VideoPlayerController.networkUrl(
