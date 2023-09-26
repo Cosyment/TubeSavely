@@ -324,10 +324,11 @@ class _HomePageState extends State<HomePage> {
     DbManager.instance().add(VideoParse(
         title: video.title,
         author: video.author,
-        createTime: DateTime.now().second,
+        createTime: DateTime.now().millisecondsSinceEpoch,
         size: info.size.toString(),
         totalBytes: info.size.totalBytes,
         cover: coverInfoList.last.url,
+        label: "",
         url: info.url.toString()));
     setState(() {
       _controller = VideoPlayerController.networkUrl(

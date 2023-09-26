@@ -1,5 +1,6 @@
 import 'package:downloaderx/data/VideoParse.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../constants/colors.dart';
 import '../data/DbManager.dart';
@@ -81,16 +82,27 @@ class _DownloadPageState extends State<DownloadPage> {
                                   info.author,
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 2,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 14,
                                   ),
                                 ),
                                 Row(
                                   children: [
                                     Text(
-                                      info.totalBytes.toString(),
-                                      style: TextStyle(
+                                      DateFormat("yyyy-MM-dd HH:mm")
+                                          .format(DateTime.now())
+                                          .toString(),
+                                      style: const TextStyle(
                                         fontSize: 12,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 20,
+                                    ),
+                                    Text(
+                                      info.size ?? "",
+                                      style: const TextStyle(
+                                        fontSize: 10,
                                       ),
                                     ),
                                     Icon(
