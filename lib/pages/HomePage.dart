@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:downloaderx/constants/colors.dart';
 import 'package:downloaderx/data/DbManager.dart';
 import 'package:downloaderx/utils/DownloadUtils.dart';
 import 'package:downloaderx/widget/VideoXWidget.dart';
@@ -9,12 +8,10 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
-
+import 'package:percent_indicator/percent_indicator.dart';
 import '../data/VideoParse.dart';
 import '../models/ParseInfo.dart';
-// import 'package:savely/savely.dart';
 
-//
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -28,7 +25,10 @@ class _HomePageState extends State<HomePage> {
   List<ParseInfo> videoList = [];
   VideoPlayerController _controller = VideoPlayerController.asset('')
     ..initialize().then((_) {});
-  bool isLoading = true;
+  bool isLoading = false;
+  bool isDownloading = false;
+  double percent = 0.0;
+  int currentIndex = 0;
 
   @override
   void initState() {
@@ -46,8 +46,11 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("DownloaderX"),
+        backgroundColor: primaryColor,
+        title: const Text(
+          "DownloaderX",
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -55,11 +58,11 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(
             height: 20,
           ),
-          const Image(
-            width: 400,
-            height: 140,
-            image: AssetImage('assets/banner.png'),
-          ),
+          // const Image(
+          //   width: 400,
+          //   height: 140,
+          //   image: AssetImage('assets/banner.png'),
+          // ),
           Row(
             children: [
               Container(
@@ -68,7 +71,7 @@ class _HomePageState extends State<HomePage> {
                 width: MediaQuery.of(context).size.width - 30,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.inversePrimary,
+                  color: primaryColor,
                   borderRadius: BorderRadius.circular(8), // 圆角半径
                 ),
                 child: Center(
@@ -104,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                   height: 44,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.inversePrimary,
+                    color: primaryColor,
                     borderRadius: BorderRadius.circular(8), // 圆角半径
                   ),
                   child: const Text(
@@ -119,29 +122,37 @@ class _HomePageState extends State<HomePage> {
                   pasteText();
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 width: 20,
               ),
-              InkWell(
-                child: Container(
-                  width: 120,
-                  height: 44,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                    borderRadius: BorderRadius.circular(8), // 圆角半径
-                  ),
-                  child: const Text(
-                    "解析视频",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                onTap: () {
-                  startParse();
-                },
+              Container(
+                width: 120,
+                alignment: Alignment.center,
+                child: isLoading
+                    ? const CircularProgressIndicator(
+                      strokeWidth: 3.0,
+                    )
+                    : InkWell(
+                        child: Container(
+                          width: 120,
+                          height: 44,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: primaryColor,
+                            borderRadius: BorderRadius.circular(8), // 圆角半径
+                          ),
+                          child: const Text(
+                            "解析视频",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        onTap: () {
+                          startParse();
+                        },
+                      ),
               )
             ],
           ),
@@ -150,39 +161,107 @@ class _HomePageState extends State<HomePage> {
               child:
                   VideoXWidget(isLoading: isLoading, controller: _controller)),
           Container(
-            height: 65,
+            height: 85,
+            margin: const EdgeInsets.all(15),
             child: GridView.builder(
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
-                  crossAxisSpacing: 0,
-                  mainAxisSpacing: 0,
-                  childAspectRatio: 3.5),
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 5,
+                  childAspectRatio: 3.2),
               itemCount: videoList.length,
               itemBuilder: (BuildContext context, int index) {
-                return gridItemWidget(context, videoList[index]);
+                return gridItemWidget(context, index, videoList[index]);
               },
             ),
-          )
+          ),
+          isDownloading
+              ? Container(
+                  child: CircularPercentIndicator(
+                  radius: 35.0,
+                  lineWidth: 4.0,
+                  percent: percent,
+                  backgroundColor: primaryColor,
+                  center: Text(
+                    "${(percent * 100).toStringAsFixed(2)}%",
+                    style: const TextStyle(color: primaryColor),
+                  ),
+                  progressColor: progressColor,
+                ))
+              : InkWell(
+                  child: Container(
+                    width: 70,
+                    height: 70,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        gradient: const LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Color(0xFFFC6AEC),
+                            Color(0xFF7776FF),
+                          ],
+                        )),
+                    child: Text(
+                      "下载",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  onTap: () {
+                    isDownloading = true;
+                    var info = videoList[currentIndex];
+                    download(info.url.toString(), info.totalBytes);
+                    setState(() {});
+                  },
+                ),
         ],
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 
-  gridItemWidget(BuildContext context, ParseInfo info) {
+  gridItemWidget(BuildContext context, index, ParseInfo info) {
     return InkWell(
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              info.label,
-              style: const TextStyle(fontSize: 10),
-            ),
-            Text(info.size, style: const TextStyle(fontSize: 10))
-          ]),
+      child: Container(
+        decoration: BoxDecoration(
+            gradient: currentIndex == index
+                ? const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFFFC6AEC),
+                      Color(0xFF7776FF),
+                    ],
+                  )
+                : null,
+            border: Border.all(color: primaryColor, width: 1.0),
+            borderRadius: const BorderRadius.all(Radius.circular(4))),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                info.label,
+                style: TextStyle(
+                    fontSize: 10,
+                    color: currentIndex == index ? Colors.white : Colors.black),
+              ),
+              Text(info.size,
+                  style: TextStyle(
+                      fontSize: 10,
+                      color:
+                          currentIndex == index ? Colors.white : Colors.black))
+            ]),
+      ),
       onTap: () {
-        download(info.url.toString(), info.totalBytes);
+        currentIndex = index;
+        isDownloading = false;
+        setState(() {});
+        // download(info.url.toString(), info.totalBytes);
       },
     );
   }
@@ -271,5 +350,11 @@ class _HomePageState extends State<HomePage> {
     DownloadUtils.downloadVideo(url, "mp4", fileSize, handleProgressUpdate);
   }
 
-  void handleProgressUpdate(double progress) {}
+  void handleProgressUpdate(double progress) {
+    percent = progress;
+    if (percent == 1.0) {
+      isDownloading = false;
+    }
+    setState(() {});
+  }
 }

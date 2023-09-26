@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
@@ -23,12 +24,11 @@ class DownloadUtils {
       await for (var data in httpClientResponse) {
         fileStream.add(data);
         receivedBytes += data.length;
-        var lengthSync = file.lengthSync();
-        double progress = receivedBytes / totalBytes;
+        String progress = (receivedBytes / totalBytes).toStringAsFixed(2);
         print(
-            'Download Progress: ${(progress * 100).toStringAsFixed(2)}%>>>>>>>>>>${receivedBytes}>>>>>${totalBytes}');
+            'Download Progress: ${(progress)}%>>>>>>>>>>${receivedBytes}>>>>>${totalBytes}');
         if (callback != null) {
-          callback(progress);
+          callback(double.parse(progress));
         }
       }
       await fileStream.flush();
