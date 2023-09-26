@@ -1,11 +1,74 @@
 import 'package:flutter/material.dart';
 
-class MinePage extends StatelessWidget {
-  const MinePage({Key? key}) : super(key: key);
+class MinePage extends StatefulWidget {
+  const MinePage({super.key});
+
+  @override
+  State<MinePage> createState() => _MinePageState();
+}
+
+class _MinePageState extends State<MinePage> {
+  List<dynamic> itemList = [
+    {
+      "icon": "",
+      "title": "会员限时特价",
+      "": "",
+    },
+    {
+      "icon": "",
+      "title": "联系客服",
+      "": "",
+    },
+    {
+      "icon": "",
+      "title": "分享好友",
+      "": "",
+    },
+    {
+      "icon": "",
+      "title": "兑换VIP",
+      "": "",
+    },
+    {
+      "icon": "",
+      "title": "清除缓存",
+      "": "",
+    },
+    {
+      "icon": "",
+      "title": "版本信息",
+      "": "",
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        color: Colors.yellow, child: const Center(child: Text('Page 3')));
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("我的"),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: List.generate(itemList.length, (index) {
+            var item = itemList[index];
+            return Container(
+              height: 50,
+              width: double.infinity,
+              margin: EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: Colors.blue, // Container的背景色
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                children: [
+                  // Image(image: image),
+                  Text(item['title']),
+                ],
+              ),
+            );
+          }),
+        ),
+      ),
+    );
   }
 }
