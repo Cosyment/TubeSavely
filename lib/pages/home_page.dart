@@ -63,6 +63,7 @@ class _HomePageState extends State<HomePage> {
           Container(
             height: 90.w,
             width: double.infinity,
+            margin: EdgeInsets.all(20.w),
             decoration: BoxDecoration(
               color: primaryColor,
               borderRadius: BorderRadius.circular(8.r),
@@ -344,6 +345,7 @@ class _HomePageState extends State<HomePage> {
       }
       VideoStreamInfo info = manifest.muxed.bestQuality;
       DbManager.instance().add(VideoParse(
+          url: textController.text,
           title: video.title,
           author: video.author,
           createTime: DateTime.now().millisecondsSinceEpoch,

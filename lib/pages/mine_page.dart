@@ -63,15 +63,15 @@ class _MinePageState extends State<MinePage> {
       body: Stack(
         children: [
           Positioned(
-            top: MediaQuery.of(context).padding.top,
+            top: -160,
             left: 0,
             right: 0,
             child: Container(
               width: double.infinity,
-              height: 400.w,
+              height: 600.w,
               decoration: BoxDecoration(
                 color: primaryColor,
-                borderRadius: BorderRadius.circular(600.r),
+                borderRadius: BorderRadius.circular(500.r),
               ),
             ),
           ),
