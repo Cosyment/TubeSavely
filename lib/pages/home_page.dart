@@ -346,14 +346,14 @@ class _HomePageState extends State<HomePage> {
       }
       VideoStreamInfo info = manifest.muxed.bestQuality;
       var videoParse = VideoParse(
-          url: textController.text,
+          videoUrl: info.url.toString(),
+          parseUrl: textController.text,
           title: video.title,
           author: video.author,
           createTime: DateTime.now().millisecondsSinceEpoch,
           size: info.size.toString(),
           totalBytes: info.size.totalBytes,
           cover: coverInfoList.last.url,
-          label: "",
           videoList: videoList);
       DbManager.instance().add(videoParse);
       EventBus.getDefault().post(videoParse);

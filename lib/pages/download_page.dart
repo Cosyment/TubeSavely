@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:downloaderx/data/video_parse.dart';
+import 'package:downloaderx/pages/video_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -68,105 +69,113 @@ class _DownloadPageState extends State<DownloadPage> {
                 itemCount: dataList.length,
                 itemBuilder: (BuildContext context, int index) {
                   var info = dataList[index];
-                  return Container(
-                    color: Colors.white,
-                    margin: EdgeInsets.only(top: 10.w),
-                    child: Padding(
-                      padding: EdgeInsets.all(20.0.w),
-                      child: Row(
-                        children: [
-                          CachedNetworkImage(
-                            imageUrl: info.cover,
-                            width: 240.w,
-                            height: 320.w,
-                            imageBuilder: (context, imageProvider) {
-                              return Container(
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: imageProvider,
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => VideoDetail(bean: info)));
+                    },
+                    child: Container(
+                      color: Colors.white,
+                      margin: EdgeInsets.only(top: 10.w),
+                      child: Padding(
+                        padding: EdgeInsets.all(20.0.w),
+                        child: Row(
+                          children: [
+                            CachedNetworkImage(
+                              imageUrl: info.cover,
+                              width: 240.w,
+                              height: 320.w,
+                              imageBuilder: (context, imageProvider) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8.r)),
+                                );
+                              },
+                              placeholder: (context, url) => ClipRRect(
+                                borderRadius: BorderRadius.circular(16.r),
+                                child: Shimmer.fromColors(
+                                  baseColor: Colors.grey.shade300,
+                                  highlightColor: Colors.grey.shade100,
+                                  child: Container(
+                                    child: Image.network(
+                                      info.cover,
                                       fit: BoxFit.cover,
                                     ),
-                                    borderRadius: BorderRadius.circular(8.r)),
-                              );
-                            },
-                            placeholder: (context, url) => ClipRRect(
-                              borderRadius: BorderRadius.circular(16.r),
-                              child: Shimmer.fromColors(
-                                baseColor: Colors.grey.shade300,
-                                highlightColor: Colors.grey.shade100,
-                                child: Container(
-                                  child: Image.network(
-                                    info.cover,
-                                    fit: BoxFit.cover,
+                                    width: 240.w,
+                                    height: 320.w,
                                   ),
-                                  width: 240.w,
-                                  height: 320.w,
                                 ),
                               ),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
                             ),
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
-                          ),
-                          SizedBox(
-                            width: 20.w,
-                          ),
-                          Expanded(
-                            child: Container(
-                              height: 320.w,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Text(
-                                    info.title,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                      fontSize: 32.sp,
+                            SizedBox(
+                              width: 20.w,
+                            ),
+                            Expanded(
+                              child: Container(
+                                height: 320.w,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Text(
+                                      info.title,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                        fontSize: 32.sp,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    info.author,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                      fontSize: 28.sp,
+                                    Text(
+                                      info.author,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                        fontSize: 28.sp,
+                                      ),
                                     ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        DateFormat("yyyy-MM-dd HH:mm")
-                                            .format(DateTime
-                                                .fromMillisecondsSinceEpoch(
-                                                    info.createTime))
-                                            .toString(),
-                                        style: TextStyle(
-                                          fontSize: 24.sp,
+                                    Row(
+                                      children: [
+                                        Text(
+                                          DateFormat("yyyy-MM-dd HH:mm")
+                                              .format(DateTime
+                                                  .fromMillisecondsSinceEpoch(
+                                                      info.createTime))
+                                              .toString(),
+                                          style: TextStyle(
+                                            fontSize: 24.sp,
+                                          ),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: 40.w,
-                                      ),
-                                      Text(
-                                        info.size ?? "",
-                                        style: TextStyle(
-                                          fontSize: 20.sp,
+                                        SizedBox(
+                                          width: 40.w,
                                         ),
-                                      ),
-                                      Icon(
-                                        Icons.download,
-                                        color: Colors.grey,
-                                      )
-                                    ],
-                                  ),
-                                ],
+                                        Text(
+                                          info.size ?? "",
+                                          style: TextStyle(
+                                            fontSize: 20.sp,
+                                          ),
+                                        ),
+                                        Icon(
+                                          Icons.download,
+                                          color: Colors.grey,
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          )
-                        ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   );

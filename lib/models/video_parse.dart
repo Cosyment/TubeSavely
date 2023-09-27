@@ -9,7 +9,6 @@ class VideoParse {
     this.totalBytes,
     required this.author,
     required this.cover,
-    required this.videoUrl,
     required this.createTime,
     required this.videoList,
     required this.parseUrl,
@@ -19,7 +18,6 @@ class VideoParse {
   String author;
   String cover;
   int createTime;
-  String videoUrl;
   int? totalBytes;
   String? size;
   String parseUrl;
@@ -31,7 +29,6 @@ class VideoParse {
         totalBytes: json['totalBytes'] as int,
         author: json['author'] as String,
         cover: json['cover'] as String,
-        videoUrl: json['videoUrl'] as String,
         parseUrl: json['parseUrl'] as String,
         createTime: json['createTime'] as int,
         videoList:
@@ -45,7 +42,6 @@ class VideoParse {
         'totalBytes': totalBytes,
         'cover': cover,
         'author': author,
-        'videoUrl': videoUrl,
         'createTime': createTime,
         'parseUrl': parseUrl,
         'videoList': videoList.map((e) => e.toJson()).toList()
