@@ -1,3 +1,4 @@
+import 'package:downloaderx/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class MinePage extends StatefulWidget {
@@ -11,12 +12,7 @@ class _MinePageState extends State<MinePage> {
   List<dynamic> itemList = [
     {
       "icon": "",
-      "title": "会员限时特价",
-      "": "",
-    },
-    {
-      "icon": "",
-      "title": "联系客服",
+      "title": "使用教程",
       "": "",
     },
     {
@@ -26,12 +22,12 @@ class _MinePageState extends State<MinePage> {
     },
     {
       "icon": "",
-      "title": "兑换VIP",
+      "title": "清除缓存",
       "": "",
     },
     {
       "icon": "",
-      "title": "清除缓存",
+      "title": "设置",
       "": "",
     },
     {
@@ -44,30 +40,60 @@ class _MinePageState extends State<MinePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("我的"),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: List.generate(itemList.length, (index) {
-            var item = itemList[index];
-            return Container(
-              height: 50,
+      appBar: null,
+      body: Stack(
+        children: [
+          Positioned(
+            child: Container(
               width: double.infinity,
-              margin: EdgeInsets.all(5),
+              height: 200,
               decoration: BoxDecoration(
-                color: Colors.blue, // Container的背景色
-                borderRadius: BorderRadius.circular(10),
+                color: primaryColor,
+                borderRadius: BorderRadius.circular(600),
               ),
-              child: Row(
-                children: [
-                  // Image(image: image),
-                  Text(item['title']),
-                ],
+            ),
+          ),
+          Positioned(
+            child: Container(
+              margin: EdgeInsets.fromLTRB(0, 220, 0, 0),
+              child: Column(
+                children: List.generate(itemList.length, (index) {
+                  var item = itemList[index];
+                  return Card(
+                    elevation: 5,
+                    margin: EdgeInsets.fromLTRB(15, 15, 15, 0),
+                    shadowColor: primaryColor,
+                    child: Container(
+                      height: 50,
+                      padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: primaryColor.withAlpha(200),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        children: [
+                          // Image(image: image),
+                          Icon(
+                            Icons.settings,
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Text(
+                            item['title'],
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
               ),
-            );
-          }),
-        ),
+            ),
+          )
+        ],
       ),
     );
   }

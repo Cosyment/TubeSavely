@@ -38,88 +38,92 @@ class _DownloadPageState extends State<DownloadPage> {
             style: TextStyle(color: Colors.white),
           ),
         ),
-        body: Container(
-            color: bgColor,
-            height: double.infinity,
-            child: ListView.builder(
-              shrinkWrap: true,
-              // physics: const NeverScrollableScrollPhysics(),
-              itemCount: dataList.length,
-              itemBuilder: (context, index) {
-                var info = dataList[index];
-                return Container(
-                  color: Colors.white,
-                  margin: const EdgeInsets.only(top: 10),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.network(info.cover,
-                              width: 120, height: 160, fit: BoxFit.cover),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: Container(
-                            height: 160,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Text(
-                                  info.title,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 2,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                Text(
-                                  info.author,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 2,
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                Row(
+        body: SingleChildScrollView(
+          child: Container(
+            color:bgColor,
+            child: Column(
+                children: List.generate(
+                  dataList.length,
+                      (index) {
+                    var info = dataList[index];
+                    return Container(
+                      color: Colors.white,
+                      margin: EdgeInsets.only(top: 10),
+                      child: Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: Row(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Container(child: Image.network(info.cover,
+                                  fit: BoxFit.cover),
+                                width: 120,
+                                height: 160,),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              child: Container(
+                                height: 160,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment
+                                      .spaceBetween,
+                                  mainAxisSize: MainAxisSize.max,
                                   children: [
                                     Text(
-                                      DateFormat("yyyy-MM-dd HH:mm")
-                                          .format(DateTime.now())
-                                          .toString(),
-                                      style: const TextStyle(
-                                        fontSize: 12,
+                                      info.title,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                        fontSize: 16,
                                       ),
-                                    ),
-                                    const SizedBox(
-                                      width: 20,
                                     ),
                                     Text(
-                                      info.size ?? "",
-                                      style: const TextStyle(
-                                        fontSize: 10,
+                                      info.author,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                        fontSize: 14,
                                       ),
                                     ),
-                                    Icon(
-                                      Icons.download,
-                                      color: Colors.grey,
-                                    )
+                                    Row(
+                                      children: [
+                                        Text(
+                                          DateFormat("yyyy-MM-dd HH:mm")
+                                              .format(DateTime.now())
+                                              .toString(),
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 20,
+                                        ),
+                                        Text(
+                                          info.size ?? "",
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                          ),
+                                        ),
+                                        Icon(
+                                          Icons.download,
+                                          color: Colors.grey,
+                                        )
+                                      ],
+                                    ),
                                   ],
                                 ),
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              },
-            )));
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                )),
+          ),
+        ));
   }
 }
