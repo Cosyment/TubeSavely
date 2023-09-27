@@ -5,6 +5,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import '../constants/colors.dart';
 import '../data/db_manager.dart';
 import '../plugin/method_plugin.dart';
+import '../utils/event_bus.dart';
 import 'login_page.dart';
 import 'setting_page.dart';
 
@@ -82,8 +83,10 @@ class _MinePageState extends State<MinePage> {
               Positioned(
                 child: InkWell(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const LoginPage()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoginPage()));
                   },
                   child: Container(
                     width: 140.w,
@@ -175,7 +178,7 @@ class _MinePageState extends State<MinePage> {
     } else if (type == 1) {
       MethodPlugin.sikpPlay();
     } else if (type == 2) {
-      DbManager.db!.clear();
+      EventBus.getDefault().post("clear");
     } else if (type == 3) {
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => const SettingPage()));

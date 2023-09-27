@@ -29,6 +29,11 @@ class _DownloadPageState extends State<DownloadPage> {
     EventBus.getDefault().register(null, (event) {
       if (event is VideoParse) {
         dataList.add(event);
+      } else if (event is String) {
+        if (event == "clear") {
+          dataList.clear();
+          DbManager.db!.clear();
+        }
       }
       setState(() {});
     });
