@@ -1,8 +1,6 @@
-import 'dart:ffi';
-
 import 'package:downloaderx/utils/json_utils.dart';
 
-import '../models/VideoInfo.dart';
+import '../models/video_info.dart';
 
 class VideoParse {
   VideoParse(
@@ -11,7 +9,6 @@ class VideoParse {
       this.totalBytes,
       required this.author,
       required this.cover,
-      this.url,
       this.label,
       required this.createTime,
       required this.videoList});
@@ -20,7 +17,6 @@ class VideoParse {
   String author;
   String cover;
   int createTime;
-  String? url;
   String? label;
   int? totalBytes;
   String? size;
@@ -31,7 +27,6 @@ class VideoParse {
         size: json['size'] as String,
         totalBytes: json['totalBytes'] as int,
         author: json['author'] as String,
-        url: json['url'] as String,
         cover: json['cover'] as String,
         label: json['label'] as String,
         createTime: json['createTime'] as int,
@@ -44,7 +39,6 @@ class VideoParse {
         'title': title,
         'size': size,
         'totalBytes': totalBytes,
-        'url': url,
         'cover': cover,
         'author': author,
         'label': label,

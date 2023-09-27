@@ -1,7 +1,7 @@
 import 'package:downloaderx/constants/colors.dart';
-import 'package:downloaderx/data/DbManager.dart';
-import 'package:downloaderx/utils/DownloadUtils.dart';
-import 'package:downloaderx/widget/VideoXWidget.dart';
+import 'package:downloaderx/data/db_manager.dart';
+import 'package:downloaderx/utils/download_utils.dart';
+import 'package:downloaderx/widget/video_x_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,9 +9,9 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:video_player/video_player.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
-import '../data/VideoParse.dart';
-import '../models/CoverInfo.dart';
-import '../models/VideoInfo.dart';
+import '../data/video_parse.dart';
+import '../models/cover_info.dart';
+import '../models/video_info.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -59,40 +59,35 @@ class _HomePageState extends State<HomePage> {
           SizedBox(
             height: 20.h,
           ),
-          Row(
-            children: [
-              Container(
-                margin: EdgeInsets.all(30.w),
-                width: MediaQuery.of(context).size.width - 30,
-                height: 90.w,
-                decoration: BoxDecoration(
-                  color: primaryColor,
-                  borderRadius: BorderRadius.circular(8.r), // 圆角半径
+
+          Container(
+            height: 90.w,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: primaryColor,
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            child: TextField(
+              maxLines: 1,
+              textAlignVertical: TextAlignVertical.center,
+              controller: textController,
+              textInputAction: TextInputAction.done,
+              onSubmitted: (value) => startParse(),
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                hintText: "请输入视频地址",
+                hintStyle: const TextStyle(color: Colors.white),
+                border: const OutlineInputBorder(borderSide: BorderSide.none),
+                focusedBorder:
+                    const OutlineInputBorder(borderSide: BorderSide.none),
+                enabledBorder: const OutlineInputBorder(
+                  borderSide: BorderSide.none,
                 ),
-                child: Center(
-                  child: TextField(
-                    maxLines: 1,
-                    textAlignVertical: TextAlignVertical.center,
-                    controller: textController,
-                    textInputAction: TextInputAction.done,
-                    onSubmitted: (value) => startParse(),
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      hintText: "请输入视频地址",
-                      hintStyle: TextStyle(color: Colors.white),
-                      border: OutlineInputBorder(borderSide: BorderSide.none),
-                      focusedBorder:
-                          OutlineInputBorder(borderSide: BorderSide.none),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                      ),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 15.w),
-                    ),
-                  ),
-                ),
+                contentPadding: EdgeInsets.symmetric(horizontal: 15.w),
               ),
-            ],
+            ),
           ),
+
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

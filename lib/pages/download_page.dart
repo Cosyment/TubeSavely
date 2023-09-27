@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:downloaderx/data/VideoParse.dart';
+import 'package:downloaderx/data/video_parse.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../constants/colors.dart';
-import '../data/DbManager.dart';
+import '../data/db_manager.dart';
 import '../widget/shimmer_image_widget.dart';
 
 class DownloadPage extends StatefulWidget {

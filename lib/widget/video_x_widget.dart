@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-import 'ControlsOverlay.dart';
+import 'controls_overlay.dart';
 
 class VideoXWidget extends StatefulWidget {
   const VideoXWidget(

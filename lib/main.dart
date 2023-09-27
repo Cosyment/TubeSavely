@@ -1,7 +1,7 @@
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
-import 'package:downloaderx/pages/DownloadPage.dart';
-import 'package:downloaderx/pages/HomePage.dart';
-import 'package:downloaderx/pages/MinePage.dart';
+import 'package:downloaderx/pages/download_page.dart';
+import 'package:downloaderx/pages/home_page.dart';
+import 'package:downloaderx/pages/mine_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

@@ -1,6 +1,6 @@
 import 'package:simple_database/simple_database.dart';
 
-import 'VideoParse.dart';
+import 'video_parse.dart';
 
 class DbManager {
   static SimpleDatabase? db = null;

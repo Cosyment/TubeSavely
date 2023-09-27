@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-import '../data/DbManager.dart';
+import '../data/db_manager.dart';
 
 class MinePage extends StatefulWidget {
   const MinePage({super.key});
