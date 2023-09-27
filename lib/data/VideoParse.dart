@@ -1,5 +1,9 @@
 import 'dart:ffi';
 
+import 'package:downloaderx/utils/json_utils.dart';
+
+import '../models/VideoInfo.dart';
+
 class VideoParse {
   VideoParse(
       {required this.title,
@@ -9,16 +13,18 @@ class VideoParse {
       required this.cover,
       this.url,
       this.label,
-      required this.createTime});
+      required this.createTime,
+      required this.videoList});
 
   String title;
-  int? totalBytes;
-  String? size;
   String author;
-  String? url;
-  String? label;
   String cover;
   int createTime;
+  String? url;
+  String? label;
+  int? totalBytes;
+  String? size;
+  List<VideoInfo> videoList;
 
   factory VideoParse.fromJson(Map<String, dynamic> json) => VideoParse(
         title: json['title'] as String,
@@ -29,6 +35,9 @@ class VideoParse {
         cover: json['cover'] as String,
         label: json['label'] as String,
         createTime: json['createTime'] as int,
+        videoList:
+            json.asList<VideoInfo>('videoList', (v) => VideoInfo.fromJson(v)) ??
+                [],
       );
 
   Map<String, dynamic> toJson() => {
@@ -39,6 +48,7 @@ class VideoParse {
         'cover': cover,
         'author': author,
         'label': label,
-        'createTime': createTime
+        'createTime': createTime,
+        'videoList': videoList.map((e) => e.toJson()).toList()
       };
 }

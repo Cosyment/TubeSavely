@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:downloaderx/constants/colors.dart';
 import 'package:downloaderx/data/DbManager.dart';
 import 'package:downloaderx/utils/DownloadUtils.dart';
@@ -7,14 +5,13 @@ import 'package:downloaderx/widget/VideoXWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 import 'package:video_player/video_player.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
-import 'package:percent_indicator/percent_indicator.dart';
+
 import '../data/VideoParse.dart';
 import '../models/CoverInfo.dart';
-import '../models/ParseInfo.dart';
+import '../models/VideoInfo.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -26,7 +23,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final TextEditingController textController = TextEditingController(
       text: 'https://www.youtube.com/watch?v=Ek1QD7AH9XQ');
-  List<ParseInfo> videoList = [];
+  List<VideoInfo> videoList = [];
   VideoPlayerController _controller = VideoPlayerController.asset('')
     ..initialize().then((_) {});
   bool isLoading = false;
@@ -108,7 +105,7 @@ class _HomePageState extends State<HomePage> {
                     color: primaryColor,
                     borderRadius: BorderRadius.circular(8.r), // 圆角半径
                   ),
-                  child:  Text(
+                  child: Text(
                     "粘贴",
                     style: TextStyle(
                         color: Colors.white,
@@ -139,7 +136,7 @@ class _HomePageState extends State<HomePage> {
                             color: primaryColor,
                             borderRadius: BorderRadius.circular(8.r), // 圆角半径
                           ),
-                          child:  Text(
+                          child: Text(
                             "解析视频",
                             style: TextStyle(
                                 color: Colors.white,
@@ -167,10 +164,10 @@ class _HomePageState extends State<HomePage> {
 
           Container(
             height: 170.w,
-            margin:  EdgeInsets.all(15.r),
+            margin: EdgeInsets.all(15.r),
             child: GridView.builder(
-              physics:  NeverScrollableScrollPhysics(),
-              gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
+              physics: NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   crossAxisSpacing: 5,
                   mainAxisSpacing: 5,
@@ -201,7 +198,7 @@ class _HomePageState extends State<HomePage> {
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(100.r),
-                        gradient:  LinearGradient(
+                        gradient: LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
@@ -229,7 +226,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  gridItemWidget(BuildContext context, index, ParseInfo info) {
+  gridItemWidget(BuildContext context, index, VideoInfo info) {
     return InkWell(
       child: Container(
         decoration: BoxDecoration(
@@ -276,88 +273,120 @@ class _HomePageState extends State<HomePage> {
       videoList.clear();
       isLoading = true;
     });
+    try {
+      final yt = YoutubeExplode();
 
-    final yt = YoutubeExplode();
-
-    var video =
-        await yt.videos.get(textController.text); // Returns a Video instance.
-    var title = video.title;
-    var author = video.author;
-    var thumbnails = video?.watchPage?.playerResponse?.root['videoDetails']
-        ['thumbnail']['thumbnails'];
-    List<dynamic> itemList = thumbnails;
-    List<CoverInfo> coverInfoList = [];
-    for (var element in itemList) {
-      var coverInfo = CoverInfo.fromJson(element);
-      coverInfoList.add(coverInfo);
-    }
-    var manifest =
-        await yt.videos.streamsClient.getManifest(textController.text);
-    var list = manifest.streams
-        .where((element) => element.container == StreamContainer.mp4)
-        .sortByBitrate();
-    for (var element in list) {
-      if (element.qualityLabel.endsWith('1080p')) {
-        videoList.add(ParseInfo('1080p(mp4,不带音频)', element.size.totalBytes,
-            element.size.toString(), element.url.toString()));
-      } else if (element.qualityLabel.endsWith('720p') &&
-          element is MuxedStreamInfo) {
-        videoList.add(ParseInfo('720p(mp4,带音频)', element.size.totalBytes,
-            element.size.toString(), element.url.toString()));
-      } else if (element.qualityLabel.endsWith('480p')) {
-        videoList.add(ParseInfo('480p(mp4,不带音频)', element.size.totalBytes,
-            element.size.toString(), element.url.toString()));
-      } else if (element.qualityLabel.endsWith('360p') &&
-          element is MuxedStreamInfo) {
-        videoList.add(ParseInfo('360p(mp4,带音频)', element.size.totalBytes,
-            element.size.toString(), element.url.toString()));
-      } else if (element.qualityLabel.endsWith('240p')) {
-        videoList.add(ParseInfo('240p(mp4,不带音频)', element.size.totalBytes,
-            element.size.toString(), element.url.toString()));
-      } else if (element.qualityLabel.endsWith('144p')) {
-        videoList.add(ParseInfo('144p(mp4,带音频)', element.size.totalBytes,
-            element.size.toString(), element.url.toString()));
+      var video =
+          await yt.videos.get(textController.text); // Returns a Video instance.
+      var thumbnails = video?.watchPage?.playerResponse?.root['videoDetails']
+          ['thumbnail']['thumbnails'];
+      List<dynamic> itemList = thumbnails;
+      List<CoverInfo> coverInfoList = [];
+      for (var element in itemList) {
+        var coverInfo = CoverInfo.fromJson(element);
+        coverInfoList.add(coverInfo);
       }
-    }
-    VideoStreamInfo info = manifest.muxed.bestQuality;
+      var manifest =
+          await yt.videos.streamsClient.getManifest(textController.text);
+      var list = manifest.streams
+          .where((element) => element.container == StreamContainer.mp4)
+          .sortByBitrate();
+      var item1080p =
+          list.firstWhere((element) => element.qualityLabel.contains('1080p'));
+      if (item1080p != null) {
+        videoList.add(VideoInfo(
+            label: '1080p(mp4,不带音频)',
+            totalBytes: item1080p.size.totalBytes,
+            size: item1080p.size.toString(),
+            url: item1080p.url.toString()));
+      }
+      var item720p =
+          list.firstWhere((element) => element.qualityLabel.contains('720p'));
+      if (item720p != null) {
+        videoList.add(VideoInfo(
+            label: '720p(mp4,带音频)',
+            totalBytes: item720p.size.totalBytes,
+            size: item720p.size.toString(),
+            url: item720p.url.toString()));
+      }
+      var item480p =
+          list.firstWhere((element) => element.qualityLabel.contains('480p'));
+      if (item480p != null) {
+        videoList.add(VideoInfo(
+            label: '480p(mp4,不带音频)',
+            totalBytes: item480p.size.totalBytes,
+            size: item480p.size.toString(),
+            url: item480p.url.toString()));
+      }
+      var item360p =
+          list.firstWhere((element) => element.qualityLabel.contains('360p'));
+      if (item360p != null) {
+        videoList.add(VideoInfo(
+            label: '360p(mp4,带音频)',
+            totalBytes: item360p.size.totalBytes,
+            size: item360p.size.toString(),
+            url: item360p.url.toString()));
+      }
 
-    DbManager.instance().add(VideoParse(
-        title: video.title,
-        author: video.author,
-        createTime: DateTime.now().millisecondsSinceEpoch,
-        size: info.size.toString(),
-        totalBytes: info.size.totalBytes,
-        cover: coverInfoList.last.url,
-        label: "",
-        url: info.url.toString()));
-    setState(() {
-      _controller = VideoPlayerController.networkUrl(
-        info.url,
-        videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
-      )..initialize().then((_) {
-          _controller.play();
-          isLoading = false;
-          _controller.addListener(() {
+      var item240p =
+          list.firstWhere((element) => element.qualityLabel.contains('240p'));
+      if (item240p != null) {
+        videoList.add(VideoInfo(
+          label: '240p(mp4,不带音频)',
+          totalBytes: item240p.size.totalBytes,
+          size: item240p.size.toString(),
+          url: item240p.url.toString(),
+        ));
+      }
+      var item144p =
+          list.firstWhere((element) => element.qualityLabel.contains('144p'));
+      if (item144p != null) {
+        videoList.add(VideoInfo(
+            label: '144p(mp4,带音频)',
+            totalBytes: item144p.size.totalBytes,
+            size: item144p.size.toString(),
+            url: item144p.url.toString()));
+      }
+      VideoStreamInfo info = manifest.muxed.bestQuality;
+      DbManager.instance().add(VideoParse(
+          title: video.title,
+          author: video.author,
+          createTime: DateTime.now().millisecondsSinceEpoch,
+          size: info.size.toString(),
+          totalBytes: info.size.totalBytes,
+          cover: coverInfoList.last.url,
+          label: "",
+          videoList: videoList));
+      setState(() {
+        _controller = VideoPlayerController.networkUrl(
+          info.url,
+          videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
+        )..initialize().then((_) {
+            _controller.play();
+            isLoading = false;
+            _controller.addListener(() {
+              setState(() {});
+            });
             setState(() {});
           });
-          setState(() {});
-        });
-      // yt.close();
-    });
-
-    // var fileName = "${DateTime.now().millisecondsSinceEpoch}.mp4";
-    // final Directory tempDir = await getTemporaryDirectory();
-    // String appDocPath = tempDir.path;
-    // print('Success to load appDocPath>>>>>>>>>>>>: ${appDocPath}');
-    //
-    // var stream = yt.videos.streamsClient.get(list.first);
-    // File file = File('$appDocPath/$fileName');
-    // var fileStream = file.openWrite();
-    // await stream.pipe(fileStream);
-    // await fileStream.flush();
-    // await fileStream.close();
-    // final result = await ImageGallerySaver.saveFile(file.path);
-    // print('result>>>>>>>>>>>>: ${result}');
+        yt.close();
+      });
+    } catch (e) {
+      isLoading = false;
+    }
+// var fileName = "${DateTime.now().millisecondsSinceEpoch}.mp4";
+// final Directory tempDir = await getTemporaryDirectory();
+// String appDocPath = tempDir.path;
+// print('Success to load appDocPath>>>>>>>>>>>>: ${appDocPath}');
+//
+// var stream = yt.videos.streamsClient.get(list.first);
+// File file = File('$appDocPath/$fileName');
+// var fileStream = file.openWrite();
+// await stream.pipe(fileStream);
+// await fileStream.flush();
+// await fileStream.close();
+// final result = await ImageGallerySaver.saveFile(file.path);
+// print('result>>>>>>>>>>>>: ${result}');
   }
 
   void pasteText() async {
