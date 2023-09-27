@@ -1,5 +1,6 @@
 import 'package:downloaderx/constants/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MinePage extends StatefulWidget {
   const MinePage({super.key});
@@ -44,32 +45,33 @@ class _MinePageState extends State<MinePage> {
       body: Stack(
         children: [
           Positioned(
+            top: MediaQuery.of(context).padding.top,
             child: Container(
               width: double.infinity,
-              height: 200,
+              height: 400.w,
               decoration: BoxDecoration(
                 color: primaryColor,
-                borderRadius: BorderRadius.circular(600),
+                borderRadius: BorderRadius.circular(600.r),
               ),
             ),
           ),
           Positioned(
             child: Container(
-              margin: EdgeInsets.fromLTRB(0, 220, 0, 0),
+              margin: EdgeInsets.fromLTRB(0, 460.w, 0, 0),
               child: Column(
                 children: List.generate(itemList.length, (index) {
                   var item = itemList[index];
                   return Card(
                     elevation: 5,
-                    margin: EdgeInsets.fromLTRB(15, 15, 15, 0),
+                    margin: EdgeInsets.fromLTRB(30.w, 30.w, 30.w, 0),
                     shadowColor: primaryColor,
                     child: Container(
-                      height: 50,
-                      padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                      height: 100.w,
+                      padding: EdgeInsets.fromLTRB(30.w, 0, 30.w, 0),
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: primaryColor.withAlpha(200),
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(20.r),
                       ),
                       child: Row(
                         children: [
@@ -79,7 +81,7 @@ class _MinePageState extends State<MinePage> {
                             color: Colors.white,
                           ),
                           SizedBox(
-                            width: 15,
+                            width: 30.w,
                           ),
                           Text(
                             item['title'],

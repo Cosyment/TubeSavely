@@ -1,5 +1,6 @@
 import 'package:downloaderx/data/VideoParse.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 import '../constants/colors.dart';
@@ -48,24 +49,24 @@ class _DownloadPageState extends State<DownloadPage> {
                     var info = dataList[index];
                     return Container(
                       color: Colors.white,
-                      margin: EdgeInsets.only(top: 10),
+                      margin: EdgeInsets.only(top: 10.w),
                       child: Padding(
-                        padding: EdgeInsets.all(10.0),
+                        padding: EdgeInsets.all(20.0.w),
                         child: Row(
                           children: [
                             ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(16.r),
                               child: Container(child: Image.network(info.cover,
                                   fit: BoxFit.cover),
-                                width: 120,
-                                height: 160,),
+                                width: 240.w,
+                                height: 160.w,),
                             ),
                             SizedBox(
-                              width: 10,
+                              width: 20.w,
                             ),
                             Expanded(
                               child: Container(
-                                height: 160,
+                                height: 320.w,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment
@@ -77,7 +78,7 @@ class _DownloadPageState extends State<DownloadPage> {
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 2,
                                       style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: 32.sp,
                                       ),
                                     ),
                                     Text(
@@ -85,7 +86,7 @@ class _DownloadPageState extends State<DownloadPage> {
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 2,
                                       style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 28.sp,
                                       ),
                                     ),
                                     Row(
@@ -95,16 +96,16 @@ class _DownloadPageState extends State<DownloadPage> {
                                               .format(DateTime.now())
                                               .toString(),
                                           style: TextStyle(
-                                            fontSize: 12,
+                                            fontSize: 24.sp,
                                           ),
                                         ),
                                         SizedBox(
-                                          width: 20,
+                                          width: 40.w,
                                         ),
                                         Text(
                                           info.size ?? "",
                                           style: TextStyle(
-                                            fontSize: 10,
+                                            fontSize: 20.sp,
                                           ),
                                         ),
                                         Icon(
