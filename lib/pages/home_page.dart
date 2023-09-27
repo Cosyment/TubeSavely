@@ -12,6 +12,7 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import '../data/video_parse.dart';
 import '../models/cover_info.dart';
 import '../models/video_info.dart';
+import '../utils/event_bus.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -344,7 +345,7 @@ class _HomePageState extends State<HomePage> {
             url: item144p.url.toString()));
       }
       VideoStreamInfo info = manifest.muxed.bestQuality;
-      DbManager.instance().add(VideoParse(
+      var videoParse = VideoParse(
           url: textController.text,
           title: video.title,
           author: video.author,
@@ -353,7 +354,9 @@ class _HomePageState extends State<HomePage> {
           totalBytes: info.size.totalBytes,
           cover: coverInfoList.last.url,
           label: "",
-          videoList: videoList));
+          videoList: videoList);
+      DbManager.instance().add(videoParse);
+      EventBus.getDefault().post(videoParse);
       setState(() {
         _controller = VideoPlayerController.networkUrl(
           info.url,

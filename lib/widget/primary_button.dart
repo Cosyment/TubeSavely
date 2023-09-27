@@ -1,3 +1,4 @@
+import 'package:downloaderx/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -11,16 +12,16 @@ class PrimaryButton extends StatelessWidget {
     return InkWell(
       onTap: () {},
       child: Container(
-        height: 49.h,
+        height: 100.w,
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primary,
+          color: primaryColor,
           borderRadius: BorderRadius.circular(10.w),
         ),
         child: Center(
           child: Text(
             text,
             style: TextStyle(
-              fontSize: 14.sp,
+              fontSize: 28.sp,
               fontWeight: FontWeight.w500,
               color: Colors.white,
             ),

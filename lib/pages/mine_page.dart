@@ -1,10 +1,12 @@
-import 'package:downloaderx/constants/colors.dart';
-import 'package:downloaderx/plugin/method_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import '../constants/colors.dart';
 import '../data/db_manager.dart';
+import '../plugin/method_plugin.dart';
+import 'login_page.dart';
+import 'setting_page.dart';
 
 class MinePage extends StatefulWidget {
   const MinePage({super.key});
@@ -60,77 +62,109 @@ class _MinePageState extends State<MinePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: null,
-      body: Stack(
+      body: Column(
         children: [
-          Positioned(
-            top: -160,
-            left: 0,
-            right: 0,
-            child: Container(
-              width: double.infinity,
-              height: 600.w,
-              decoration: BoxDecoration(
-                color: primaryColor,
-                borderRadius: BorderRadius.circular(500.r),
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                width: double.infinity,
+                height: 400.w,
+                margin: EdgeInsets.only(),
+                decoration: BoxDecoration(
+                  color: primaryColor,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(400.w),
+                    bottomRight: Radius.circular(400.w),
+                  ),
+                ),
               ),
-            ),
+              Positioned(
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const LoginPage()));
+                  },
+                  child: Container(
+                    width: 140.w,
+                    height: 140.w,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100.r),
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Color(0xFFFC6AEC),
+                            Color(0xFF7776FF),
+                          ],
+                        )),
+                    child: Text(
+                      "登录",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 28.sp,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              )
+            ],
           ),
-          Positioned(
-            child: Container(
-              margin: EdgeInsets.fromLTRB(0, 460.w, 0, 0),
-              child: Column(
-                children: List.generate(itemList.length, (index) {
-                  var item = itemList[index];
-                  return Card(
-                    elevation: 5,
-                    margin: EdgeInsets.fromLTRB(30.w, 30.w, 30.w, 0),
-                    shadowColor: primaryColor,
-                    child: InkWell(
-                      onTap: () {
-                        onItemClick(item['type']);
-                      },
-                      child: Container(
-                        height: 100.w,
-                        padding: EdgeInsets.fromLTRB(30.w, 0, 30.w, 0),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: primaryColor.withAlpha(200),
-                          borderRadius: BorderRadius.circular(20.r),
-                        ),
-                        child: Row(
-                          children: [
-                            // Image(image: image),
-                            Icon(
-                              Icons.settings,
-                              color: Colors.white,
-                            ),
-                            SizedBox(
-                              width: 30.w,
-                            ),
-                            Text(
-                              item['title'],
+          Container(
+            margin: EdgeInsets.fromLTRB(0, 40.w, 0, 0),
+            child: Column(
+              children: List.generate(itemList.length, (index) {
+                var item = itemList[index];
+                return Card(
+                  elevation: 5,
+                  margin: EdgeInsets.fromLTRB(30.w, 30.w, 30.w, 0),
+                  shadowColor: primaryColor,
+                  child: InkWell(
+                    onTap: () {
+                      onItemClick(item['type']);
+                    },
+                    child: Container(
+                      height: 100.w,
+                      padding: EdgeInsets.fromLTRB(30.w, 0, 30.w, 0),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: primaryColor.withAlpha(200),
+                        borderRadius: BorderRadius.circular(20.r),
+                      ),
+                      child: Row(
+                        children: [
+                          // Image(image: image),
+                          Icon(
+                            Icons.settings,
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            width: 30.w,
+                          ),
+                          Text(
+                            item['title'],
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          Flexible(
+                            flex: 1,
+                            child: Container(),
+                          ),
+                          Visibility(
+                            visible: item['type'] == 4,
+                            child: Text(
+                              versionName,
                               style: TextStyle(color: Colors.white),
                             ),
-                            Flexible(
-                              flex: 1,
-                              child: Container(),
-                            ),
-                            Visibility(
-                              visible: item['type'] == 4,
-                              child: Text(
-                                versionName,
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                  );
-                }),
-              ),
+                  ),
+                );
+              }),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -143,9 +177,8 @@ class _MinePageState extends State<MinePage> {
     } else if (type == 2) {
       DbManager.db!.clear();
     } else if (type == 3) {
-
-    } else if (type == 4) {
-
-    }
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const SettingPage()));
+    } else if (type == 4) {}
   }
 }

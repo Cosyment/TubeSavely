@@ -7,6 +7,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../constants/colors.dart';
 import '../data/db_manager.dart';
+import '../utils/event_bus.dart';
 import '../widget/shimmer_image_widget.dart';
 
 class DownloadPage extends StatefulWidget {
@@ -24,6 +25,13 @@ class _DownloadPageState extends State<DownloadPage> {
   void initState() {
     super.initState();
     loadList();
+
+    EventBus.getDefault().register(null, (event) {
+      if (event is VideoParse) {
+        dataList.add(event);
+      }
+      setState(() {});
+    });
   }
 
   void loadList() async {

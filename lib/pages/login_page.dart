@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../widget/primary_button.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({super.key});
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -14,9 +14,11 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("登录"),
+      ),
       body: Container(
-        height: 812.h,
-        width: 375.w,
+        width: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/images/Background.png"),
@@ -38,51 +40,12 @@ class _LoginPageState extends State<LoginPage> {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              SizedBox(height: 62.w),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: 150.w,
-                    height: 50.h,
-                    decoration: BoxDecoration(
-                      color: Color(0xFFF3F4F5),
-                      borderRadius: BorderRadius.circular(10.w),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Google",
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 150.w,
-                    height: 50.h,
-                    decoration: BoxDecoration(
-                      color: Color(0xFFF3F4F5),
-                      borderRadius: BorderRadius.circular(10.w),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "Facebook",
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(height: 93.w),
+
+              SizedBox(height: 193.w),
               Text(
                 "Email",
                 style: TextStyle(
-                  fontSize: 14.sp,
+                  fontSize: 28.sp,
                 ),
               ),
               SizedBox(height: 8.w),
@@ -90,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
                 decoration: InputDecoration(
                   hintText: "Enter your email",
                   hintStyle: TextStyle(
-                    fontSize: 14.sp,
+                    fontSize: 28.sp,
                     color: Color(0xFF1A1A1A).withOpacity(0.2494),
                   ),
                   filled: true,
@@ -108,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
               Text(
                 "Password",
                 style: TextStyle(
-                  fontSize: 14.sp,
+                  fontSize: 28.sp,
                 ),
               ),
               SizedBox(height: 8.w),
@@ -116,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                 decoration: InputDecoration(
                   hintText: "Enter your password",
                   hintStyle: TextStyle(
-                    fontSize: 14.sp,
+                    fontSize: 28.sp,
                     color: Color(0xFF1A1A1A).withOpacity(0.2494),
                   ),
                   filled: true,
@@ -141,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: Text(
                   "Forget password?",
                   style: TextStyle(
-                    fontSize: 14.sp,
+                    fontSize: 28.sp,
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   textAlign: TextAlign.end,
@@ -156,7 +119,7 @@ class _LoginPageState extends State<LoginPage> {
                   "Create new account",
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.primary,
-                    fontSize: 14.sp,
+                    fontSize: 28.sp,
                     fontWeight: FontWeight.w500,
                   ),
                   textAlign: TextAlign.center,
