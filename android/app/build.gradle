@@ -62,6 +62,26 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    productFlavors {
+        pgyer {}   // 蒲公英
+        huawei {}       // 华为商店
+        google {}       // 谷歌商店
+        baidu {}        // 百度手机助手
+        tencent {}   // 应用宝
+        xiaomi {}   // 小米
+        oppo {}   // OPPO
+        vivo {}   // VIVO
+        s360 {}   // 360
+        lenovo {}   // 联想
+        aliuc {}   // 阿里UC
+        muyu {}   // 官方包
+    }
+    productFlavors.all { flavor ->
+        // 友盟推送渠道包， UMENG_CHANNEL 是根据你AndroidManifest.xml来配置的，请看下面。
+        flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+    }
+
 }
 
 flutter {
