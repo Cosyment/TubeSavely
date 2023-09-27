@@ -46,6 +46,8 @@ dependencies:
   percent_indicator: ^4.2.3
   intl: ^0.18.1
   flutter_screenutil: ^5.9.0
+  shimmer: ^3.0.0
+  cached_network_image: ^3.3.0
 
 dev_dependencies:
   flutter_test:

@@ -1,10 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:downloaderx/data/VideoParse.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../constants/colors.dart';
 import '../data/DbManager.dart';
+import '../widget/shimmer_image_widget.dart';
 
 class DownloadPage extends StatefulWidget {
   const DownloadPage({Key? key}) : super(key: key);
@@ -15,6 +18,7 @@ class DownloadPage extends StatefulWidget {
 
 class _DownloadPageState extends State<DownloadPage> {
   List<VideoParse> dataList = [];
+  bool isShowShimmer = true;
 
   @override
   void initState() {
@@ -41,89 +45,114 @@ class _DownloadPageState extends State<DownloadPage> {
         ),
         body: SingleChildScrollView(
           child: Container(
-            color:bgColor,
+            color: bgColor,
             child: Column(
                 children: List.generate(
-                  dataList.length,
-                      (index) {
-                    var info = dataList[index];
-                    return Container(
-                      color: Colors.white,
-                      margin: EdgeInsets.only(top: 10.w),
-                      child: Padding(
-                        padding: EdgeInsets.all(20.0.w),
-                        child: Row(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(16.r),
-                              child: Container(child: Image.network(info.cover,
-                                  fit: BoxFit.cover),
-                                width: 240.w,
-                                height: 160.w,),
-                            ),
-                            SizedBox(
-                              width: 20.w,
-                            ),
-                            Expanded(
+              dataList.length,
+              (index) {
+                var info = dataList[index];
+                return Container(
+                  color: Colors.white,
+                  margin: EdgeInsets.only(top: 10.w),
+                  child: Padding(
+                    padding: EdgeInsets.all(20.0.w),
+                    child: Row(
+                      children: [
+                        CachedNetworkImage(
+                          imageUrl: "https://zimg.zchd.top/farm/a.png",
+                          // imageUrl: info.cover,
+                          width: 240.w,
+                          height: 320.w,
+                          imageBuilder: (context, imageProvider) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.r)),
+                            );
+                          },
+                          placeholder: (context, url) => ClipRRect(
+                            borderRadius: BorderRadius.circular(16.r),
+                            child: Shimmer.fromColors(
+                              baseColor: Colors.grey.shade300,
+                              highlightColor: Colors.grey.shade100,
                               child: Container(
+                                child: Image.network(
+                                  info.cover,
+                                  fit: BoxFit.cover,
+                                ),
+                                width: 240.w,
                                 height: 320.w,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment
-                                      .spaceBetween,
-                                  mainAxisSize: MainAxisSize.max,
+                              ),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error),
+                        ),
+                        SizedBox(
+                          width: 20.w,
+                        ),
+                        Expanded(
+                          child: Container(
+                            height: 320.w,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Text(
+                                  info.title,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                    fontSize: 32.sp,
+                                  ),
+                                ),
+                                Text(
+                                  info.author,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                    fontSize: 28.sp,
+                                  ),
+                                ),
+                                Row(
                                   children: [
                                     Text(
-                                      info.title,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
+                                      DateFormat("yyyy-MM-dd HH:mm")
+                                          .format(DateTime.now())
+                                          .toString(),
                                       style: TextStyle(
-                                        fontSize: 32.sp,
+                                        fontSize: 24.sp,
                                       ),
+                                    ),
+                                    SizedBox(
+                                      width: 40.w,
                                     ),
                                     Text(
-                                      info.author,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
+                                      info.size ?? "",
                                       style: TextStyle(
-                                        fontSize: 28.sp,
+                                        fontSize: 20.sp,
                                       ),
                                     ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          DateFormat("yyyy-MM-dd HH:mm")
-                                              .format(DateTime.now())
-                                              .toString(),
-                                          style: TextStyle(
-                                            fontSize: 24.sp,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 40.w,
-                                        ),
-                                        Text(
-                                          info.size ?? "",
-                                          style: TextStyle(
-                                            fontSize: 20.sp,
-                                          ),
-                                        ),
-                                        Icon(
-                                          Icons.download,
-                                          color: Colors.grey,
-                                        )
-                                      ],
-                                    ),
+                                    Icon(
+                                      Icons.download,
+                                      color: Colors.grey,
+                                    )
                                   ],
                                 ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                )),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              },
+            )),
           ),
         ));
   }

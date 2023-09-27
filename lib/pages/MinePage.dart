@@ -46,8 +46,10 @@ class _MinePageState extends State<MinePage> {
         children: [
           Positioned(
             top: MediaQuery.of(context).padding.top,
+            left: 0,
+            right: 0,
             child: Container(
-              width: double.infinity,
+              // width: double.infinity,
               height: 400.w,
               decoration: BoxDecoration(
                 color: primaryColor,
