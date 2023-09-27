@@ -5,7 +5,7 @@ import '../constants/colors.dart';
 import '../data/DbManager.dart';
 
 class DownloadPage extends StatefulWidget {
-  const DownloadPage({Key? key}) : super(key: key);
+   DownloadPage({Key? key}) : super(key: key);
 
   @override
   State<DownloadPage> createState() => _DownloadPageState();
@@ -32,7 +32,7 @@ class _DownloadPageState extends State<DownloadPage> {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: primaryColor,
-          title: const Text(
+          title:  Text(
             "下载",
             style: TextStyle(color: Colors.white),
           ),
@@ -48,7 +48,7 @@ class _DownloadPageState extends State<DownloadPage> {
                 var info = dataList[index];
                 return Container(
                   color: Colors.white,
-                  margin: const EdgeInsets.only(top: 10),
+                  margin:  EdgeInsets.only(top: 10),
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Row(

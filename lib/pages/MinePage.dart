@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MinePage extends StatefulWidget {
   const MinePage({super.key});
@@ -52,12 +53,12 @@ class _MinePageState extends State<MinePage> {
           children: List.generate(itemList.length, (index) {
             var item = itemList[index];
             return Container(
-              height: 50,
+              height: 90.w,
               width: double.infinity,
-              margin: EdgeInsets.all(5),
+              margin: EdgeInsets.all(5.w),
               decoration: BoxDecoration(
                 color: Colors.blue, // Container的背景色
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(10.r),
               ),
               child: Row(
                 children: [

@@ -3,8 +3,10 @@ import 'package:downloaderx/pages/DownloadPage.dart';
 import 'package:downloaderx/pages/HomePage.dart';
 import 'package:downloaderx/pages/MinePage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
+  await ScreenUtil.ensureScreenSize();
   runApp(const MyApp());
 }
 
@@ -13,6 +15,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context);
     return MaterialApp(
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -47,6 +50,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context, designSize: const Size(750, 1378));
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: IndexedStack(
@@ -61,7 +65,7 @@ class _MainPageState extends State<MainPage> {
           showLabel: false,
           notchColor: Colors.white,
           removeMargins: false,
-          bottomBarWidth: 200,
+          bottomBarWidth: 200.w,
           durationInMilliSeconds: 300,
           bottomBarItems: const [
             BottomBarItem(

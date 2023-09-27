@@ -6,6 +6,7 @@ import 'package:downloaderx/utils/DownloadUtils.dart';
 import 'package:downloaderx/widget/VideoXWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
@@ -58,19 +59,18 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(
-            height: 20,
+          SizedBox(
+            height: 20.h,
           ),
           Row(
             children: [
               Container(
-                margin: const EdgeInsets.only(
-                    bottom: 15, top: 15, left: 15, right: 15),
+                margin: EdgeInsets.all(30.w),
                 width: MediaQuery.of(context).size.width - 30,
-                height: 48,
+                height: 90.w,
                 decoration: BoxDecoration(
                   color: primaryColor,
-                  borderRadius: BorderRadius.circular(8), // 圆角半径
+                  borderRadius: BorderRadius.circular(8.r), // 圆角半径
                 ),
                 child: Center(
                   child: TextField(
@@ -79,8 +79,8 @@ class _HomePageState extends State<HomePage> {
                     controller: textController,
                     textInputAction: TextInputAction.done,
                     onSubmitted: (value) => startParse(),
-                    style: const TextStyle(color: Colors.white),
-                    decoration: const InputDecoration(
+                    style: TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
                       hintText: "请输入视频地址",
                       hintStyle: TextStyle(color: Colors.white),
                       border: OutlineInputBorder(borderSide: BorderSide.none),
@@ -89,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide.none,
                       ),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 15),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 15.w),
                     ),
                   ),
                 ),
@@ -101,18 +101,18 @@ class _HomePageState extends State<HomePage> {
             children: [
               InkWell(
                 child: Container(
-                  width: 120,
-                  height: 44,
+                  width: 240.w,
+                  height: 88.w,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: primaryColor,
-                    borderRadius: BorderRadius.circular(8), // 圆角半径
+                    borderRadius: BorderRadius.circular(8.r), // 圆角半径
                   ),
-                  child: const Text(
+                  child:  Text(
                     "粘贴",
                     style: TextStyle(
                         color: Colors.white,
-                        fontSize: 14,
+                        fontSize: 28.sp,
                         fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -124,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                 width: 20,
               ),
               Container(
-                width: 120,
+                width: 240.w,
                 alignment: Alignment.center,
                 child: isLoading
                     ? const CircularProgressIndicator(
@@ -132,18 +132,18 @@ class _HomePageState extends State<HomePage> {
                       )
                     : InkWell(
                         child: Container(
-                          width: 120,
-                          height: 44,
+                          width: 240.w,
+                          height: 88.w,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             color: primaryColor,
-                            borderRadius: BorderRadius.circular(8), // 圆角半径
+                            borderRadius: BorderRadius.circular(8.r), // 圆角半径
                           ),
-                          child: const Text(
+                          child:  Text(
                             "解析视频",
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 14,
+                                fontSize: 28.sp,
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -161,16 +161,16 @@ class _HomePageState extends State<HomePage> {
           //   image: AssetImage('assets/banner.png'),
           // ),
           Container(
-              margin: EdgeInsets.all(15),
+              margin: EdgeInsets.all(30.w),
               child:
                   VideoXWidget(isLoading: isLoading, controller: _controller)),
 
           Container(
-            height: 85,
-            margin: const EdgeInsets.all(15),
+            height: 170.w,
+            margin:  EdgeInsets.all(15.r),
             child: GridView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              physics:  NeverScrollableScrollPhysics(),
+              gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   crossAxisSpacing: 5,
                   mainAxisSpacing: 5,
@@ -184,7 +184,7 @@ class _HomePageState extends State<HomePage> {
           isDownloading
               ? Container(
                   child: CircularPercentIndicator(
-                  radius: 35.0,
+                  radius: 35.0.r,
                   lineWidth: 4.0,
                   percent: percent,
                   backgroundColor: primaryColor,
@@ -196,12 +196,12 @@ class _HomePageState extends State<HomePage> {
                 ))
               : InkWell(
                   child: Container(
-                    width: 70,
-                    height: 70,
+                    width: 140.w,
+                    height: 140.w,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        gradient: const LinearGradient(
+                        borderRadius: BorderRadius.circular(100.r),
+                        gradient:  LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
@@ -213,7 +213,7 @@ class _HomePageState extends State<HomePage> {
                       "下载",
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: 14,
+                          fontSize: 28.sp,
                           fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -252,12 +252,12 @@ class _HomePageState extends State<HomePage> {
               Text(
                 info.label,
                 style: TextStyle(
-                    fontSize: 10,
+                    fontSize: 20.sp,
                     color: currentIndex == index ? Colors.white : Colors.black),
               ),
               Text(info.size,
                   style: TextStyle(
-                      fontSize: 10,
+                      fontSize: 20.sp,
                       color:
                           currentIndex == index ? Colors.white : Colors.black))
             ]),
