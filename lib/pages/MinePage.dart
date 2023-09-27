@@ -1,6 +1,9 @@
 import 'package:downloaderx/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+
+import '../data/DbManager.dart';
 
 class MinePage extends StatefulWidget {
   const MinePage({super.key});
@@ -14,29 +17,43 @@ class _MinePageState extends State<MinePage> {
     {
       "icon": "",
       "title": "使用教程",
-      "": "",
+      "type": 0,
     },
     {
       "icon": "",
       "title": "分享好友",
-      "": "",
+      "type": 1,
     },
     {
       "icon": "",
       "title": "清除缓存",
-      "": "",
+      "type": 2,
     },
     {
       "icon": "",
       "title": "设置",
-      "": "",
+      "type": 3,
     },
     {
       "icon": "",
       "title": "版本信息",
-      "": "",
+      "type": 4,
     },
   ];
+
+  var versionName = "";
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      PackageInfo.fromPlatform().then((value) {
+        setState(() {
+          versionName = value.version;
+        });
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +66,7 @@ class _MinePageState extends State<MinePage> {
             left: 0,
             right: 0,
             child: Container(
-              // width: double.infinity,
+              width: double.infinity,
               height: 400.w,
               decoration: BoxDecoration(
                 color: primaryColor,
@@ -67,29 +84,45 @@ class _MinePageState extends State<MinePage> {
                     elevation: 5,
                     margin: EdgeInsets.fromLTRB(30.w, 30.w, 30.w, 0),
                     shadowColor: primaryColor,
-                    child: Container(
-                      height: 100.w,
-                      padding: EdgeInsets.fromLTRB(30.w, 0, 30.w, 0),
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: primaryColor.withAlpha(200),
-                        borderRadius: BorderRadius.circular(20.r),
-                      ),
-                      child: Row(
-                        children: [
-                          // Image(image: image),
-                          Icon(
-                            Icons.settings,
-                            color: Colors.white,
-                          ),
-                          SizedBox(
-                            width: 30.w,
-                          ),
-                          Text(
-                            item['title'],
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ],
+                    child: InkWell(
+                      onTap: () {
+                        onItemClick(item['type']);
+                      },
+                      child: Container(
+                        height: 100.w,
+                        padding: EdgeInsets.fromLTRB(30.w, 0, 30.w, 0),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: primaryColor.withAlpha(200),
+                          borderRadius: BorderRadius.circular(20.r),
+                        ),
+                        child: Row(
+                          children: [
+                            // Image(image: image),
+                            Icon(
+                              Icons.settings,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: 30.w,
+                            ),
+                            Text(
+                              item['title'],
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            Flexible(
+                              flex: 1,
+                              child: Container(),
+                            ),
+                            Visibility(
+                              visible: item['type'] == 4,
+                              child: Text(
+                                versionName,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );
@@ -100,5 +133,14 @@ class _MinePageState extends State<MinePage> {
         ],
       ),
     );
+  }
+
+  void onItemClick(int type) {
+    if (type == 0) {
+    } else if (type == 1) {
+    } else if (type == 2) {
+      DbManager.db!.clear();
+    } else if (type == 3) {
+    } else if (type == 4) {}
   }
 }

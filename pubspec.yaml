@@ -48,6 +48,8 @@ dependencies:
   flutter_screenutil: ^5.9.0
   shimmer: ^3.0.0
   cached_network_image: ^3.3.0
+  package_info_plus: ^4.1.0
+  url_launcher: ^6.1.11
 
 dev_dependencies:
   flutter_test:
