@@ -1,4 +1,5 @@
 import 'package:downloaderx/constants/colors.dart';
+import 'package:downloaderx/plugin/method_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -138,9 +139,13 @@ class _MinePageState extends State<MinePage> {
   void onItemClick(int type) {
     if (type == 0) {
     } else if (type == 1) {
+      MethodPlugin.sikpPlay();
     } else if (type == 2) {
       DbManager.db!.clear();
     } else if (type == 3) {
-    } else if (type == 4) {}
+
+    } else if (type == 4) {
+
+    }
   }
 }
