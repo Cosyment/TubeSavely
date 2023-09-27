@@ -59,8 +59,7 @@ class _DownloadPageState extends State<DownloadPage> {
                     child: Row(
                       children: [
                         CachedNetworkImage(
-                          imageUrl: "https://zimg.zchd.top/farm/a.png",
-                          // imageUrl: info.cover,
+                          imageUrl: info.cover,
                           width: 240.w,
                           height: 320.w,
                           imageBuilder: (context, imageProvider) {
