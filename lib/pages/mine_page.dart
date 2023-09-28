@@ -4,11 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../constants/colors.dart';
-import '../data/db_manager.dart';
 import '../plugin/method_plugin.dart';
 import '../utils/event_bus.dart';
+import 'app.dart';
 import 'login_page.dart';
-import 'scrawl/watermark_page.dart';
 import 'setting_page.dart';
 
 class MinePage extends StatefulWidget {
@@ -177,6 +176,9 @@ class _MinePageState extends State<MinePage> {
 
   void onItemClick(int type) {
     if (type == 0) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const ChewieDemo()));
+
     } else if (type == 1) {
       MethodPlugin.sikpPlay();
     } else if (type == 2) {
@@ -185,12 +187,11 @@ class _MinePageState extends State<MinePage> {
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => const SettingPage()));
     } else if (type == 4) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const ScrawlPage()));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const ScrawlPage()));
 
       // Navigator.push(context,
       //     MaterialPageRoute(builder: (context) => const WatermarkPage()));
-
     }
   }
 }

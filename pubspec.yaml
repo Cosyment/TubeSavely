@@ -42,6 +42,7 @@ dependencies:
   path_provider: ^2.1.0
   image_gallery_saver: ^2.0.3
   video_player: ^2.7.2
+  chewie: ^1.7.1
   simple_database: ^2.0.1
   percent_indicator: ^4.2.3
   intl: ^0.18.1

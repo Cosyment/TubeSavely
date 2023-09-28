@@ -6,7 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class MethodPlugin {
   static const MethodChannel _channel =
-      MethodChannel('com.xhx.woodenfishs/plugin');
+      MethodChannel('com.xhx.downloaderx/plugin');
 
   static void share() {
     _channel.invokeMethod('share');

@@ -43,36 +43,37 @@ class _ScrawlState extends State<ScrawlPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Container(
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: Container(
-                  color: Colors.white,
-                  margin: EdgeInsets.all(12.0),
-                  child: RepaintBoundary(
-                    key: _repaintKey,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: <Widget>[
-                        (imageFile == null)
-                            ? Image.asset('assets/images/Background.png')
-                            : Image.file(imageFile!),
-                        Positioned(
-                          child: _buildCanvas(),
-                          top: 0.0,
-                          bottom: 0.0,
-                          left: 0.0,
-                          right: 0.0,
-                        ),
-                      ],
-                    ),
+        appBar: AppBar(
+          title: Text("涂鸦"),
+        ),
+        body: Column(
+          children: <Widget>[
+            Expanded(
+              child: Container(
+                color: Colors.white,
+                margin: EdgeInsets.all(12.0),
+                child: RepaintBoundary(
+                  key: _repaintKey,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: <Widget>[
+                      (imageFile == null)
+                          ? Image.asset('assets/images/Background.png')
+                          : Image.file(imageFile!),
+                      Positioned(
+                        child: _buildCanvas(),
+                        top: 0.0,
+                        bottom: 0.0,
+                        left: 0.0,
+                        right: 0.0,
+                      ),
+                    ],
                   ),
                 ),
               ),
-              _buildBottom(),
-            ],
-          ),
+            ),
+            _buildBottom(),
+          ],
         ),
       ),
     );

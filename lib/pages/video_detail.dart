@@ -1,3 +1,4 @@
+import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,7 +6,7 @@ import 'package:video_player/video_player.dart';
 
 import '../constants/colors.dart';
 import '../data/video_parse.dart';
-import '../widget/video_x_widget.dart';
+import '../utils/download_utils.dart';
 
 class VideoDetail extends StatefulWidget {
   final VideoParse bean;
@@ -19,6 +20,9 @@ class VideoDetail extends StatefulWidget {
 class _VideoDetailState extends State<VideoDetail> {
   VideoPlayerController? _controller;
 
+  ChewieController? _chewieController;
+  int? bufferDelay;
+
   @override
   void initState() {
     super.initState();
@@ -31,6 +35,17 @@ class _VideoDetailState extends State<VideoDetail> {
           setState(() {});
         });
       });
+    _chewieController = ChewieController(
+      videoPlayerController: _controller!,
+      aspectRatio: 16 / 9,
+      autoPlay: true,
+      looping: true,
+      hideControlsTimer: const Duration(seconds: 3),
+      // customControls: Container(
+      //   color: Colors.blueAccent,
+      //   child: Text("sss"),
+      // ),
+    );
   }
 
   @override
@@ -46,10 +61,52 @@ class _VideoDetailState extends State<VideoDetail> {
         body: Column(
           children: [
             Container(
-                margin: EdgeInsets.all(30.w),
-                child:
-                    VideoXWidget(isLoading: false, controller: _controller!!)),
-            Text('封面下载')
+              margin: EdgeInsets.all(30.w),
+              height: 400.w,
+              child: Center(
+                child: _chewieController != null &&
+                        _chewieController!
+                            .videoPlayerController.value.isInitialized
+                    ? Chewie(
+                        controller: _chewieController!,
+                      )
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(),
+                          SizedBox(height: 20),
+                          Text('Loading'),
+                        ],
+                      ),
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                DownloadUtils.downloadVideo(widget.bean.cover, "png", 0, null);
+              },
+              child: Container(
+                width: 140.w,
+                height: 140.w,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100.r),
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Color(0xFFFC6AEC),
+                        Color(0xFF7776FF),
+                      ],
+                    )),
+                child: Text(
+                  '封面下载',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 28.sp,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            )
           ],
         ));
   }
@@ -57,6 +114,7 @@ class _VideoDetailState extends State<VideoDetail> {
   @override
   void dispose() {
     _controller!.dispose();
+    _chewieController!.dispose();
     super.dispose();
   }
 }
