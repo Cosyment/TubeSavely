@@ -82,7 +82,7 @@ class _VideoDetailState extends State<VideoDetail> {
             ),
             InkWell(
               onTap: () {
-                DownloadUtils.downloadVideo(widget.bean.cover, "png", 0, null);
+                DownloadUtils.downloadVideo(widget.bean.cover, null);
               },
               child: Container(
                 width: 140.w,

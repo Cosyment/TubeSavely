@@ -17,6 +17,11 @@ class VideoXWidget extends StatefulWidget {
 
 class _VideoXWidgetState extends State<VideoXWidget> {
   @override
+  void initState() {
+    super.initState();
+
+  }
+  @override
   Widget build(BuildContext context) {
     return Container(
       height: 180,

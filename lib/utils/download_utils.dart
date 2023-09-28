@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -7,16 +8,21 @@ import 'platform_utils.dart';
 typedef ProgressCallback = void Function(double progress);
 
 class DownloadUtils {
-  static Future<bool> downloadVideo(String url, String mediaType,
-      int totalBytes, ProgressCallback? callback) async {
-    var fileName = "${DateTime.now().millisecondsSinceEpoch}.$mediaType";
+  static Future<bool> downloadVideo(
+      String url, ProgressCallback? callback) async {
+    int lastDotIndex = url.lastIndexOf(".");
+    String mediaType = url.substring(lastDotIndex);
+    var fileName = "${DateTime.now().millisecondsSinceEpoch}$mediaType";
+    print('fileName>>>>>>>>>>>: ${fileName}');
     try {
       final response = await HttpClient().getUrl(Uri.parse(url));
       final httpClientResponse = await response.close();
 
       final Directory tempDir = await getTemporaryDirectory();
       String appDocPath = tempDir.path;
-      print('Success to load appDocPath>>>>>>>>>>>>: ${appDocPath}');
+      int totalBytes = httpClientResponse.contentLength;
+      print(
+          'Success to load appDocPath>>>>>>>>>>>>: ${appDocPath}  contentLength=${httpClientResponse.contentLength}');
       File file = File('$appDocPath/$fileName');
       var fileStream = file.openWrite();
       var receivedBytes = 0;
@@ -25,7 +31,7 @@ class DownloadUtils {
         receivedBytes += data.length;
         String progress = (receivedBytes / totalBytes).toStringAsFixed(2);
         print(
-            'Download Progress: ${(progress)}%>>>>>>>>>>${receivedBytes}>>>>>${totalBytes}');
+            'Download Progress: ${(progress)}>>>>>>>>>>${receivedBytes}>>>>>${totalBytes}');
         if (callback != null) {
           callback(double.parse(progress));
         }
