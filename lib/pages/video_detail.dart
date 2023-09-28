@@ -47,9 +47,16 @@ class _VideoDetailState extends State<VideoDetail> {
           children: [
             Container(
                 margin: EdgeInsets.all(30.w),
-                child: VideoXWidget(isLoading: false, controller: _controller!!)),
+                child:
+                    VideoXWidget(isLoading: false, controller: _controller!!)),
             Text('封面下载')
           ],
         ));
+  }
+
+  @override
+  void dispose() {
+    _controller!.dispose();
+    super.dispose();
   }
 }

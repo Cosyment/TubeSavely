@@ -4,8 +4,8 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/rendering.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
-
 
 final String scrawlImagePath = '/screen_shot_scraw.png';
 
@@ -19,6 +19,20 @@ Future<File?> getScreenShotFile() async {
 
 Future saveScreenShot2SDCard(RenderRepaintBoundary boundary,
     {Function? success, Function? fail}) async {
+  capturePng2List(boundary).then((uint8List) async {
+    await getTemporaryDirectory();
+    capturePng2List(boundary).then((uint8List) async {
+      if (uint8List.isEmpty) {
+        if (fail != null) fail();
+        return;
+      }
+      Directory tempDir = await getTemporaryDirectory();
+      _saveImage(uint8List, Directory('${tempDir.path}/flutter_ui'),
+          '/screen_shot_scraw_${DateTime.now()}.png',
+          success: success, fail: fail);
+    });
+  });
+
   // check storage permission.
 //   PermissionHandler().requestPermissions([PermissionGroup.storage]).then((map) {
 //     if (map[PermissionGroup.storage] == PermissionStatus.granted) {
@@ -61,8 +75,11 @@ void _saveImage(Uint8List uint8List, Directory dir, String fileName,
   File image = File(tempPath);
   bool isExist = await image.exists();
   if (isExist) await image.delete();
-  File(tempPath).writeAsBytes(uint8List).then((_) {
-    if (success != null) success();
+  File(tempPath).writeAsBytes(uint8List).then((_) async {
+    if (success != null) {
+      await ImageGallerySaver.saveImage(uint8List, quality: 100);
+      success();
+    }
   });
 }
 

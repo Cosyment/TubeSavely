@@ -5,11 +5,10 @@ import 'file_utils.dart';
 import 'scrawl_painter.dart';
 
 class ScrawlPage extends StatefulWidget {
-
   const ScrawlPage({super.key});
+
   @override
   State<StatefulWidget> createState() => _ScrawlState();
-
 }
 
 class _ScrawlState extends State<ScrawlPage> {
@@ -222,13 +221,15 @@ class _ScrawlState extends State<ScrawlPage> {
             GestureDetector(
               child: Text('save'),
               onTap: () {
-                RenderObject? boundary =
-                    _repaintKey.currentContext!.findRenderObject();
-                // saveScreenShot2SDCard(boundary, success: () {
-                //   showToast('save success!');
-                // }, fail: () {
-                //   showToast('save fail!');
-                // });
+                RenderRepaintBoundary? boundary = _repaintKey.currentContext!
+                    .findRenderObject() as RenderRepaintBoundary;
+                saveScreenShot2SDCard(boundary, success: () {
+                  // showToast('save success!');
+                  print("object");
+                }, fail: () {
+                  print("object");
+                  // showToast('save fail!');
+                });
               },
             ),
           ],
