@@ -2,6 +2,7 @@ import 'package:downloaderx/pages/scrawl/scrawl_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
 import '../constants/colors.dart';
 import '../plugin/method_plugin.dart';
@@ -174,11 +175,10 @@ class _MinePageState extends State<MinePage> {
     );
   }
 
-  void onItemClick(int type) {
+  void onItemClick(int type) async {
     if (type == 0) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const ChewieDemo()));
-
     } else if (type == 1) {
       MethodPlugin.sikpPlay();
     } else if (type == 2) {
@@ -187,9 +187,11 @@ class _MinePageState extends State<MinePage> {
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => const SettingPage()));
     } else if (type == 4) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const ScrawlPage()));
+      // Navigator.push(
+      //     context, MaterialPageRoute(builder: (context) => const ScrawlPage()));
 
+      final List<AssetEntity>? result = await AssetPicker.pickAssets(context,
+          pickerConfig: AssetPickerConfig(maxAssets: 1));
       // Navigator.push(context,
       //     MaterialPageRoute(builder: (context) => const WatermarkPage()));
     }

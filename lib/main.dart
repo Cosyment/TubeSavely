@@ -4,10 +4,12 @@ import 'package:downloaderx/pages/home_page.dart';
 import 'package:downloaderx/pages/mine_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
 void main() async {
   await ScreenUtil.ensureScreenSize();
   runApp(const MyApp());
+  AssetPicker.registerObserve();
 }
 
 class MyApp extends StatelessWidget {
