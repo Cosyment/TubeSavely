@@ -158,12 +158,14 @@ class _HomePageState extends State<HomePage> {
               ? Column(
                   children: [
                     SizedBox(
-                      height: 20,
+                      height: 20.h,
                     ),
                     const Text("海外平台需要网络环境支持", style: TextStyle(fontSize: 12)),
                   ],
                 )
-              : Spacer(),
+              : SizedBox(
+                  height: 0,
+                ),
           videoList.length > 0
               ? Container(
                   margin: EdgeInsets.all(30.w),
@@ -174,7 +176,7 @@ class _HomePageState extends State<HomePage> {
           videoList.length > 0
               ? Container(
                   height: 170.w,
-                  margin: EdgeInsets.all(15.r),
+                  margin: EdgeInsets.all(20.w),
                   child: GridView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     gridDelegate:
