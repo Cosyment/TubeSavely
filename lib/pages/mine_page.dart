@@ -1,3 +1,4 @@
+import 'package:downloaderx/pages/scrawl/scrawl_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -7,6 +8,7 @@ import '../data/db_manager.dart';
 import '../plugin/method_plugin.dart';
 import '../utils/event_bus.dart';
 import 'login_page.dart';
+import 'scrawl/watermark_page.dart';
 import 'setting_page.dart';
 
 class MinePage extends StatefulWidget {
@@ -182,6 +184,13 @@ class _MinePageState extends State<MinePage> {
     } else if (type == 3) {
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => const SettingPage()));
-    } else if (type == 4) {}
+    } else if (type == 4) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const ScrawlPage()));
+
+      // Navigator.push(context,
+      //     MaterialPageRoute(builder: (context) => const WatermarkPage()));
+
+    }
   }
 }
