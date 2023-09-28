@@ -10,10 +10,6 @@ typedef ProgressCallback = void Function(double progress);
 class DownloadUtils {
   static Future<bool> downloadVideo(
       String url, ProgressCallback? callback) async {
-    int lastDotIndex = url.lastIndexOf(".");
-    String mediaType = url.substring(lastDotIndex);
-    var fileName = "${DateTime.now().millisecondsSinceEpoch}$mediaType";
-    print('fileName>>>>>>>>>>>: ${fileName}');
     try {
       final response = await HttpClient().getUrl(Uri.parse(url));
       final httpClientResponse = await response.close();
@@ -21,8 +17,14 @@ class DownloadUtils {
       final Directory tempDir = await getTemporaryDirectory();
       String appDocPath = tempDir.path;
       int totalBytes = httpClientResponse.contentLength;
+      String contentType = httpClientResponse.headers.contentType!.mimeType;
+      // int lastDotIndex = url.lastIndexOf(".");
+      // String mediaType = url.substring(lastDotIndex);
+      String mediaType =
+          contentType.substring(contentType.lastIndexOf("/") + 1);
+      var fileName = "${DateTime.now().millisecondsSinceEpoch}.$mediaType";
       print(
-          'Success to load appDocPath>>>>>>>>>>>>: ${appDocPath}  contentLength=${httpClientResponse.contentLength}');
+          'Success to load appDocPath>>>>>>>>>>>>: ${appDocPath}  contentLength=${httpClientResponse.contentLength}   contentType==${contentType}');
       File file = File('$appDocPath/$fileName');
       var fileStream = file.openWrite();
       var receivedBytes = 0;

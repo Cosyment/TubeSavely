@@ -1,5 +1,4 @@
 import 'package:downloaderx/constants/colors.dart';
-import 'package:downloaderx/data/db_manager.dart';
 import 'package:downloaderx/utils/download_utils.dart';
 import 'package:downloaderx/utils/parse/youtobe.dart';
 import 'package:downloaderx/widget/video_x_widget.dart';
@@ -8,12 +7,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:video_player/video_player.dart';
-import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
-import '../data/video_parse.dart';
-import '../models/cover_info.dart';
 import '../models/video_info.dart';
-import '../utils/event_bus.dart';
+import '../utils/parse/other.dart';
 import '../widget/video_label_item.dart';
 
 class HomePage extends StatefulWidget {
@@ -25,7 +21,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final TextEditingController textController = TextEditingController(
-      text: 'https://www.youtube.com/watch?v=Ek1QD7AH9XQ');
+      text:
+          'https://v.douyin.com/ieccTV51/'); //https://www.youtube.com/watch?v=Ek1QD7AH9XQ
   List<VideoInfo> videoList = [];
   VideoPlayerController _controller = VideoPlayerController.asset('')
     ..initialize().then((_) {});
@@ -33,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   bool isDownloading = false;
   double percent = 0.0;
   int currentIndex = 0;
+  bool isNeedVPN = false;
 
   @override
   void initState() {
@@ -156,6 +154,16 @@ class _HomePageState extends State<HomePage> {
           //   height: 140,
           //   image: AssetImage('assets/banner.png'),
           // ),
+          isNeedVPN
+              ? Column(
+                  children: [
+                    SizedBox(
+                      height: 20,
+                    ),
+                    const Text("海外平台需要网络环境支持", style: TextStyle(fontSize: 12)),
+                  ],
+                )
+              : Spacer(),
           videoList.length > 0
               ? Container(
                   margin: EdgeInsets.all(30.w),
@@ -245,27 +253,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> startParse() async {
-    setState(() {
-      videoList.clear();
-      isLoading = true;
-    });
     try {
-      YouToBe.get().parse(textController.text, (result) {
-        if (result.isNotEmpty) {
-          videoList = result;
-          _controller = VideoPlayerController.networkUrl(
-            Uri.parse(result[0].url),
-            videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
-          )..initialize().then((_) {
-              _controller.play();
-              isLoading = false;
-              _controller.addListener(() {
-                setState(() {});
-              });
-              setState(() {});
-            });
-          setState(() {});
-        }
+      if (textController.text.startsWith("https://www.youtube.com")) {
+        isNeedVPN = true;
+        YouToBe.get().parse(textController.text, onResult);
+      } else {
+        isNeedVPN = false;
+        Other.get().parse(textController.text, onResult);
+      }
+      setState(() {
+        videoList.clear();
+        isLoading = true;
       });
     } catch (e) {
       print(">>>>>>>>>>>>>>>${e}");
@@ -284,6 +282,24 @@ class _HomePageState extends State<HomePage> {
 // await fileStream.close();
 // final result = await ImageGallerySaver.saveFile(file.path);
 // print('result>>>>>>>>>>>>: ${result}');
+  }
+
+  void onResult(result) {
+    if (result.isNotEmpty) {
+      videoList = result;
+      _controller = VideoPlayerController.networkUrl(
+        Uri.parse(result[0].url),
+        videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
+      )..initialize().then((_) {
+          _controller.play();
+          isLoading = false;
+          _controller.addListener(() {
+            setState(() {});
+          });
+          setState(() {});
+        });
+      setState(() {});
+    }
   }
 
   void pasteText() async {

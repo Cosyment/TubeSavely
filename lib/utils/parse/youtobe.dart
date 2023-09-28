@@ -26,8 +26,7 @@ class YouToBe {
       String parseUrl, Function(List<VideoInfo>) onResult) async {
     List<VideoInfo> videoList = [];
     if (parseUrl.contains("https://www.youtube.com/live")) {
-      var manifest = await yt.videos.streamsClient.getManifest(parseUrl);
-      print(">>>>>>>>>>>>>>${manifest}");
+      onResult(videoList);
     } else {
       var video = await yt.videos.get(parseUrl);
       var thumbnails = video?.watchPage?.playerResponse?.root['videoDetails']
