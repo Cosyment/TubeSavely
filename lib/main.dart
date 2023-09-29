@@ -22,6 +22,18 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
+        // scaffoldBackgroundColor: Colors.black,
+        appBarTheme: AppBarTheme(
+          centerTitle: true,
+          color: Colors.black,
+          iconTheme: const IconThemeData(
+            color: Colors.white, // 设置AppBar返回按钮的颜色为红色
+          ),
+          titleTextStyle: TextStyle(
+            color: Colors.white,
+            fontSize: 24.sp,
+          ),
+        ),
       ),
       home: const MainPage(),
     );

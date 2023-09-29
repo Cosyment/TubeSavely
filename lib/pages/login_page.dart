@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../constants/colors.dart';
 import '../widget/primary_button.dart';
 
 class LoginPage extends StatefulWidget {
@@ -15,6 +16,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: primaryColor,
         title: Text("登录"),
       ),
       body: Container(
@@ -40,7 +42,6 @@ class _LoginPageState extends State<LoginPage> {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-
               SizedBox(height: 193.w),
               Text(
                 "Email",

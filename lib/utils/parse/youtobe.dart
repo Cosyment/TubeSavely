@@ -23,7 +23,7 @@ class YouToBe {
   }
 
   Future<void> parse(
-      String parseUrl, Function(List<VideoInfo>) onResult) async {
+      String parseUrl, Function onResult) async {
     List<VideoInfo> videoList = [];
     if (parseUrl.contains("https://www.youtube.com/live")) {
       onResult(videoList);
@@ -117,7 +117,7 @@ class YouToBe {
           totalBytes: info.size.totalBytes,
           cover: coverInfoList.last.url,
           videoList: videoList);
-      onResult(videoList);
+      onResult(videoParse);
       EventBus.getDefault().post(videoParse);
       DbManager.instance().add(videoParse);
     }

@@ -61,7 +61,6 @@ class _VideoDetailState extends State<VideoDetail> {
           backgroundColor: primaryColor,
           title: const Text(
             "详情",
-            style: TextStyle(color: Colors.white),
           ),
         ),
         body: Column(

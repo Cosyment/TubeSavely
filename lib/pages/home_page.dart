@@ -12,6 +12,7 @@ import 'package:video_player/video_player.dart';
 import '../models/video_info.dart';
 import '../utils/parse/other.dart';
 import '../widget/video_label_item.dart';
+import 'video_detail.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -181,34 +182,32 @@ class _HomePageState extends State<HomePage> {
 
   Row titleWidget() {
     return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                margin: EdgeInsets.all(20.w),
-                child: Text(
-                  "支持提取的视频平台",
-                  style: TextStyle(fontSize: 28.sp),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.all(20.w),
-                padding: EdgeInsets.symmetric(
-                  horizontal: 10.w,
-                ),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(
-                        color: Colors.grey,
-                        style: BorderStyle.solid,
-                        width: 1.w),
-                    borderRadius: BorderRadius.all(Radius.circular(20.r))),
-                child: Text(
-                  "免费试用",
-                  style: TextStyle(color: Colors.grey, fontSize: 20.sp),
-                ),
-              ),
-            ],
-          );
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Container(
+          margin: EdgeInsets.all(20.w),
+          child: Text(
+            "支持提取的视频平台",
+            style: TextStyle(fontSize: 28.sp),
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.all(20.w),
+          padding: EdgeInsets.symmetric(
+            horizontal: 10.w,
+          ),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                  color: Colors.grey, style: BorderStyle.solid, width: 1.w),
+              borderRadius: BorderRadius.all(Radius.circular(20.r))),
+          child: Text(
+            "免费试用",
+            style: TextStyle(color: Colors.grey, fontSize: 20.sp),
+          ),
+        ),
+      ],
+    );
   }
 
   Row buildRow() {
@@ -372,21 +371,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   void onResult(result) {
-    if (result.isNotEmpty) {
-      videoList = result;
-      _controller = VideoPlayerController.networkUrl(
-        Uri.parse(result[0].url),
-        videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
-      )..initialize().then((_) {
-          _controller.play();
-          isLoading = false;
-          _controller.addListener(() {
-            setState(() {});
-          });
-          setState(() {});
-        });
-      setState(() {});
+    if (result != null) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => VideoDetail(bean: result)));
     }
+    isLoading = false;
+    setState(() {});
   }
 
   void pasteText() async {

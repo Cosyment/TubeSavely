@@ -23,8 +23,7 @@ class Other {
     http.close();
   }
 
-  Future<void> parse(
-      String parseUrl, Function(List<VideoInfo>) onResult) async {
+  Future<void> parse(String parseUrl, Function onResult) async {
     List<VideoInfo> videoList = [];
     Uri uri = Uri.parse('https://tenapi.cn/v2/video?url=${parseUrl}');
     HttpClientRequest request = await http.getUrl(uri);
@@ -41,7 +40,10 @@ class Other {
           totalBytes: 0,
           url: data['url']));
       videoList.add(VideoInfo(
-          label: '封面(高清)', size: '${(0.1 + Random().nextDouble() * (0.5)).toStringAsFixed(2)}M', totalBytes: 0, url: data['cover']));
+          label: '封面(高清)',
+          size: '${(0.1 + Random().nextDouble() * (0.5)).toStringAsFixed(2)}M',
+          totalBytes: 0,
+          url: data['cover']));
       var videoParse = VideoParse(
           videoUrl: data['url'],
           parseUrl: parseUrl,
@@ -54,7 +56,7 @@ class Other {
           videoList: videoList);
       EventBus.getDefault().post(videoParse);
       DbManager.instance().add(videoParse);
+      onResult(videoParse);
     }
-    onResult(videoList);
   }
 }
