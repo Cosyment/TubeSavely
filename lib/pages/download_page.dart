@@ -9,7 +9,6 @@ import 'package:shimmer/shimmer.dart';
 import '../constants/colors.dart';
 import '../data/db_manager.dart';
 import '../utils/event_bus.dart';
-import '../widget/shimmer_image_widget.dart';
 
 class DownloadPage extends StatefulWidget {
   const DownloadPage({Key? key}) : super(key: key);
@@ -65,7 +64,9 @@ class _DownloadPageState extends State<DownloadPage> {
             onRefresh: _refreshItems,
             child: Container(
               color: bgColor,
+              height: double.infinity,
               child: ListView.builder(
+                shrinkWrap: true,
                 itemCount: dataList.length,
                 itemBuilder: (BuildContext context, int index) {
                   var info = dataList[index];

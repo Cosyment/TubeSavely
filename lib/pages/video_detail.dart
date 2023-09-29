@@ -7,6 +7,7 @@ import 'package:video_player/video_player.dart';
 import '../constants/colors.dart';
 import '../data/video_parse.dart';
 import '../utils/download_utils.dart';
+import '../widget/video_label_item.dart';
 
 class VideoDetail extends StatefulWidget {
   final VideoParse bean;
@@ -22,10 +23,15 @@ class _VideoDetailState extends State<VideoDetail> {
 
   ChewieController? _chewieController;
   int? bufferDelay;
+  var videoList = [];
+  var currentIndex = 0;
+
+  bool isDownloading = false;
 
   @override
   void initState() {
     super.initState();
+    videoList = widget.bean.videoList;
     _controller = VideoPlayerController.networkUrl(
       Uri.parse(widget.bean.videoList[0].url ?? ""),
       videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
@@ -80,6 +86,26 @@ class _VideoDetailState extends State<VideoDetail> {
                       ),
               ),
             ),
+            Container(
+              height: 170.w,
+              margin: EdgeInsets.all(20.w),
+              child: GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 5,
+                    mainAxisSpacing: 5,
+                    childAspectRatio: 3.2),
+                itemCount: videoList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return VideoItem(
+                    item: videoList[index],
+                    isSelected: index == currentIndex,
+                    onItemClick: onVideoLabelItemClick,
+                  );
+                },
+              ),
+            ),
             InkWell(
               onTap: () {
                 DownloadUtils.downloadVideo(widget.bean.cover, null);
@@ -109,6 +135,12 @@ class _VideoDetailState extends State<VideoDetail> {
             )
           ],
         ));
+  }
+
+  void onVideoLabelItemClick(item) {
+    currentIndex = videoList.indexOf(item);
+    isDownloading = false;
+    setState(() {});
   }
 
   @override
