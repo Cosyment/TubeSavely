@@ -10,6 +10,7 @@ import '../utils/event_bus.dart';
 import 'app.dart';
 import 'login_page.dart';
 import 'setting_page.dart';
+import 'tutorial_page.dart';
 
 class MinePage extends StatefulWidget {
   const MinePage({super.key});
@@ -177,8 +178,10 @@ class _MinePageState extends State<MinePage> {
 
   void onItemClick(int type) async {
     if (type == 0) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const ChewieDemo()));
+      // Navigator.push(
+      //     context, MaterialPageRoute(builder: (context) => const ChewieDemo()));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const TutorialPage()));
     } else if (type == 1) {
       MethodPlugin.sikpPlay();
     } else if (type == 2) {
