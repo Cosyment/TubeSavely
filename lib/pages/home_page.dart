@@ -342,7 +342,7 @@ class _HomePageState extends State<HomePage> {
           RegExp(r'http[s]?:\/\/[\w.]+[\w/]*[\w.]*\??[\w=&:\-+%]*[/]*')
               .firstMatch(parseUrl);
       var url = match?.group(0) ?? '';
-      if (textController.text.startsWith("https://www.youtube.com")) {
+      if (parseUrl.startsWith("https://www.youtube.com")) {
         isNeedVPN = true;
         YouToBe.get().parse(url, onResult);
       } else {
