@@ -22,8 +22,7 @@ class YouToBe {
     yt.close();
   }
 
-  Future<void> parse(
-      String parseUrl, Function onResult) async {
+  Future<void> parse(String parseUrl, Function onResult) async {
     List<VideoInfo> videoList = [];
     if (parseUrl.contains("https://www.youtube.com/live")) {
       onResult(videoList);
@@ -117,7 +116,7 @@ class YouToBe {
           totalBytes: info.size.totalBytes,
           cover: coverInfoList.last.url,
           videoList: videoList);
-      onResult(videoParse);
+      onResult(videoList);
       EventBus.getDefault().post(videoParse);
       DbManager.instance().add(videoParse);
     }

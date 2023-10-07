@@ -33,6 +33,10 @@ class Other {
     if (responseBody != null && responseBody.length > 0) {
       print(">>>>>>>responseBody>>>>>>>>${responseBody}");
       Map<String, dynamic> res = json.decode(responseBody);
+      if (res['code'] != 200) {
+        onResult(null);
+        return;
+      }
       var data = res['data'];
       videoList.add(VideoInfo(
           label: '视频(高清)',
@@ -56,7 +60,9 @@ class Other {
           videoList: videoList);
       EventBus.getDefault().post(videoParse);
       DbManager.instance().add(videoParse);
-      onResult(videoParse);
+      onResult(videoList);
+    } else {
+      onResult(null);
     }
   }
 }

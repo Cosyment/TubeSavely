@@ -53,7 +53,7 @@ class _DownloadPageState extends State<DownloadPage> {
         appBar: AppBar(
           backgroundColor: primaryColor,
           title: const Text(
-            "下载",
+            "解析记录",
             style: TextStyle(color: Colors.white),
           ),
         ),
@@ -66,7 +66,7 @@ class _DownloadPageState extends State<DownloadPage> {
             slivers: [
               SliverList(
                 delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
+                  (BuildContext context, int index) {
                     var info = dataList[index];
                     return InkWell(
                       onTap: () {
@@ -93,26 +93,25 @@ class _DownloadPageState extends State<DownloadPage> {
                                           image: imageProvider,
                                           fit: BoxFit.cover,
                                         ),
-                                        borderRadius: BorderRadius.circular(
-                                            8.r)),
+                                        borderRadius:
+                                            BorderRadius.circular(8.r)),
                                   );
                                 },
-                                placeholder: (context, url) =>
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(16.r),
-                                      child: Shimmer.fromColors(
-                                        baseColor: Colors.grey.shade300,
-                                        highlightColor: Colors.grey.shade100,
-                                        child: Container(
-                                          child: Image.network(
-                                            info.cover,
-                                            fit: BoxFit.cover,
-                                          ),
-                                          width: 240.w,
-                                          height: 320.w,
-                                        ),
+                                placeholder: (context, url) => ClipRRect(
+                                  borderRadius: BorderRadius.circular(16.r),
+                                  child: Shimmer.fromColors(
+                                    baseColor: Colors.grey.shade300,
+                                    highlightColor: Colors.grey.shade100,
+                                    child: Container(
+                                      child: Image.network(
+                                        info.cover,
+                                        fit: BoxFit.cover,
                                       ),
+                                      width: 240.w,
+                                      height: 320.w,
                                     ),
+                                  ),
+                                ),
                                 errorWidget: (context, url, error) =>
                                     Icon(Icons.error),
                               ),
@@ -123,10 +122,10 @@ class _DownloadPageState extends State<DownloadPage> {
                                 child: Container(
                                   height: 320.w,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
                                       Text(
@@ -150,8 +149,8 @@ class _DownloadPageState extends State<DownloadPage> {
                                           Text(
                                             DateFormat("yyyy-MM-dd HH:mm")
                                                 .format(DateTime
-                                                .fromMillisecondsSinceEpoch(
-                                                info.createTime))
+                                                    .fromMillisecondsSinceEpoch(
+                                                        info.createTime))
                                                 .toString(),
                                             style: TextStyle(
                                               fontSize: 24.sp,

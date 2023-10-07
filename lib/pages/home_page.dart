@@ -24,10 +24,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final TextEditingController textController = TextEditingController(
       text:
-          'https://v.douyin.com/ieccTV51/'); //https://www.youtube.com/watch?v=Ek1QD7AH9XQ
+          'https://www.youtube.com/watch?v=Ek1QD7AH9XQ'); //https://www.youtube.com/watch?v=Ek1QD7AH9XQ
   List<VideoInfo> videoList = [];
-  VideoPlayerController _controller = VideoPlayerController.asset('')
-    ..initialize().then((_) {});
+  late VideoPlayerController _controller;
   bool isLoading = false;
   bool isDownloading = false;
   double percent = 0.0;
@@ -41,7 +40,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 
@@ -58,125 +57,124 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: buildContainer(),
-          ),
-          SliverToBoxAdapter(
-            child: buildRow(),
-          ),
-          SliverToBoxAdapter(
-            child: titleWidget(),
-          ),
-          buildChildLayout(),
-        ],
-      ),
-      //
-      // body: Container(
-      //   color: bgColor,
-      //   height: double.infinity,
-      //   child: Column(
-      //     crossAxisAlignment: CrossAxisAlignment.center,
-      //     children: [
-      //       SizedBox(
-      //         height: 20.h,
-      //       ),
-      //       _pingtaiIcon(),
-      //       buildContainer(),
-      //       buildRow(),
-      //       isNeedVPN
-      //           ? Column(
-      //               children: [
-      //                 SizedBox(
-      //                   height: 20.h,
-      //                 ),
-      //                 const Text("海外平台需要网络环境支持",
-      //                     style: TextStyle(fontSize: 12)),
-      //               ],
-      //             )
-      //           : SizedBox(
-      //               height: 0,
-      //             ),
-      //       videoList.length > 0
-      //           ? Container(
-      //               margin: EdgeInsets.all(30.w),
-      //               child: VideoXWidget(
-      //                   isLoading: isLoading, controller: _controller))
-      //           : Spacer(),
-      //       videoList.length > 0
-      //           ? Container(
-      //               height: 170.w,
-      //               margin: EdgeInsets.all(20.w),
-      //               child: GridView.builder(
-      //                 physics: const NeverScrollableScrollPhysics(),
-      //                 gridDelegate:
-      //                     const SliverGridDelegateWithFixedCrossAxisCount(
-      //                         crossAxisCount: 3,
-      //                         crossAxisSpacing: 5,
-      //                         mainAxisSpacing: 5,
-      //                         childAspectRatio: 3.2),
-      //                 itemCount: videoList.length,
-      //                 itemBuilder: (BuildContext context, int index) {
-      //                   return VideoItem(
-      //                     item: videoList[index],
-      //                     isSelected: index == currentIndex,
-      //                     onItemClick: onVideoLabelItemClick,
-      //                   );
-      //                 },
-      //               ),
-      //             )
-      //           : Spacer(),
-      //       videoList.length > 0
-      //           ? isDownloading
-      //               ? Container(
-      //                   width: 140.w,
-      //                   height: 140.w,
-      //                   child: CircularPercentIndicator(
-      //                     radius: 70.0.r,
-      //                     lineWidth: 4.0,
-      //                     percent: percent,
-      //                     backgroundColor: primaryColor,
-      //                     center: Text(
-      //                       "${(percent * 100).toStringAsFixed(0)}%",
-      //                       style: const TextStyle(color: primaryColor),
-      //                     ),
-      //                     progressColor: progressColor,
-      //                   ))
-      //               : InkWell(
-      //                   child: Container(
-      //                     width: 140.w,
-      //                     height: 140.w,
-      //                     alignment: Alignment.center,
-      //                     decoration: BoxDecoration(
-      //                         borderRadius: BorderRadius.circular(100.r),
-      //                         gradient: LinearGradient(
-      //                           begin: Alignment.topLeft,
-      //                           end: Alignment.bottomRight,
-      //                           colors: [
-      //                             Color(0xFFFC6AEC),
-      //                             Color(0xFF7776FF),
-      //                           ],
-      //                         )),
-      //                     child: Text(
-      //                       "下载",
-      //                       style: TextStyle(
-      //                           color: Colors.white,
-      //                           fontSize: 28.sp,
-      //                           fontWeight: FontWeight.bold),
-      //                     ),
-      //                   ),
-      //                   onTap: () {
-      //                     isDownloading = true;
-      //                     var info = videoList[currentIndex];
-      //                     download(info.url.toString());
-      //                     setState(() {});
-      //                   },
-      //                 )
-      //           : Spacer(),
-      //     ],
-      //   ),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
+      // body: CustomScrollView(
+      //   slivers: [
+      //     SliverToBoxAdapter(
+      //       child: buildContainer(),
+      //     ),
+      //     SliverToBoxAdapter(
+      //       child: buildRow(),
+      //     ),
+      //     SliverToBoxAdapter(
+      //       child: titleWidget(),
+      //     ),
+      //     buildChildLayout(),
+      //   ],
+      // ),
+
+      body: Container(
+        color: bgColor,
+        height: double.infinity,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 20.h,
+            ),
+            buildContainer(),
+            buildRow(),
+            isNeedVPN
+                ? Column(
+                    children: [
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      const Text("海外平台需要网络环境支持",
+                          style: TextStyle(fontSize: 12)),
+                    ],
+                  )
+                : const SizedBox(
+                    height: 0,
+                  ),
+            videoList.length > 0
+                ? Container(
+                    margin: EdgeInsets.all(30.w),
+                    child: VideoXWidget(
+                        isLoading: isLoading, controller: _controller))
+                : Spacer(),
+            videoList.length > 0
+                ? Container(
+                    height: 170.w,
+                    margin: EdgeInsets.all(20.w),
+                    child: GridView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 5,
+                              mainAxisSpacing: 5,
+                              childAspectRatio: 3.2),
+                      itemCount: videoList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return VideoItem(
+                          item: videoList[index],
+                          isSelected: index == currentIndex,
+                          onItemClick: onVideoLabelItemClick,
+                        );
+                      },
+                    ),
+                  )
+                : Spacer(),
+            videoList.length > 0
+                ? isDownloading
+                    ? Container(
+                        width: 140.w,
+                        height: 140.w,
+                        child: CircularPercentIndicator(
+                          radius: 70.0.r,
+                          lineWidth: 4.0,
+                          percent: percent,
+                          backgroundColor: primaryColor,
+                          center: Text(
+                            "${(percent * 100).toStringAsFixed(0)}%",
+                            style: const TextStyle(color: primaryColor),
+                          ),
+                          progressColor: progressColor,
+                        ))
+                    : InkWell(
+                        child: Container(
+                          width: 140.w,
+                          height: 140.w,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100.r),
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  Color(0xFFFC6AEC),
+                                  Color(0xFF7776FF),
+                                ],
+                              )),
+                          child: Text(
+                            "下载",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 28.sp,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        onTap: () {
+                          isDownloading = true;
+                          var info = videoList[currentIndex];
+                          download(info.url.toString());
+                          setState(() {});
+                        },
+                      )
+                : Spacer(),
+          ],
+        ),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 
@@ -340,12 +338,18 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> startParse() async {
     try {
+      var parseUrl = textController.text;
+      Match? match =
+          RegExp(r'http[s]?:\/\/[\w.]+[\w/]*[\w.]*\??[\w=&:\-+%]*[/]*')
+              .firstMatch(parseUrl);
+      var url = match?.group(0) ?? '';
+      print(">>>>>>>>>${url}");
       if (textController.text.startsWith("https://www.youtube.com")) {
         isNeedVPN = true;
-        YouToBe.get().parse(textController.text, onResult);
+        YouToBe.get().parse(url, onResult);
       } else {
         isNeedVPN = false;
-        Other.get().parse(textController.text, onResult);
+        Other.get().parse(url, onResult);
       }
       setState(() {
         videoList.clear();
@@ -371,12 +375,25 @@ class _HomePageState extends State<HomePage> {
   }
 
   void onResult(result) {
-    if (result != null) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => VideoDetail(bean: result)));
-    }
+    // if (result != null) {
+    //   Navigator.push(context,
+    //       MaterialPageRoute(builder: (context) => VideoDetail(bean: result)));
+    // }
     isLoading = false;
     setState(() {});
+    if (result != null) {
+      videoList = result;
+      _controller = VideoPlayerController.networkUrl(
+        Uri.parse(result[0].url),
+        videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
+      )..initialize().then((_) {
+          _controller.play();
+
+          _controller.addListener(() {
+            setState(() {});
+          });
+        });
+    }
   }
 
   void pasteText() async {

@@ -1,3 +1,4 @@
+import 'package:downloaderx/pages/download_page.dart';
 import 'package:downloaderx/pages/scrawl/scrawl_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,29 +23,34 @@ class MinePage extends StatefulWidget {
 class _MinePageState extends State<MinePage> {
   List<dynamic> itemList = [
     {
-      "icon": "",
+      "icon": Icons.description,
       "title": "使用教程",
       "type": 0,
     },
     {
-      "icon": "",
+      "icon": Icons.share,
       "title": "分享好友",
       "type": 1,
     },
     {
-      "icon": "",
+      "icon": Icons.clear,
       "title": "清除缓存",
       "type": 2,
     },
     {
-      "icon": "",
+      "icon": Icons.settings,
       "title": "设置",
       "type": 3,
     },
     {
-      "icon": "",
+      "icon": Icons.verified,
       "title": "版本信息",
       "type": 4,
+    },
+    {
+      "icon": Icons.history,
+      "title": "解析记录",
+      "type": 5,
     },
   ];
 
@@ -142,7 +148,7 @@ class _MinePageState extends State<MinePage> {
                         children: [
                           // Image(image: image),
                           Icon(
-                            Icons.settings,
+                            item['icon'],
                             color: Colors.white,
                           ),
                           SizedBox(
@@ -197,6 +203,9 @@ class _MinePageState extends State<MinePage> {
           pickerConfig: AssetPickerConfig(maxAssets: 1));
       // Navigator.push(context,
       //     MaterialPageRoute(builder: (context) => const WatermarkPage()));
+    } else {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const DownloadPage()));
     }
   }
 }
