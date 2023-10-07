@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
+import 'constants/colors.dart';
+
 void main() async {
   await ScreenUtil.ensureScreenSize();
   runApp(const MyApp());
@@ -25,13 +27,13 @@ class MyApp extends StatelessWidget {
         // scaffoldBackgroundColor: Colors.black,
         appBarTheme: AppBarTheme(
           centerTitle: true,
-          color: Colors.black,
+          color: primaryColor,
           iconTheme: const IconThemeData(
             color: Colors.white, // 设置AppBar返回按钮的颜色为红色
           ),
           titleTextStyle: TextStyle(
             color: Colors.white,
-            fontSize: 24.sp,
+            fontSize: 20.sp,
           ),
         ),
       ),

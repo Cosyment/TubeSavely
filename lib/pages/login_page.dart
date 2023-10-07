@@ -16,7 +16,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: primaryColor,
         title: Text("登录"),
       ),
       body: Container(

@@ -49,7 +49,6 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: primaryColor,
         title: Text(
           "DownloaderX",
           style: TextStyle(
@@ -343,7 +342,6 @@ class _HomePageState extends State<HomePage> {
           RegExp(r'http[s]?:\/\/[\w.]+[\w/]*[\w.]*\??[\w=&:\-+%]*[/]*')
               .firstMatch(parseUrl);
       var url = match?.group(0) ?? '';
-      print(">>>>>>>>>${url}");
       if (textController.text.startsWith("https://www.youtube.com")) {
         isNeedVPN = true;
         YouToBe.get().parse(url, onResult);
@@ -379,8 +377,6 @@ class _HomePageState extends State<HomePage> {
     //   Navigator.push(context,
     //       MaterialPageRoute(builder: (context) => VideoDetail(bean: result)));
     // }
-    isLoading = false;
-    setState(() {});
     if (result != null) {
       videoList = result;
       _controller = VideoPlayerController.networkUrl(
@@ -388,11 +384,14 @@ class _HomePageState extends State<HomePage> {
         videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
       )..initialize().then((_) {
           _controller.play();
-
+          isLoading = false;
           _controller.addListener(() {
             setState(() {});
           });
         });
+    } else {
+      isLoading = false;
+      setState(() {});
     }
   }
 

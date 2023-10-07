@@ -19,7 +19,6 @@ class _TutorialPageState extends State<TutorialPage> {
     screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: primaryColor,
         title: Text(
           "使用教程",
         ),

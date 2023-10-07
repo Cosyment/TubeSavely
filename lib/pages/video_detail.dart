@@ -1,10 +1,8 @@
 import 'package:chewie/chewie.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:video_player/video_player.dart';
 
-import '../constants/colors.dart';
 import '../data/video_parse.dart';
 import '../utils/download_utils.dart';
 import '../widget/video_label_item.dart';
@@ -58,7 +56,6 @@ class _VideoDetailState extends State<VideoDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: primaryColor,
           title: const Text(
             "详情",
           ),
