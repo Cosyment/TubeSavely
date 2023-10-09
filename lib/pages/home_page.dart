@@ -12,7 +12,6 @@ import 'package:video_player/video_player.dart';
 import '../models/video_info.dart';
 import '../utils/parse/other.dart';
 import '../widget/video_label_item.dart';
-import 'video_detail.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -56,128 +55,75 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      // body: CustomScrollView(
-      //   slivers: [
-      //     SliverToBoxAdapter(
-      //       child: buildContainer(),
-      //     ),
-      //     SliverToBoxAdapter(
-      //       child: buildRow(),
-      //     ),
-      //     SliverToBoxAdapter(
-      //       child: titleWidget(),
-      //     ),
-      //     buildChildLayout(),
-      //   ],
-      // ),
-
-      body: Container(
-        color: bgColor,
-        height: double.infinity,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 20.h,
-            ),
-            buildContainer(),
-            buildRow(),
-            isNeedVPN
-                ? Column(
-                    children: [
-                      SizedBox(
-                        height: 20.h,
-                      ),
-                      const Text("海外平台需要网络环境支持",
-                          style: TextStyle(fontSize: 12)),
-                    ],
-                  )
-                : const SizedBox(
-                    height: 0,
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: buildContainer(),
+          ),
+          SliverToBoxAdapter(
+            child: buildRow(),
+          ),
+          SliverToBoxAdapter(
+            child: Visibility(
+              visible: isNeedVPN,
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 20.w),
+                  child: Text(
+                    "海外平台需要网络环境支持",
+                    style: TextStyle(fontSize: 24.sp),
                   ),
-            videoList.length > 0
-                ? Container(
-                    margin: EdgeInsets.all(30.w),
-                    child: VideoXWidget(
-                        isLoading: isLoading, controller: _controller))
-                : Spacer(),
-            videoList.length > 0
-                ? Container(
-                    height: 170.w,
-                    margin: EdgeInsets.all(20.w),
-                    child: GridView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              crossAxisSpacing: 5,
-                              mainAxisSpacing: 5,
-                              childAspectRatio: 3.2),
-                      itemCount: videoList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return VideoItem(
-                          item: videoList[index],
-                          isSelected: index == currentIndex,
-                          onItemClick: onVideoLabelItemClick,
-                        );
-                      },
-                    ),
-                  )
-                : Spacer(),
-            videoList.length > 0
-                ? isDownloading
-                    ? Container(
-                        width: 140.w,
-                        height: 140.w,
-                        child: CircularPercentIndicator(
-                          radius: 70.0.r,
-                          lineWidth: 4.0,
-                          percent: percent,
-                          backgroundColor: primaryColor,
-                          center: Text(
-                            "${(percent * 100).toStringAsFixed(0)}%",
-                            style: const TextStyle(color: primaryColor),
-                          ),
-                          progressColor: progressColor,
-                        ))
-                    : InkWell(
-                        child: Container(
-                          width: 140.w,
-                          height: 140.w,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100.r),
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  Color(0xFFFC6AEC),
-                                  Color(0xFF7776FF),
-                                ],
-                              )),
-                          child: Text(
-                            "下载",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 28.sp,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        onTap: () {
-                          isDownloading = true;
-                          var info = videoList[currentIndex];
-                          download(info.url.toString());
-                          setState(() {});
-                        },
-                      )
-                : Spacer(),
-          ],
-        ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+                ),
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Container(
+              margin: EdgeInsets.all(30.w),
+              child: videoList.isNotEmpty
+                  ? VideoXWidget(
+                      isLoading: isLoading,
+                      controller: _controller,
+                    )
+                  : Container(),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: buildBottom(),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.all(20.w),
+              child: Text(
+                "视频剪辑工具",
+                style: TextStyle(fontSize: 40.sp),
+              ),
+            ),
+          ),
+          SliverGrid(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                mainAxisSpacing: 20.w,
+                crossAxisSpacing: 20.w,
+                childAspectRatio: 3.2),
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                return VideoItem(
+                  item: videoList[index],
+                  isSelected: index == currentIndex,
+                  onItemClick: onVideoLabelItemClick,
+                );
+              },
+              childCount: videoList.length,
+            ),
+          ),
+          buildChildLayout(),
+        ],
+      ),
     );
   }
 
-  Row titleWidget() {
+  titleWidget() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -207,7 +153,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Row buildRow() {
+  buildRow() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -308,23 +254,88 @@ class _HomePageState extends State<HomePage> {
       ),
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          var item = Constant.pingtaiList[index];
+          var item = Constant.meList[index];
           return Container(
             margin: EdgeInsets.all(10.w),
             child: Column(
               children: [
-                Image(
-                  image: AssetImage("assets/images/${item['bg']}"),
-                  width: 100.w,
-                  height: 100.w,
-                  fit: BoxFit.fill,
+                // Image(
+                //   image: AssetImage("assets/images/${item['bg']}"),
+                //   width: 100.w,
+                //   height: 100.w,
+                //   fit: BoxFit.fill,
+                // ),
+                Icon(
+                  item['icon'] as IconData?,
+                  size: 80.w,
                 ),
                 Text(item['title'].toString()),
               ],
             ),
           );
         },
-        childCount: Constant.pingtaiList.length,
+        childCount: Constant.meList.length,
+      ),
+    );
+  }
+
+  buildBottom() {
+    return Container(
+      margin: EdgeInsets.only(bottom: 20.w),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Visibility(
+              visible: videoList.isNotEmpty && !isDownloading,
+              child: InkWell(
+                child: Container(
+                  width: 140.w,
+                  height: 140.w,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100.r),
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Color(0xFFFC6AEC),
+                        Color(0xFF7776FF),
+                      ],
+                    ),
+                  ),
+                  child: Text(
+                    "下载",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 28.sp,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                onTap: () {
+                  isDownloading = true;
+                  var info = videoList[currentIndex];
+                  download(info.url.toString());
+                  setState(() {});
+                },
+              )),
+          Visibility(
+            visible: videoList.isNotEmpty && isDownloading,
+            child: SizedBox(
+                width: 140.w,
+                height: 140.w,
+                child: CircularPercentIndicator(
+                  radius: 70.0.r,
+                  lineWidth: 4.0,
+                  percent: percent,
+                  backgroundColor: primaryColor,
+                  center: Text(
+                    "${(percent * 100).toStringAsFixed(0)}%",
+                    style: const TextStyle(color: primaryColor),
+                  ),
+                  progressColor: progressColor,
+                )),
+          )
+        ],
       ),
     );
   }

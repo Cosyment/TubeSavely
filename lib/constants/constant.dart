@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Constant {
   static const String agreementUrl =
       "https://img.firefix.cn/fish/agreement.html";
@@ -89,6 +91,71 @@ class Constant {
     {
       "content": "开启相册权限后，默认我们会将视频保存在相册里。",
       "title": "解析后的视频保存在什么地方?",
+    },
+  ];
+
+
+
+  static const meList = [
+    {
+      'title': '视频裁剪',
+      'content': '多种比列裁剪',
+      'type': '视频裁剪',
+      'icon': Icons.content_cut,
+    },
+    {
+      'title': '视频倒放',
+      'content': '一键倒放功能',
+      'type': '视频倒放',
+      'icon': Icons.turn_left,
+    },
+    {
+      'title': '视频旋转',
+      'content': '各种角度旋转',
+      'type': '视频旋转',
+      'icon': Icons.crop_rotate,
+    },
+    {
+      'title': '视频变速',
+      'content': '支持视频加速减速',
+      'type': '视频变速',
+      'icon': Icons.speed,
+    },
+    {
+      'title': '视频压缩',
+      'content': '支持质量压缩',
+      'type': '视频压缩',
+      'icon': Icons.compress,
+    },
+    {
+      'title': '视频截图',
+      'content': '生成视频视图',
+      'type': '视频截图',
+      'icon': Icons.screenshot,
+    },
+    {
+      'title': '视频合并',
+      'content': '多个视频合并',
+      'type': '视频合并',
+      'icon': Icons.merge,
+    },
+    {
+      'title': '视频转GIF',
+      'content': '支持各种格式',
+      'type': '视频转GIF',
+      'icon': Icons.gif,
+    },
+    {
+      'title': '视频镜像',
+      'content': '支持多种样式',
+      'type': '视频镜像',
+      'icon': Icons.gif,
+    },
+    {
+      'title': '视频去声音',
+      'content': '去除视频声音',
+      'type': '视频去声音',
+      'icon': Icons.gif,
     },
   ];
 }

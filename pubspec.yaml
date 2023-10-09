@@ -53,6 +53,10 @@ dependencies:
   url_launcher: ^6.1.11
   permission_handler: ^11.0.0
   wechat_assets_picker: ^8.6.3
+  video_editor: ^3.0.0
+  ffmpeg_kit_flutter: ^5.1.0-LTS
+  video_trimmer: ^2.1.0
+  fraction: ^4.1.4
 
 dev_dependencies:
   flutter_test:
