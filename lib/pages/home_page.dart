@@ -262,6 +262,7 @@ class _HomePageState extends State<HomePage> {
               final List<AssetEntity>? result =
                   await AssetPicker.pickAssets(context,
                       pickerConfig: AssetPickerConfig(
+                        themeColor: primaryColor,
                         maxAssets: 1,
                         requestType: item['type'] as RequestType,
                       ));

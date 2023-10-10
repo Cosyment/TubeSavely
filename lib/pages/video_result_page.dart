@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fraction/fraction.dart';
 import 'package:path/path.dart' as path;
 import 'package:video_player/video_player.dart';
+import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
 Future<void> _getImageDimension(File file,
     {required Function(Size) onResult}) async {
@@ -79,7 +80,7 @@ class _VideoResultPageState extends State<VideoResultPage> {
                   ? 1
                   : _fileDimension.aspectRatio,
               child:
-                  _isGif ? Image.file(widget.video) : VideoPlayer(_controller!),
+              _isGif ? Image.file(widget.video) : VideoPlayer(_controller!),
             ),
             Positioned(
               bottom: 0,
@@ -88,13 +89,27 @@ class _VideoResultPageState extends State<VideoResultPage> {
                   'Video path': widget.video.path,
                   if (!_isGif)
                     'Video duration':
-                        '${((_controller?.value.duration.inMilliseconds ?? 0) / 1000).toStringAsFixed(2)}s',
+                    '${((_controller?.value.duration.inMilliseconds ?? 0) /
+                        1000).toStringAsFixed(2)}s',
                   'Video ratio': Fraction.fromDouble(_fileDimension.aspectRatio)
                       .reduce()
                       .toString(),
                   'Video dimension': _fileDimension.toString(),
                   'Video size': _fileMbSize,
                 },
+              ),
+            ),
+            Positioned(
+              top: 0,
+              child: InkWell(
+                onTap: () {
+                  PhotoManager.editor.saveVideo(
+                      widget.video, title: path.basename(widget.video.path),
+                      relativePath: "");
+                },
+                child: Container(
+                  child: Text("保存"),
+                ),
               ),
             ),
           ],
@@ -114,14 +129,18 @@ class FileDescription extends StatelessWidget {
     return DefaultTextStyle(
       style: const TextStyle(fontSize: 11),
       child: Container(
-        width: MediaQuery.of(context).size.width - 60,
+        width: MediaQuery
+            .of(context)
+            .size
+            .width - 60,
         padding: const EdgeInsets.all(10),
         color: Colors.black.withOpacity(0.5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: description.entries
               .map(
-                (entry) => Text.rich(
+                (entry) =>
+                Text.rich(
                   TextSpan(
                     children: [
                       TextSpan(
@@ -138,7 +157,7 @@ class FileDescription extends StatelessWidget {
                     ],
                   ),
                 ),
-              )
+          )
               .toList(),
         ),
       ),

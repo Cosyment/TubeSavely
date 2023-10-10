@@ -33,6 +33,37 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
   late VideoFFmpegVideoEditorConfig config;
   double height = 60;
 
+  var list = [
+    {
+      'title': '标清',
+      'value': '标清',
+      'isSelected': true,
+    },
+    {
+      'title': '高清',
+      'value': '标清',
+      'isSelected': false,
+    },
+    {
+      'title': '超清',
+      'value': '标清',
+      'isSelected': false,
+    },
+  ];
+
+  var listMirror = [
+    {
+      'title': '水平镜像',
+      'value': 'hflip',
+    },
+    {
+      'title': '垂直镜像',
+      'value': 'vflip',
+    },
+  ];
+
+  var selectIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -56,6 +87,10 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
         );
         break;
       case "视频剪辑":
+        viewer = widgetViewer1();
+        config = VideoFFmpegVideoEditorConfig(
+          controller,
+        );
         break;
       case "视频倒放":
         viewer = widgetViewer1();
@@ -68,7 +103,10 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
         );
         break;
       case "视频旋转":
-        viewer = widgetViewer();
+        viewer = widgetViewer1();
+        config = VideoFFmpegVideoEditorConfig(
+          controller,
+        );
         break;
       case "视频变速":
         viewer = widgetViewer1();
@@ -84,8 +122,10 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
         viewer = widgetViewer1();
         break;
       case "视频截图":
+        viewer = widgetViewer();
         break;
       case "视频合并":
+        viewer = widgetViewer();
         break;
       case "视频转GIF":
         viewer = widgetViewer();
@@ -105,6 +145,7 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
         );
         break;
       case "视频去声音":
+        viewer = widgetViewer1();
         config = VideoFFmpegVideoEditorConfig(
           controller,
           commandBuilder: (config, videoPath, outputPath) {
@@ -113,6 +154,7 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
         );
         break;
       case "提取音频":
+        viewer = widgetViewer1();
         config = VideoFFmpegVideoEditorConfig(
           controller,
           commandBuilder: (config, videoPath, outputPath) {
@@ -121,6 +163,7 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
         );
         break;
       case "修改md5":
+        viewer = widgetViewer1();
         config = VideoFFmpegVideoEditorConfig(
           controller,
           commandBuilder: (config, videoPath, outputPath) {
@@ -157,11 +200,21 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
     );
   }
 
+  @override
+  void dispose() {
+    exportingProgress.dispose();
+    isExporting.dispose();
+    controller.dispose();
+    ExportService.dispose();
+    super.dispose();
+  }
+
   widgetType() {
     switch (title) {
       case "视频裁剪":
         return widgetProportionalCrop(context);
       case "视频剪辑":
+        return trimSlider();
       case "视频倒放":
       case "视频旋转":
         return widgetRotate();
@@ -285,33 +338,6 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
 
   var isVideoStatus = true;
 
-  widgetBottom() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        ActionChip(
-          label: Text(isVideoStatus ? '播放' : "暂停"),
-          onPressed: () {
-            if (isVideoStatus) {
-              controller.video.play();
-              isVideoStatus = false;
-            } else {
-              controller.video.pause();
-              isVideoStatus = true;
-            }
-            setState(() {});
-          },
-        ),
-        ActionChip(
-          label: Text('保存'),
-          onPressed: () {
-            exportVideo();
-          },
-        ),
-      ],
-    );
-  }
-
   widgetViewer() {
     return Stack(
       alignment: Alignment.center,
@@ -431,26 +457,6 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
     );
   }
 
-  var list = [
-    {
-      'title': '标清',
-      'value': '标清',
-      'isSelected': true,
-    },
-    {
-      'title': '高清',
-      'value': '标清',
-      'isSelected': false,
-    },
-    {
-      'title': '超清',
-      'value': '标清',
-      'isSelected': false,
-    },
-  ];
-
-  var selectIndex = 0;
-
   widgetQuality() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -488,17 +494,6 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
     );
   }
 
-  var listMirror = [
-    {
-      'title': '水平镜像',
-      'value': 'hflip',
-    },
-    {
-      'title': '垂直镜像',
-      'value': 'vflip',
-    },
-  ];
-
   widgetMirror() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -521,7 +516,7 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
                 border: Border.all(color: primaryColor, width: 1.0),
                 borderRadius: const BorderRadius.all(Radius.circular(4))),
             child: Text(
-              list[index]['title'].toString(),
+              listMirror[index]['title'].toString(),
               style: TextStyle(
                   color: selectIndex == index ? Colors.white : Colors.black),
             ),
@@ -533,6 +528,84 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
           },
         );
       }).toList(),
+    );
+  }
+
+  String formatter(Duration duration) => [
+        duration.inMinutes.remainder(60).toString().padLeft(2, '0'),
+        duration.inSeconds.remainder(60).toString().padLeft(2, '0')
+      ].join(":");
+
+  trimSlider() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        AnimatedBuilder(
+          animation: Listenable.merge([
+            controller,
+            controller.video,
+          ]),
+          builder: (_, __) {
+            final int duration = controller.videoDuration.inSeconds;
+            final double pos = controller.trimPosition * duration;
+            return Padding(
+              padding: EdgeInsets.symmetric(horizontal: height / 4),
+              child: Row(children: [
+                Text(formatter(Duration(seconds: pos.toInt()))),
+                const Expanded(child: SizedBox()),
+                AnimatedOpacity(
+                  opacity: controller.isTrimming ? 1 : 0,
+                  duration: kThemeAnimationDuration,
+                  child: Row(mainAxisSize: MainAxisSize.min, children: [
+                    Text(formatter(controller.startTrim)),
+                    const SizedBox(width: 10),
+                    Text(formatter(controller.endTrim)),
+                  ]),
+                ),
+              ]),
+            );
+          },
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width,
+          margin: EdgeInsets.symmetric(vertical: height / 4),
+          child: TrimSlider(
+            controller: controller,
+            height: height,
+            horizontalMargin: height / 4,
+            child: TrimTimeline(
+              controller: controller,
+              padding: const EdgeInsets.only(top: 10),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  widgetBottom() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        ActionChip(
+          label: Text(!controller.isPlaying ? '播放' : "暂停"),
+          onPressed: () {
+            if (!controller.isPlaying) {
+              controller.video.play();
+            } else {
+              controller.video.pause();
+            }
+            setState(() {});
+          },
+        ),
+        ActionChip(
+          label: Text('下一步'),
+          onPressed: () {
+            controller.applyCacheCrop();
+            exportVideo();
+          },
+        ),
+      ],
     );
   }
 }

@@ -103,6 +103,12 @@ class Constant {
       'icon': Icons.content_cut,
     },
     {
+      'title': '视频剪辑',
+      'content': '分段视频剪辑',
+      'type': RequestType.video,
+      'icon': Icons.content_cut,
+    },
+    {
       'title': '视频倒放',
       'content': '一键倒放功能',
       'type': RequestType.video,
@@ -148,13 +154,13 @@ class Constant {
       'title': '视频镜像',
       'content': '支持多种样式',
       'type': RequestType.video,
-      'icon': Icons.gif,
+      'icon': Icons.unfold_less,
     },
     {
       'title': '视频去声音',
       'content': '去除视频声音',
       'type': RequestType.video,
-      'icon': Icons.gif,
+      'icon': Icons.music_off,
     },
   ];
 }
