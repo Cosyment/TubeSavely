@@ -36,18 +36,15 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
   var list = [
     {
       'title': '标清',
-      'value': '标清',
-      'isSelected': true,
+      'value': '640',
     },
     {
       'title': '高清',
-      'value': '标清',
-      'isSelected': false,
+      'value': '720',
     },
     {
       'title': '超清',
-      'value': '标清',
-      'isSelected': false,
+      'value': '1080',
     },
   ];
 
@@ -120,6 +117,14 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
         break;
       case "视频压缩":
         viewer = widgetViewer1();
+        config = VideoFFmpegVideoEditorConfig(
+          controller,
+          format: VideoExportFormat.mp4,
+          commandBuilder: (config, videoPath, outputPath) {
+            return '-i $videoPath -c:a aac -vf scale=${list[selectIndex]['value']}:-2 -threads 4 -q:v 0 -b:v 2M -y $outputPath';
+          },
+        );
+
         break;
       case "视频截图":
         viewer = widgetViewer();
