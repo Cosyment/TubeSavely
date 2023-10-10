@@ -1,5 +1,6 @@
 import 'package:downloaderx/constants/colors.dart';
 import 'package:downloaderx/constants/constant.dart';
+import 'package:downloaderx/pages/video_montage_page.dart';
 import 'package:downloaderx/utils/download_utils.dart';
 import 'package:downloaderx/utils/parse/youtobe.dart';
 import 'package:downloaderx/widget/video_x_widget.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:video_player/video_player.dart';
+import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
 import '../models/video_info.dart';
 import '../utils/parse/other.dart';
@@ -255,22 +257,40 @@ class _HomePageState extends State<HomePage> {
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
           var item = Constant.meList[index];
-          return Container(
-            margin: EdgeInsets.all(10.w),
-            child: Column(
-              children: [
-                // Image(
-                //   image: AssetImage("assets/images/${item['bg']}"),
-                //   width: 100.w,
-                //   height: 100.w,
-                //   fit: BoxFit.fill,
-                // ),
-                Icon(
-                  item['icon'] as IconData?,
-                  size: 80.w,
-                ),
-                Text(item['title'].toString()),
-              ],
+          return InkWell(
+            onTap: () async {
+              final List<AssetEntity>? result =
+                  await AssetPicker.pickAssets(context,
+                      pickerConfig: AssetPickerConfig(
+                        maxAssets: 1,
+                        requestType: item['type'] as RequestType,
+                      ));
+              var file2 = await result![0].file;
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => VideoMontagePage(
+                            file: file2!,
+                            title: item['title'].toString(),
+                          )));
+            },
+            child: Container(
+              margin: EdgeInsets.all(10.w),
+              child: Column(
+                children: [
+                  // Image(
+                  //   image: AssetImage("assets/images/${item['bg']}"),
+                  //   width: 100.w,
+                  //   height: 100.w,
+                  //   fit: BoxFit.fill,
+                  // ),
+                  Icon(
+                    item['icon'] as IconData?,
+                    size: 80.w,
+                  ),
+                  Text(item['title'].toString()),
+                ],
+              ),
             ),
           );
         },

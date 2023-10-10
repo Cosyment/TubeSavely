@@ -1,13 +1,18 @@
 import 'dart:io';
 
+import 'package:downloaderx/pages/video_result_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:video_editor/video_editor.dart';
 import 'package:fraction/fraction.dart';
+import '../constants/colors.dart';
 import '../utils/export_service.dart';
 
 class VideoMontagePage extends StatefulWidget {
-  const VideoMontagePage({super.key});
+  final File file;
+  final String title;
+
+  const VideoMontagePage({super.key, required this.file, required this.title});
 
   @override
   State<VideoMontagePage> createState() => _VideoMontagePageState();
@@ -31,6 +36,8 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
   @override
   void initState() {
     super.initState();
+    file = widget.file;
+    title = widget.title;
 
     controller = VideoEditorController.file(
       file,
@@ -93,7 +100,7 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
           controller,
           format: VideoExportFormat.mp4,
           commandBuilder: (config, videoPath, outputPath) {
-            return '-i $videoPath -vf hflip -q:v 0 -b:v 2M  -y $outputPath';
+            return '-i $videoPath -vf ${listMirror[selectIndex]['value']} -q:v 0 -b:v 2M  -y $outputPath';
           },
         );
         break;
@@ -130,13 +137,7 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          title,
-          style: Theme.of(context)
-              .textTheme
-              .apply(displayColor: Theme.of(context).colorScheme.onSurface)
-              .titleMedium,
-        ),
+        title: Text(title),
       ),
       body: SafeArea(
         child: Padding(
@@ -171,6 +172,7 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
       case "视频截图":
       case "视频合并":
       case "视频转GIF":
+        return Container();
       case "视频镜像":
         return widgetMirror();
       case "视频去声音":
@@ -281,14 +283,23 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
     );
   }
 
+  var isVideoStatus = true;
+
   widgetBottom() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         ActionChip(
-          label: Text('播放'),
+          label: Text(isVideoStatus ? '播放' : "暂停"),
           onPressed: () {
-            controller.video.play();
+            if (isVideoStatus) {
+              controller.video.play();
+              isVideoStatus = false;
+            } else {
+              controller.video.pause();
+              isVideoStatus = true;
+            }
+            setState(() {});
           },
         ),
         ActionChip(
@@ -393,6 +404,12 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
       await config.getExecuteConfig(),
       onProgress: (stats) {
         exportingProgress.value = config.getFFmpegProgress(stats.getTime());
+        // showDialog(
+        //   context: context,
+        //   builder: (_) {
+        //     return Container();
+        //   },
+        // );
       },
       onError: (e, s) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -404,87 +421,118 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
       },
       onCompleted: (file) {
         isExporting.value = false;
-        // showDialog(
-        //   context: context,
-        //   builder: (_) => VideoResultPopup(video: file),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VideoResultPage(video: file),
+          ),
+        );
       },
     );
   }
 
+  var list = [
+    {
+      'title': '标清',
+      'value': '标清',
+      'isSelected': true,
+    },
+    {
+      'title': '高清',
+      'value': '标清',
+      'isSelected': false,
+    },
+    {
+      'title': '超清',
+      'value': '标清',
+      'isSelected': false,
+    },
+  ];
+
+  var selectIndex = 0;
+
   widgetQuality() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Flexible(
-          child: TextButton(
-            style: ElevatedButton.styleFrom(
-              elevation: 0,
-              backgroundColor: true ? Colors.grey.shade800 : null,
-              foregroundColor: true ? Colors.white : null,
-              textStyle: Theme.of(context).textTheme.bodySmall,
+      children: list.asMap().keys.map((int index) {
+        return InkWell(
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 20.w),
+            margin: EdgeInsets.symmetric(vertical: 10.w, horizontal: 10.w),
+            decoration: BoxDecoration(
+                gradient: selectIndex == index
+                    ? const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color(0xFFFC6AEC),
+                          Color(0xFF7776FF),
+                        ],
+                      )
+                    : null,
+                border: Border.all(color: primaryColor, width: 1.0),
+                borderRadius: const BorderRadius.all(Radius.circular(4))),
+            child: Text(
+              list[index]['title'].toString(),
+              style: TextStyle(
+                  color: selectIndex == index ? Colors.white : Colors.black),
             ),
-            onPressed: () => {},
-            child: Text("标清"),
           ),
-        ),
-        Flexible(
-          child: TextButton(
-            style: ElevatedButton.styleFrom(
-              elevation: 0,
-              backgroundColor: true ? Colors.grey.shade800 : null,
-              foregroundColor: true ? Colors.white : null,
-              textStyle: Theme.of(context).textTheme.bodySmall,
-            ),
-            onPressed: () => {},
-            child: Text("高清"),
-          ),
-        ),
-        Flexible(
-          child: TextButton(
-            style: ElevatedButton.styleFrom(
-              elevation: 0,
-              backgroundColor: true ? Colors.grey.shade800 : null,
-              foregroundColor: true ? Colors.white : null,
-              textStyle: Theme.of(context).textTheme.bodySmall,
-            ),
-            onPressed: () => {},
-            child: Text("超清"),
-          ),
-        ),
-      ],
+          onTap: () {
+            setState(() {
+              selectIndex = index;
+            });
+          },
+        );
+      }).toList(),
     );
   }
+
+  var listMirror = [
+    {
+      'title': '水平镜像',
+      'value': 'hflip',
+    },
+    {
+      'title': '垂直镜像',
+      'value': 'vflip',
+    },
+  ];
 
   widgetMirror() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Flexible(
-          child: TextButton(
-            style: ElevatedButton.styleFrom(
-              elevation: 0,
-              backgroundColor: true ? Colors.grey.shade800 : null,
-              foregroundColor: true ? Colors.white : null,
-              textStyle: Theme.of(context).textTheme.bodySmall,
+      children: listMirror.asMap().keys.map((int index) {
+        return InkWell(
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 20.w),
+            margin: EdgeInsets.symmetric(vertical: 10.w, horizontal: 10.w),
+            decoration: BoxDecoration(
+                gradient: selectIndex == index
+                    ? const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color(0xFFFC6AEC),
+                          Color(0xFF7776FF),
+                        ],
+                      )
+                    : null,
+                border: Border.all(color: primaryColor, width: 1.0),
+                borderRadius: const BorderRadius.all(Radius.circular(4))),
+            child: Text(
+              list[index]['title'].toString(),
+              style: TextStyle(
+                  color: selectIndex == index ? Colors.white : Colors.black),
             ),
-            onPressed: () => {},
-            child: Text("水平镜像"),
           ),
-        ),
-        Flexible(
-          child: TextButton(
-            style: ElevatedButton.styleFrom(
-              elevation: 0,
-              backgroundColor: true ? Colors.grey.shade800 : null,
-              foregroundColor: true ? Colors.white : null,
-              textStyle: Theme.of(context).textTheme.bodySmall,
-            ),
-            onPressed: () => {},
-            child: Text("垂直镜像"),
-          ),
-        ),
-      ],
+          onTap: () {
+            setState(() {
+              selectIndex = index;
+            });
+          },
+        );
+      }).toList(),
     );
   }
 }
