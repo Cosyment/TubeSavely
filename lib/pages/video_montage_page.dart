@@ -223,6 +223,7 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
       case "视频压缩":
         return widgetQuality();
       case "视频截图":
+        return trimSlider();
       case "视频合并":
       case "视频转GIF":
         return Container();
@@ -344,7 +345,7 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
       children: [
         CropGridViewer.edit(
           controller: controller,
-          rotateCropArea: false,
+          rotateCropArea: true,
           margin: EdgeInsets.symmetric(horizontal: 20.w),
         ),
         AnimatedBuilder(
@@ -384,7 +385,10 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
             opacity: controller.isPlaying ? 0 : 1,
             duration: kThemeAnimationDuration,
             child: GestureDetector(
-              onTap: controller.video.play,
+              onTap: () {
+                controller.video.play();
+                setState(() {});
+              },
               child: Container(
                 width: 40,
                 height: 40,
