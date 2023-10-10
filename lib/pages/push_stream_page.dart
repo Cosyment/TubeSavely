@@ -1,3 +1,4 @@
+import 'package:downloaderx/widget/live_type_item.dart';
 import 'package:downloaderx/widget/platform_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,13 @@ class _PushStreamPageState extends State<PushStreamPage> {
     {'title': '视频号', 'icon': 'iconspbaidu.png'},
     {'title': 'YouToBe', 'icon': 'iconspyoutube.png'},
   ];
+  List<dynamic> liveType = [
+    {'title': '催眠直播', 'icon': 'iconspdy.png'},
+    {'title': '音乐直播', 'icon': 'iconspbilibili.png'},
+    {'title': '电影直播', 'icon': 'icon_sp_acfun.png'},
+  ];
   var currentIndex = 0;
+  var currentLiveIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +45,7 @@ class _PushStreamPageState extends State<PushStreamPage> {
         children: [
           Container(
             alignment: Alignment.centerLeft,
-            margin: EdgeInsets.all(20.w),
+            margin: EdgeInsets.fromLTRB(20.w, 20.w, 20.w, 0),
             child: Text(
               "选择推流平台",
               style: TextStyle(fontWeight: FontWeight.bold),
@@ -64,13 +71,36 @@ class _PushStreamPageState extends State<PushStreamPage> {
               },
             ),
           ),
-          buildInputContainer("服务器地址:", 'rtmp://pswb.live.weibo.com/alicdn/'),
-          buildInputContainer("串流秘钥:",
-              '4954246133318227?auth_key=1697963786-0-0-f3468703707378afe5aa4f6bc8c3b9af'),
-          buildInputContainer("联系方式:", 'wx11111'),
-          Icon(
-            Icons.add,
-            size: 200.w,
+          buildInputContainer("服务器地址:", '请输入服务器地址(rtmp://)'),
+          buildInputContainer("串流秘钥:", '请输入串流秘钥'),
+          buildInputContainer("联系方式:", '请输入联系方式'),
+          Container(
+            alignment: Alignment.centerLeft,
+            margin: EdgeInsets.fromLTRB(20.w, 0, 20.w, 0),
+            child: Text(
+              "直播类型",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Container(
+            height: 100.h,
+            margin: EdgeInsets.all(20.w),
+            child: GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 5,
+                  childAspectRatio: 2.6),
+              itemCount: liveType.length,
+              itemBuilder: (BuildContext context, int index) {
+                return LiveTypeItem(
+                  item: liveType[index],
+                  isSelected: index == currentLiveIndex,
+                  onItemClick: onLiveItemClick,
+                );
+              },
+            ),
           ),
           InkWell(
             child: Container(
@@ -106,24 +136,27 @@ class _PushStreamPageState extends State<PushStreamPage> {
     currentIndex = platform.indexOf(item);
     setState(() {});
   }
+
+  void onLiveItemClick(item) {
+    currentLiveIndex = liveType.indexOf(item);
+    setState(() {});
+  }
 }
 
 Container buildInputContainer(String title, String hitText) {
   return Container(
+    width: double.infinity,
     margin: EdgeInsets.fromLTRB(20.w, 6.h, 20.w, 6.h),
-    child: Row(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         Container(
-          height: 90.w,
-          width: 500.w,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.r),
-            border: Border.all(color: primaryColor, width: 1.0),
-          ),
+          height: 80.w,
+          width: double.infinity,
           child: TextField(
             maxLines: 1,
             textAlignVertical: TextAlignVertical.center,
