@@ -44,7 +44,7 @@ class _LiveTypeItemState extends State<LiveTypeItem> {
               Text(
                 widget.item['title'],
                 style: TextStyle(
-                    fontSize: 22.sp,
+                    fontSize: 26.sp,
                     color: widget.isSelected ? Colors.white : Colors.black),
               ),
             ]),

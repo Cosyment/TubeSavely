@@ -13,14 +13,15 @@ class PushStreamPage extends StatefulWidget {
   State<PushStreamPage> createState() => _PushStreamPageState();
 }
 
-class _PushStreamPageState extends State<PushStreamPage> {
+class _PushStreamPageState extends State<PushStreamPage>
+    with SingleTickerProviderStateMixin {
   List<dynamic> platform = [
-    {'title': '抖音', 'icon': 'iconspdy.png'},
-    {'title': 'bili', 'icon': 'iconspbilibili.png'},
-    {'title': '微博', 'icon': 'icon_sp_acfun.png'},
-    {'title': '知乎', 'icon': 'iconspbaidu.png'},
-    {'title': '视频号', 'icon': 'iconspbaidu.png'},
-    {'title': 'YouToBe', 'icon': 'iconspyoutube.png'},
+    {'title': '抖音', 'icon': 'douyin.png'},
+    {'title': '快手', 'icon': 'ks.png'},
+    {'title': '哔哩', 'icon': 'bili.png'},
+    {'title': '微博', 'icon': 'weibo.png'},
+    {'title': '知乎', 'icon': 'zhihu.png'},
+    {'title': 'YouTobe', 'icon': 'youtobe.png'},
   ];
   List<dynamic> liveType = [
     {'title': '催眠直播', 'icon': 'iconspdy.png'},
@@ -29,6 +30,17 @@ class _PushStreamPageState extends State<PushStreamPage> {
   ];
   var currentIndex = 0;
   var currentLiveIndex = 0;
+  late AnimationController _controller;
+  late Animation<double> tweenAnimal;
+  var width = 600.w;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+        vsync: this, duration: const Duration(microseconds: 12000));
+    tweenAnimal = Tween<double>(begin: 1, end: 0.5).animate(_controller);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +60,7 @@ class _PushStreamPageState extends State<PushStreamPage> {
             margin: EdgeInsets.fromLTRB(20.w, 20.w, 20.w, 0),
             child: Text(
               "选择推流平台",
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
             ),
           ),
           Container(
@@ -79,7 +91,7 @@ class _PushStreamPageState extends State<PushStreamPage> {
             margin: EdgeInsets.fromLTRB(20.w, 0, 20.w, 0),
             child: Text(
               "直播类型",
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
             ),
           ),
           Container(
@@ -103,29 +115,39 @@ class _PushStreamPageState extends State<PushStreamPage> {
             ),
           ),
           InkWell(
-            child: Container(
-              width: 540.w,
-              height: 80.h,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100.r),
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color(0xFFFC6AEC),
-                      Color(0xFF7776FF),
-                    ],
-                  )),
-              child: Text(
-                "开始推流",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 28.sp,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-            onTap: () {},
+            child: TweenAnimationBuilder(
+                duration: Duration(seconds: 1300),
+                tween: Tween(begin: 1.0, end: 0.5),
+                builder: (BuildContext context, double value, Widget? child) {
+                  return  Center(
+                    child: Transform.scale(
+                      scale: value,
+                      child: Container(
+                      width: width,
+                      height: 80.h,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100.r),
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Color(0xFFFC6AEC),
+                              Color(0xFF7776FF),
+                            ],
+                          )),
+                      child: Text(
+                        "开始推流",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 30.sp,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),) ,
+                  );
+                }),
+            onTap: () {
+            },
           )
         ],
       ),
@@ -150,9 +172,18 @@ Container buildInputContainer(String title, String hitText) {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: TextStyle(fontWeight: FontWeight.bold),
+        Row(
+          children: [
+            Text(
+              title,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
+            ),
+            Icon(
+              Icons.help,
+              color: Colors.grey,
+              size: 16,
+            ),
+          ],
         ),
         Container(
           height: 80.w,
@@ -172,7 +203,7 @@ Container buildInputContainer(String title, String hitText) {
               enabledBorder: const OutlineInputBorder(
                 borderSide: BorderSide.none,
               ),
-              contentPadding: EdgeInsets.symmetric(horizontal: 15.w),
+              contentPadding: EdgeInsets.symmetric(horizontal: 0.w),
             ),
           ),
         ),
