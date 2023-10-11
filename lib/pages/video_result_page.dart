@@ -1,11 +1,10 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:fraction/fraction.dart';
 import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
-import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
 Future<void> _getImageDimension(File file,
     {required Function(Size) onResult}) async {
@@ -102,10 +101,17 @@ class _VideoResultPageState extends State<VideoResultPage> {
             Positioned(
               top: 0,
               child: InkWell(
-                onTap: () {
-                  PhotoManager.editor.saveVideo(
-                      widget.video, title: path.basename(widget.video.path),
-                      relativePath: "");
+                onTap: () async {
+                  Directory? externalDir = await getExternalStorageDirectory();
+                  String externalPath = externalDir!.path;
+                  print(externalPath);
+                  List<Directory>? externalCacheDir = await getExternalCacheDirectories();
+                  String externalCachePath = externalCacheDir![0].path;
+                  print(externalCachePath);
+
+                  // PhotoManager.editor.saveVideo(
+                  //     widget.video, title: path.basename(widget.video.path),
+                  //     relativePath: "");
                 },
                 child: Container(
                   child: Text("保存"),

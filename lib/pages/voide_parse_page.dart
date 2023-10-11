@@ -54,10 +54,11 @@ class _VideoParePageState extends State<VideoParePage> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context, designSize: const Size(750, 1378));
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text(
+        title:  Text(
           "视频去水印",
           style: TextStyle(
             color: Colors.white,
@@ -180,8 +181,8 @@ class _VideoParePageState extends State<VideoParePage> {
             pasteText();
           },
         ),
-        const SizedBox(
-          width: 20,
+         SizedBox(
+          width: 20.w,
         ),
         Container(
           width: 240.w,
