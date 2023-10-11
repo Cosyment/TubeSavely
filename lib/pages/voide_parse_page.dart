@@ -1,5 +1,6 @@
 import 'package:downloaderx/constants/colors.dart';
 import 'package:downloaderx/utils/download_utils.dart';
+import 'package:downloaderx/utils/exit.dart';
 import 'package:downloaderx/utils/parse/youtobe.dart';
 import 'package:downloaderx/widget/video_x_widget.dart';
 import 'package:flutter/material.dart';
@@ -37,11 +38,11 @@ class _VideoParePageState extends State<VideoParePage> {
   @override
   void initState() {
     super.initState();
-    if (widget.bean != null) {
+    if (widget.bean != null && widget.bean?.videoList?.isNotEmpty == true) {
       setState(() {
         textController.text = widget.bean?.parseUrl ?? "";
       });
-      onResult(widget.bean?.videoList ?? []);
+      onResult(widget.bean?.videoList);
       startParse();
     }
   }
@@ -58,7 +59,7 @@ class _VideoParePageState extends State<VideoParePage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title:  Text(
+        title: Text(
           "视频去水印",
           style: TextStyle(
             color: Colors.white,
@@ -181,7 +182,7 @@ class _VideoParePageState extends State<VideoParePage> {
             pasteText();
           },
         ),
-         SizedBox(
+        SizedBox(
           width: 20.w,
         ),
         Container(
@@ -375,6 +376,7 @@ class _VideoParePageState extends State<VideoParePage> {
           });
         });
     } else {
+      ToastExit.show("解析失败");
       isLoading = false;
       setState(() {});
     }
