@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -12,7 +11,9 @@ class LiveTypeItem extends StatefulWidget {
       required this.onItemClick});
 
   final Map<String, dynamic> item;
+
   final bool isSelected;
+
   final Function onItemClick;
 
   @override

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../constants/colors.dart';
 import '../widget/primary_button.dart';
 
 class LoginPage extends StatefulWidget {
@@ -20,38 +19,31 @@ class _LoginPageState extends State<LoginPage> {
       ),
       body: Container(
         width: double.infinity,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/Background.png"),
-            fit: BoxFit.cover,
-          ),
-        ),
         child: Padding(
           padding: EdgeInsets.symmetric(
             horizontal: 30.w,
           ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 80.w),
+              SizedBox(height: 120.w),
               Text(
-                "Login and start transfering",
+                "Your Email Address",
                 style: TextStyle(
                   fontSize: 32.sp,
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              SizedBox(height: 193.w),
+              SizedBox(height: 20.w),
               Text(
-                "Email",
-                style: TextStyle(
-                  fontSize: 28.sp,
-                ),
+                "Please confirm your email \nand enter  your password",
+                style: TextStyle(fontSize: 28.sp, color: Colors.black87),
               ),
-              SizedBox(height: 8.w),
+              SizedBox(height: 40.w),
               TextField(
                 decoration: InputDecoration(
                   hintText: "Enter your email",
+                  labelText: "Email",
                   hintStyle: TextStyle(
                     fontSize: 28.sp,
                     color: Color(0xFF1A1A1A).withOpacity(0.2494),
@@ -59,22 +51,29 @@ class _LoginPageState extends State<LoginPage> {
                   filled: true,
                   fillColor: Colors.white,
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.w),
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
                     borderSide: BorderSide(
-                      color: Color(0xFF1A1A1A).withOpacity(0.1),
-                      width: 1.sp,
+                      color: Colors.blue,
+                      width: 2.0,
+                    ),
+                  ),
+                  disabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    borderSide: BorderSide(
+                      color: Colors.red,
+                      width: 2.0,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    borderSide: BorderSide(
+                      color: Colors.green,
+                      width: 2.0,
                     ),
                   ),
                 ),
               ),
               SizedBox(height: 24.w),
-              Text(
-                "Password",
-                style: TextStyle(
-                  fontSize: 28.sp,
-                ),
-              ),
-              SizedBox(height: 8.w),
               TextField(
                 decoration: InputDecoration(
                   hintText: "Enter your password",
