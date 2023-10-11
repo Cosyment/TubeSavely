@@ -438,7 +438,7 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
     await ExportService.runFFmpegCommand(
       await config.getExecuteConfig(),
       onProgress: (stats) {
-        exportingProgress.value = config.getFFmpegProgress(stats.getTime());
+        exportingProgress.value = config.getFFmpegProgress(stats.getTime() as int);
         // showDialog(
         //   context: context,
         //   builder: (_) {
