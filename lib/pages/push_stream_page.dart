@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../constants/colors.dart';
+import 'tutorial_page.dart';
 
 class PushStreamPage extends StatefulWidget {
   const PushStreamPage({super.key});
@@ -86,10 +87,11 @@ class _PushStreamPageState extends State<PushStreamPage>
               },
             ),
           ),
-          buildInputContainer("服务器地址:", '请输入服务器地址(rtmp://)', controllerHost),
-          buildInputContainer("串流秘钥:", '请输入串流秘钥', controllerSecretKey),
           buildInputContainer(
-              "直播间地址:", '请输入直播间地址(https://)', controllerLiveUrl),
+              "服务器地址:", '请输入服务器地址(rtmp://)', controllerHost, context),
+          buildInputContainer("串流秘钥:", '请输入串流秘钥', controllerSecretKey, context),
+          buildInputContainer(
+              "直播间地址:", '请输入直播间地址(https://)', controllerLiveUrl, context),
           Container(
             alignment: Alignment.centerLeft,
             margin: EdgeInsets.fromLTRB(20.w, 0, 20.w, 0),
@@ -137,22 +139,24 @@ class _PushStreamPageState extends State<PushStreamPage>
                   )),
               alignment: Alignment.center,
               child: isCircular
-                  ? countdown>0?Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        LoadingAnimationWidget.threeArchedCircle(
+                  ? countdown > 0
+                      ? Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            LoadingAnimationWidget.threeArchedCircle(
+                              color: Colors.white,
+                              size: 60.h,
+                            ),
+                            Text(
+                              "${countdown}s",
+                              style: TextStyle(color: Colors.white),
+                            )
+                          ],
+                        )
+                      : LoadingAnimationWidget.hexagonDots(
                           color: Colors.white,
                           size: 60.h,
-                        ),
-                        Text(
-                          "${countdown}s",
-                          style: TextStyle(color: Colors.white),
                         )
-                      ],
-                    ): LoadingAnimationWidget.hexagonDots(
-                color: Colors.white,
-                size: 60.h,
-              )
                   : Center(
                       child: Text(
                       btnStr,
@@ -190,7 +194,7 @@ class _PushStreamPageState extends State<PushStreamPage>
       return;
     }
     setState(() {
-      countdown =0;
+      countdown = 0;
       isCircular = !isCircular;
     });
     Future.delayed(Duration(seconds: 5), () {
@@ -226,26 +230,32 @@ class _PushStreamPageState extends State<PushStreamPage>
   }
 }
 
-Container buildInputContainer(
-    String title, String hitText, TextEditingController controller) {
+Container buildInputContainer(String title, String hitText,
+    TextEditingController controller, BuildContext context) {
   return Container(
     width: double.infinity,
     margin: EdgeInsets.fromLTRB(20.w, 6.h, 20.w, 6.h),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Text(
-              title,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
-            ),
-            const Icon(
-              Icons.help,
-              color: Colors.grey,
-              size: 16,
-            ),
-          ],
+        GestureDetector(
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const TutorialPage()));
+          },
+          child: Row(
+            children: [
+              Text(
+                title,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
+              ),
+              const Icon(
+                Icons.help,
+                color: Colors.grey,
+                size: 16,
+              ),
+            ],
+          ),
         ),
         Container(
           height: 80.w,

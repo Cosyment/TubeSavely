@@ -21,8 +21,8 @@ class MinePage extends StatefulWidget {
 class _MinePageState extends State<MinePage> {
   List<dynamic> itemList = [
     {
-      "icon": Icons.description,
-      "title": "使用教程",
+      "icon": Icons.help,
+      "title": "常见问题",
       "type": 0,
     },
     {

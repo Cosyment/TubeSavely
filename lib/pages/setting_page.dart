@@ -1,3 +1,5 @@
+import 'package:downloaderx/constants/constant.dart';
+import 'package:downloaderx/pages/webview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -24,8 +26,17 @@ class _SettingPageState extends State<SettingPage> {
               elevation: 5,
               margin: EdgeInsets.fromLTRB(30.w, 30.w, 30.w, 0),
               shadowColor: primaryColor,
-              child: InkWell(
-                onTap: () {},
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => WebViewPage(
+                          title: '用户协议',
+                          url: Constant.agreementUrl,
+                        ),
+                      ));
+                },
                 child: Container(
                   height: 100.w,
                   padding: EdgeInsets.fromLTRB(30.w, 0, 30.w, 0),
@@ -36,14 +47,14 @@ class _SettingPageState extends State<SettingPage> {
                   ),
                   child: Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.account_box_outlined,
                         color: Colors.white,
                       ),
                       SizedBox(
                         width: 30.w,
                       ),
-                      Text(
+                      const Text(
                         "用户协议",
                         style: TextStyle(color: Colors.white),
                       ),
@@ -56,8 +67,17 @@ class _SettingPageState extends State<SettingPage> {
               elevation: 5,
               margin: EdgeInsets.fromLTRB(30.w, 30.w, 30.w, 0),
               shadowColor: primaryColor,
-              child: InkWell(
-                onTap: () {},
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => WebViewPage(
+                          title: '隐私政策',
+                          url: Constant.privacyUrl,
+                        ),
+                      ));
+                },
                 child: Container(
                   height: 100.w,
                   padding: EdgeInsets.fromLTRB(30.w, 0, 30.w, 0),
@@ -68,14 +88,14 @@ class _SettingPageState extends State<SettingPage> {
                   ),
                   child: Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.privacy_tip,
                         color: Colors.white,
                       ),
                       SizedBox(
                         width: 30.w,
                       ),
-                      Text(
+                      const Text(
                         "隐私协议",
                         style: TextStyle(color: Colors.white),
                       ),

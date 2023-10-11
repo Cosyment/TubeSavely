@@ -71,27 +71,44 @@ class Constant {
     }
   ];
 
-  static const tutorialList = [
+  static List<dynamic> tutorialList = [
     {
       "content": "打开短视频软件，播放您需要的短视频，点击分享，并滑动找到“复制链接”。",
-      "title": "如何获取视频链接?",
+      "title": "如何获取视频解析地址？",
+      "type": 1,
+      "isExpanded": false
+    },
+    {
+      "content": "抖音、快手、微博、哔哩哔哩、YouTobe、",
+      "title": "支持哪些视频平台？",
+      "isExpanded": false
+    },
+    {
+      "content": "哔哩哔哩直播 电脑网页端打开哔哩哔哩并登录,找到如下页面点击开播",
+      "title": "如何获取直播服务器地址、串流秘钥？",
+      "type": 2,
+      "isExpanded": true
     },
     {
       "content":
           "本软件能解析99%以上的视频，但若原作者上传的视频本来就有水印暂无法去除。原视频是否有水印请查看对应APP播放时是否有水印",
       "title": "提取的视频还有水印?",
+      "isExpanded": false
     },
     {
       "content": "请尝试在浏览器中打开视频链接，若浏览器无法打开则说明视频已经失效，无法解析。",
       "title": "提示视频解析失败?",
+      "isExpanded": false
     },
     {
       "content": "请确认是否为图集，图集可以直接浏览器打开链接，长按保存。",
       "title": "提取视频下载失败?",
+      "isExpanded": false
     },
     {
       "content": "开启相册权限后，默认我们会将视频保存在相册里。",
-      "title": "解析后的视频保存在什么地方?",
+      "title": "解析后的视频保存在什么位置?",
+      "isExpanded": false
     },
   ];
 

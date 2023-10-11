@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(
-          "DownloaderX",
+          "视频去水印",
           style: TextStyle(
             color: Colors.white,
           ),

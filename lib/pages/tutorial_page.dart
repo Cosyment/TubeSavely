@@ -1,3 +1,6 @@
+import 'dart:ffi';
+
+import 'package:downloaderx/pages/image_viewer_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -12,29 +15,119 @@ class TutorialPage extends StatefulWidget {
 }
 
 class _TutorialPageState extends State<TutorialPage> {
-  var screenSize;
-
   @override
   Widget build(BuildContext context) {
-    screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "使用教程",
+        title: const Text(
+          "常见问题",
         ),
       ),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: oneWidget(),
-          ),
-          SliverToBoxAdapter(
-            child: titleWidget(),
-          ),
-          buildChildLayout(),
-          bottomList(),
-        ],
+      body: ListView(
+        children: Constant.tutorialList.map((item) {
+          return ExpansionPanelList(
+            elevation: 0,
+            expandedHeaderPadding: EdgeInsets.zero,
+            expansionCallback: (int index, bool isExpanded) {
+              setState(() {
+                item['isExpanded'] = !isExpanded;
+              });
+            },
+            children: [
+              ExpansionPanel(
+                headerBuilder: (BuildContext context, bool isExpanded) {
+                  return ListTile(
+                    title: Text(
+                      item['title'].toString(),
+                      style: const TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold),
+                    ),
+                  );
+                },
+                body: item['type'] == 1
+                    ? Container(
+                        margin: EdgeInsets.fromLTRB(30.w, 0, 30.w, 0),
+                        child: Column(
+                          children: [
+                            Text(item['content'].toString(),
+                                style: TextStyle(
+                                    color: Colors.black87, fontSize: 30.sp)),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ImageViewerPage(
+                                        imagePath: 'assets/images/step2.jpg',
+                                      ),
+                                    ));
+                              },
+                              child: Hero(
+                                  tag: 'image',
+                                  child: Image.asset(
+                                    'assets/images/step2.jpg',
+                                    width: 200.w,
+                                    height: 200.h,
+                                  )),
+                            )
+                          ],
+                        ),
+                      )
+                    : item['type'] == 2
+                        ? Container(
+                            margin: EdgeInsets.fromLTRB(30.w, 0, 30.w, 0),
+                            child: Column(
+                              children: [
+                                Text(item['content'].toString(),
+                                    style: TextStyle(
+                                        color: Colors.black87,
+                                        fontSize: 30.sp)),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ImageViewerPage(
+                                            imagePath: 'assets/eg_live.jpg',
+                                          ),
+                                        ));
+                                  },
+                                  child: Hero(
+                                      tag: 'image',
+                                      child: Image.asset(
+                                        'assets/eg_live.jpg',
+                                        width: 600.w,
+                                        height: 200.h,
+                                      )),
+                                )
+                              ],
+                            ),
+                          )
+                        : ListTile(
+                            title: Text(
+                              item['content'].toString(),
+                              style: TextStyle(
+                                  color: Colors.black87, fontSize: 30.sp),
+                            ),
+                          ),
+                isExpanded: item['isExpanded'] == true,
+              ),
+            ],
+          );
+        }).toList(),
       ),
+      // body: CustomScrollView(
+      //   slivers: [
+      //     SliverToBoxAdapter(
+      //       child: oneWidget(),
+      //     ),
+      //     SliverToBoxAdapter(
+      //       child: titleWidget(),
+      //     ),
+      //     buildChildLayout(),
+      //     bottomList(),
+      //   ],
+      // ),
     );
   }
 
@@ -88,7 +181,7 @@ class _TutorialPageState extends State<TutorialPage> {
   }
 
   oneWidget() {
-    var imgWidth = (screenSize.width / 3) - 20.w;
+    var imgWidth = 20.w;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
