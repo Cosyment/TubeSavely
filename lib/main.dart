@@ -2,6 +2,7 @@ import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_not
 import 'package:downloaderx/pages/home_page.dart';
 import 'package:downloaderx/pages/mine_page.dart';
 import 'package:downloaderx/pages/push_stream_page.dart';
+import 'package:downloaderx/widget/agreement_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
@@ -63,6 +64,24 @@ class _MainPageState extends State<MainPage> {
     const PushStreamPage(),
     const MinePage(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 600), () {
+      showGeneralDialog(
+          context: context,
+          barrierDismissible: false,
+          barrierLabel: '',
+          transitionDuration: const Duration(milliseconds: 400),
+          pageBuilder: (BuildContext context, Animation<double> animation,
+              Animation<double> secondaryAnimation) {
+            return AgreementDialog(onAgreeClick: onAgreeClick);
+          });
+    });
+  }
+
+  void onAgreeClick() {}
 
   @override
   Widget build(BuildContext context) {

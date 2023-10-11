@@ -22,8 +22,9 @@ class PlatFormItem extends StatefulWidget {
 class _PlatFormItemState extends State<PlatFormItem> {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       child: Container(
+        margin: EdgeInsets.fromLTRB(20.w, 20.w, 20.w, 0),
         decoration: BoxDecoration(
             gradient: widget.isSelected
                 ? const LinearGradient(
@@ -37,7 +38,7 @@ class _PlatFormItemState extends State<PlatFormItem> {
                 : null,
             border: Border.all(color: primaryColor, width: 1.0),
             borderRadius: const BorderRadius.all(Radius.circular(4))),
-        child: Column(
+        child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -47,10 +48,13 @@ class _PlatFormItemState extends State<PlatFormItem> {
                 height: 60.w,
                 fit: BoxFit.fill,
               ),
+              SizedBox(
+                width: 10.w,
+              ),
               Text(
                 widget.item['title'],
                 style: TextStyle(
-                    fontSize: 20.sp,
+                    fontSize: 24.sp,
                     color: widget.isSelected ? Colors.white : Colors.black),
               ),
             ]),

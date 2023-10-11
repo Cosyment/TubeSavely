@@ -22,7 +22,7 @@ class LiveTypeItem extends StatefulWidget {
 class _LiveTypeItemState extends State<LiveTypeItem> {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       child: Container(
         decoration: BoxDecoration(
             gradient: widget.isSelected
