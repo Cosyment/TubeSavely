@@ -4,20 +4,20 @@ import 'package:downloaderx/pages/video_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../constants/colors.dart';
 import '../data/db_manager.dart';
-import '../utils/event_bus.dart';
 
-class DownloadPage extends StatefulWidget {
-  const DownloadPage({Key? key}) : super(key: key);
+class HistoryPage extends StatefulWidget {
+  const HistoryPage({Key? key}) : super(key: key);
 
   @override
-  State<DownloadPage> createState() => _DownloadPageState();
+  State<HistoryPage> createState() => _HistoryPageState();
 }
 
-class _DownloadPageState extends State<DownloadPage> {
+class _HistoryPageState extends State<HistoryPage> {
   List<VideoParse> dataList = [];
   bool isShowShimmer = true;
 
@@ -194,14 +194,15 @@ class _DownloadPageState extends State<DownloadPage> {
                       SizedBox(
                         height: 120.h,
                       ),
-                      Icon(
-                        Icons.dataset,
-                        color: Colors.grey,
-                        size: 120,
+                      Lottie.asset(
+                        'assets/lottie/emptybox.json',
+                        width: 160,
+                        height: 160,
+                        fit: BoxFit.fill,
                       ),
                       Text(
                         '暂无记录',
-                        style: TextStyle(fontSize: 21.5.sp, color: Colors.grey),
+                        style: TextStyle(fontSize: 28.sp, color: Colors.grey),
                       )
                     ],
                   ),

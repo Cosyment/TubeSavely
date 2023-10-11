@@ -1,5 +1,4 @@
-import 'package:downloaderx/pages/download_page.dart';
-import 'package:downloaderx/pages/scrawl/scrawl_page.dart';
+import 'package:downloaderx/pages/history_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -8,7 +7,6 @@ import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 import '../constants/colors.dart';
 import '../plugin/method_plugin.dart';
 import '../utils/event_bus.dart';
-import 'app.dart';
 import 'login_page.dart';
 import 'setting_page.dart';
 import 'tutorial_page.dart';
@@ -206,7 +204,7 @@ class _MinePageState extends State<MinePage> {
       //     MaterialPageRoute(builder: (context) => const WatermarkPage()));
     } else {
       Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const DownloadPage()));
+          MaterialPageRoute(builder: (context) => const HistoryPage()));
     }
   }
 }

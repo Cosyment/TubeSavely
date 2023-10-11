@@ -1,8 +1,11 @@
+import 'dart:async';
+
+import 'package:downloaderx/utils/exit.dart';
 import 'package:downloaderx/widget/live_type_item.dart';
 import 'package:downloaderx/widget/platform_item.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../constants/colors.dart';
 
@@ -30,16 +33,16 @@ class _PushStreamPageState extends State<PushStreamPage>
   ];
   var currentIndex = 0;
   var currentLiveIndex = 0;
-  late AnimationController _controller;
-  late Animation<double> tweenAnimal;
-  var width = 600.w;
+  bool isCircular = false;
+  var countdown = 0;
+  var btnStr = "开始推流";
+  var controllerHost = TextEditingController();
+  var controllerSecretKey = TextEditingController();
+  var controllerLiveUrl = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-        vsync: this, duration: const Duration(microseconds: 12000));
-    tweenAnimal = Tween<double>(begin: 1, end: 0.5).animate(_controller);
   }
 
   @override
@@ -83,9 +86,10 @@ class _PushStreamPageState extends State<PushStreamPage>
               },
             ),
           ),
-          buildInputContainer("服务器地址:", '请输入服务器地址(rtmp://)'),
-          buildInputContainer("串流秘钥:", '请输入串流秘钥'),
-          buildInputContainer("联系方式:", '请输入联系方式'),
+          buildInputContainer("服务器地址:", '请输入服务器地址(rtmp://)', controllerHost),
+          buildInputContainer("串流秘钥:", '请输入串流秘钥', controllerSecretKey),
+          buildInputContainer(
+              "直播间地址:", '请输入直播间地址(https://)', controllerLiveUrl),
           Container(
             alignment: Alignment.centerLeft,
             margin: EdgeInsets.fromLTRB(20.w, 0, 20.w, 0),
@@ -114,44 +118,101 @@ class _PushStreamPageState extends State<PushStreamPage>
               },
             ),
           ),
-          InkWell(
-            child: TweenAnimationBuilder(
-                duration: Duration(seconds: 1300),
-                tween: Tween(begin: 1.0, end: 0.5),
-                builder: (BuildContext context, double value, Widget? child) {
-                  return  Center(
-                    child: Transform.scale(
-                      scale: value,
-                      child: Container(
-                      width: width,
-                      height: 80.h,
+          GestureDetector(
+            onTap: onTap,
+            child: AnimatedContainer(
+              duration: Duration(milliseconds: 600),
+              curve: Curves.linear,
+              width: isCircular ? 100.h : 600.w,
+              height: isCircular ? 100.h : 80.h,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(isCircular ? 50.h : 40.h),
+                  gradient: const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFFFC6AEC),
+                      Color(0xFF7776FF),
+                    ],
+                  )),
+              alignment: Alignment.center,
+              child: isCircular
+                  ? countdown>0?Stack(
                       alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100.r),
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              Color(0xFFFC6AEC),
-                              Color(0xFF7776FF),
-                            ],
-                          )),
+                      children: [
+                        LoadingAnimationWidget.threeArchedCircle(
+                          color: Colors.white,
+                          size: 60.h,
+                        ),
+                        Text(
+                          "${countdown}s",
+                          style: TextStyle(color: Colors.white),
+                        )
+                      ],
+                    ): LoadingAnimationWidget.hexagonDots(
+                color: Colors.white,
+                size: 60.h,
+              )
+                  : Center(
                       child: Text(
-                        "开始推流",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 30.sp,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),) ,
-                  );
-                }),
-            onTap: () {
-            },
+                      btnStr,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30.sp,
+                          fontWeight: FontWeight.bold),
+                    )),
+              // child: isCircular
+              //     ? ClipOval(child: Container(color: Colors.blue))
+              //     : null,
+            ),
           )
         ],
       ),
     );
+  }
+
+  void onTap() {
+    var host = controllerHost.value.text;
+    var secretKey = controllerSecretKey.value.text;
+    var liveUrl = controllerLiveUrl.value.text;
+    var plat = platform[currentIndex];
+    var type = liveType[currentLiveIndex];
+    if (host.isEmpty) {
+      ToastExit.show('请输入服务器地址');
+      return;
+    }
+    if (secretKey.isEmpty) {
+      ToastExit.show('请输入秘钥地址');
+      return;
+    }
+    if (liveUrl.isEmpty) {
+      ToastExit.show('请输入直播地址');
+      return;
+    }
+    setState(() {
+      countdown =0;
+      isCircular = !isCircular;
+    });
+    Future.delayed(Duration(seconds: 5), () {
+      startTimer();
+    });
+  }
+
+  void startTimer() {
+    countdown = 9;
+    Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      if (countdown == 1) {
+        timer.cancel();
+        setState(() {
+          isCircular = false;
+          btnStr = "正在直播中";
+        });
+      } else {
+        setState(() {
+          countdown--;
+        });
+      }
+    });
   }
 
   void onItemClick(item) {
@@ -165,7 +226,8 @@ class _PushStreamPageState extends State<PushStreamPage>
   }
 }
 
-Container buildInputContainer(String title, String hitText) {
+Container buildInputContainer(
+    String title, String hitText, TextEditingController controller) {
   return Container(
     width: double.infinity,
     margin: EdgeInsets.fromLTRB(20.w, 6.h, 20.w, 6.h),
@@ -178,7 +240,7 @@ Container buildInputContainer(String title, String hitText) {
               title,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
             ),
-            Icon(
+            const Icon(
               Icons.help,
               color: Colors.grey,
               size: 16,
@@ -190,8 +252,9 @@ Container buildInputContainer(String title, String hitText) {
           width: double.infinity,
           child: TextField(
             maxLines: 1,
+            keyboardType: TextInputType.url,
             textAlignVertical: TextAlignVertical.center,
-            controller: TextEditingController(),
+            controller: controller,
             textInputAction: TextInputAction.done,
             style: const TextStyle(color: Colors.black),
             decoration: InputDecoration(

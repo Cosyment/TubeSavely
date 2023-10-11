@@ -57,6 +57,9 @@ dependencies:
   ffmpeg_kit_flutter: ^5.1.0-LTS
   video_trimmer: ^2.1.0
   fraction: ^4.1.4
+  lottie: ^2.6.0
+  loading_animation_widget: ^1.2.0+4
+  fluttertoast: ^8.2.2
 
 dev_dependencies:
   flutter_test:
@@ -77,6 +80,7 @@ flutter:
   assets:
     - assets/
     - assets/images/
+    - assets/lottie/
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

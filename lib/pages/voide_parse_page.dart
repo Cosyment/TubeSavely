@@ -1,29 +1,26 @@
 import 'package:downloaderx/constants/colors.dart';
-import 'package:downloaderx/constants/constant.dart';
-import 'package:downloaderx/pages/video_montage_page.dart';
 import 'package:downloaderx/utils/download_utils.dart';
 import 'package:downloaderx/utils/parse/youtobe.dart';
 import 'package:downloaderx/widget/video_x_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:video_player/video_player.dart';
-import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
 import '../models/video_info.dart';
 import '../utils/parse/other.dart';
 import '../widget/video_label_item.dart';
-import 'voide_parse_page.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class VideoParePage extends StatefulWidget {
+  const VideoParePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<VideoParePage> createState() => _VideoParePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _VideoParePageState extends State<VideoParePage> {
   final TextEditingController textController = TextEditingController(
       text:
           'https://www.youtube.com/watch?v=Ek1QD7AH9XQ'); //https://www.youtube.com/watch?v=Ek1QD7AH9XQ
@@ -52,39 +49,69 @@ class _HomePageState extends State<HomePage> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(
-          "DownloaderX",
+          "视频去水印",
           style: TextStyle(
             color: Colors.white,
           ),
         ),
       ),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.all(20.w),
-              child: Text(
-                "视频剪辑工具",
-                style: TextStyle(fontSize: 40.sp),
+      body: Container(
+        margin: EdgeInsets.fromLTRB(30.w, 0, 30.w, 0),
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: buildContainer(),
+            ),
+            SliverToBoxAdapter(
+              child: buildRow(),
+            ),
+            SliverToBoxAdapter(
+              child: Visibility(
+                visible: isNeedVPN,
+                child: Center(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 20.w),
+                    child: Text(
+                      "海外平台需要网络环境支持",
+                      style: TextStyle(fontSize: 24.sp),
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
-
-          SliverToBoxAdapter(
-            child: InkWell(
+            SliverToBoxAdapter(
               child: Container(
-                child: Text('视频去水印'),
+                margin: EdgeInsets.fromLTRB(0, 30.w, 0, 30.w),
+                child: videoList.isNotEmpty
+                    ? VideoXWidget(
+                        isLoading: isLoading,
+                        controller: _controller,
+                      )
+                    : Container(),
               ),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const VideoParePage()));
-              },
             ),
-          ),
-          buildChildLayout(),
-        ],
+            SliverGrid(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  mainAxisSpacing: 20.w,
+                  crossAxisSpacing: 20.w,
+                  childAspectRatio: 3.2),
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  return VideoItem(
+                    item: videoList[index],
+                    isSelected: index == currentIndex,
+                    onItemClick: onVideoLabelItemClick,
+                  );
+                },
+                childCount: videoList.length,
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: buildBottom(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -151,9 +178,10 @@ class _HomePageState extends State<HomePage> {
           width: 240.w,
           alignment: Alignment.center,
           child: isLoading
-              ? const CircularProgressIndicator(
-                  strokeWidth: 3.0,
-                )
+              ?  LoadingAnimationWidget.discreteCircle(
+            color: primaryColor,
+            size: 60.h,
+          )
               : InkWell(
                   child: Container(
                     width: 240.w,
@@ -184,7 +212,7 @@ class _HomePageState extends State<HomePage> {
     return Container(
       height: 90.w,
       width: double.infinity,
-      margin: EdgeInsets.all(20.w),
+      margin: EdgeInsets.fromLTRB(0, 20.w, 0, 20.w),
       decoration: BoxDecoration(
         color: primaryColor,
         borderRadius: BorderRadius.circular(8.r),
@@ -210,63 +238,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  buildChildLayout() {
-    return SliverGrid(
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 200.w,
-        mainAxisSpacing: 20.w,
-        crossAxisSpacing: 20.w,
-        childAspectRatio: 1,
-      ),
-      delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          var item = Constant.meList[index];
-          return InkWell(
-            onTap: () async {
-              final List<AssetEntity>? result =
-                  await AssetPicker.pickAssets(context,
-                      pickerConfig: AssetPickerConfig(
-                        themeColor: primaryColor,
-                        maxAssets: 1,
-                        requestType: item['type'] as RequestType,
-                      ));
-              var file2 = await result![0].file;
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => VideoMontagePage(
-                            file: file2!,
-                            title: item['title'].toString(),
-                          )));
-            },
-            child: Container(
-              margin: EdgeInsets.all(10.w),
-              child: Column(
-                children: [
-                  // Image(
-                  //   image: AssetImage("assets/images/${item['bg']}"),
-                  //   width: 100.w,
-                  //   height: 100.w,
-                  //   fit: BoxFit.fill,
-                  // ),
-                  Icon(
-                    item['icon'] as IconData?,
-                    size: 80.w,
-                  ),
-                  Text(item['title'].toString()),
-                ],
-              ),
-            ),
-          );
-        },
-        childCount: Constant.meList.length,
-      ),
-    );
-  }
-
   buildBottom() {
     return Container(
-      margin: EdgeInsets.only(bottom: 20.w),
+      margin: EdgeInsets.fromLTRB(0, 30.w, 0, 0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
