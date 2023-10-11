@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:downloaderx/data/video_parse.dart';
-import 'package:downloaderx/pages/video_detail.dart';
+import 'package:downloaderx/pages/voide_parse_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -58,7 +58,6 @@ class _HistoryPageState extends State<HistoryPage> {
         ),
         body: RefreshIndicator(
           color: primaryColor,
-          //下拉停止的距离
           displacement: 44.0.h,
           onRefresh: _refreshItems,
           child: dataList.length > 0
@@ -74,7 +73,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          VideoDetail(bean: info)));
+                                          VideoParePage(bean: info)));
                             },
                             child: Container(
                               color: Colors.white,

@@ -9,21 +9,23 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:video_player/video_player.dart';
 
+import '../data/video_parse.dart';
 import '../models/video_info.dart';
 import '../utils/parse/other.dart';
 import '../widget/video_label_item.dart';
 
 class VideoParePage extends StatefulWidget {
-  const VideoParePage({super.key});
+  VideoParePage({super.key, this.bean});
+
+  VideoParse? bean;
 
   @override
   State<VideoParePage> createState() => _VideoParePageState();
 }
 
 class _VideoParePageState extends State<VideoParePage> {
-  final TextEditingController textController = TextEditingController(
-      text:
-          'https://www.youtube.com/watch?v=Ek1QD7AH9XQ'); //https://www.youtube.com/watch?v=Ek1QD7AH9XQ
+  TextEditingController textController = TextEditingController(
+      text: ''); //https://www.youtube.com/watch?v=Ek1QD7AH9XQ
   List<VideoInfo> videoList = [];
   late VideoPlayerController _controller;
   bool isLoading = false;
@@ -35,6 +37,13 @@ class _VideoParePageState extends State<VideoParePage> {
   @override
   void initState() {
     super.initState();
+    if (widget.bean != null) {
+      setState(() {
+        textController.text = widget.bean?.parseUrl ?? "";
+      });
+      onResult(widget.bean?.videoList ?? []);
+      startParse();
+    }
   }
 
   @override
@@ -48,7 +57,7 @@ class _VideoParePageState extends State<VideoParePage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "视频去水印",
           style: TextStyle(
             color: Colors.white,
@@ -60,10 +69,10 @@ class _VideoParePageState extends State<VideoParePage> {
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
-              child: buildContainer(),
+              child: inputContainer(),
             ),
             SliverToBoxAdapter(
-              child: buildRow(),
+              child: actionRow(),
             ),
             SliverToBoxAdapter(
               child: Visibility(
@@ -146,7 +155,7 @@ class _VideoParePageState extends State<VideoParePage> {
     );
   }
 
-  buildRow() {
+  actionRow() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -178,10 +187,10 @@ class _VideoParePageState extends State<VideoParePage> {
           width: 240.w,
           alignment: Alignment.center,
           child: isLoading
-              ?  LoadingAnimationWidget.discreteCircle(
-            color: primaryColor,
-            size: 60.h,
-          )
+              ? LoadingAnimationWidget.discreteCircle(
+                  color: primaryColor,
+                  size: 60.h,
+                )
               : InkWell(
                   child: Container(
                     width: 240.w,
@@ -208,33 +217,38 @@ class _VideoParePageState extends State<VideoParePage> {
     );
   }
 
-  Container buildContainer() {
-    return Container(
-      height: 90.w,
-      width: double.infinity,
-      margin: EdgeInsets.fromLTRB(0, 20.w, 0, 20.w),
-      decoration: BoxDecoration(
-        color: primaryColor,
-        borderRadius: BorderRadius.circular(8.r),
-      ),
-      child: TextField(
-        maxLines: 1,
-        textAlignVertical: TextAlignVertical.center,
-        controller: textController,
-        textInputAction: TextInputAction.done,
-        onSubmitted: (value) => startParse(),
-        style: const TextStyle(color: Colors.white),
-        decoration: InputDecoration(
-          hintText: "请输入视频地址",
-          hintStyle: const TextStyle(color: Colors.white),
-          border: const OutlineInputBorder(borderSide: BorderSide.none),
-          focusedBorder: const OutlineInputBorder(borderSide: BorderSide.none),
-          enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide.none,
+  inputContainer() {
+    return Column(
+      children: [
+        Container(
+          height: 90.w,
+          width: double.infinity,
+          margin: EdgeInsets.fromLTRB(0, 20.w, 0, 20.w),
+          decoration: BoxDecoration(
+            color: primaryColor,
+            borderRadius: BorderRadius.circular(8.r),
           ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 15.w),
+          child: TextField(
+            maxLines: 1,
+            textAlignVertical: TextAlignVertical.center,
+            controller: textController,
+            textInputAction: TextInputAction.done,
+            onSubmitted: (value) => startParse(),
+            style: const TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              hintText: "请输入视频地址",
+              hintStyle: const TextStyle(color: Colors.white),
+              border: const OutlineInputBorder(borderSide: BorderSide.none),
+              focusedBorder:
+                  const OutlineInputBorder(borderSide: BorderSide.none),
+              enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide.none,
+              ),
+              contentPadding: EdgeInsets.symmetric(horizontal: 15.w),
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 

@@ -9,7 +9,6 @@ import '../widget/video_label_item.dart';
 
 class VideoDetail extends StatefulWidget {
   final VideoParse bean;
-
   const VideoDetail({super.key, required this.bean});
 
   @override
