@@ -30,20 +30,22 @@ class _VideoParePageState extends State<VideoParePage> {
   List<VideoInfo> videoList = [];
   late VideoPlayerController _controller;
   bool isLoading = false;
+  bool isVideoLoading = true;
   bool isDownloading = false;
   double percent = 0.0;
   int currentIndex = 0;
   bool isNeedVPN = false;
+  bool isEdit = false;
 
   @override
   void initState() {
     super.initState();
-    if (widget.bean != null && widget.bean?.videoList?.isNotEmpty == true) {
+    isEdit = widget.bean != null && widget.bean?.videoList != null;
+    if (isEdit) {
       setState(() {
         textController.text = widget.bean?.parseUrl ?? "";
       });
       onResult(widget.bean?.videoList);
-      startParse();
     }
   }
 
@@ -67,7 +69,7 @@ class _VideoParePageState extends State<VideoParePage> {
         ),
       ),
       body: Container(
-        margin: EdgeInsets.fromLTRB(30.w, 0, 30.w, 0),
+        margin: EdgeInsets.fromLTRB(30.w, 30.w, 30.w, 30.w),
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
@@ -95,7 +97,7 @@ class _VideoParePageState extends State<VideoParePage> {
                 margin: EdgeInsets.fromLTRB(0, 30.w, 0, 30.w),
                 child: videoList.isNotEmpty
                     ? VideoXWidget(
-                        isLoading: isLoading,
+                        isLoading: isVideoLoading,
                         controller: _controller,
                       )
                     : Container(),
@@ -106,7 +108,7 @@ class _VideoParePageState extends State<VideoParePage> {
                   crossAxisCount: 3,
                   mainAxisSpacing: 20.w,
                   crossAxisSpacing: 20.w,
-                  childAspectRatio: 3.2),
+                  childAspectRatio: 2.8),
               delegate: SliverChildBuilderDelegate(
                 (BuildContext context, int index) {
                   return VideoItem(
@@ -371,6 +373,12 @@ class _VideoParePageState extends State<VideoParePage> {
       )..initialize().then((_) {
           _controller.play();
           isLoading = false;
+          if (_controller.value.hasError && isEdit) {
+            isEdit = false;
+            startParse();
+          } else {
+            isVideoLoading = false;
+          }
           _controller.addListener(() {
             setState(() {});
           });

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
+import '../constants/colors.dart';
 import '../widget/primary_button.dart';
 
 class LoginPage extends StatefulWidget {
@@ -11,6 +13,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  var isLoading=false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
         width: double.infinity,
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: 30.w,
+            horizontal: 60.w,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -39,91 +42,111 @@ class _LoginPageState extends State<LoginPage> {
                 "Please confirm your email \nand enter  your password",
                 style: TextStyle(fontSize: 28.sp, color: Colors.black87),
               ),
-              SizedBox(height: 40.w),
-              TextField(
-                decoration: InputDecoration(
-                  hintText: "Enter your email",
-                  labelText: "Email",
-                  hintStyle: TextStyle(
-                    fontSize: 28.sp,
-                    color: Color(0xFF1A1A1A).withOpacity(0.2494),
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(
-                      color: Colors.blue,
-                      width: 2.0,
+              Container(
+                height: 100.h,
+                margin: EdgeInsets.symmetric(vertical: 40.h),
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: "Enter your email",
+                    labelText: "Email",
+                    hintStyle: TextStyle(
+                      fontSize: 26.sp,
+                      color: const Color(0xFF1A1A1A).withOpacity(0.2494),
                     ),
-                  ),
-                  disabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(
-                      color: Colors.red,
-                      width: 2.0,
+                    filled: true,
+                    fillColor: Colors.white,
+                    enabledBorder: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderSide: BorderSide(
+                        color: primaryColor,
+                        width: 2.0,
+                      ),
                     ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                    borderSide: BorderSide(
-                      color: Colors.green,
-                      width: 2.0,
+                    disabledBorder: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderSide: BorderSide(
+                        color: primaryColor,
+                        width: 2.0,
+                      ),
+                    ),
+                    focusedBorder: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderSide: BorderSide(
+                        color: primaryColor,
+                        width: 2.0,
+                      ),
                     ),
                   ),
                 ),
               ),
-              SizedBox(height: 24.w),
-              TextField(
-                decoration: InputDecoration(
-                  hintText: "Enter your password",
-                  hintStyle: TextStyle(
-                    fontSize: 28.sp,
-                    color: Color(0xFF1A1A1A).withOpacity(0.2494),
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                  suffixIcon: Icon(
-                    Icons.remove_red_eye_outlined,
-                    size: 24.sp,
-                    color: Colors.black.withOpacity(0.1953),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.w),
-                    borderSide: BorderSide(
-                      color: Color(0xFF1A1A1A).withOpacity(0.1),
-                      width: 1.sp,
+              Container(
+                height: 100.h,
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: "Enter your password",
+                    labelText: "Password",
+                    hintStyle: TextStyle(
+                      fontSize: 26.sp,
+                      color: const Color(0xFF1A1A1A).withOpacity(0.2494),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    enabledBorder: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderSide: BorderSide(
+                        color: primaryColor,
+                        width: 2.0,
+                      ),
+                    ),
+                    disabledBorder: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderSide: BorderSide(
+                        color: primaryColor,
+                        width: 2.0,
+                      ),
+                    ),
+                    focusedBorder: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderSide: BorderSide(
+                        color: primaryColor,
+                        width: 2.0,
+                      ),
                     ),
                   ),
                 ),
               ),
               SizedBox(height: 8.w),
-              SizedBox(
-                width: 375.w,
+              Container(
+                alignment: Alignment.centerRight,
                 child: Text(
                   "Forget password?",
                   style: TextStyle(
-                    fontSize: 28.sp,
+                    fontSize: 24.sp,
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   textAlign: TextAlign.end,
                 ),
               ),
-              SizedBox(height: 92.w),
-              PrimaryButton(text: "Login"),
-              SizedBox(height: 24.w),
-              SizedBox(
-                width: 375.w,
-                child: Text(
-                  "Create new account",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontSize: 28.sp,
-                    fontWeight: FontWeight.w500,
+              SizedBox(height: 50.h),
+              Align(
+                alignment: Alignment.centerRight,
+                child: FloatingActionButton(
+                  backgroundColor: primaryColor,
+                  shape: const CircleBorder(),
+                  onPressed: () {
+                   setState(() {
+                     isLoading=true;
+                   });
+                  },
+                  child: isLoading? LoadingAnimationWidget.hexagonDots(
+                    color: Colors.white,
+                    size: 40.h,
+                  ):Icon(
+                    Icons.u_turn_right,
+                    color: Colors.white,
                   ),
-                  textAlign: TextAlign.center,
                 ),
-              ),
+              )
             ],
           ),
         ),

@@ -19,15 +19,18 @@ class _VideoXWidgetState extends State<VideoXWidget> {
   @override
   void initState() {
     super.initState();
-
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 180,
       color: Colors.black,
-      child: Stack(children: [
+      child: Stack(alignment: Alignment.center, children: [
         VideoPlayer(widget.controller),
+        widget.isLoading
+            ? const SizedBox()
+            : ControlsOverlay(controller: widget.controller),
         widget.isLoading
             ? const Positioned(
                 top: 0,
@@ -40,7 +43,6 @@ class _VideoXWidgetState extends State<VideoXWidget> {
                   ),
                 ))
             : const SizedBox(),
-        ControlsOverlay(controller: widget.controller),
         // VideoProgressIndicator(widget.controller, allowScrubbing: true),
       ]),
     );

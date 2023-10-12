@@ -24,7 +24,6 @@ class _PlatFormItemState extends State<PlatFormItem> {
   Widget build(BuildContext context) {
     return GestureDetector(
       child: Container(
-        margin: EdgeInsets.fromLTRB(20.w, 20.w, 20.w, 0),
         decoration: BoxDecoration(
             gradient: widget.isSelected
                 ? const LinearGradient(
