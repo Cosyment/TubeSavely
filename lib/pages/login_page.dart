@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -13,7 +14,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  var isLoading=false;
+  var isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,86 +45,99 @@ class _LoginPageState extends State<LoginPage> {
                 style: TextStyle(fontSize: 28.sp, color: Colors.black87),
               ),
               Container(
-                height: 100.h,
+                height: 88.h,
                 margin: EdgeInsets.symmetric(vertical: 40.h),
                 child: TextField(
+                  autofocus: true,
+                  keyboardType: TextInputType.emailAddress,
+                  inputFormatters: <TextInputFormatter>[
+                    LengthLimitingTextInputFormatter(16)
+                  ],
+                  style: TextStyle(color: primaryColor, fontSize: 28.sp),
                   decoration: InputDecoration(
                     hintText: "Enter your email",
                     labelText: "Email",
                     hintStyle: TextStyle(
                       fontSize: 26.sp,
-                      color: const Color(0xFF1A1A1A).withOpacity(0.2494),
+                      color: Colors.grey,
                     ),
+                    labelStyle: TextStyle(fontSize: 26.sp, color: Colors.grey),
                     filled: true,
                     fillColor: Colors.white,
-                    enabledBorder: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(14.r)),
                       borderSide: BorderSide(
-                        color: primaryColor,
-                        width: 2.0,
+                        color: Colors.grey,
+                        width: 1.w,
                       ),
                     ),
-                    disabledBorder: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    disabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(14.r)),
                       borderSide: BorderSide(
                         color: primaryColor,
-                        width: 2.0,
+                        width: 1.w,
                       ),
                     ),
-                    focusedBorder: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(14.r)),
                       borderSide: BorderSide(
                         color: primaryColor,
-                        width: 2.0,
+                        width: 4.w,
                       ),
                     ),
                   ),
                 ),
               ),
               Container(
-                height: 100.h,
+                height: 88.h,
                 child: TextField(
+                  keyboardType: TextInputType.visiblePassword,
+                  inputFormatters: <TextInputFormatter>[
+                    LengthLimitingTextInputFormatter(16)
+                  ],
+                  style: TextStyle(color: primaryColor, fontSize: 28.sp),
                   decoration: InputDecoration(
                     hintText: "Enter your password",
                     labelText: "Password",
                     hintStyle: TextStyle(
                       fontSize: 26.sp,
-                      color: const Color(0xFF1A1A1A).withOpacity(0.2494),
+                      color: Colors.grey,
                     ),
+                    labelStyle: TextStyle(fontSize: 26.sp, color: Colors.grey),
                     filled: true,
                     fillColor: Colors.white,
-                    enabledBorder: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(14.r)),
                       borderSide: BorderSide(
-                        color: primaryColor,
-                        width: 2.0,
+                        color: Colors.grey,
+                        width: 1.w,
                       ),
                     ),
-                    disabledBorder: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    disabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(14.r)),
                       borderSide: BorderSide(
                         color: primaryColor,
-                        width: 2.0,
+                        width: 1.w,
                       ),
                     ),
-                    focusedBorder: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(14.r)),
                       borderSide: BorderSide(
                         color: primaryColor,
-                        width: 2.0,
+                        width: 4.w,
                       ),
                     ),
                   ),
                 ),
               ),
-              SizedBox(height: 8.w),
+              SizedBox(height: 12.w),
               Container(
                 alignment: Alignment.centerRight,
                 child: Text(
                   "Forget password?",
                   style: TextStyle(
                     fontSize: 24.sp,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: primaryColor,
                   ),
                   textAlign: TextAlign.end,
                 ),
@@ -134,17 +149,19 @@ class _LoginPageState extends State<LoginPage> {
                   backgroundColor: primaryColor,
                   shape: const CircleBorder(),
                   onPressed: () {
-                   setState(() {
-                     isLoading=true;
-                   });
+                    setState(() {
+                      isLoading = true;
+                    });
                   },
-                  child: isLoading? LoadingAnimationWidget.hexagonDots(
-                    color: Colors.white,
-                    size: 40.h,
-                  ):Icon(
-                    Icons.u_turn_right,
-                    color: Colors.white,
-                  ),
+                  child: isLoading
+                      ? LoadingAnimationWidget.hexagonDots(
+                          color: Colors.white,
+                          size: 40.h,
+                        )
+                      : Icon(
+                          Icons.u_turn_right,
+                          color: Colors.white,
+                        ),
                 ),
               )
             ],

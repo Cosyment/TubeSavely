@@ -58,7 +58,7 @@ class _PushStreamPageState extends State<PushStreamPage>
         ),
       ),
       body: Container(
-        margin: EdgeInsets.all(25.w),
+        margin: EdgeInsets.all(30.w),
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
