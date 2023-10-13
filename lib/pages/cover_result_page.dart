@@ -79,17 +79,7 @@ class _CoverResultPageState extends State<CoverResultPage> {
             SizedBox(height: 20.w),
             InkWell(
               onTap: () async {
-                Directory? externalDir = await getExternalStorageDirectory();
-                String externalPath = externalDir!.path;
-                print(externalPath);
-                List<Directory>? externalCacheDir =
-                    await getExternalCacheDirectories();
-                String externalCachePath = externalCacheDir![0].path;
-                print(externalCachePath);
-
-                // PhotoManager.editor.saveVideo(
-                //     widget.video, title: path.basename(widget.video.path),
-                //     relativePath: "");
+                savePhoto();
               },
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 20.w, horizontal: 40.w),
@@ -124,23 +114,16 @@ class _CoverResultPageState extends State<CoverResultPage> {
     var status = await Permission.photos.status;
     if (permition) {
       if (Platform.isIOS) {
-        if (status.isGranted) {
-          final result = await ImageGallerySaver.saveImage(_imagebytes);
+        final result = await ImageGallerySaver.saveImage(_imagebytes);
+        if (result != null) {
           ToastExit.show("保存成功");
         }
-        if (status.isDenied) {
-          print("IOS拒绝");
-        }
       } else {
-        //安卓
-        if (status.isGranted) {
-          print("Android已授权");
-          final result = await ImageGallerySaver.saveImage(_imagebytes);
-          if (result != null) {
-            ToastExit.show("保存成功");
-          } else {
-            ToastExit.show("保存失败");
-          }
+        final result = await ImageGallerySaver.saveImage(_imagebytes);
+        if (result != null) {
+          ToastExit.show("保存成功");
+        } else {
+          ToastExit.show("保存失败");
         }
       }
     } else {
@@ -163,6 +146,7 @@ class _CoverResultPageState extends State<CoverResultPage> {
       if (status.isDenied) {
         Map<Permission, PermissionStatus> statuses = await [
           Permission.storage,
+          Permission.photos,
         ].request();
       }
       return status.isGranted;

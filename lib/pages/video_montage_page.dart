@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:downloaderx/pages/cover_result_page.dart';
 import 'package:downloaderx/pages/video_result_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 import 'package:video_editor/video_editor.dart';
 import 'package:fraction/fraction.dart';
 import '../constants/colors.dart';
@@ -30,7 +32,7 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
 
   var exportingProgress = ValueNotifier<double>(0.0);
   var isExporting = ValueNotifier<bool>(false);
-  late VideoFFmpegVideoEditorConfig config;
+  late FFmpegVideoEditorConfig config;
   double height = 60;
 
   var list = [
@@ -69,8 +71,12 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
 
     controller = VideoEditorController.file(
       file,
-      minDuration: const Duration(seconds: 1),
-      maxDuration: const Duration(seconds: 10),
+      minDuration: Duration(seconds: 1),
+      maxDuration: Duration(seconds: 10),
+      coverStyle: CoverSelectionStyle(selectedBorderColor: primaryColor),
+      cropStyle: CropGridStyle(
+        selectedBoundariesColor: primaryColor,
+      ),
     );
     controller.initialize(aspectRatio: 9 / 16).then((_) {
       setState(() {});
@@ -95,7 +101,7 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
           controller,
           format: VideoExportFormat.mp4,
           commandBuilder: (config, videoPath, outputPath) {
-            return '-i $videoPath -vf reverse -q:v 0 -b:v 2M -y $outputPath';
+            return '-i $videoPath -vf reverse -q:v 0 -b:v 2M  -y $outputPath';
           },
         );
         break;
@@ -124,10 +130,10 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
             return '-i $videoPath -c:a aac -vf scale=${list[selectIndex]['value']}:-2 -threads 4 -q:v 0 -b:v 2M -y $outputPath';
           },
         );
-
         break;
       case "视频截图":
-        viewer = widgetViewer();
+        viewer = widgetViewer1();
+        config = CoverFFmpegVideoEditorConfig(controller);
         break;
       case "视频合并":
         viewer = widgetViewer();
@@ -145,7 +151,7 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
           controller,
           format: VideoExportFormat.mp4,
           commandBuilder: (config, videoPath, outputPath) {
-            return '-i $videoPath -vf ${listMirror[selectIndex]['value']} -q:v 0 -b:v 2M  -y $outputPath';
+            return '-i $videoPath -vf ${listMirror[selectIndex]['value']} -q:v 0 -b:v 2M -y $outputPath';
           },
         );
         break;
@@ -183,6 +189,7 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context, designSize: const Size(750, 1378));
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
@@ -190,15 +197,17 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 40.w),
-          child: Column(
-            children: [
-              Expanded(
-                child: viewer,
-              ),
-              SizedBox(height: 15.w),
-              widgetType(),
-              widgetBottom()
-            ],
+          child: Container(
+            child: Column(
+              children: [
+                Expanded(
+                  child: viewer,
+                ),
+                SizedBox(height: 15.w),
+                widgetType(),
+                widgetBottom()
+              ],
+            ),
           ),
         ),
       ),
@@ -221,6 +230,7 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
       case "视频剪辑":
         return trimSlider();
       case "视频倒放":
+        return Container();
       case "视频旋转":
         return widgetRotate();
       case "视频变速":
@@ -228,7 +238,7 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
       case "视频压缩":
         return widgetQuality();
       case "视频截图":
-        return trimSlider();
+        return coverSelection();
       case "视频合并":
       case "视频转GIF":
         return Container();
@@ -433,20 +443,22 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
   }
 
   exportVideo() async {
+    showProgress();
     exportingProgress.value = 0;
     isExporting.value = true;
+    var execute = await config.getExecuteConfig();
     await ExportService.runFFmpegCommand(
-      await config.getExecuteConfig(),
+      execute!,
       onProgress: (stats) {
-        exportingProgress.value = config.getFFmpegProgress(stats.getTime() as int);
-        // showDialog(
-        //   context: context,
-        //   builder: (_) {
-        //     return Container();
-        //   },
-        // );
+        exportingProgress.value =
+            config.getFFmpegProgress(stats.getTime().toInt());
+        print(exportingProgress.value);
+        if (progresState != null) {
+          progresState!(() {});
+        }
       },
       onError: (e, s) {
+        Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(e.toString()),
@@ -455,12 +467,72 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
         );
       },
       onCompleted: (file) {
+        Navigator.pop(context);
         isExporting.value = false;
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => VideoResultPage(video: file),
-          ),
+        if (title == "视频截图") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CoverResultPage(cover: file),
+            ),
+          );
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => VideoResultPage(video: file),
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  StateSetter? progresState;
+
+  showProgress() {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) {
+        return StatefulBuilder(
+          builder: (context, state) {
+            progresState = state;
+            return Center(
+              child: Container(
+                width: double.infinity,
+                height: 300.w,
+                margin: EdgeInsets.symmetric(horizontal: 50.w),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 140.w,
+                      height: 140.w,
+                      child: CircularPercentIndicator(
+                        radius: 70.0.r,
+                        lineWidth: 4.0,
+                        percent: exportingProgress.value,
+                        backgroundColor: primaryColor,
+                        center: Text(
+                          "${(exportingProgress.value * 100).ceil()}%",
+                          style: TextStyle(
+                            color: primaryColor,
+                          ),
+                        ),
+                        progressColor: progressColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
         );
       },
     );
@@ -507,34 +579,36 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: listMirror.asMap().keys.map((int index) {
-        return InkWell(
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 20.w),
-            margin: EdgeInsets.symmetric(vertical: 10.w, horizontal: 10.w),
-            decoration: BoxDecoration(
-                gradient: selectIndex == index
-                    ? const LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Color(0xFFFC6AEC),
-                          Color(0xFF7776FF),
-                        ],
-                      )
-                    : null,
-                border: Border.all(color: primaryColor, width: 1.0),
-                borderRadius: const BorderRadius.all(Radius.circular(4))),
-            child: Text(
-              listMirror[index]['title'].toString(),
-              style: TextStyle(
-                  color: selectIndex == index ? Colors.white : Colors.black),
+        return Padding(
+          padding: EdgeInsets.all(10.w),
+          child: InkWell(
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 20.w),
+              decoration: BoxDecoration(
+                  gradient: selectIndex == index
+                      ? const LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Color(0xFFFC6AEC),
+                            Color(0xFF7776FF),
+                          ],
+                        )
+                      : null,
+                  border: Border.all(color: primaryColor, width: 1.0),
+                  borderRadius: const BorderRadius.all(Radius.circular(4))),
+              child: Text(
+                listMirror[index]['title'].toString(),
+                style: TextStyle(
+                    color: selectIndex == index ? Colors.white : Colors.black),
+              ),
             ),
+            onTap: () {
+              setState(() {
+                selectIndex = index;
+              });
+            },
           ),
-          onTap: () {
-            setState(() {
-              selectIndex = index;
-            });
-          },
         );
       }).toList(),
     );
@@ -575,20 +649,51 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
             );
           },
         ),
-        Container(
-          width: MediaQuery.of(context).size.width,
-          margin: EdgeInsets.symmetric(vertical: height / 4),
-          child: TrimSlider(
-            controller: controller,
-            height: height,
-            horizontalMargin: height / 4,
-            child: TrimTimeline(
-              controller: controller,
-              padding: const EdgeInsets.only(top: 10),
-            ),
-          ),
-        )
+        controller != null
+            ? Container(
+                width: double.infinity,
+                margin: EdgeInsets.symmetric(vertical: height / 4),
+                child: TrimSlider(
+                  controller: controller,
+                  height: height,
+                  horizontalMargin: height / 4,
+                  child: TrimTimeline(
+                    controller: controller,
+                    padding: const EdgeInsets.only(top: 10),
+                  ),
+                ),
+              )
+            : Container(),
       ],
+    );
+  }
+
+  coverSelection() {
+    return SingleChildScrollView(
+      child: Center(
+        child: Container(
+          margin: EdgeInsets.all(15.w),
+          child: CoverSelection(
+            controller: controller,
+            size: height + 10,
+            quantity: 8,
+            selectedCoverBuilder: (cover, size) {
+              return Stack(
+                alignment: Alignment.center,
+                children: [
+                  cover,
+                  Icon(
+                    Icons.check_circle,
+                    color:
+                        CoverSelectionStyle(selectedBorderColor: primaryColor)
+                            .selectedBorderColor,
+                  )
+                ],
+              );
+            },
+          ),
+        ),
+      ),
     );
   }
 

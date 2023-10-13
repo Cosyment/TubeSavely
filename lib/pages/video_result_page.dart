@@ -149,7 +149,7 @@ class _VideoResultPageState extends State<VideoResultPage> {
     var status = await Permission.photos.status;
     if (permition) {
       Directory? externalDir = await getExternalStorageDirectory();
-      var s = externalDir!.path + path.basename(widget.video.path);
+      var s = externalDir!.path + "/" + path.basename(widget.video.path);
       if (Platform.isIOS) {
         final result = await ImageGallerySaver.saveFile(s);
         ToastExit.show("保存成功");
@@ -157,7 +157,7 @@ class _VideoResultPageState extends State<VideoResultPage> {
           print("IOS拒绝");
         }
       } else {
-        final result = await ImageGallerySaver.saveFile(s);
+        final result = await ImageGallerySaver.saveFile(widget.video.path);
         if (result != null) {
           ToastExit.show("保存成功");
         } else {
