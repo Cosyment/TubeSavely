@@ -27,7 +27,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     namespace "com.xhx.downloaderx"
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 33
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -49,7 +49,7 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 24
-        targetSdkVersion flutter.targetSdkVersion
+        targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
@@ -83,7 +83,7 @@ android {
         s360 {}   // 360
         lenovo {}   // 联想
         aliuc {}   // 阿里UC
-        muyu {}   // 官方包
+        guanfang {}   // 官方包
     }
     productFlavors.all { flavor ->
         // 友盟推送渠道包， UMENG_CHANNEL 是根据你AndroidManifest.xml来配置的，请看下面。
