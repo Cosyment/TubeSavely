@@ -84,15 +84,16 @@ class _CoverResultPageState extends State<CoverResultPage> {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 20.w, horizontal: 40.w),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5.r),
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Color(0xFFFC6AEC),
-                        Color(0xFF7776FF),
-                      ],
-                    )),
+                  borderRadius: BorderRadius.circular(15.r),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFFFC6AEC),
+                      Color(0xFF7776FF),
+                    ],
+                  ),
+                ),
                 child: Text(
                   "保存",
                   style: TextStyle(

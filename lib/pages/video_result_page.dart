@@ -120,7 +120,7 @@ class _VideoResultPageState extends State<VideoResultPage> {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 20.w, horizontal: 40.w),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5.r),
+                    borderRadius: BorderRadius.circular(15.r),
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
