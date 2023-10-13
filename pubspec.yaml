@@ -62,6 +62,9 @@ dependencies:
   fluttertoast: ^8.2.2
   webview_flutter: ^4.4.1
   in_app_review: ^2.0.6
+  dio: ^5.2.1+1
+  common_utils: ^2.1.0
+  json2dart_safe: ^1.5.3
 
 dev_dependencies:
   flutter_test:
