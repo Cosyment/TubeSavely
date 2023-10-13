@@ -9,6 +9,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../constants/colors.dart';
 import 'tutorial_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PushStreamPage extends StatefulWidget {
   const PushStreamPage({super.key});
@@ -37,9 +38,9 @@ class _PushStreamPageState extends State<PushStreamPage>
   bool isCircular = false;
   var countdown = 0;
   var btnStr = "开始推流";
-  var controllerHost = TextEditingController();
-  var controllerSecretKey = TextEditingController();
-  var controllerLiveUrl = TextEditingController();
+  var controllerHost = TextEditingController(text: "rtmp://live-push.bilivideo.com/live-bvc/");
+  var controllerSecretKey = TextEditingController(text: "?streamname=live_1395106275_52446772&key=353e0970a59ad30ebb317984e0f6b348&schedule=rtmp&pflag=1");
+  var controllerLiveUrl = TextEditingController(text: "http://live.bilibili.com/27521273");
 
   @override
   void initState() {
@@ -105,7 +106,7 @@ class _PushStreamPageState extends State<PushStreamPage>
               ),
             ),
             SliverGrid.builder(
-              gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   crossAxisSpacing: 10.w,
                   mainAxisSpacing: 10.w,
@@ -121,7 +122,7 @@ class _PushStreamPageState extends State<PushStreamPage>
             ),
             SliverToBoxAdapter(
               child: Container(
-                margin: EdgeInsets.symmetric(vertical: 50.w,horizontal: 0),
+                margin: EdgeInsets.symmetric(vertical: 50.w, horizontal: 0),
                 child: Column(
                   children: [
                     GestureDetector(
@@ -203,6 +204,13 @@ class _PushStreamPageState extends State<PushStreamPage>
       ToastExit.show('请输入直播地址');
       return;
     }
+    if (isCircular) {
+      return;
+    }
+    if (btnStr=="正在直播中") {
+      jumpLaunchUrl(liveUrl);
+      return;
+    }
     setState(() {
       countdown = 0;
       isCircular = !isCircular;
@@ -227,6 +235,13 @@ class _PushStreamPageState extends State<PushStreamPage>
         });
       }
     });
+  }
+
+  Future<void> jumpLaunchUrl(webUrl) async {
+    final Uri uri = Uri.parse(webUrl);
+    if (!await launchUrl(uri)) {
+      throw Exception('Could not launch $uri');
+    }
   }
 
   void onItemClick(item) {

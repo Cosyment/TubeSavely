@@ -1,3 +1,4 @@
+import 'package:downloaderx/pages/feedback_page.dart';
 import 'package:downloaderx/pages/history_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -31,8 +32,8 @@ class _MinePageState extends State<MinePage> {
       "type": 1,
     },
     {
-      "icon": Icons.clear,
-      "title": "清除缓存",
+      "icon": Icons.feedback,
+      "title": "意见反馈",
       "type": 2,
     },
     {
@@ -190,7 +191,9 @@ class _MinePageState extends State<MinePage> {
     } else if (type == 1) {
       MethodPlugin.sikpPlay();
     } else if (type == 2) {
-      EventBus.getDefault().post("clear");
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const FeedBackPage()));
+      // EventBus.getDefault().post("clear");
     } else if (type == 3) {
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => const SettingPage()));

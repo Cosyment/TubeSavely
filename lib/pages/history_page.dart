@@ -55,6 +55,18 @@ class _HistoryPageState extends State<HistoryPage> {
             "解析记录",
             style: TextStyle(color: Colors.white),
           ),
+          actions: [
+            GestureDetector(
+              onTap: () {
+                cleanAll();
+              },
+              child: Container(
+                alignment: Alignment.center,
+                child: Icon(Icons.delete_forever),
+                margin: EdgeInsets.all(20),
+              ),
+            )
+          ],
         ),
         body: RefreshIndicator(
           color: primaryColor,
@@ -207,6 +219,12 @@ class _HistoryPageState extends State<HistoryPage> {
                   ),
                 ),
         ));
+  }
+
+  void cleanAll() {
+    dataList.clear();
+    setState(() {});
+    DbManager.instance().clear();
   }
 
   Future<void> _refreshItems() async {

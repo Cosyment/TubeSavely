@@ -36,7 +36,7 @@ class AgreementDialogState extends State<AgreementDialog> {
         child: Container(
           constraints: const BoxConstraints(
             minWidth: 240,
-            maxWidth: 260,
+            maxWidth: 240,
             minHeight: 260,
           ),
           decoration: BoxDecoration(
