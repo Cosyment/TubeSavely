@@ -1,10 +1,12 @@
-import 'package:flutter/cupertino.dart';
+import 'package:downloaderx/utils/exit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../constants/colors.dart';
+import '../network/http_api.dart';
+import '../network/http_utils.dart';
 
 class FeedBackPage extends StatefulWidget {
   const FeedBackPage({super.key});
@@ -14,6 +16,9 @@ class FeedBackPage extends StatefulWidget {
 }
 
 class _FeedBackPageState extends State<FeedBackPage> {
+  late TextEditingController contentController =
+      TextEditingController(text: "");
+  late TextEditingController mobileController = TextEditingController(text: "");
   var isLoading = false;
 
   @override
@@ -33,6 +38,7 @@ class _FeedBackPageState extends State<FeedBackPage> {
                   maxLines: 8,
                   minLines: 5,
                   autofocus: true,
+                  controller: contentController,
                   keyboardType: TextInputType.text,
                   inputFormatters: <TextInputFormatter>[
                     LengthLimitingTextInputFormatter(200)
@@ -77,6 +83,7 @@ class _FeedBackPageState extends State<FeedBackPage> {
                 height: 88.h,
                 margin: EdgeInsets.symmetric(vertical: 30.h),
                 child: TextField(
+                  controller: mobileController,
                   keyboardType: TextInputType.visiblePassword,
                   inputFormatters: <TextInputFormatter>[
                     LengthLimitingTextInputFormatter(16)
@@ -123,9 +130,7 @@ class _FeedBackPageState extends State<FeedBackPage> {
                 backgroundColor: primaryColor,
                 shape: const CircleBorder(),
                 onPressed: () {
-                  setState(() {
-                    isLoading = true;
-                  });
+                  submit();
                 },
                 child: isLoading
                     ? LoadingAnimationWidget.hexagonDots(
@@ -142,5 +147,30 @@ class _FeedBackPageState extends State<FeedBackPage> {
         ),
       ),
     );
+  }
+
+  submit() async {
+    setState(() {
+      isLoading = true;
+    });
+    String content = contentController.text;
+    if (content.isEmpty) {
+      ToastExit.show('请输入内容');
+      return;
+    }
+    var map = <String, dynamic>{};
+    map['content'] = content;
+    map['mobile'] = mobileController.text;
+    var respond = await HttpUtils.instance.requestNetWorkAy(
+        Method.post, HttpApi.submitFeedback,
+        queryParameters: map);
+    if (respond) {
+      await Future.delayed(Duration(milliseconds: 400));
+      ToastExit.show('感谢您的反馈~');
+      setState(() {
+        isLoading = false;
+      });
+    } else {}
+    Navigator.pop(context);
   }
 }

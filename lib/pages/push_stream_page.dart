@@ -8,6 +8,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../constants/colors.dart';
+import '../network/http_api.dart';
+import '../network/http_utils.dart';
 import 'tutorial_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -29,18 +31,22 @@ class _PushStreamPageState extends State<PushStreamPage>
     {'title': 'YouTobe', 'icon': 'youtobe.png'},
   ];
   List<dynamic> liveType = [
-    {'title': '催眠直播', 'icon': 'iconspdy.png'},
-    {'title': '音乐直播', 'icon': 'iconspbilibili.png'},
-    {'title': '电影直播', 'icon': 'icon_sp_acfun.png'},
+    {'title': '催眠直播', 'icon': 'iconspdy.png', 'type': 0},
+    {'title': '音乐直播', 'icon': 'iconspbilibili.png', 'type': 1},
+    {'title': '电影直播', 'icon': 'icon_sp_acfun.png', 'type': 2},
   ];
   var currentIndex = 0;
   var currentLiveIndex = 0;
   bool isCircular = false;
   var countdown = 0;
   var btnStr = "开始推流";
-  var controllerHost = TextEditingController(text: "rtmp://live-push.bilivideo.com/live-bvc/");
-  var controllerSecretKey = TextEditingController(text: "?streamname=live_1395106275_52446772&key=353e0970a59ad30ebb317984e0f6b348&schedule=rtmp&pflag=1");
-  var controllerLiveUrl = TextEditingController(text: "http://live.bilibili.com/27521273");
+  var controllerHost =
+      TextEditingController(text: "rtmp://live-push.bilivideo.com/live-bvc/");
+  var controllerSecretKey = TextEditingController(
+      text:
+          "?streamname=live_1395106275_52446772&key=353e0970a59ad30ebb317984e0f6b348&schedule=rtmp&pflag=1");
+  var controllerLiveUrl =
+      TextEditingController(text: "http://live.bilibili.com/27521273");
 
   @override
   void initState() {
@@ -186,12 +192,12 @@ class _PushStreamPageState extends State<PushStreamPage>
     );
   }
 
-  void onTap() {
+  void onTap() async {
     var host = controllerHost.value.text;
     var secretKey = controllerSecretKey.value.text;
     var liveUrl = controllerLiveUrl.value.text;
-    var plat = platform[currentIndex];
-    var type = liveType[currentLiveIndex];
+    var plat = platform[currentIndex]['title'];
+    var type = liveType[currentLiveIndex]['type'];
     if (host.isEmpty) {
       ToastExit.show('请输入服务器地址');
       return;
@@ -207,7 +213,7 @@ class _PushStreamPageState extends State<PushStreamPage>
     if (isCircular) {
       return;
     }
-    if (btnStr=="正在直播中") {
+    if (btnStr == "正在直播中") {
       jumpLaunchUrl(liveUrl);
       return;
     }
@@ -215,12 +221,22 @@ class _PushStreamPageState extends State<PushStreamPage>
       countdown = 0;
       isCircular = !isCircular;
     });
-    Future.delayed(Duration(seconds: 5), () {
-      startTimer();
-    });
+    var map = <String, dynamic>{};
+    map['liveHost'] = host;
+    map['secretKey'] = secretKey;
+    map['liveUrl'] = liveUrl;
+    map['platform'] = plat;
+    map['liveType'] = type;
+    var respond = await HttpUtils.instance.requestNetWorkAy(
+        Method.post, HttpApi.submitLiveStream,
+        queryParameters: map);
+    print(">>>>>>>>>>>>>>>${respond}");
+    await Future.delayed(Duration(milliseconds: 400));
+    startTimer();
   }
 
   void startTimer() {
+    ToastExit.show("已提交,正在排队等候推流中~");
     countdown = 9;
     Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       if (countdown == 1) {

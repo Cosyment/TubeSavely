@@ -1,7 +1,9 @@
+import 'package:downloaderx/network/http_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+
 import '../constants/colors.dart';
 import '../network/http_utils.dart';
 
@@ -50,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               SizedBox(height: 20.w),
               Text(
-                "Please confirm your email \nand enter  your password",
+                "Please confirm your email \nand enter  your code",
                 style: TextStyle(fontSize: 28.sp, color: Colors.black87),
               ),
               Container(
@@ -110,8 +112,8 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                       style: TextStyle(color: primaryColor, fontSize: 28.sp),
                       decoration: InputDecoration(
-                        hintText: "Enter your password",
-                        labelText: "Password",
+                        hintText: "Enter your code",
+                        labelText: "Code",
                         hintStyle: TextStyle(
                           fontSize: 26.sp,
                           color: Colors.grey,
@@ -226,7 +228,7 @@ class _LoginPageState extends State<LoginPage> {
     map['email'] = emailController.text;
     map['code'] = codeController.text;
     var requestNetWorkAy = await HttpUtils.instance
-        .requestNetWorkAy(Method.get, "/tUser/login", queryParameters: map);
+        .requestNetWorkAy(Method.post, HttpApi.login, queryParameters: map);
     setState(() {});
   }
 
@@ -234,7 +236,7 @@ class _LoginPageState extends State<LoginPage> {
     var map = <String, dynamic>{};
     map['email'] = emailController.text;
     var requestNetWorkAy = await HttpUtils.instance.requestNetWorkAy(
-        Method.get, "/tVerCode/sendCode",
+        Method.post, HttpApi.sendVerCode,
         queryParameters: map);
     setState(() {});
   }

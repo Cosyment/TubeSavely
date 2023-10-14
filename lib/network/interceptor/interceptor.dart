@@ -14,6 +14,7 @@ class AuthInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     // options.headers['Authorization'] = 'Bearer ${HttpUtils.token ?? ''}';
+    options.headers['userId'] = '0395359849';
     options.headers['UserAgent'] = 'mobile';
     options.headers['PackageNames'] = HttpUtils.appInfo;
     super.onRequest(options, handler);
