@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:downloaderx/data/video_parse.dart';
 import 'package:downloaderx/pages/voide_parse_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -58,7 +59,31 @@ class _HistoryPageState extends State<HistoryPage> {
           actions: [
             GestureDetector(
               onTap: () {
-                cleanAll();
+                showCupertinoDialog(
+                  barrierDismissible: true,
+                  context: context,
+                  builder: (context) {
+                    return CupertinoAlertDialog(
+                      title: Text("提示"),
+                      content: Text("确认删除吗？"),
+                      actions: [
+                        CupertinoDialogAction(
+                          child: const Text("取消"),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        CupertinoDialogAction(
+                          child: const Text("确定"),
+                          onPressed: () {
+                            cleanAll();
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
               },
               child: Container(
                 alignment: Alignment.center,

@@ -1,7 +1,13 @@
 import 'package:downloaderx/constants/constant.dart';
+import 'package:downloaderx/pages/home_page.dart';
+import 'package:downloaderx/pages/login_page.dart';
 import 'package:downloaderx/pages/webview.dart';
+import 'package:downloaderx/utils/exit.dart';
+import 'package:downloaderx/widget/confirm_dialog.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../constants/colors.dart';
 
@@ -14,8 +20,8 @@ class SettingPage extends StatefulWidget {
 
 List<dynamic> itemList = [
   {
-    "icon": Icons.open_with,
-    "title": "关于我们",
+    "icon": Icons.verified,
+    "title": "版本信息",
     "type": 0,
   },
   {
@@ -34,8 +40,21 @@ List<dynamic> itemList = [
     "type": 3,
   },
 ];
+var versionName = "";
 
 class _SettingPageState extends State<SettingPage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      PackageInfo.fromPlatform().then((value) {
+        setState(() {
+          versionName = value.version;
+        });
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +68,7 @@ class _SettingPageState extends State<SettingPage> {
             var item = itemList[index];
             return Card(
               elevation: 5,
-              margin: EdgeInsets.fromLTRB(30.w, 30.w, 30.w, 0),
+              margin: EdgeInsets.fromLTRB(40.w, 30.w, 40.w, 0),
               shadowColor: primaryColor,
               child: InkWell(
                 onTap: () {
@@ -81,6 +100,13 @@ class _SettingPageState extends State<SettingPage> {
                         flex: 1,
                         child: Container(),
                       ),
+                      Visibility(
+                        visible: item['type'] == 0,
+                        child: Text(
+                          versionName,
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -94,6 +120,7 @@ class _SettingPageState extends State<SettingPage> {
 
   void onItemClick(int type) async {
     if (type == 0) {
+      ToastExit.show("已是最新版本!");
     } else if (type == 1) {
       Navigator.push(
           context,
@@ -112,6 +139,37 @@ class _SettingPageState extends State<SettingPage> {
               url: Constant.privacyUrl,
             ),
           ));
-    } else if (type == 3) {}
+    } else if (type == 3) {
+      showCupertinoDialog(
+        barrierDismissible: true,
+        context: context,
+        builder: (context) {
+          return CupertinoAlertDialog(
+            title: Text("提示"),
+            content: Text("确认退出吗？"),
+            actions: [
+              CupertinoDialogAction(
+                child: const Text("取消"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              CupertinoDialogAction(
+                child: const Text("确定"),
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                    (Route<dynamic> route) => false,
+                  );
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
+
+  void onRightClick() {}
 }

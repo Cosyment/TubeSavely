@@ -67,6 +67,7 @@ dependencies:
   common_utils: ^2.1.0
   json2dart_safe: ^1.5.3
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -100,7 +101,7 @@ flutter:
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
-  # For details regarding adding assets from package dependencies, see
+  # For details regarding adding assets from package dependencies, see 就咩咩咩咩咩咩咩咩咩咩咩
   # https://flutter.dev/assets-and-images/#from-packages
 
   # To add custom fonts to your application, add a fonts section here,

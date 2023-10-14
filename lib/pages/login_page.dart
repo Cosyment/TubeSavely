@@ -181,18 +181,18 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ],
               ),
-              SizedBox(height: 12.w),
-              Container(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  "Forget password?",
-                  style: TextStyle(
-                    fontSize: 24.sp,
-                    color: primaryColor,
-                  ),
-                  textAlign: TextAlign.end,
-                ),
-              ),
+              // SizedBox(height: 12.w),
+              // Container(
+              //   alignment: Alignment.centerRight,
+              //   child: Text(
+              //     "Forget password?",
+              //     style: TextStyle(
+              //       fontSize: 24.sp,
+              //       color: primaryColor,
+              //     ),
+              //     textAlign: TextAlign.end,
+              //   ),
+              // ),
               SizedBox(height: 50.h),
               Align(
                 alignment: Alignment.centerRight,
@@ -210,10 +210,7 @@ class _LoginPageState extends State<LoginPage> {
                           color: Colors.white,
                           size: 40.h,
                         )
-                      : Icon(
-                          Icons.u_turn_right,
-                          color: Colors.white,
-                        ),
+                      : Image.asset("assets/next.png", fit: BoxFit.fill,width: 40.w,height: 40.w,),
                 ),
               )
             ],

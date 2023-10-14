@@ -3,11 +3,9 @@ import 'package:downloaderx/pages/history_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
 import '../constants/colors.dart';
 import '../plugin/method_plugin.dart';
-import '../utils/event_bus.dart';
 import 'login_page.dart';
 import 'setting_page.dart';
 import 'tutorial_page.dart';
@@ -37,34 +35,20 @@ class _MinePageState extends State<MinePage> {
       "type": 2,
     },
     {
-      "icon": Icons.settings,
-      "title": "设置",
+      "icon": Icons.history,
+      "title": "解析记录",
       "type": 3,
     },
     {
-      "icon": Icons.verified,
-      "title": "版本信息",
+      "icon": Icons.settings,
+      "title": "设置",
       "type": 4,
     },
-    {
-      "icon": Icons.history,
-      "title": "解析记录",
-      "type": 5,
-    },
   ];
-
-  var versionName = "";
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      PackageInfo.fromPlatform().then((value) {
-        setState(() {
-          versionName = value.version;
-        });
-      });
-    });
   }
 
   @override
@@ -130,9 +114,9 @@ class _MinePageState extends State<MinePage> {
                 var item = itemList[index];
                 return Card(
                   elevation: 5,
-                  margin: EdgeInsets.fromLTRB(30.w, 30.w, 30.w, 0),
+                  margin: EdgeInsets.fromLTRB(40.w, 30.w, 40.w, 0),
                   shadowColor: primaryColor,
-                  child: InkWell(
+                  child: GestureDetector(
                     onTap: () {
                       onItemClick(item['type']);
                     },
@@ -157,17 +141,6 @@ class _MinePageState extends State<MinePage> {
                           Text(
                             item['title'],
                             style: TextStyle(color: Colors.white),
-                          ),
-                          Flexible(
-                            flex: 1,
-                            child: Container(),
-                          ),
-                          Visibility(
-                            visible: item['type'] == 4,
-                            child: Text(
-                              versionName,
-                              style: TextStyle(color: Colors.white),
-                            ),
                           ),
                         ],
                       ),
@@ -196,18 +169,10 @@ class _MinePageState extends State<MinePage> {
       // EventBus.getDefault().post("clear");
     } else if (type == 3) {
       Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const SettingPage()));
-    } else if (type == 4) {
-      // Navigator.push(
-      //     context, MaterialPageRoute(builder: (context) => const ScrawlPage()));
-
-      final List<AssetEntity>? result = await AssetPicker.pickAssets(context,
-          pickerConfig: AssetPickerConfig(maxAssets: 1));
-      // Navigator.push(context,
-      //     MaterialPageRoute(builder: (context) => const WatermarkPage()));
-    } else {
-      Navigator.push(context,
           MaterialPageRoute(builder: (context) => const HistoryPage()));
-    }
+    } else if (type == 4) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const SettingPage()));
+    } else {}
   }
 }

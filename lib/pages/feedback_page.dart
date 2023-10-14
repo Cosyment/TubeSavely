@@ -137,9 +137,11 @@ class _FeedBackPageState extends State<FeedBackPage> {
                         color: Colors.white,
                         size: 40.h,
                       )
-                    : Icon(
-                        Icons.navigate_next,
-                        color: Colors.white,
+                    : Image.asset(
+                        "assets/next.png",
+                        fit: BoxFit.fill,
+                        width: 40.w,
+                        height: 40.w,
                       ),
               )
             ],
@@ -150,14 +152,14 @@ class _FeedBackPageState extends State<FeedBackPage> {
   }
 
   submit() async {
-    setState(() {
-      isLoading = true;
-    });
     String content = contentController.text;
     if (content.isEmpty) {
       ToastExit.show('请输入内容');
       return;
     }
+    setState(() {
+      isLoading = true;
+    });
     var map = <String, dynamic>{};
     map['content'] = content;
     map['mobile'] = mobileController.text;
