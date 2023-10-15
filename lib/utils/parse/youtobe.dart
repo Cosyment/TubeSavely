@@ -111,14 +111,15 @@ class YouToBe {
             videoUrl: info.url.toString(),
             parseUrl: parseUrl,
             title: video.title,
+            type: 0,
             author: video.author,
             createTime: DateTime.now().millisecondsSinceEpoch,
             size: info.size.toString(),
             totalBytes: info.size.totalBytes,
             cover: coverInfoList.last.url,
             videoList: videoList);
-        onResult(videoList);
-        EventBus.getDefault().post(videoParse);
+        onResult(videoParse);
+        // EventBus.getDefault().post(videoParse);
         DbManager.instance().add(videoParse);
       }
     } catch (e) {

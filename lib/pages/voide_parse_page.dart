@@ -13,6 +13,7 @@ import 'package:video_player/video_player.dart';
 import '../data/video_parse.dart';
 import '../models/video_info.dart';
 import '../utils/parse/other.dart';
+import '../widget/banner_widget.dart';
 import '../widget/video_label_item.dart';
 
 class VideoParePage extends StatefulWidget {
@@ -36,6 +37,7 @@ class _VideoParePageState extends State<VideoParePage> {
   int currentIndex = 0;
   bool isNeedVPN = false;
   bool isEdit = false;
+  bool isVideType = true;
 
   @override
   void initState() {
@@ -45,14 +47,15 @@ class _VideoParePageState extends State<VideoParePage> {
       setState(() {
         textController.text = widget.bean?.parseUrl ?? "";
       });
-      onResult(widget.bean?.videoList);
+      onResult(widget.bean!);
     }
   }
 
   @override
   void dispose() {
-    _controller?.dispose();
     super.dispose();
+    _controller?.pause();
+    _controller?.dispose();
   }
 
   @override
@@ -61,7 +64,7 @@ class _VideoParePageState extends State<VideoParePage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "视频去水印",
           style: TextStyle(
             color: Colors.white,
@@ -85,7 +88,7 @@ class _VideoParePageState extends State<VideoParePage> {
                   child: Padding(
                     padding: EdgeInsets.only(top: 20.w),
                     child: Text(
-                      "海外平台需要网络环境支持",
+                      "YouTobe平台需要网络环境支持",
                       style: TextStyle(fontSize: 24.sp),
                     ),
                   ),
@@ -93,16 +96,34 @@ class _VideoParePageState extends State<VideoParePage> {
               ),
             ),
             SliverToBoxAdapter(
-              child: Container(
-                margin: EdgeInsets.fromLTRB(0, 30.w, 0, 30.w),
-                child: videoList.isNotEmpty
-                    ? VideoXWidget(
-                        isLoading: isVideoLoading,
-                        controller: _controller,
-                      )
-                    : Container(),
-              ),
+              child: videoList.isEmpty && !isLoading ? guideContainer() : null,
             ),
+            SliverToBoxAdapter(
+                child: Container(
+                  margin: EdgeInsets.fromLTRB(0, 30.w, 0, 30.w),
+                  child: isVideType
+                      ? videoList.isNotEmpty
+                      ? VideoXWidget(
+                    isLoading: isVideoLoading,
+                    controller: _controller,
+                  )
+                      : Container()
+                      : BannerWidget(
+                    width: 340,
+                    height: 180,
+                    autoDisplayInterval: 6,
+                    childWidget: videoList.map((f) {
+                      return Image.network(
+                        f.url,
+                        width: 340,
+                        height: 180,
+                        fit: BoxFit.fitWidth,
+                      );
+                    }).toList(),
+                    onPageSelected: (int value) {},
+                    onPageClicked: (int value) {},
+                  ),
+                )),
             SliverGrid(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
@@ -110,7 +131,7 @@ class _VideoParePageState extends State<VideoParePage> {
                   crossAxisSpacing: 20.w,
                   childAspectRatio: 2.8),
               delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
+                    (BuildContext context, int index) {
                   return VideoItem(
                     item: videoList[index],
                     isSelected: index == currentIndex,
@@ -192,30 +213,30 @@ class _VideoParePageState extends State<VideoParePage> {
           alignment: Alignment.center,
           child: isLoading
               ? LoadingAnimationWidget.discreteCircle(
-                  color: primaryColor,
-                  size: 60.h,
-                )
+            color: primaryColor,
+            size: 60.h,
+          )
               : InkWell(
-                  child: Container(
-                    width: 240.w,
-                    height: 88.w,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: primaryColor,
-                      borderRadius: BorderRadius.circular(8.r), // 圆角半径
-                    ),
-                    child: Text(
-                      "解析视频",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 28.sp,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  onTap: () {
-                    startParse();
-                  },
-                ),
+            child: Container(
+              width: 240.w,
+              height: 88.w,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: primaryColor,
+                borderRadius: BorderRadius.circular(8.r), // 圆角半径
+              ),
+              child: Text(
+                "解析视频",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 28.sp,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            onTap: () {
+              startParse();
+            },
+          ),
         )
       ],
     );
@@ -244,7 +265,7 @@ class _VideoParePageState extends State<VideoParePage> {
               hintStyle: const TextStyle(color: Colors.white),
               border: const OutlineInputBorder(borderSide: BorderSide.none),
               focusedBorder:
-                  const OutlineInputBorder(borderSide: BorderSide.none),
+              const OutlineInputBorder(borderSide: BorderSide.none),
               enabledBorder: const OutlineInputBorder(
                 borderSide: BorderSide.none,
               ),
@@ -253,6 +274,61 @@ class _VideoParePageState extends State<VideoParePage> {
           ),
         ),
       ],
+    );
+  }
+
+  guideContainer() {
+    return Container(
+      alignment: Alignment.centerLeft,
+      margin: EdgeInsets.fromLTRB(0, 30.w, 0, 30.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "抖音、快手、西瓜视频、TikTok、YouTobe、bilibili、小红书、微博、等180个平台",
+            style: TextStyle(
+                color: primaryColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 30.sp),
+          ),
+          SizedBox(
+            height: 20.h,
+          ),
+          Text(
+            "复制短视频连接后,点击粘贴或者在输入框内输入,然后点击解析按钮即可",
+            style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 32.sp),
+          ),
+          SizedBox(
+            height: 20.h,
+          ),
+          Text(
+            "第一步:点击视频的分享图标",
+            style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 32.sp),
+          ),
+          SizedBox(
+            height: 20.h,
+          ),
+          Image.asset("assets/step1.jpg"),
+          SizedBox(
+            height: 20.h,
+          ),
+          Text("第二步:点击复制连接图标",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 32.sp)),
+          SizedBox(
+            height: 20.h,
+          ),
+          Image.asset("assets/step2.jpg")
+        ],
+      ),
     );
   }
 
@@ -324,13 +400,21 @@ class _VideoParePageState extends State<VideoParePage> {
   }
 
   Future<void> startParse() async {
+    var parseUrl = textController.text;
     try {
-      var parseUrl = textController.text;
+      if (videoList.isNotEmpty && isVideType) {
+        _controller?.pause();
+      }
       Match? match =
-          RegExp(r'http[s]?:\/\/[\w.]+[\w/]*[\w.]*\??[\w=&:\-+%]*[/]*')
-              .firstMatch(parseUrl);
+      RegExp(r'http[s]?:\/\/[\w.]+[\w/]*[\w.]*\??[\w=&:\-+%]*[/]*')
+          .firstMatch(parseUrl);
       var url = match?.group(0) ?? '';
-      if (parseUrl.startsWith("https://www.youtube.com")) {
+      if (!url.contains('http')) {
+        ToastExit.show("请输入正确的链接地址");
+        return;
+      }
+      print(">>>>>>>>${url}");
+      if (parseUrl.contains("youtu.be") || parseUrl.contains("youtube.com")) {
         isNeedVPN = true;
         YouToBe.get().parse(url, onResult);
       } else {
@@ -360,32 +444,36 @@ class _VideoParePageState extends State<VideoParePage> {
 // print('result>>>>>>>>>>>>: ${result}');
   }
 
-  void onResult(result) {
+  void onResult(VideoParse? result) {
     // if (result != null) {
     //   Navigator.push(context,
     //       MaterialPageRoute(builder: (context) => VideoDetail(bean: result)));
     // }
-    if (result != null) {
-      videoList = result;
-      _controller = VideoPlayerController.networkUrl(
-        Uri.parse(result[0].url),
-        videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
-      )..initialize().then((_) {
-          _controller.play();
-          isLoading = false;
-          if (_controller.value.hasError && isEdit) {
-            isEdit = false;
-            startParse();
-          } else {
-            isVideoLoading = false;
-          }
-          _controller.addListener(() {
-            setState(() {});
+    isLoading = false;
+    if (result != null && result.videoList.isNotEmpty) {
+      isVideType = result.type == 0;
+      videoList = result.videoList;
+      if (isVideType) {
+        _controller = VideoPlayerController.networkUrl(
+          Uri.parse(result.videoUrl),
+          videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
+        )
+          ..initialize().then((_) {
+            _controller.play();
+            if (_controller.value.hasError && isEdit) {
+              isEdit = false;
+              startParse();
+            } else {
+              isVideoLoading = false;
+            }
+            _controller.addListener(() {
+              setState(() {});
+            });
           });
-        });
+      }
+      setState(() {});
     } else {
       ToastExit.show("解析失败");
-      isLoading = false;
       setState(() {});
     }
   }

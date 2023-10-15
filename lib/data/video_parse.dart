@@ -13,11 +13,13 @@ class VideoParse {
     required this.createTime,
     required this.videoList,
     required this.parseUrl,
+    required this.type,
   });
 
   String title;
   String author;
   String cover;
+  int type = 0; //0视频2图片
   int createTime;
   String videoUrl;
   int? totalBytes;
@@ -28,6 +30,7 @@ class VideoParse {
   factory VideoParse.fromJson(Map<String, dynamic> json) => VideoParse(
         title: json['title'] as String,
         size: json['size'] as String,
+        type: json['type'] as int,
         totalBytes: json['totalBytes'] as int,
         author: json['author'] as String,
         cover: json['cover'] as String,
@@ -44,6 +47,7 @@ class VideoParse {
         'size': size,
         'totalBytes': totalBytes,
         'cover': cover,
+        'type': type,
         'author': author,
         'videoUrl': videoUrl,
         'createTime': createTime,

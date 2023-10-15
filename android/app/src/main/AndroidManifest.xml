@@ -11,6 +11,7 @@
     <application
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true"
         android:label="DownloaderX">
         <activity
             android:name=".MainActivity"
@@ -20,7 +21,6 @@
             android:launchMode="singleTop"
             android:requestLegacyExternalStorage="true"
             android:theme="@style/LaunchTheme"
-            android:usesCleartextTraffic="true"
             android:windowSoftInputMode="adjustResize">
             <!-- Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user
