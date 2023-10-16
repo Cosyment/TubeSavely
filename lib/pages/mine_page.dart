@@ -1,8 +1,8 @@
 import 'package:downloaderx/pages/feedback_page.dart';
 import 'package:downloaderx/pages/history_page.dart';
+import 'package:downloaderx/utils/pub_method.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 
 import '../constants/colors.dart';
 import '../plugin/method_plugin.dart';
@@ -46,9 +46,18 @@ class _MinePageState extends State<MinePage> {
     },
   ];
 
+  var userId = "";
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((tim) {
+      PubMethodUtils.getSharedPreferences("userId").then((value) {
+        setState(() {
+          userId = value ?? "";
+        });
+      });
+    });
   }
 
   @override
@@ -75,11 +84,20 @@ class _MinePageState extends State<MinePage> {
               ),
               Positioned(
                 child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LoginPage()));
+                  onTap: () async {
+                    var userIds =
+                        await PubMethodUtils.getSharedPreferences("userId");
+                    if (userIds == null) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginPage())).then((value) {
+                        if (value != null) {
+                          userId = value;
+                          setState(() {});
+                        }
+                      });
+                    }
                   },
                   child: Container(
                     width: 140.w,
@@ -96,7 +114,7 @@ class _MinePageState extends State<MinePage> {
                           ],
                         )),
                     child: Text(
-                      "登录",
+                      userId == "" ? "登录" : "已登录",
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 28.sp,
@@ -172,8 +190,15 @@ class _MinePageState extends State<MinePage> {
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => const HistoryPage()));
     } else if (type == 4) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const SettingPage()));
+      Navigator.push(
+              context, MaterialPageRoute(builder: (context) => SettingPage()))
+          .then((value) {
+        PubMethodUtils.getSharedPreferences("userId").then((value) {
+          setState(() {
+            userId = value ?? "";
+          });
+        });
+      });
     } else {}
   }
 }

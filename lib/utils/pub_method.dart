@@ -1,8 +1,8 @@
 import 'package:in_app_review/in_app_review.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class PubMethodUtils {
-
-
   // static void umengCommonSdkInit() {
   //   if (PlatformUtils.isAndroid) {
   //     MethodPlugin.getAppChannelId().then((value) {
@@ -20,5 +20,15 @@ class PubMethodUtils {
     if (await inAppReview.isAvailable()) {
       inAppReview.requestReview();
     }
+  }
+
+  static void putSharedPreferences(key, value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(key, value);
+  }
+
+  static Future<String?> getSharedPreferences(key) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(key);
   }
 }

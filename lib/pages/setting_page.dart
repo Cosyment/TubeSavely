@@ -11,38 +11,39 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 import '../constants/colors.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../utils/pub_method.dart';
+
 class SettingPage extends StatefulWidget {
-  const SettingPage({super.key});
+  SettingPage({super.key});
 
   @override
   State<SettingPage> createState() => _SettingPageState();
 }
 
-List<dynamic> itemList = [
-  {
-    "icon": Icons.verified,
-    "title": "版本信息",
-    "type": 0,
-  },
-  {
-    "icon": Icons.account_box,
-    "title": "用户协议",
-    "type": 1,
-  },
-  {
-    "icon": Icons.privacy_tip,
-    "title": "隐私政策",
-    "type": 2,
-  },
-  {
-    "icon": Icons.logout,
-    "title": "退出登录",
-    "type": 3,
-  },
-];
-var versionName = "";
-
 class _SettingPageState extends State<SettingPage> {
+  List itemList = [
+    {
+      "icon": Icons.verified,
+      "title": "版本信息",
+      "type": 0,
+    },
+    {
+      "icon": Icons.account_box,
+      "title": "用户协议",
+      "type": 1,
+    },
+    {
+      "icon": Icons.privacy_tip,
+      "title": "隐私政策",
+      "type": 2,
+    },
+  ];
+
+  var versionName = "";
+  var userId = "";
+
   @override
   void initState() {
     super.initState();
@@ -52,7 +53,22 @@ class _SettingPageState extends State<SettingPage> {
           versionName = value.version;
         });
       });
+      PubMethodUtils.getSharedPreferences("userId").then((value) {
+        if (value != null) {
+          itemList.add({
+            "icon": Icons.logout,
+            "title": "退出登录",
+            "type": 3,
+          });
+        }
+        setState(() {});
+      });
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -156,12 +172,10 @@ class _SettingPageState extends State<SettingPage> {
               ),
               CupertinoDialogAction(
                 child: const Text("确定"),
-                onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
-                    (Route<dynamic> route) => false,
-                  );
+                onPressed: () async {
+                  var sharedPreferences = await SharedPreferences.getInstance();
+                  sharedPreferences.remove("userId");
+                  Navigator.popUntil(context, ModalRoute.withName('/'));
                 },
               ),
             ],
