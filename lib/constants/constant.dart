@@ -9,6 +9,7 @@ class Constant {
       "https://www.apple.com/legal/internet-services/itunes/dev/stdeula";
   static const String isAgree = "is_agree";
   static const String isInAppReviewKey = "isInAppReviewKey";
+  static String userId = "";
   static const pingtaiList = [
     {
       "bg": "iconspxkx.png",

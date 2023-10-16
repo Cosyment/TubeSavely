@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:common_utils/common_utils.dart';
 import 'package:dio/dio.dart';
+import 'package:downloaderx/constants/constant.dart';
 import '../../utils/log_util.dart';
 import '../http_api.dart';
 
@@ -14,7 +15,7 @@ class AuthInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     // options.headers['Authorization'] = 'Bearer ${HttpUtils.token ?? ''}';
-    options.headers['userId'] = '0395359849';
+    options.headers['userId'] = Constant.userId;
     options.headers['UserAgent'] = 'mobile';
     options.headers['PackageNames'] = HttpUtils.appInfo;
     super.onRequest(options, handler);
@@ -32,7 +33,8 @@ class LoggingInterceptor extends Interceptor {
     if (options.queryParameters.isEmpty) {
       Log.d('RequestUrl: ${options.baseUrl}${options.path}');
     } else {
-      Log.d('RequestUrl: ${options.baseUrl}${options.path}?${Transformer.urlEncodeMap(options.queryParameters)}');
+      Log.d(
+          'RequestUrl: ${options.baseUrl}${options.path}?${Transformer.urlEncodeMap(options.queryParameters)}');
     }
     Log.d('RequestMethod: ${options.method}');
     Log.d('RequestHeaders:${options.headers}');
@@ -46,8 +48,10 @@ class LoggingInterceptor extends Interceptor {
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     RequestOptions options = response.requestOptions;
     Log.d('---------- Response Start ----------');
-    Log.d('ResponseUrl: ${options.baseUrl}${options.path}?${Transformer.urlEncodeMap(options.queryParameters)}');
-    print('ResponseUrl: ${options.baseUrl}${options.path}?${Transformer.urlEncodeMap(options.queryParameters)}');
+    Log.d(
+        'ResponseUrl: ${options.baseUrl}${options.path}?${Transformer.urlEncodeMap(options.queryParameters)}');
+    print(
+        'ResponseUrl: ${options.baseUrl}${options.path}?${Transformer.urlEncodeMap(options.queryParameters)}');
     endTime = DateTime.now();
     int duration = endTime.difference(startTime).inMilliseconds;
     if (response.statusCode == ExceptionHandle.success) {
@@ -62,6 +66,7 @@ class LoggingInterceptor extends Interceptor {
         return;
       }
     }
+
     /// 输出结果
     /// Log.json(response.data.toString());
     /// print(response.data.toString());
