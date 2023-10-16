@@ -701,9 +701,8 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        ActionChip(
-          label: Text(!controller.isPlaying ? '播放' : "暂停"),
-          onPressed: () {
+        GestureDetector(
+          onTap: () {
             if (!controller.isPlaying) {
               controller.video.play();
             } else {
@@ -711,13 +710,60 @@ class _VideoMontagePageState extends State<VideoMontagePage> {
             }
             setState(() {});
           },
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              vertical: 20.w,
+              horizontal: 20.w,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15.r),
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFFFC6AEC),
+                  Color(0xFF7776FF),
+                ],
+              ),
+            ),
+            child: Text(
+              !controller.isPlaying ? '播放' : "暂停",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 26.sp,
+              ),
+            ),
+          ),
         ),
-        ActionChip(
-          label: Text('下一步'),
-          onPressed: () {
+        GestureDetector(
+          onTap: () {
             controller.applyCacheCrop();
             exportVideo();
           },
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              vertical: 20.w,
+              horizontal: 20.w,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15.r),
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFFFC6AEC),
+                  Color(0xFF7776FF),
+                ],
+              ),
+            ),
+            child: Text(
+              '下一步',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 26.sp,
+              ),
+            ),
+          ),
         ),
       ],
     );

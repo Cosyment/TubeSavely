@@ -118,7 +118,7 @@ class Constant {
       'title': '视频裁剪',
       'content': '多种比列裁剪',
       'type': RequestType.video,
-      'icon': Icons.content_cut,
+      'icon': Icons.crop,
     },
     {
       'title': '视频剪辑',
@@ -156,12 +156,12 @@ class Constant {
       'type': RequestType.video,
       'icon': Icons.screenshot,
     },
-    {
-      'title': '视频合并',
-      'content': '多个视频合并',
-      'type': RequestType.video,
-      'icon': Icons.merge,
-    },
+    // {
+    //   'title': '视频合并',
+    //   'content': '多个视频合并',
+    //   'type': RequestType.video,
+    //   'icon': Icons.merge,
+    // },
     {
       'title': '视频转GIF',
       'content': '支持各种格式',

@@ -4,7 +4,6 @@ import 'package:flutter/rendering.dart';
 import 'file_utils.dart';
 
 class WatermarkPage extends StatefulWidget {
-
   const WatermarkPage({super.key});
 
   @override

@@ -15,7 +15,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   @override
   void initState() {
     super.initState();
@@ -46,23 +45,26 @@ class _HomePageState extends State<HomePage> {
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
+            child: InkWell(
+              child: Container(
+                child: Padding(
+                  padding: EdgeInsets.all(20.w),
+                  child: Text('视频去水印'),
+                ),
+              ),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => VideoParePage()));
+              },
+            ),
+          ),
+          SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.all(20.w),
               child: Text(
                 "视频剪辑工具",
                 style: TextStyle(fontSize: 40.sp),
               ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: InkWell(
-              child: Container(
-                child: Text('视频去水印'),
-              ),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => VideoParePage()));
-              },
             ),
           ),
           buildChildLayout(),
@@ -75,7 +77,7 @@ class _HomePageState extends State<HomePage> {
     return SliverGrid(
       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 200.w,
-        mainAxisSpacing: 20.w,
+        mainAxisSpacing: 10.w,
         crossAxisSpacing: 20.w,
         childAspectRatio: 1,
       ),
@@ -84,21 +86,22 @@ class _HomePageState extends State<HomePage> {
           var item = Constant.meList[index];
           return InkWell(
             onTap: () async {
-              final List<AssetEntity>? result =
-                  await AssetPicker.pickAssets(context,
-                      pickerConfig: AssetPickerConfig(
-                        themeColor: primaryColor,
-                        maxAssets: 1,
-                        requestType: item['type'] as RequestType,
-                      ));
-              var file2 = await result![0].file;
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => VideoMontagePage(
-                            file: file2!,
-                            title: item['title'].toString(),
-                          )));
+              List<AssetEntity>? result = await AssetPicker.pickAssets(context,
+                  pickerConfig: AssetPickerConfig(
+                    themeColor: primaryColor,
+                    maxAssets: 1,
+                    requestType: item['type'] as RequestType,
+                  ));
+              if (result != null) {
+                var file2 = await result[0].file;
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => VideoMontagePage(
+                              file: file2!,
+                              title: item['title'].toString(),
+                            )));
+              }
             },
             child: Container(
               margin: EdgeInsets.all(10.w),
@@ -112,9 +115,16 @@ class _HomePageState extends State<HomePage> {
                   // ),
                   Icon(
                     item['icon'] as IconData?,
+                    color: primaryColor,
                     size: 80.w,
                   ),
-                  Text(item['title'].toString()),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10.w),
+                    child: Text(
+                      item['title'].toString(),
+                      style: TextStyle(fontSize: 26.sp),
+                    ),
+                  ),
                 ],
               ),
             ),
