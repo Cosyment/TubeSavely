@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:downloaderx/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'file_utils.dart';
 import 'scrawl_page.dart';
 import 'watermark_page.dart';
@@ -24,7 +26,7 @@ class _ContentPageState extends State<ContentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('scrawl and watermark'),
+        title: Text('查看图片'),
       ),
       body: RepaintBoundary(
         key: _repaintKey,
@@ -41,7 +43,9 @@ class _ContentPageState extends State<ContentPage> {
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(builder: (context) {
-                        return WatermarkPage(cover: widget.cover,);
+                        return WatermarkPage(
+                          cover: widget.cover,
+                        );
                       }),
                     );
                   },
@@ -51,8 +55,10 @@ class _ContentPageState extends State<ContentPage> {
                 child: Container(
                   alignment: Alignment.center,
                   child: Text(
-                    '(Click image above to add watermark ↑↑↑)',
-                    style: TextStyle(color: Colors.grey),
+                    '点击顶部图片',
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
                   ),
                 ),
               ),
@@ -64,10 +70,19 @@ class _ContentPageState extends State<ContentPage> {
         onPressed: () {
           _saveScreenShot(context);
         },
-        icon: Icon(Icons.add),
-        label: Text('去涂鸦'),
+        icon: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        label: Text(
+          '去涂鸦',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18.sp,
+          ),
+        ),
         backgroundColor:
-            Color.alphaBlend(Colors.pinkAccent.withOpacity(0.8), Colors.white),
+            Color.alphaBlend(primaryColor.withOpacity(0.8), Colors.white),
       ),
     );
   }

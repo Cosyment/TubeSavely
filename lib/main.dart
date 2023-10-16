@@ -2,6 +2,7 @@ import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_not
 import 'package:downloaderx/pages/home_page.dart';
 import 'package:downloaderx/pages/mine_page.dart';
 import 'package:downloaderx/pages/push_stream_page.dart';
+import 'package:downloaderx/utils/pub_method.dart';
 import 'package:downloaderx/widget/agreement_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -69,19 +70,25 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(milliseconds: 600), () {
-      showGeneralDialog(
-          context: context,
-          barrierDismissible: false,
-          barrierLabel: '',
-          transitionDuration: const Duration(milliseconds: 400),
-          pageBuilder: (BuildContext context, Animation<double> animation,
-              Animation<double> secondaryAnimation) {
-            return AgreementDialog(onAgreeClick: onAgreeClick);
-          });
+      PubMethodUtils.getSharedPreferences("isAgree").then((value) {
+        if (value == null) {
+          showGeneralDialog(
+              context: context,
+              barrierDismissible: false,
+              barrierLabel: '',
+              transitionDuration: const Duration(milliseconds: 400),
+              pageBuilder: (BuildContext context, Animation<double> animation,
+                  Animation<double> secondaryAnimation) {
+                return AgreementDialog(onAgreeClick: onAgreeClick);
+              });
+        }
+      });
     });
   }
 
-  void onAgreeClick() {}
+  void onAgreeClick() {
+    PubMethodUtils.putSharedPreferences("isAgree", "1");
+  }
 
   @override
   Widget build(BuildContext context) {

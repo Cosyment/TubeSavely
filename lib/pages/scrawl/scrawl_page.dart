@@ -1,6 +1,9 @@
+import 'package:downloaderx/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:io';
+import '../../utils/exit.dart';
 import 'file_utils.dart';
 import 'scrawl_painter.dart';
 
@@ -182,7 +185,7 @@ class _ScrawlState extends State<ScrawlPage> {
             GestureDetector(
               child: Container(
                 color: selectedColor == colors[1]
-                    ? Colors.grey.withOpacity(0.2)
+                    ? primaryColor.withOpacity(0.2)
                     : Colors.transparent,
                 child: Icon(
                   Icons.create,
@@ -198,7 +201,7 @@ class _ScrawlState extends State<ScrawlPage> {
             GestureDetector(
               child: Container(
                 color: selectedColor == colors[2]
-                    ? Colors.grey.withOpacity(0.2)
+                    ? primaryColor.withOpacity(0.2)
                     : Colors.transparent,
                 child: Icon(
                   Icons.create,
@@ -212,7 +215,30 @@ class _ScrawlState extends State<ScrawlPage> {
               },
             ),
             GestureDetector(
-              child: Text('clear'),
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  vertical: 20.w,
+                  horizontal: 20.w,
+                ),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.r),
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Color(0xFFFC6AEC),
+                        Color(0xFF7776FF),
+                      ],
+                    )),
+                child: Text(
+                  '清除',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 28.sp,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
               onTap: () {
                 setState(() {
                   reset();
@@ -220,16 +246,37 @@ class _ScrawlState extends State<ScrawlPage> {
               },
             ),
             GestureDetector(
-              child: Text('save'),
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  vertical: 20.w,
+                  horizontal: 20.w,
+                ),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.r),
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Color(0xFFFC6AEC),
+                        Color(0xFF7776FF),
+                      ],
+                    )),
+                child: Text(
+                  '保存',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 28.sp,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
               onTap: () {
                 RenderRepaintBoundary? boundary = _repaintKey.currentContext!
                     .findRenderObject() as RenderRepaintBoundary;
                 saveScreenShot2SDCard(boundary, success: () {
-                  // showToast('save success!');
-                  print("object");
+                  ToastExit.show("保存成功");
                 }, fail: () {
-                  print("object");
-                  // showToast('save fail!');
+                  ToastExit.show("保存失败");
                 });
               },
             ),

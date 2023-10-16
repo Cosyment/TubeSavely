@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:downloaderx/utils/exit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'file_utils.dart';
 
@@ -16,6 +18,7 @@ class WatermarkPage extends StatefulWidget {
 }
 
 class WatermarkState extends State<WatermarkPage> {
+
   late final Uint8List _imagebytes = widget.cover.readAsBytesSync();
 
   static List<Icon> icons = const [
@@ -59,6 +62,9 @@ class WatermarkState extends State<WatermarkPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          title: Text('添加水印'),
+        ),
         body: Column(
           children: <Widget>[
             Expanded(
@@ -75,18 +81,40 @@ class WatermarkState extends State<WatermarkPage> {
                 ),
               ),
             ),
-            ElevatedButton(
-              // color: Colors.pinkAccent.withOpacity(0.1),
-              onPressed: () {
+            InkWell(
+              onTap: () {
                 RenderRepaintBoundary boundary = _repaintKey.currentContext!
                     .findRenderObject() as RenderRepaintBoundary;
                 saveScreenShot2SDCard(boundary, success: () {
-                  // showToast('save success!');
+                  ToastExit.show("保存成功");
                 }, fail: () {
-                  // showToast('save fail!');
+                  ToastExit.show("保存失败");
                 });
               },
-              child: Text('save'),
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  vertical: 20.w,
+                  horizontal: 20.w,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.r),
+                  gradient: const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFFFC6AEC),
+                      Color(0xFF7776FF),
+                    ],
+                  ),
+                ),
+                child: Text(
+                  '保存',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 26.sp,
+                  ),
+                ),
+              ),
             ),
             Container(
               height: 60.0,

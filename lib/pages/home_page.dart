@@ -20,11 +20,14 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // if (!Application.getStorage.hasData(Constant.isInAppReviewKey)) {
-    Future.delayed(const Duration(milliseconds: 1000 * 10), () {
-      PubMethodUtils.getInAppReview();
+    PubMethodUtils.getSharedPreferences("InAppReview").then((value) {
+      if (value == null) {
+        PubMethodUtils.putSharedPreferences("InAppReview", "1");
+        Future.delayed(const Duration(milliseconds: 1000 * 10), () {
+          PubMethodUtils.getInAppReview();
+        });
+      }
     });
-    // }
   }
 
   @override
@@ -178,6 +181,55 @@ class _HomePageState extends State<HomePage> {
   }
 
   buildChildLayout() {
+    return SliverGrid.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 4,
+          crossAxisSpacing: 10.w,
+          mainAxisSpacing: 10.w,
+          childAspectRatio: 1),
+      itemCount: Constant.meList.length,
+      itemBuilder: (BuildContext context, int index) {
+        var item = Constant.meList[index];
+        return Card(
+          elevation: 1,
+          clipBehavior: Clip.hardEdge,
+          color: primaryColor,
+          child: InkWell(
+            splashColor: Colors.blue.withAlpha(30),
+            onTap: () async {
+              await skipSelectPhoto(context, item);
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Image(
+                //   image: AssetImage("assets/images/${item['bg']}"),
+                //   width: 100.w,
+                //   height: 100.w,
+                //   fit: BoxFit.fill,
+                // ),
+                Icon(
+                  item['icon'] as IconData?,
+                  color: Colors.white,
+                  size: 60.w,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10.w),
+                  child: Text(
+                    item['title'].toString(),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 26.sp,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
     return SliverGrid(
       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 200.w,
