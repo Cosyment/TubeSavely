@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 import '../utils/pub_method.dart';
+import 'scrawl/content_page.dart';
+import 'scrawl/scrawl_page.dart';
 import 'voide_parse_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -45,18 +47,12 @@ class _HomePageState extends State<HomePage> {
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
-            child: InkWell(
-              child: Container(
-                child: Padding(
-                  padding: EdgeInsets.all(20.w),
-                  child: Text('视频去水印'),
-                ),
-              ),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => VideoParePage()));
-              },
+            child: SizedBox(
+              height: 50.w,
             ),
+          ),
+          SliverToBoxAdapter(
+            child: widgetTop(context),
           ),
           SliverToBoxAdapter(
             child: Padding(
@@ -76,39 +72,133 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  widgetTop(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        SizedBox(width: 20.w),
+        Expanded(
+          child: Card(
+            elevation: 1,
+            clipBehavior: Clip.hardEdge,
+            color: primaryColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.r)),
+            ),
+            child: InkWell(
+              splashColor: Colors.blue.withAlpha(30),
+              child: Container(
+                padding: EdgeInsets.all(20.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '视频链接去水印',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30.sp,
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: Icon(
+                        Icons.link,
+                        color: Colors.white,
+                        size: 80.w,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => VideoParePage()));
+              },
+            ),
+          ),
+        ),
+        SizedBox(width: 10.w),
+        Expanded(
+          child: Card(
+            elevation: 1,
+            clipBehavior: Clip.hardEdge,
+            color: primaryColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.r)),
+            ),
+            child: InkWell(
+              splashColor: Colors.blue.withAlpha(30),
+              child: Container(
+                padding: EdgeInsets.all(20.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '图片去水印',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30.sp,
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                        size: 80.w,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              onTap: () async {
+                List<AssetEntity>? result =
+                    await AssetPicker.pickAssets(context,
+                        pickerConfig: AssetPickerConfig(
+                          themeColor: primaryColor,
+                          maxAssets: 1,
+                          requestType: RequestType.image,
+                        ));
+                if (result != null) {
+                  var file2 = await result[0].file;
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ContentPage(
+                                cover: file2!,
+                              )));
+                }
+              },
+            ),
+          ),
+        ),
+        SizedBox(width: 20.w),
+      ],
+    );
+  }
+
   buildChildLayout() {
     return SliverGrid(
       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 200.w,
         mainAxisSpacing: 10.w,
-        crossAxisSpacing: 20.w,
+        crossAxisSpacing: 10.w,
         childAspectRatio: 1,
       ),
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
           var item = Constant.meList[index];
-          return InkWell(
-            onTap: () async {
-              List<AssetEntity>? result = await AssetPicker.pickAssets(context,
-                  pickerConfig: AssetPickerConfig(
-                    themeColor: primaryColor,
-                    maxAssets: 1,
-                    requestType: item['type'] as RequestType,
-                  ));
-              if (result != null) {
-                var file2 = await result[0].file;
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => VideoMontagePage(
-                              file: file2!,
-                              title: item['title'].toString(),
-                            )));
-              }
-            },
-            child: Container(
-              margin: EdgeInsets.all(10.w),
+          return Card(
+            elevation: 1,
+            clipBehavior: Clip.hardEdge,
+            color: primaryColor,
+            child: InkWell(
+              splashColor: Colors.blue.withAlpha(30),
+              onTap: () async {
+                await skipSelectPhoto(context, item);
+              },
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // Image(
                   //   image: AssetImage("assets/images/${item['bg']}"),
@@ -118,14 +208,15 @@ class _HomePageState extends State<HomePage> {
                   // ),
                   Icon(
                     item['icon'] as IconData?,
-                    color: primaryColor,
-                    size: 80.w,
+                    color: Colors.white,
+                    size: 60.w,
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 10.w),
                     child: Text(
                       item['title'].toString(),
                       style: TextStyle(
+                        color: Colors.white,
                         fontSize: 26.sp,
                       ),
                     ),
@@ -138,5 +229,25 @@ class _HomePageState extends State<HomePage> {
         childCount: Constant.meList.length,
       ),
     );
+  }
+
+  Future<void> skipSelectPhoto(
+      BuildContext context, Map<String, Object> item) async {
+    List<AssetEntity>? result = await AssetPicker.pickAssets(context,
+        pickerConfig: AssetPickerConfig(
+          themeColor: primaryColor,
+          maxAssets: 1,
+          requestType: item['type'] as RequestType,
+        ));
+    if (result != null) {
+      var file2 = await result[0].file;
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => VideoMontagePage(
+                    file: file2!,
+                    title: item['title'].toString(),
+                  )));
+    }
   }
 }

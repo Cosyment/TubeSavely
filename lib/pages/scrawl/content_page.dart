@@ -1,11 +1,24 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'file_utils.dart';
 import 'scrawl_page.dart';
 import 'watermark_page.dart';
 
-class ContentPage extends StatelessWidget {
+class ContentPage extends StatefulWidget {
+  const ContentPage({super.key, required this.cover});
+
+  final File cover;
+
+  @override
+  State<ContentPage> createState() => _ContentPageState();
+}
+
+class _ContentPageState extends State<ContentPage> {
   final GlobalKey _repaintKey = GlobalKey();
+  late final Uint8List _imagebytes = widget.cover.readAsBytesSync();
 
   @override
   Widget build(BuildContext context) {
@@ -23,15 +36,12 @@ class ContentPage extends StatelessWidget {
                 child: GestureDetector(
                   child: Padding(
                     padding: EdgeInsets.all(12.0),
-                    child: Image.asset(
-                      'images/food01.jpeg',
-                      fit: BoxFit.cover,
-                    ),
+                    child: Image.memory(_imagebytes),
                   ),
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(builder: (context) {
-                        return WatermarkPage();
+                        return WatermarkPage(cover: widget.cover,);
                       }),
                     );
                   },
@@ -43,22 +53,6 @@ class ContentPage extends StatelessWidget {
                   child: Text(
                     '(Click image above to add watermark ↑↑↑)',
                     style: TextStyle(color: Colors.grey),
-                  ),
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: Container(
-                  padding: EdgeInsets.all(12.0),
-                  child: Text(
-                    '    Paint your app to life in milliseconds with stateful Hot Reload. Use a rich set of fully-customizable widgets to build native interfaces in minutes.\n'
-                    '    Quickly ship features with a focus on native end-user experiences. Layered architecture allows for full customization, which results in incredibly fast rendering and expressive and flexible designs.\n'
-                    '    Flutter’s widgets incorporate all critical platform differences such as scrolling, navigation, icons and fonts to provide full native performance on both iOS and Android.',
-                    style: TextStyle(
-                      color: Colors.black87,
-                      fontSize: 20.0,
-                      height: 1.2,
-                    ),
-                    textAlign: TextAlign.justify,
                   ),
                 ),
               ),

@@ -53,9 +53,11 @@ class _VideoParePageState extends State<VideoParePage> {
 
   @override
   void dispose() {
+    if (_controller != null) {
+      _controller.pause();
+      _controller.dispose();
+    }
     super.dispose();
-    _controller?.pause();
-    _controller?.dispose();
   }
 
   @override
@@ -100,30 +102,30 @@ class _VideoParePageState extends State<VideoParePage> {
             ),
             SliverToBoxAdapter(
                 child: Container(
-                  margin: EdgeInsets.fromLTRB(0, 30.w, 0, 30.w),
-                  child: isVideType
-                      ? videoList.isNotEmpty
+              margin: EdgeInsets.fromLTRB(0, 30.w, 0, 30.w),
+              child: isVideType
+                  ? videoList.isNotEmpty
                       ? VideoXWidget(
-                    isLoading: isVideoLoading,
-                    controller: _controller,
-                  )
+                          isLoading: isVideoLoading,
+                          controller: _controller,
+                        )
                       : Container()
-                      : BannerWidget(
-                    width: 340,
-                    height: 180,
-                    autoDisplayInterval: 6,
-                    childWidget: videoList.map((f) {
-                      return Image.network(
-                        f.url,
-                        width: 340,
-                        height: 180,
-                        fit: BoxFit.fitWidth,
-                      );
-                    }).toList(),
-                    onPageSelected: (int value) {},
-                    onPageClicked: (int value) {},
-                  ),
-                )),
+                  : BannerWidget(
+                      width: 340,
+                      height: 180,
+                      autoDisplayInterval: 6,
+                      childWidget: videoList.map((f) {
+                        return Image.network(
+                          f.url,
+                          width: 340,
+                          height: 180,
+                          fit: BoxFit.fitWidth,
+                        );
+                      }).toList(),
+                      onPageSelected: (int value) {},
+                      onPageClicked: (int value) {},
+                    ),
+            )),
             SliverGrid(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
@@ -131,7 +133,7 @@ class _VideoParePageState extends State<VideoParePage> {
                   crossAxisSpacing: 20.w,
                   childAspectRatio: 2.8),
               delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
+                (BuildContext context, int index) {
                   return VideoItem(
                     item: videoList[index],
                     isSelected: index == currentIndex,
@@ -213,30 +215,30 @@ class _VideoParePageState extends State<VideoParePage> {
           alignment: Alignment.center,
           child: isLoading
               ? LoadingAnimationWidget.discreteCircle(
-            color: primaryColor,
-            size: 60.h,
-          )
+                  color: primaryColor,
+                  size: 60.h,
+                )
               : InkWell(
-            child: Container(
-              width: 240.w,
-              height: 88.w,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: primaryColor,
-                borderRadius: BorderRadius.circular(8.r), // 圆角半径
-              ),
-              child: Text(
-                "解析视频",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 28.sp,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-            onTap: () {
-              startParse();
-            },
-          ),
+                  child: Container(
+                    width: 240.w,
+                    height: 88.w,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: primaryColor,
+                      borderRadius: BorderRadius.circular(8.r), // 圆角半径
+                    ),
+                    child: Text(
+                      "解析视频",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 28.sp,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  onTap: () {
+                    startParse();
+                  },
+                ),
         )
       ],
     );
@@ -265,7 +267,7 @@ class _VideoParePageState extends State<VideoParePage> {
               hintStyle: const TextStyle(color: Colors.white),
               border: const OutlineInputBorder(borderSide: BorderSide.none),
               focusedBorder:
-              const OutlineInputBorder(borderSide: BorderSide.none),
+                  const OutlineInputBorder(borderSide: BorderSide.none),
               enabledBorder: const OutlineInputBorder(
                 borderSide: BorderSide.none,
               ),
@@ -406,8 +408,8 @@ class _VideoParePageState extends State<VideoParePage> {
         _controller?.pause();
       }
       Match? match =
-      RegExp(r'http[s]?:\/\/[\w.]+[\w/]*[\w.]*\??[\w=&:\-+%]*[/]*')
-          .firstMatch(parseUrl);
+          RegExp(r'http[s]?:\/\/[\w.]+[\w/]*[\w.]*\??[\w=&:\-+%]*[/]*')
+              .firstMatch(parseUrl);
       var url = match?.group(0) ?? '';
       if (!url.contains('http')) {
         ToastExit.show("请输入正确的链接地址");
@@ -457,8 +459,7 @@ class _VideoParePageState extends State<VideoParePage> {
         _controller = VideoPlayerController.networkUrl(
           Uri.parse(result.videoUrl),
           videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
-        )
-          ..initialize().then((_) {
+        )..initialize().then((_) {
             _controller.play();
             if (_controller.value.hasError && isEdit) {
               isEdit = false;

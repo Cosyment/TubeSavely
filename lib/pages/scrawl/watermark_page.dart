@@ -1,17 +1,24 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'file_utils.dart';
 
 class WatermarkPage extends StatefulWidget {
-  const WatermarkPage({super.key});
+  const WatermarkPage({super.key, required this.cover});
+
+  final File cover;
 
   @override
   State<StatefulWidget> createState() => WatermarkState();
 }
 
 class WatermarkState extends State<WatermarkPage> {
-  static final List<Icon> icons = [
+  late final Uint8List _imagebytes = widget.cover.readAsBytesSync();
+
+  static List<Icon> icons = const [
     Icon(
       Icons.map,
       size: 40.0,
@@ -61,10 +68,7 @@ class WatermarkState extends State<WatermarkPage> {
                   child: Stack(
                     alignment: Alignment.bottomRight,
                     children: <Widget>[
-                      Image.asset(
-                        'assets/images/Background.png',
-                        fit: BoxFit.cover,
-                      ),
+                      Image.memory(_imagebytes),
                       selected,
                     ],
                   ),

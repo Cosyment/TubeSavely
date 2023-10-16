@@ -116,7 +116,8 @@ class _MinePageState extends State<MinePage> {
                   elevation: 5,
                   margin: EdgeInsets.fromLTRB(40.w, 30.w, 40.w, 0),
                   shadowColor: primaryColor,
-                  child: GestureDetector(
+                  clipBehavior: Clip.hardEdge,
+                  child: InkWell(
                     onTap: () {
                       onItemClick(item['type']);
                     },
