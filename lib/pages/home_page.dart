@@ -63,7 +63,10 @@ class _HomePageState extends State<HomePage> {
               padding: EdgeInsets.all(20.w),
               child: Text(
                 "视频剪辑工具",
-                style: TextStyle(fontSize: 40.sp),
+                style: TextStyle(
+                  fontSize: 40.sp,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
@@ -122,7 +125,9 @@ class _HomePageState extends State<HomePage> {
                     padding: EdgeInsets.only(top: 10.w),
                     child: Text(
                       item['title'].toString(),
-                      style: TextStyle(fontSize: 26.sp),
+                      style: TextStyle(
+                        fontSize: 26.sp,
+                      ),
                     ),
                   ),
                 ],

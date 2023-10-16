@@ -110,7 +110,7 @@ class _MainPageState extends State<MainPage> {
               ),
               activeItem: Icon(
                 Icons.home_filled,
-                color: Colors.black,
+                color: primaryColor,
               ),
               itemLabel: 'Page 1',
             ),
@@ -121,7 +121,7 @@ class _MainPageState extends State<MainPage> {
               ),
               activeItem: Icon(
                 Icons.video_call_sharp,
-                color: Colors.black,
+                color: primaryColor,
               ),
               itemLabel: 'Page 2',
             ),
@@ -132,7 +132,7 @@ class _MainPageState extends State<MainPage> {
               ),
               activeItem: Icon(
                 Icons.person,
-                color: Colors.black,
+                color: primaryColor,
               ),
               itemLabel: 'Page 3',
             ),
