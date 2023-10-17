@@ -67,9 +67,7 @@ class _LoginPageState extends State<LoginPage> {
                   controller: emailController,
                   autofocus: true,
                   keyboardType: TextInputType.emailAddress,
-                  inputFormatters: <TextInputFormatter>[
-                    LengthLimitingTextInputFormatter(16)
-                  ],
+                  inputFormatters: <TextInputFormatter>[LengthLimitingTextInputFormatter(30)],
                   style: TextStyle(color: primaryColor, fontSize: 28.sp),
                   decoration: InputDecoration(
                     hintText: "Enter your email",
@@ -112,9 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: TextField(
                       controller: codeController,
                       keyboardType: TextInputType.visiblePassword,
-                      inputFormatters: <TextInputFormatter>[
-                        LengthLimitingTextInputFormatter(16)
-                      ],
+                      inputFormatters: <TextInputFormatter>[LengthLimitingTextInputFormatter(16)],
                       style: TextStyle(color: primaryColor, fontSize: 28.sp),
                       decoration: InputDecoration(
                         hintText: "Enter your code",
@@ -123,8 +119,7 @@ class _LoginPageState extends State<LoginPage> {
                           fontSize: 26.sp,
                           color: Colors.grey,
                         ),
-                        labelStyle:
-                            TextStyle(fontSize: 26.sp, color: Colors.grey),
+                        labelStyle: TextStyle(fontSize: 26.sp, color: Colors.grey),
                         filled: true,
                         fillColor: Colors.white,
                         enabledBorder: OutlineInputBorder(
@@ -236,8 +231,7 @@ class _LoginPageState extends State<LoginPage> {
     var map = <String, dynamic>{};
     map['email'] = emailController.text;
     map['code'] = codeController.text;
-    var data = await HttpUtils.instance
-        .requestNetWorkAy(Method.post, HttpApi.login, queryParameters: map);
+    var data = await HttpUtils.instance.requestNetWorkAy(Method.post, HttpApi.login, queryParameters: map);
     if (data != null) {
       var userId = data['userId'];
       PubMethodUtils.putSharedPreferences("userId", userId);
@@ -262,9 +256,7 @@ class _LoginPageState extends State<LoginPage> {
     codeEnable = false;
     var map = <String, dynamic>{};
     map['email'] = emailController.text;
-    var requestNetWorkAy = await HttpUtils.instance.requestNetWorkAy(
-        Method.post, HttpApi.sendVerCode,
-        queryParameters: map);
+    var requestNetWorkAy = await HttpUtils.instance.requestNetWorkAy(Method.post, HttpApi.sendVerCode, queryParameters: map);
     _t = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
         if (seconds == 1) {

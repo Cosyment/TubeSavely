@@ -24,11 +24,11 @@ class _MinePageState extends State<MinePage> {
       "title": "常见问题",
       "type": 0,
     },
-    {
-      "icon": Icons.share,
-      "title": "分享好友",
-      "type": 1,
-    },
+    // {
+    //   "icon": Icons.share,
+    //   "title": "分享好友",
+    //   "type": 1,
+    // },
     {
       "icon": Icons.feedback,
       "title": "意见反馈",

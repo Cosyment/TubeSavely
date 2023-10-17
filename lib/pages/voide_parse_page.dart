@@ -76,6 +76,7 @@ class _VideoParePageState extends State<VideoParePage> {
       body: Container(
         margin: EdgeInsets.fromLTRB(30.w, 30.w, 30.w, 30.w),
         child: CustomScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           slivers: [
             SliverToBoxAdapter(
               child: inputContainer(),
@@ -427,6 +428,7 @@ class _VideoParePageState extends State<VideoParePage> {
         videoList.clear();
         isLoading = true;
       });
+
     } catch (e) {
       print(">>>>>>>>>>>>>>>${e}");
       isLoading = false;
