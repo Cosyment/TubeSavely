@@ -3,8 +3,9 @@ import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
 class Constant {
   static const String agreementUrl =
-      "https://img.firefix.cn/fish/agreement.html";
-  static const String privacyUrl = "https://img.firefix.cn/fish/privacy.html";
+      "https://img.firefix.cn/downloaderx/agreement.html";
+  static const String privacyUrl =
+      "https://img.firefix.cn/downloaderx/privacy.html";
   static const String termsUseUrl =
       "https://www.apple.com/legal/internet-services/itunes/dev/stdeula";
   static const String isAgree = "is_agree";
