@@ -6,7 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class MethodPlugin {
   static const MethodChannel _channel =
-      MethodChannel('com.xhx.downloaderx/plugin');
+      MethodChannel('com.tube.video.saver/plugin');
 
   static void share() {
     _channel.invokeMethod('share');
@@ -40,16 +40,16 @@ class MethodPlugin {
       var channelName = await _channel.invokeMethod('getAppChannelId');
       switch (channelName) {
         case "huawei":
-          url = Uri.parse("appmarket://details?id=com.xhx.downloaderx");
+          url = Uri.parse("appmarket://details?id=com.tube.video.saver");
           break;
         case "google":
-          url = Uri.parse("market://details?id=com.xhx.downloaderx");
+          url = Uri.parse("market://details?id=com.tube.video.saver");
           break;
         case "xiaomi":
-          url = Uri.parse("mimarket://details?id=com.xhx.downloaderx");
+          url = Uri.parse("mimarket://details?id=com.tube.video.saver");
           break;
         default:
-          url = Uri.parse("market://details?id=com.xhx.downloaderx");
+          url = Uri.parse("market://details?id=com.tube.video.saver");
           break;
       }
     } else if (Platform.isIOS) {

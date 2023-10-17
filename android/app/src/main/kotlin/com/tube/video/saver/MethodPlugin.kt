@@ -1,4 +1,4 @@
-package com.xhx.downloaderx
+package com.tube.video.saver
 
 import android.app.Activity
 import android.content.Intent
@@ -6,7 +6,7 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.net.Uri
 import com.umeng.commonsdk.UMConfigure
-import com.xhx.downloaderx.AppInfo.getAppChannelId
+import com.tube.video.saver.AppInfo.getAppChannelId
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -19,7 +19,7 @@ class MethodPlugin : MethodChannel.MethodCallHandler, FlutterPlugin, ActivityAwa
 
     private var activity: Activity? = null
     private var channel: MethodChannel? = null
-    private val FLUTTERPLUGIN = "com.xhx.downloaderx/plugin"
+    private val FLUTTERPLUGIN = "com.tube.video.saver/plugin"
     private var flutterResult: MethodChannel.Result? = null
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
@@ -37,7 +37,7 @@ class MethodPlugin : MethodChannel.MethodCallHandler, FlutterPlugin, ActivityAwa
                 textIntent.type = "text/plain"
                 textIntent.putExtra(
                     Intent.EXTRA_TEXT,
-                    "https://play.google.com/store/apps/details?id=com.xhx.woodenfishs"
+                    "https://play.google.com/store/apps/details?id=com.tube.video.saver"
                 )
                 activity?.startActivity(Intent.createChooser(textIntent, "分享"))
             }
