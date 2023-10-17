@@ -6,12 +6,12 @@ import 'package:downloaderx/widget/platform_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../constants/colors.dart';
 import '../network/http_api.dart';
 import '../network/http_utils.dart';
 import 'tutorial_page.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class PushStreamPage extends StatefulWidget {
   const PushStreamPage({super.key});
@@ -20,8 +20,7 @@ class PushStreamPage extends StatefulWidget {
   State<PushStreamPage> createState() => _PushStreamPageState();
 }
 
-class _PushStreamPageState extends State<PushStreamPage>
-    with SingleTickerProviderStateMixin {
+class _PushStreamPageState extends State<PushStreamPage> with SingleTickerProviderStateMixin {
   List<dynamic> platform = [
     {'title': '抖音', 'icon': 'douyin.png'},
     {'title': '快手', 'icon': 'ks.png'},
@@ -40,13 +39,9 @@ class _PushStreamPageState extends State<PushStreamPage>
   bool isCircular = false;
   var countdown = 0;
   var btnStr = "开始推流";
-  var controllerHost =
-      TextEditingController(text: "rtmp://live-push.bilivideo.com/live-bvc/");
-  var controllerSecretKey = TextEditingController(
-      text:
-          "?streamname=live_1395106275_52446772&key=353e0970a59ad30ebb317984e0f6b348&schedule=rtmp&pflag=1");
-  var controllerLiveUrl =
-      TextEditingController(text: "http://live.bilibili.com/27521273");
+  var controllerHost = TextEditingController(text: "");
+  var controllerSecretKey = TextEditingController(text: "");
+  var controllerLiveUrl = TextEditingController(text: "");
 
   @override
   void initState() {
@@ -67,6 +62,7 @@ class _PushStreamPageState extends State<PushStreamPage>
       body: Container(
         margin: EdgeInsets.all(30.w),
         child: CustomScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           slivers: [
             SliverToBoxAdapter(
               child: Container(
@@ -74,17 +70,13 @@ class _PushStreamPageState extends State<PushStreamPage>
                 margin: EdgeInsets.fromLTRB(0, 0, 0, 25.w),
                 child: Text(
                   "选择推流平台",
-                  style:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
                 ),
               ),
             ),
             SliverGrid.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 10.w,
-                  mainAxisSpacing: 10.w,
-                  childAspectRatio: 2.2),
+                  crossAxisCount: 3, crossAxisSpacing: 10.w, mainAxisSpacing: 10.w, childAspectRatio: 2.2),
               itemCount: platform.length,
               itemBuilder: (BuildContext context, int index) {
                 return PlatFormItem(
@@ -94,29 +86,26 @@ class _PushStreamPageState extends State<PushStreamPage>
                 );
               },
             ),
+            buildInputContainer("服务器地址:", 'rtmp://live-push.bilivideo.com/live-bvc/', controllerHost, context),
             buildInputContainer(
-                "服务器地址:", '请输入服务器地址(rtmp://)', controllerHost, context),
-            buildInputContainer(
-                "串流秘钥:", '请输入串流秘钥', controllerSecretKey, context),
-            buildInputContainer(
-                "直播间地址:", '请输入直播间地址(https://)', controllerLiveUrl, context),
+                "串流秘钥:",
+                '?streamname=live_1395106275_52446772&key=353e0970a59ad30ebb317984e0f6b348&schedule=rtmp&pflag=1',
+                controllerSecretKey,
+                context),
+            buildInputContainer("直播间地址:", 'http://live.bilibili.com/27521273', controllerLiveUrl, context),
             SliverToBoxAdapter(
               child: Container(
                 alignment: Alignment.centerLeft,
                 margin: EdgeInsets.fromLTRB(0, 0, 0, 25.w),
                 child: Text(
                   "直播类型",
-                  style:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
                 ),
               ),
             ),
             SliverGrid.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 10.w,
-                  mainAxisSpacing: 10.w,
-                  childAspectRatio: 2.6),
+                  crossAxisCount: 3, crossAxisSpacing: 10.w, mainAxisSpacing: 10.w, childAspectRatio: 2.6),
               itemCount: liveType.length,
               itemBuilder: (BuildContext context, int index) {
                 return LiveTypeItem(
@@ -139,8 +128,7 @@ class _PushStreamPageState extends State<PushStreamPage>
                         width: isCircular ? 100.h : 600.w,
                         height: isCircular ? 100.h : 80.h,
                         decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(isCircular ? 50.h : 40.h),
+                            borderRadius: BorderRadius.circular(isCircular ? 50.h : 40.h),
                             gradient: const LinearGradient(
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
@@ -172,10 +160,7 @@ class _PushStreamPageState extends State<PushStreamPage>
                             : Center(
                                 child: Text(
                                 btnStr,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 30.sp,
-                                    fontWeight: FontWeight.bold),
+                                style: TextStyle(color: Colors.white, fontSize: 30.sp, fontWeight: FontWeight.bold),
                               )),
                         // child: isCircular
                         //     ? ClipOval(child: Container(color: Colors.blue))
@@ -227,9 +212,7 @@ class _PushStreamPageState extends State<PushStreamPage>
     map['liveUrl'] = liveUrl;
     map['platform'] = plat;
     map['liveType'] = type;
-    var respond = await HttpUtils.instance.requestNetWorkAy(
-        Method.post, HttpApi.submitLiveStream,
-        queryParameters: map);
+    var respond = await HttpUtils.instance.requestNetWorkAy(Method.post, HttpApi.submitLiveStream, queryParameters: map);
     print(">>>>>>>>>>>>>>>${respond}");
     await Future.delayed(Duration(milliseconds: 400));
     startTimer();
@@ -271,8 +254,7 @@ class _PushStreamPageState extends State<PushStreamPage>
   }
 }
 
-SliverToBoxAdapter buildInputContainer(String title, String hitText,
-    TextEditingController controller, BuildContext context) {
+SliverToBoxAdapter buildInputContainer(String title, String hitText, TextEditingController controller, BuildContext context) {
   return SliverToBoxAdapter(
     child: Container(
       width: double.infinity,
@@ -282,17 +264,13 @@ SliverToBoxAdapter buildInputContainer(String title, String hitText,
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const TutorialPage()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const TutorialPage()));
             },
             child: Row(
               children: [
                 Text(
                   title,
-                  style:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
                 ),
                 const Icon(
                   Icons.help,
@@ -316,8 +294,7 @@ SliverToBoxAdapter buildInputContainer(String title, String hitText,
                 hintText: hitText,
                 hintStyle: const TextStyle(color: Colors.grey),
                 border: const OutlineInputBorder(borderSide: BorderSide.none),
-                focusedBorder:
-                    const OutlineInputBorder(borderSide: BorderSide.none),
+                focusedBorder: const OutlineInputBorder(borderSide: BorderSide.none),
                 enabledBorder: const OutlineInputBorder(
                   borderSide: BorderSide.none,
                 ),
