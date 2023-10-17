@@ -182,16 +182,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   buildChildLayout() {
-    return SliverGrid.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+    return SliverPadding(
+      padding: EdgeInsets.all(20.w),
+      sliver: SliverGrid.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 4,
-          childAspectRatio: 1),
-      itemCount: Constant.meList.length,
-      itemBuilder: (BuildContext context, int index) {
-        var item = Constant.meList[index];
-        return Container(
-          margin: EdgeInsets.fromLTRB(10.w, 5.w, 10.w, 5.w),
-          child: Card(
+          childAspectRatio: 1,
+        ),
+        itemCount: Constant.meList.length,
+        itemBuilder: (BuildContext context, int index) {
+          var item = Constant.meList[index];
+          return Card(
             elevation: 1,
             clipBehavior: Clip.hardEdge,
             color: primaryColor,
@@ -227,9 +228,9 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
 
     return SliverGrid(

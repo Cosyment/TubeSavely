@@ -7,11 +7,11 @@ class PubMethodUtils {
   //   if (PlatformUtils.isAndroid) {
   //     MethodPlugin.getAppChannelId().then((value) {
   //       UmengCommonSdk.initCommon(
-  //           '63b91145ba6a5259c4e3e8b6', '63b912d9ba6a5259c4e3e8f1', value);
+  //           '652e62c3b2f6fa00ba65ae50', '652e62ddb2f6fa00ba65ae51', value);
   //     });
   //   } else if (PlatformUtils.isIOS) {
   //     UmengCommonSdk.initCommon(
-  //         '63b91145ba6a5259c4e3e8b6', '63b912d9ba6a5259c4e3e8f1', "ios");
+  //         '652e62c3b2f6fa00ba65ae50', '652e62ddb2f6fa00ba65ae51', "ios");
   //   }
   // }
 
