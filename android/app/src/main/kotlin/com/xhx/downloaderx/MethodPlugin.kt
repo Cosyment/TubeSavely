@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.net.Uri
+import com.umeng.commonsdk.UMConfigure
 import com.xhx.downloaderx.AppInfo.getAppChannelId
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -27,7 +28,7 @@ class MethodPlugin : MethodChannel.MethodCallHandler, FlutterPlugin, ActivityAwa
         }
         when (call.method) {
             "isAgree" -> {
-//                UMConfigure.submitPolicyGrantResult(activity, true)
+                UMConfigure.submitPolicyGrantResult(activity, true)
                 result.success("isAgree")
             }
 
