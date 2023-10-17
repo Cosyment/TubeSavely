@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
 
     <application
-        android:name="${applicationName}"
+        android:name=".MyApp"
         android:icon="@mipmap/ic_launcher"
         android:label="鲁搬视频下载"
         android:usesCleartextTraffic="true">

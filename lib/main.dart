@@ -82,6 +82,8 @@ class _MainPageState extends State<MainPage> {
                   Animation<double> secondaryAnimation) {
                 return AgreementDialog(onAgreeClick: onAgreeClick);
               });
+        } else {
+          PubMethodUtils.umengCommonSdkInit();
         }
       });
     });
@@ -89,6 +91,7 @@ class _MainPageState extends State<MainPage> {
 
   void onAgreeClick() {
     PubMethodUtils.putSharedPreferences("isAgree", "1");
+    PubMethodUtils.umengCommonSdkInit();
   }
 
   @override
