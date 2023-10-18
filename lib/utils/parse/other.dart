@@ -5,6 +5,8 @@ import 'dart:math';
 import '../../data/db_manager.dart';
 import '../../data/video_parse.dart';
 import '../../models/video_info.dart';
+import '../../network/http_api.dart';
+import '../../network/http_utils.dart';
 
 class Other {
   static Other? _instance;
@@ -24,6 +26,13 @@ class Other {
 
   Future<void> parse(String parseUrl, Function onResult) async {
     List<VideoInfo> videoList = [];
+    // var map = <String, dynamic>{};
+    // map['link'] = parseUrl;
+    // var data = await HttpUtils.instance
+    //     .requestNetWorkAy(Method.get, HttpApi.videoParse, queryParameters: map);
+    // if (data != null) {
+    //
+    // }
     Uri uri = Uri.parse(
         'https://proxy.layzz.cn/lyz/getAnalyse?token=rzwewdzrckc-auther-523ddd&link=${parseUrl}');
 

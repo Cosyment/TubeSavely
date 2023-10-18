@@ -17,7 +17,8 @@ class AuthInterceptor extends Interceptor {
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     // options.headers['Authorization'] = 'Bearer ${HttpUtils.token ?? ''}';
     var parameters = options.queryParameters;
-    options.headers['sign'] = EncryptedUtils.createSign(parameters);
+    var createSign = EncryptedUtils.createSign(parameters);
+    options.headers['sign'] = createSign;
     options.headers['userId'] = Constant.userId;
     options.headers['UserAgent'] = 'mobile';
     options.headers['PackageNames'] = HttpUtils.appInfo;
