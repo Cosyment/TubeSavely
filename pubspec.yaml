@@ -30,7 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  flutter_localizations:
+    sdk: flutter
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -45,7 +46,6 @@ dependencies:
   chewie: ^1.7.1
   simple_database: ^2.0.1
   percent_indicator: ^4.2.3
-  intl: ^0.18.1
   flutter_screenutil: ^5.9.0
   shimmer: ^3.0.0
   cached_network_image: ^3.3.0
@@ -82,6 +82,9 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
+
+dependency_overrides:
+  intl: ^0.18.1
 
 # The following section is specific to Flutter packages.
 flutter:
@@ -124,3 +127,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+flutter_intl:
+  enabled: true

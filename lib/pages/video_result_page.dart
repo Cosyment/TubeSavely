@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:video_player/video_player.dart';
 
+import '../generated/l10n.dart';
 import '../utils/exit.dart';
 
 Future<void> _getImageDimension(File file,
@@ -72,7 +73,9 @@ class _VideoResultPageState extends State<VideoResultPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("视频播放"),
+        title: Text(
+          S.of(context).tvPlayTxt,
+        ),
       ),
       body: Padding(
         padding: EdgeInsets.all(30.w),
@@ -130,7 +133,7 @@ class _VideoResultPageState extends State<VideoResultPage> {
                       ],
                     )),
                 child: Text(
-                  "保存",
+                    S.of(context).saveTxt,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 30.sp,
@@ -152,16 +155,16 @@ class _VideoResultPageState extends State<VideoResultPage> {
       var s = externalDir!.path + "/" + path.basename(widget.video.path);
       if (Platform.isIOS) {
         final result = await ImageGallerySaver.saveFile(s);
-        ToastExit.show("保存成功");
+        ToastExit.show(S.of(context).saveSuccessfullyTxt);
         if (status.isDenied) {
           print("IOS拒绝");
         }
       } else {
         final result = await ImageGallerySaver.saveFile(widget.video.path);
         if (result != null) {
-          ToastExit.show("保存成功");
+          ToastExit.show(S.of(context).saveSuccessfullyTxt);
         } else {
-          ToastExit.show("保存失败");
+          ToastExit.show(S.of(context).saveFailedyTxt);
         }
       }
     } else {

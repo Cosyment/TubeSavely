@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:io';
+import '../../generated/l10n.dart';
 import '../../utils/exit.dart';
 import 'file_utils.dart';
 import 'scrawl_painter.dart';
@@ -47,7 +48,9 @@ class _ScrawlState extends State<ScrawlPage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("涂鸦"),
+          title: Text(
+            S.of(context).doodleTxt,
+          ),
         ),
         body: Column(
           children: <Widget>[
@@ -232,7 +235,7 @@ class _ScrawlState extends State<ScrawlPage> {
                       ],
                     )),
                 child: Text(
-                  '清除',
+                  S.of(context).clearTxt,
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 28.sp,
@@ -263,7 +266,7 @@ class _ScrawlState extends State<ScrawlPage> {
                       ],
                     )),
                 child: Text(
-                  '保存',
+                  S.of(context).saveTxt,
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 28.sp,
@@ -274,9 +277,9 @@ class _ScrawlState extends State<ScrawlPage> {
                 RenderRepaintBoundary? boundary = _repaintKey.currentContext!
                     .findRenderObject() as RenderRepaintBoundary;
                 saveScreenShot2SDCard(boundary, success: () {
-                  ToastExit.show("保存成功");
+                  ToastExit.show(S.of(context).saveSuccessfullyTxt);
                 }, fail: () {
-                  ToastExit.show("保存失败");
+                  ToastExit.show(S.of(context).saveFailedyTxt);
                 });
               },
             ),

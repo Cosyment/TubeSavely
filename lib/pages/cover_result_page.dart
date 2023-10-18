@@ -9,6 +9,7 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../generated/l10n.dart';
 import '../utils/exit.dart';
 import 'video_result_page.dart';
 
@@ -49,7 +50,7 @@ class _CoverResultPageState extends State<CoverResultPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("图片预览"),
+        title: Text(S.of(context).lookPhotoTxt),
       ),
       body: Padding(
         padding: EdgeInsets.all(30.w),
@@ -95,7 +96,7 @@ class _CoverResultPageState extends State<CoverResultPage> {
                   ),
                 ),
                 child: Text(
-                  "保存",
+                  S.of(context).saveTxt,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 30.sp,
@@ -117,14 +118,14 @@ class _CoverResultPageState extends State<CoverResultPage> {
       if (Platform.isIOS) {
         final result = await ImageGallerySaver.saveImage(_imagebytes);
         if (result != null) {
-          ToastExit.show("保存成功");
+          ToastExit.show(S.of(context).saveSuccessfullyTxt);
         }
       } else {
         final result = await ImageGallerySaver.saveImage(_imagebytes);
         if (result != null) {
-          ToastExit.show("保存成功");
+          ToastExit.show(S.of(context).saveSuccessfullyTxt);
         } else {
-          ToastExit.show("保存失败");
+          ToastExit.show(S.of(context).saveFailedyTxt);
         }
       }
     } else {

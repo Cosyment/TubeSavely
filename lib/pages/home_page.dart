@@ -4,6 +4,7 @@ import 'package:downloaderx/pages/video_montage_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
+import '../generated/l10n.dart';
 import '../utils/pub_method.dart';
 import 'scrawl/content_page.dart';
 import 'scrawl/scrawl_page.dart';
@@ -42,7 +43,7 @@ class _HomePageState extends State<HomePage> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(
-          "视频去水印",
+          S.of(context).videoLinkWatermarkTxt,
           style: TextStyle(
             color: Colors.white,
           ),
@@ -62,7 +63,7 @@ class _HomePageState extends State<HomePage> {
             child: Padding(
               padding: EdgeInsets.all(20.w),
               child: Text(
-                "视频剪辑工具",
+                S.of(context).tvClipTxt,
                 style: TextStyle(
                   fontSize: 40.sp,
                   fontWeight: FontWeight.bold,
@@ -97,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '视频链接去水印',
+                      S.of(context).videoLinkWatermarkRemovalTxt,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 30.sp,
@@ -138,7 +139,7 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '图片去水印',
+                      S.of(context).pictureWatermarkingTxt,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 30.sp,

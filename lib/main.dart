@@ -5,10 +5,12 @@ import 'package:downloaderx/pages/push_stream_page.dart';
 import 'package:downloaderx/utils/pub_method.dart';
 import 'package:downloaderx/widget/agreement_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
 import 'constants/colors.dart';
+import 'generated/l10n.dart';
 
 void main() async {
   await ScreenUtil.ensureScreenSize();
@@ -40,6 +42,13 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
+      localizationsDelegates: const [
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        S.delegate,
+      ],
+      supportedLocales: S.delegate.supportedLocales,
       home: const MainPage(),
     );
   }
