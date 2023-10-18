@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:common_utils/common_utils.dart';
 import 'package:dio/dio.dart';
 import 'package:downloaderx/constants/constant.dart';
+import '../../utils/encrypted_utils.dart';
 import '../../utils/log_util.dart';
 import '../http_api.dart';
 
@@ -15,6 +16,8 @@ class AuthInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     // options.headers['Authorization'] = 'Bearer ${HttpUtils.token ?? ''}';
+    var parameters = options.queryParameters;
+    options.headers['sign'] = EncryptedUtils.createSign(parameters);
     options.headers['userId'] = Constant.userId;
     options.headers['UserAgent'] = 'mobile';
     options.headers['PackageNames'] = HttpUtils.appInfo;

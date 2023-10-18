@@ -67,6 +67,7 @@ dependencies:
   common_utils: ^2.1.0
   json2dart_safe: ^1.5.3
   umeng_common_sdk: ^1.2.6
+  crypto: ^3.0.3
 
 
 dev_dependencies:

@@ -3,6 +3,7 @@ import 'package:downloaderx/pages/history_page.dart';
 import 'package:downloaderx/utils/pub_method.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lottie/lottie.dart';
 
 import '../constants/colors.dart';
 import '../plugin/method_plugin.dart';
@@ -113,13 +114,23 @@ class _MinePageState extends State<MinePage> {
                             Color(0xFF7776FF),
                           ],
                         )),
-                    child: Text(
-                      userId == "" ? "登录" : "已登录",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 28.sp,
-                          fontWeight: FontWeight.bold),
-                    ),
+                    child: userId == ""
+                        ? Text(
+                            "登录",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 28.sp,
+                                fontWeight: FontWeight.bold),
+                          )
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Lottie.asset(
+                              'assets/lottie/avatar.json',
+                              width: 140.w,
+                              height: 140.w,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
                   ),
                 ),
               )
