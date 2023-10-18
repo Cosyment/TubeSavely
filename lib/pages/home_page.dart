@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       var list =
-          S.of(context).tvListTxt.split(',').map((e) => e.trim()).toList();
+          S.of(context).tvListTxt.split(', ').map((e) => e.trim()).toList();
       for (int i = 0; i < Constant.meList.length; i++) {
         var item = Constant.meList[i];
         item['title'] = list[i];
@@ -197,7 +197,7 @@ class _HomePageState extends State<HomePage> {
       sliver: SliverGrid.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
-          childAspectRatio: 1,
+          childAspectRatio: 1 / 0.9,
         ),
         itemCount: Constant.meList.length,
         itemBuilder: (BuildContext context, int index) {
@@ -212,7 +212,7 @@ class _HomePageState extends State<HomePage> {
                 await skipSelectPhoto(context, item);
               },
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   // Image(
                   //   image: AssetImage("assets/images/${item['bg']}"),
@@ -226,13 +226,15 @@ class _HomePageState extends State<HomePage> {
                     size: 60.w,
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 10.w),
+                    padding: EdgeInsets.all(10.w),
                     child: Text(
                       item['title'].toString(),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 26.sp,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
