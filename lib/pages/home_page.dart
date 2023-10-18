@@ -30,6 +30,15 @@ class _HomePageState extends State<HomePage> {
         });
       }
     });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      var list =
+          S.of(context).tvListTxt.split(',').map((e) => e.trim()).toList();
+      for (int i = 0; i < Constant.meList.length; i++) {
+        var item = Constant.meList[i];
+        item['title'] = list[i];
+      }
+      setState(() {});
+    });
   }
 
   @override
@@ -122,62 +131,62 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-        SizedBox(width: 10.w),
-        Expanded(
-          child: Card(
-            elevation: 1,
-            clipBehavior: Clip.hardEdge,
-            color: primaryColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.r)),
-            ),
-            child: InkWell(
-              splashColor: Colors.blue.withAlpha(30),
-              child: Container(
-                padding: EdgeInsets.all(20.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      S.of(context).pictureWatermarkingTxt,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 30.sp,
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: Icon(
-                        Icons.delete,
-                        color: Colors.white,
-                        size: 80.w,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              onTap: () async {
-                List<AssetEntity>? result =
-                    await AssetPicker.pickAssets(context,
-                        pickerConfig: AssetPickerConfig(
-                          themeColor: primaryColor,
-                          maxAssets: 1,
-                          requestType: RequestType.image,
-                        ));
-                if (result != null) {
-                  var file2 = await result[0].file;
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ContentPage(
-                                cover: file2!,
-                              )));
-                }
-              },
-            ),
-          ),
-        ),
         SizedBox(width: 20.w),
+        // Expanded(
+        //   child: Card(
+        //     elevation: 1,
+        //     clipBehavior: Clip.hardEdge,
+        //     color: primaryColor,
+        //     shape: RoundedRectangleBorder(
+        //       borderRadius: BorderRadius.all(Radius.circular(20.r)),
+        //     ),
+        //     child: InkWell(
+        //       splashColor: Colors.blue.withAlpha(30),
+        //       child: Container(
+        //         padding: EdgeInsets.all(20.w),
+        //         child: Column(
+        //           crossAxisAlignment: CrossAxisAlignment.start,
+        //           children: [
+        //             Text(
+        //               S.of(context).pictureWatermarkingTxt,
+        //               style: TextStyle(
+        //                 color: Colors.white,
+        //                 fontSize: 30.sp,
+        //               ),
+        //             ),
+        //             Align(
+        //               alignment: Alignment.topRight,
+        //               child: Icon(
+        //                 Icons.delete,
+        //                 color: Colors.white,
+        //                 size: 80.w,
+        //               ),
+        //             ),
+        //           ],
+        //         ),
+        //       ),
+        //       onTap: () async {
+        //         List<AssetEntity>? result =
+        //             await AssetPicker.pickAssets(context,
+        //                 pickerConfig: AssetPickerConfig(
+        //                   themeColor: primaryColor,
+        //                   maxAssets: 1,
+        //                   requestType: RequestType.image,
+        //                 ));
+        //         if (result != null) {
+        //           var file2 = await result[0].file;
+        //           Navigator.push(
+        //               context,
+        //               MaterialPageRoute(
+        //                   builder: (context) => ContentPage(
+        //                         cover: file2!,
+        //                       )));
+        //         }
+        //       },
+        //     ),
+        //   ),
+        // ),
+        // SizedBox(width: 20.w),
       ],
     );
   }
@@ -187,7 +196,7 @@ class _HomePageState extends State<HomePage> {
       padding: EdgeInsets.all(20.w),
       sliver: SliverGrid.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,
+          crossAxisCount: 3,
           childAspectRatio: 1,
         ),
         itemCount: Constant.meList.length,

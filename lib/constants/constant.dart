@@ -115,7 +115,7 @@ class Constant {
     },
   ];
 
-  static const meList = [
+  static var meList = [
     {
       'title': '视频裁剪',
       'content': '多种比列裁剪',
