@@ -115,69 +115,69 @@ class Constant {
     },
   ];
 
-  static const meList = [
+  static var meList = [
     {
-      'title': '视频裁剪',
+      'title': '',
       'content': '多种比列裁剪',
       'type': RequestType.video,
       'icon': Icons.crop,
     },
     {
-      'title': '视频剪辑',
+      'title': '',
       'content': '分段视频剪辑',
       'type': RequestType.video,
       'icon': Icons.content_cut,
     },
     {
-      'title': '视频倒放',
+      'title': '',
       'content': '一键倒放功能',
       'type': RequestType.video,
       'icon': Icons.turn_left,
     },
     {
-      'title': '视频旋转',
+      'title': '',
       'content': '各种角度旋转',
       'type': RequestType.video,
       'icon': Icons.crop_rotate,
     },
     {
-      'title': '视频变速',
+      'title': '',
       'content': '支持视频加速减速',
       'type': RequestType.video,
       'icon': Icons.speed,
     },
     {
-      'title': '视频压缩',
+      'title': '',
       'content': '支持质量压缩',
       'type': RequestType.video,
       'icon': Icons.compress,
     },
     {
-      'title': '视频截图',
+      'title': '',
       'content': '生成视频视图',
       'type': RequestType.video,
       'icon': Icons.screenshot,
     },
     // {
-    //   'title': '视频合并',
+    //   'title': '',
     //   'content': '多个视频合并',
     //   'type': RequestType.video,
     //   'icon': Icons.merge,
     // },
     {
-      'title': '视频转GIF',
+      'title': '',
       'content': '支持各种格式',
       'type': RequestType.video,
       'icon': Icons.gif,
     },
     {
-      'title': '视频镜像',
+      'title': '',
       'content': '支持多种样式',
       'type': RequestType.video,
       'icon': Icons.unfold_less,
     },
     {
-      'title': '视频去声音',
+      'title': '',
       'content': '去除视频声音',
       'type': RequestType.video,
       'icon': Icons.music_off,

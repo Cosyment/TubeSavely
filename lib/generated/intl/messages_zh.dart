@@ -61,7 +61,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "termsUse": MessageLookupByLibrary.simpleMessage("使用条款"),
         "tvClipTxt": MessageLookupByLibrary.simpleMessage("视频剪辑工具"),
         "tvListTxt": MessageLookupByLibrary.simpleMessage(
-            "视频裁剪，视频剪辑，视频倒放，视频旋转，视频变速，视频压缩，视频截图，视频转GIF，视频镜像，视频去声音"),
+            "视频裁剪, 视频剪辑, 视频倒放, 视频旋转, 视频变速, 视频压缩, 视频截图, 视频转GIF, 视频镜像, 视频去声音"),
         "tvPlayTxt": MessageLookupByLibrary.simpleMessage("视频播放"),
         "userAgreement": MessageLookupByLibrary.simpleMessage("用户协议"),
         "version": MessageLookupByLibrary.simpleMessage("版本"),
