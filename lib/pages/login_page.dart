@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../constants/colors.dart';
+import '../constants/constant.dart';
 import '../network/http_utils.dart';
 
 class LoginPage extends StatefulWidget {
@@ -237,6 +238,7 @@ class _LoginPageState extends State<LoginPage> {
         .requestNetWorkAy(Method.post, HttpApi.login, queryParameters: map);
     if (data != null) {
       var userId = data['userId'];
+      Constant.userId = userId;
       PubMethodUtils.putSharedPreferences("userId", userId);
       ToastExit.show("登录成功");
       Navigator.pop(context, userId);

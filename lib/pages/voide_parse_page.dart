@@ -53,7 +53,7 @@ class _VideoParePageState extends State<VideoParePage> {
 
   @override
   void dispose() {
-    if (_controller != null) {
+    if (videoList.isNotEmpty && _controller != null) {
       _controller.pause();
       _controller.dispose();
     }
@@ -428,7 +428,6 @@ class _VideoParePageState extends State<VideoParePage> {
         videoList.clear();
         isLoading = true;
       });
-
     } catch (e) {
       print(">>>>>>>>>>>>>>>${e}");
       isLoading = false;

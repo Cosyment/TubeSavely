@@ -23,11 +23,15 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     PubMethodUtils.getSharedPreferences("InAppReview").then((value) {
       if (value == null) {
-        Constant.userId = value.toString();
         PubMethodUtils.putSharedPreferences("InAppReview", "1");
         Future.delayed(const Duration(milliseconds: 1000 * 10), () {
           PubMethodUtils.getInAppReview();
         });
+      }
+    });
+    PubMethodUtils.getSharedPreferences("userId").then((value) {
+      if (value != null) {
+        Constant.userId = value.toString();
       }
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
