@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
+import 'package:downloaderx/utils/exit.dart';
 import '../utils/log_util.dart';
 import 'entity/base_entity.dart';
 import 'http_api.dart';
@@ -66,9 +67,9 @@ class HttpUtils {
   HttpUtils._internal() {
     var options = BaseOptions(
       baseUrl: _apiBaseUrl,
-      connectTimeout: const Duration(milliseconds:  10 * 1000),
-      receiveTimeout: const Duration(milliseconds:  10 * 1000),
-      sendTimeout: const Duration(milliseconds:  10 * 1000),
+      connectTimeout: const Duration(milliseconds: 10 * 1000),
+      receiveTimeout: const Duration(milliseconds: 10 * 1000),
+      sendTimeout: const Duration(milliseconds: 10 * 1000),
       contentType: ContentType.json.value,
       responseType: ResponseType.plain,
       validateStatus: (status) {
@@ -154,8 +155,14 @@ class HttpUtils {
         }
       } else {
         if (result.code != null) {
-          _onError(result.code, result.message ?? "", null);
+          if (result.msg != null && result.msg != "") {
+            ToastExit.show(result.msg);
+          }
+          _onError(result.code, result.msg ?? "", null);
         } else {
+          if (result.responseMsg != null && result.responseMsg != "") {
+            ToastExit.show(result.responseMsg);
+          }
           _onError(result.responseCode, result.responseMsg ?? "", null);
         }
         return result.data;
@@ -209,7 +216,7 @@ class HttpUtils {
         }
       } else {
         if (result.code != null) {
-          _onError(result.code, result.message ?? "", onError);
+          _onError(result.code, result.msg ?? "", onError);
         } else {
           _onError(result.responseCode, result.responseMsg ?? "", onError);
         }

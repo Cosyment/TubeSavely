@@ -9,13 +9,13 @@ class HttpConstant {
   static const String result = 'result';
 
   static const String data = 'data';
-  static const String message = 'err';
+  static const String msg = 'msg';
   static const String code = 'code';
 }
 
 class BaseEntity<T> {
   int? code;
-  String? message = "";
+  String? msg = "";
   T? data;
   int? responseCode;
 
@@ -24,7 +24,7 @@ class BaseEntity<T> {
 
   List<T> listData = [];
 
-  BaseEntity(this.code, this.message, this.data, {this.responseCode});
+  BaseEntity(this.code, this.msg, this.data, {this.responseCode});
 
   BaseEntity.fromJson(Map<String, dynamic>? json) {
     if (json!.containsKey(HttpConstant.responseCode)) {
@@ -33,7 +33,7 @@ class BaseEntity<T> {
     }
     if (json.containsKey(HttpConstant.code)) {
       code = json.asInt(HttpConstant.code);
-      message = json.asString(HttpConstant.message);
+      msg = json.asString(HttpConstant.msg);
     }
     if (json.containsKey(HttpConstant.data)) {
       if (json[HttpConstant.data] is List) {

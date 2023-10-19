@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
     ScreenUtil.init(context, designSize: const Size(750, 1378));
     return Scaffold(
       appBar: AppBar(
-        title: Text("登录"),
+        title: Text("Login"),
       ),
       body: Container(
         width: double.infinity,
@@ -152,38 +152,35 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   Positioned(
-                    right: 20.w,
-                    top: 10.w,
-                    child: InkWell(
-                      onTap: () async {
-                        if (codeEnable) {
-                          sendMsm();
-                        }
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 20.w,
-                          horizontal: 20.w,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15.r),
-                          gradient: const LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              Color(0xFFFC6AEC),
-                              Color(0xFF7776FF),
-                            ],
+                    right: 25.w,
+                    top: 0,
+                    bottom: 0,
+                    child: Row(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 15),
+                          child: VerticalDivider(
+                            thickness: 1,
+                            color: Colors.black87,
                           ),
                         ),
-                        child: Text(
-                          _buttonText,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 26.sp,
+                        InkWell(
+                          onTap: () async {
+                            if (codeEnable) {
+                              sendMsm();
+                            }
+                          },
+                          child: Center(
+                            child: Text(
+                              _buttonText,
+                              style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 26.sp,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
+                        )
+                      ],
                     ),
                   ),
                 ],
@@ -247,39 +244,46 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         isLoading = false;
       });
-      ToastExit.show("验证码错误");
     }
   }
 
   Timer? _t;
   int seconds = 60;
-  String _buttonText = "获取验证码";
+  String _buttonText = "Get VerCode";
   bool codeEnable = true;
 
   sendMsm() async {
     reset() {
       _t!.cancel();
       codeEnable = true;
-      _buttonText = "获取验证码";
+      _buttonText = "Get VerCode";
       seconds = 60;
     }
 
-    codeEnable = false;
+    setState(() {
+      codeEnable = false;
+    });
     var map = <String, dynamic>{};
     map['email'] = emailController.text;
-    var requestNetWorkAy = await HttpUtils.instance.requestNetWorkAy(
+    var data = await HttpUtils.instance.requestNetWorkAy(
         Method.post, HttpApi.sendVerCode,
         queryParameters: map);
-    _t = Timer.periodic(Duration(seconds: 1), (timer) {
-      setState(() {
-        if (seconds == 1) {
-          reset();
-        } else {
-          seconds--;
-          _buttonText = "重新发送($seconds)";
-        }
+    if (data != null) {
+      _t = Timer.periodic(Duration(seconds: 1), (timer) {
+        setState(() {
+          if (seconds == 1) {
+            reset();
+          } else {
+            seconds--;
+            _buttonText = "Resend($seconds)";
+          }
+        });
       });
-    });
+    } else {
+      setState(() {
+        codeEnable = true;
+      });
+    }
   }
 
   @override
