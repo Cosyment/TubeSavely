@@ -11,6 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../constants/colors.dart';
 import '../network/http_api.dart';
 import '../network/http_utils.dart';
+import 'login_page.dart';
 import 'tutorial_page.dart';
 
 class PushStreamPage extends StatefulWidget {
@@ -20,7 +21,8 @@ class PushStreamPage extends StatefulWidget {
   State<PushStreamPage> createState() => _PushStreamPageState();
 }
 
-class _PushStreamPageState extends State<PushStreamPage> with SingleTickerProviderStateMixin {
+class _PushStreamPageState extends State<PushStreamPage>
+    with SingleTickerProviderStateMixin {
   List<dynamic> platform = [
     {'title': '抖音', 'icon': 'douyin.png'},
     {'title': '快手', 'icon': 'ks.png'},
@@ -70,13 +72,17 @@ class _PushStreamPageState extends State<PushStreamPage> with SingleTickerProvid
                 margin: EdgeInsets.fromLTRB(0, 0, 0, 25.w),
                 child: Text(
                   "选择推流平台",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
+                  style:
+                      TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
                 ),
               ),
             ),
             SliverGrid.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3, crossAxisSpacing: 10.w, mainAxisSpacing: 10.w, childAspectRatio: 2.2),
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 10.w,
+                  mainAxisSpacing: 10.w,
+                  childAspectRatio: 2.2),
               itemCount: platform.length,
               itemBuilder: (BuildContext context, int index) {
                 return PlatFormItem(
@@ -86,26 +92,35 @@ class _PushStreamPageState extends State<PushStreamPage> with SingleTickerProvid
                 );
               },
             ),
-            buildInputContainer("服务器地址:", 'rtmp://live-push.bilivideo.com/live-bvc/', controllerHost, context),
+            buildInputContainer(
+                "服务器地址:",
+                'rtmp://live-push.bilivideo.com/live-bvc/',
+                controllerHost,
+                context),
             buildInputContainer(
                 "串流秘钥:",
                 '?streamname=live_1395106275_52446772&key=353e0970a59ad30ebb317984e0f6b348&schedule=rtmp&pflag=1',
                 controllerSecretKey,
                 context),
-            buildInputContainer("直播间地址:", 'http://live.bilibili.com/27521273', controllerLiveUrl, context),
+            buildInputContainer("直播间地址:", 'http://live.bilibili.com/27521273',
+                controllerLiveUrl, context),
             SliverToBoxAdapter(
               child: Container(
                 alignment: Alignment.centerLeft,
                 margin: EdgeInsets.fromLTRB(0, 0, 0, 25.w),
                 child: Text(
                   "直播类型",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
+                  style:
+                      TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
                 ),
               ),
             ),
             SliverGrid.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3, crossAxisSpacing: 10.w, mainAxisSpacing: 10.w, childAspectRatio: 2.6),
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 10.w,
+                  mainAxisSpacing: 10.w,
+                  childAspectRatio: 2.6),
               itemCount: liveType.length,
               itemBuilder: (BuildContext context, int index) {
                 return LiveTypeItem(
@@ -128,7 +143,8 @@ class _PushStreamPageState extends State<PushStreamPage> with SingleTickerProvid
                         width: isCircular ? 100.h : 600.w,
                         height: isCircular ? 100.h : 80.h,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(isCircular ? 50.h : 40.h),
+                            borderRadius:
+                                BorderRadius.circular(isCircular ? 50.h : 40.h),
                             gradient: const LinearGradient(
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
@@ -160,7 +176,10 @@ class _PushStreamPageState extends State<PushStreamPage> with SingleTickerProvid
                             : Center(
                                 child: Text(
                                 btnStr,
-                                style: TextStyle(color: Colors.white, fontSize: 30.sp, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 30.sp,
+                                    fontWeight: FontWeight.bold),
                               )),
                         // child: isCircular
                         //     ? ClipOval(child: Container(color: Colors.blue))
@@ -183,6 +202,11 @@ class _PushStreamPageState extends State<PushStreamPage> with SingleTickerProvid
     var liveUrl = controllerLiveUrl.value.text;
     var plat = platform[currentIndex]['title'];
     var type = liveType[currentLiveIndex]['type'];
+    if (await UserExit.isLogin() == null) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const LoginPage()));
+      return;
+    }
     if (host.isEmpty) {
       ToastExit.show('请输入服务器地址');
       return;
@@ -212,7 +236,9 @@ class _PushStreamPageState extends State<PushStreamPage> with SingleTickerProvid
     map['liveUrl'] = liveUrl;
     map['platform'] = plat;
     map['liveType'] = type;
-    var respond = await HttpUtils.instance.requestNetWorkAy(Method.post, HttpApi.submitLiveStream, queryParameters: map);
+    var respond = await HttpUtils.instance.requestNetWorkAy(
+        Method.post, HttpApi.submitLiveStream,
+        queryParameters: map);
     print(">>>>>>>>>>>>>>>${respond}");
     await Future.delayed(Duration(milliseconds: 400));
     startTimer();
@@ -254,7 +280,8 @@ class _PushStreamPageState extends State<PushStreamPage> with SingleTickerProvid
   }
 }
 
-SliverToBoxAdapter buildInputContainer(String title, String hitText, TextEditingController controller, BuildContext context) {
+SliverToBoxAdapter buildInputContainer(String title, String hitText,
+    TextEditingController controller, BuildContext context) {
   return SliverToBoxAdapter(
     child: Container(
       width: double.infinity,
@@ -264,13 +291,17 @@ SliverToBoxAdapter buildInputContainer(String title, String hitText, TextEditing
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const TutorialPage()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const TutorialPage()));
             },
             child: Row(
               children: [
                 Text(
                   title,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
+                  style:
+                      TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
                 ),
                 const Icon(
                   Icons.help,
@@ -294,7 +325,8 @@ SliverToBoxAdapter buildInputContainer(String title, String hitText, TextEditing
                 hintText: hitText,
                 hintStyle: const TextStyle(color: Colors.grey),
                 border: const OutlineInputBorder(borderSide: BorderSide.none),
-                focusedBorder: const OutlineInputBorder(borderSide: BorderSide.none),
+                focusedBorder:
+                    const OutlineInputBorder(borderSide: BorderSide.none),
                 enabledBorder: const OutlineInputBorder(
                   borderSide: BorderSide.none,
                 ),
