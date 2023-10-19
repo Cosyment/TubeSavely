@@ -11,6 +11,7 @@ class Constant {
   static const String isAgree = "is_agree";
   static const String isInAppReviewKey = "isInAppReviewKey";
   static String userId = "";
+  static String appChannelId = "";
   static const pingtaiList = [
     {
       "bg": "iconspxkx.png",

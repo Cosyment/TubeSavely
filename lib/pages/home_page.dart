@@ -69,9 +69,9 @@ class _HomePageState extends State<HomePage> {
               height: 50.w,
             ),
           ),
-          SliverToBoxAdapter(
-            child: widgetTop(context),
-          ),
+          // SliverToBoxAdapter(
+          //   child: widgetTop(context),
+          // ),
           SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.all(20.w),

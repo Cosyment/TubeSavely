@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:downloaderx/constants/constant.dart';
 import '../../utils/encrypted_utils.dart';
 import '../../utils/log_util.dart';
-import '../http_api.dart';
 
 import '../http_utils.dart';
 import 'error_handle.dart';
@@ -21,6 +20,7 @@ class AuthInterceptor extends Interceptor {
     options.headers['sign'] = createSign;
     options.headers['userId'] = Constant.userId;
     options.headers['UserAgent'] = 'mobile';
+    options.headers['AppChannelId'] = Constant.appChannelId;
     options.headers['PackageNames'] = HttpUtils.appInfo;
     super.onRequest(options, handler);
   }
