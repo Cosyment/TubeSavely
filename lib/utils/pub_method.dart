@@ -9,6 +9,7 @@ import 'platform_utils.dart';
 class PubMethodUtils {
   static void umengCommonSdkInit() {
     if (PlatformUtils.isAndroid) {
+      MethodPlugin.isAgree();
       MethodPlugin.getAppChannelId().then((value) {
         UmengCommonSdk.initCommon(
             '652e62c3b2f6fa00ba65ae50', '652e62ddb2f6fa00ba65ae51', value);

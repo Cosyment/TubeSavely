@@ -55,7 +55,7 @@ class LoggingInterceptor extends Interceptor {
     Log.d(
         'ResponseUrl: ${options.baseUrl}${options.path}?${Transformer.urlEncodeMap(options.queryParameters)}');
     print(
-        'ResponseUrl: ${options.baseUrl}${options.path}?${Transformer.urlEncodeMap(options.queryParameters)}');
+        'ResponseUrl: ${options.baseUrl}${options.path}?${Transformer.urlEncodeMap(options.queryParameters)}  response=${response.data.toString()}');
     endTime = DateTime.now();
     int duration = endTime.difference(startTime).inMilliseconds;
     if (response.statusCode == ExceptionHandle.success) {

@@ -11,6 +11,9 @@ class MethodPlugin {
   static void share() {
     _channel.invokeMethod('share');
   }
+  static void isAgree() {
+    _channel.invokeMethod('isAgree');
+  }
 
   static void googlePlay() {
     _channel.invokeMethod('googlePlay');
