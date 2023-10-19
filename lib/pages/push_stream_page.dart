@@ -39,8 +39,8 @@ class _PushStreamPageState extends State<PushStreamPage>
   var currentIndex = 0;
   var currentLiveIndex = 0;
   bool isCircular = false;
+  int status = -1;
   var countdown = 0;
-  var btnStr = "开始推流";
   var controllerHost = TextEditingController(text: "");
   var controllerSecretKey = TextEditingController(text: "");
   var controllerLiveUrl = TextEditingController(text: "");
@@ -48,6 +48,7 @@ class _PushStreamPageState extends State<PushStreamPage>
   @override
   void initState() {
     super.initState();
+    loadPushStreamInfo();
   }
 
   @override
@@ -175,7 +176,11 @@ class _PushStreamPageState extends State<PushStreamPage>
                                   )
                             : Center(
                                 child: Text(
-                                btnStr,
+                                status == -1
+                                    ? '开始推流'
+                                    : status == 0
+                                        ? "正在排队中..."
+                                        : "观看直播",
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 30.sp,
@@ -222,10 +227,14 @@ class _PushStreamPageState extends State<PushStreamPage>
     if (isCircular) {
       return;
     }
-    if (btnStr == "正在直播中") {
+    if (status == 0) {
+      ToastExit.show("正在排队推流中");
+      return;
+    } else if (status == 1) {
       jumpLaunchUrl(liveUrl);
       return;
     }
+
     setState(() {
       countdown = 0;
       isCircular = !isCircular;
@@ -239,9 +248,12 @@ class _PushStreamPageState extends State<PushStreamPage>
     var respond = await HttpUtils.instance.requestNetWorkAy(
         Method.post, HttpApi.submitLiveStream,
         queryParameters: map);
+    if (respond != null) {
+      await Future.delayed(Duration(milliseconds: 400));
+      status = 0;
+      startTimer();
+    }
     print(">>>>>>>>>>>>>>>${respond}");
-    await Future.delayed(Duration(milliseconds: 400));
-    startTimer();
   }
 
   void startTimer() {
@@ -252,7 +264,7 @@ class _PushStreamPageState extends State<PushStreamPage>
         timer.cancel();
         setState(() {
           isCircular = false;
-          btnStr = "正在直播中";
+          status = 0;
         });
       } else {
         setState(() {
@@ -260,6 +272,22 @@ class _PushStreamPageState extends State<PushStreamPage>
         });
       }
     });
+  }
+
+  void loadPushStreamInfo() async {
+    if (await UserExit.isLogin() != null) {
+      var respond = await HttpUtils.instance
+          .requestNetWorkAy(Method.get, HttpApi.getStreamInfo);
+      print(">>>>>>loadPushStreamInfo>>>>>>>>${respond}");
+      if (respond != null) {
+        setState(() {
+          controllerHost.text = respond['liveHost'];
+          controllerSecretKey.text = respond['secretKey'];
+          controllerLiveUrl.text = respond['liveUrl'];
+          status = respond['status'];
+        });
+      }
+    }
   }
 
   Future<void> jumpLaunchUrl(webUrl) async {
