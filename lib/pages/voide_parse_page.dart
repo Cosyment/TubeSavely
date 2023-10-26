@@ -153,35 +153,7 @@ class _VideoParePageState extends State<VideoParePage> {
     );
   }
 
-  titleWidget() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(
-          margin: EdgeInsets.all(20.w),
-          child: Text(
-            "支持提取的视频平台",
-            style: TextStyle(fontSize: 28.sp),
-          ),
-        ),
-        Container(
-          margin: EdgeInsets.all(20.w),
-          padding: EdgeInsets.symmetric(
-            horizontal: 10.w,
-          ),
-          decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(
-                  color: Colors.grey, style: BorderStyle.solid, width: 1.w),
-              borderRadius: BorderRadius.all(Radius.circular(20.r))),
-          child: Text(
-            "免费试用",
-            style: TextStyle(color: Colors.grey, fontSize: 20.sp),
-          ),
-        ),
-      ],
-    );
-  }
+
 
   actionRow() {
     return Row(
