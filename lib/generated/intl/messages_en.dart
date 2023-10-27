@@ -56,7 +56,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "pictureWatermarkingTxt": MessageLookupByLibrary.simpleMessage(
             "Remove watermark from picture"),
         "platformListTxt": MessageLookupByLibrary.simpleMessage(
-            "Douyin, Kuaishou, Bili, Weibo, Zhihu, YouTube"),
+            "Douyin, Kuaishou, Bili, Weibo, Zhihu"),
         "playTxt": MessageLookupByLibrary.simpleMessage("play"),
         "premium": MessageLookupByLibrary.simpleMessage("Premium"),
         "premium_monthly": MessageLookupByLibrary.simpleMessage("Monthly"),

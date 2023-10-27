@@ -190,10 +190,10 @@ class S {
     );
   }
 
-  /// `Douyin, Kuaishou, Bili, Weibo, Zhihu, YouTube`
+  /// `Douyin, Kuaishou, Bili, Weibo, Zhihu`
   String get platformListTxt {
     return Intl.message(
-      'Douyin, Kuaishou, Bili, Weibo, Zhihu, YouTube',
+      'Douyin, Kuaishou, Bili, Weibo, Zhihu',
       name: 'platformListTxt',
       desc: '',
       args: [],

@@ -47,7 +47,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "parseRecordsTxt": MessageLookupByLibrary.simpleMessage("解析记录"),
         "pictureWatermarkingTxt": MessageLookupByLibrary.simpleMessage("图片去水印"),
         "platformListTxt":
-            MessageLookupByLibrary.simpleMessage("抖音,快手,哔哩,微博,知乎,YouTobe"),
+            MessageLookupByLibrary.simpleMessage("抖音,快手,哔哩,微博,知乎"),
         "playTxt": MessageLookupByLibrary.simpleMessage("播放"),
         "premium": MessageLookupByLibrary.simpleMessage("会员订阅"),
         "premium_monthly": MessageLookupByLibrary.simpleMessage("月会员"),

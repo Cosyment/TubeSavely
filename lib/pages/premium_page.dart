@@ -36,7 +36,7 @@ class _PremiumScreen extends State<StatefulWidget> {
   final InAppPurchase _inAppPurchase = InAppPurchase.instance;
   late bool isAvailable = false;
   late StreamSubscription<List<PurchaseDetails>> _subscription;
-  final List<String> _identifiers = ['membership_weekly', 'membership_monthly', 'membership_quarterly', 'membership_yearly'];
+  final List<String> _identifiers = [ 'com.tube.video.saver.monthly', 'com.tube.video.saver.quarterly', 'com.tube.video.saver.yearly'];
   List<ProductDetails> _products = <ProductDetails>[];
   var _checkedIndex = 0;
   var _manualRestore = false;
