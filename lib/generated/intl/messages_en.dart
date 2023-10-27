@@ -24,11 +24,11 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "aboutUs": MessageLookupByLibrary.simpleMessage("about us"),
         "agree": MessageLookupByLibrary.simpleMessage("agree"),
-        "appName":
-            MessageLookupByLibrary.simpleMessage("Lubian video download"),
+        "appName": MessageLookupByLibrary.simpleMessage("TubeSaver"),
         "askQuestions": MessageLookupByLibrary.simpleMessage("FAQ"),
         "cancel": MessageLookupByLibrary.simpleMessage("cancel"),
         "clearTxt": MessageLookupByLibrary.simpleMessage("clear"),
+        "current_level": MessageLookupByLibrary.simpleMessage("Current"),
         "doodleTxt": MessageLookupByLibrary.simpleMessage("doodle"),
         "everyPass":
             MessageLookupByLibrary.simpleMessage("You must pass every exam"),
@@ -49,6 +49,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "lookPhotoTxt": MessageLookupByLibrary.simpleMessage("View Picture"),
         "me": MessageLookupByLibrary.simpleMessage("my"),
         "nextTxt": MessageLookupByLibrary.simpleMessage("Next step"),
+        "nothing_to_restore":
+            MessageLookupByLibrary.simpleMessage("Nothing to Restore"),
         "parseRecordsTxt":
             MessageLookupByLibrary.simpleMessage("Parse Records"),
         "pictureWatermarkingTxt": MessageLookupByLibrary.simpleMessage(
@@ -56,7 +58,25 @@ class MessageLookup extends MessageLookupByLibrary {
         "platformListTxt": MessageLookupByLibrary.simpleMessage(
             "Douyin, Kuaishou, Bili, Weibo, Zhihu, YouTube"),
         "playTxt": MessageLookupByLibrary.simpleMessage("play"),
+        "premium": MessageLookupByLibrary.simpleMessage("Premium"),
+        "premium_monthly": MessageLookupByLibrary.simpleMessage("Monthly"),
+        "premium_plus_explain":
+            MessageLookupByLibrary.simpleMessage("Premium Features"),
+        "premium_quarterly": MessageLookupByLibrary.simpleMessage("Quarterly"),
+        "premium_weekly": MessageLookupByLibrary.simpleMessage("Weekly"),
+        "premium_yearly": MessageLookupByLibrary.simpleMessage("Yearly"),
         "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy Policy"),
+        "privacy_policy":
+            MessageLookupByLibrary.simpleMessage("Privacy Policy"),
+        "purchase_cancel":
+            MessageLookupByLibrary.simpleMessage("Purchase Cancel"),
+        "purchase_error":
+            MessageLookupByLibrary.simpleMessage("Purchase Unknown Error"),
+        "purchase_failure":
+            MessageLookupByLibrary.simpleMessage("Purchase Failure"),
+        "purchase_success": MessageLookupByLibrary.simpleMessage(
+            "Congratulations Subscribe Success!"),
+        "restore": MessageLookupByLibrary.simpleMessage("Restore"),
         "saveFailedyTxt": MessageLookupByLibrary.simpleMessage("Save failed"),
         "saveSuccessfullyTxt":
             MessageLookupByLibrary.simpleMessage("Save successfully"),
@@ -74,7 +94,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Purchase failed"),
         "streamingKeyTxt":
             MessageLookupByLibrary.simpleMessage("Streaming Key"),
+        "subscribe": MessageLookupByLibrary.simpleMessage("Subscribe"),
         "termsUse": MessageLookupByLibrary.simpleMessage("Terms of use"),
+        "terms_use": MessageLookupByLibrary.simpleMessage("Terms Use"),
         "tvClipTxt":
             MessageLookupByLibrary.simpleMessage("Video clipping tool"),
         "tvListTxt": MessageLookupByLibrary.simpleMessage(

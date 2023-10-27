@@ -68,6 +68,8 @@ dependencies:
   json2dart_safe: ^1.5.3
   umeng_common_sdk: ^1.2.6
   crypto: ^3.0.3
+  in_app_purchase: ^3.1.8
+  shake_animation_widget: ^3.0.4
 
 
 dev_dependencies:

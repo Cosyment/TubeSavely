@@ -1,5 +1,5 @@
 {
-  "appName": "鲁搬视频下载",
+  "appName": "TubeSaver",
   "askQuestions": "常见问题",
   "home": "首页",
   "me": "我的",
@@ -41,5 +41,23 @@
   "version": "版本",
   "givePraise": "给好评",
   "startShop": "准备开始启动购买流程",
-  "startShopFail": "购买失败了"
+  "startShopFail": "购买失败了",
+
+  "premium": "会员订阅",
+  "nothing_to_restore": "您还没有订阅过哦",
+  "purchase_failure": "支付失败，请稍后再试",
+  "purchase_success": "恭喜会员开通成功",
+  "purchase_cancel": "支付已取消",
+  "purchase_error": "支付出错，请稍后再试",
+  "terms_use": "使用条款",
+  "privacy_policy": "隐私政策",
+  "restore": "恢复",
+  "current_level": "当前会员等级",
+  "premium_weekly": "周会员",
+  "premium_monthly": "月会员",
+  "premium_quarterly": "季度会员",
+  "premium_yearly": "年度会员",
+  "premium_plus_explain": "高级会员权益",
+  "subscribe": "立即订阅"
+
 }

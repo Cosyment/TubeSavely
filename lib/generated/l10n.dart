@@ -50,10 +50,10 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
-  /// `Lubian video download`
+  /// `TubeSaver`
   String get appName {
     return Intl.message(
-      'Lubian video download',
+      'TubeSaver',
       name: 'appName',
       desc: '',
       args: [],
@@ -475,6 +475,166 @@ class S {
     return Intl.message(
       'Purchase failed',
       name: 'startShopFail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Premium`
+  String get premium {
+    return Intl.message(
+      'Premium',
+      name: 'premium',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nothing to Restore`
+  String get nothing_to_restore {
+    return Intl.message(
+      'Nothing to Restore',
+      name: 'nothing_to_restore',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Purchase Failure`
+  String get purchase_failure {
+    return Intl.message(
+      'Purchase Failure',
+      name: 'purchase_failure',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Congratulations Subscribe Success!`
+  String get purchase_success {
+    return Intl.message(
+      'Congratulations Subscribe Success!',
+      name: 'purchase_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Purchase Cancel`
+  String get purchase_cancel {
+    return Intl.message(
+      'Purchase Cancel',
+      name: 'purchase_cancel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Purchase Unknown Error`
+  String get purchase_error {
+    return Intl.message(
+      'Purchase Unknown Error',
+      name: 'purchase_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Terms Use`
+  String get terms_use {
+    return Intl.message(
+      'Terms Use',
+      name: 'terms_use',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Privacy Policy`
+  String get privacy_policy {
+    return Intl.message(
+      'Privacy Policy',
+      name: 'privacy_policy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Restore`
+  String get restore {
+    return Intl.message(
+      'Restore',
+      name: 'restore',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Current`
+  String get current_level {
+    return Intl.message(
+      'Current',
+      name: 'current_level',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Weekly`
+  String get premium_weekly {
+    return Intl.message(
+      'Weekly',
+      name: 'premium_weekly',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Monthly`
+  String get premium_monthly {
+    return Intl.message(
+      'Monthly',
+      name: 'premium_monthly',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Quarterly`
+  String get premium_quarterly {
+    return Intl.message(
+      'Quarterly',
+      name: 'premium_quarterly',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Yearly`
+  String get premium_yearly {
+    return Intl.message(
+      'Yearly',
+      name: 'premium_yearly',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Premium Features`
+  String get premium_plus_explain {
+    return Intl.message(
+      'Premium Features',
+      name: 'premium_plus_explain',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Subscribe`
+  String get subscribe {
+    return Intl.message(
+      'Subscribe',
+      name: 'subscribe',
       desc: '',
       args: [],
     );

@@ -1,5 +1,5 @@
 {
-  "appName": "Lubian video download",
+  "appName": "TubeSaver",
   "askQuestions": "FAQ",
   "home": "Home",
   "me": "my",
@@ -41,5 +41,22 @@
   "version": "version",
   "givePraise": "Give praise",
   "startShop": "Ready to start the purchase process",
-  "startShopFail": "Purchase failed"
+  "startShopFail": "Purchase failed",
+
+  "premium": "Premium",
+  "nothing_to_restore": "Nothing to Restore",
+  "purchase_failure": "Purchase Failure",
+  "purchase_success": "Congratulations Subscribe Success!",
+  "purchase_cancel": "Purchase Cancel",
+  "purchase_error": "Purchase Unknown Error",
+  "terms_use": "Terms Use",
+  "privacy_policy": "Privacy Policy",
+  "restore": "Restore",
+  "current_level": "Current",
+  "premium_weekly": "Weekly",
+  "premium_monthly": "Monthly",
+  "premium_quarterly": "Quarterly",
+  "premium_yearly": "Yearly",
+  "premium_plus_explain": "Premium Features",
+  "subscribe": "Subscribe"
 }
