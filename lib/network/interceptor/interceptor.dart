@@ -17,10 +17,10 @@ class AuthInterceptor extends Interceptor {
     // options.headers['Authorization'] = 'Bearer ${HttpUtils.token ?? ''}';
     var parameters = options.queryParameters;
     var createSign = EncryptedUtils.createSign(parameters);
-    options.headers['sign'] = createSign;
     options.headers['userId'] = Constant.userId;
+    options.headers['Sign'] = createSign;
     options.headers['UserAgent'] = 'mobile';
-    options.headers['AppChannelId'] = Constant.appChannelId;
+    options.headers['Channel'] = Constant.appChannelId;
     options.headers['PackageNames'] = HttpUtils.appInfo;
     super.onRequest(options, handler);
   }

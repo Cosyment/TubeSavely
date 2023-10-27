@@ -10,6 +10,7 @@
         android:name=".MyApp"
         android:icon="@mipmap/ic_launcher"
         android:label="TobeSave"
+        android:theme="@style/LaunchTheme"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"

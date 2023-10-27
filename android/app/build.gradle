@@ -120,7 +120,7 @@ android {
         s360 {}   // 360
         lenovo {}   // 联想
         aliuc {}   // 阿里UC
-        guanfang {}   // 官方包
+        official {}   // 官方包
     }
     productFlavors.all { flavor ->
         // 友盟推送渠道包， UMENG_CHANNEL 是根据你AndroidManifest.xml来配置的，请看下面。
