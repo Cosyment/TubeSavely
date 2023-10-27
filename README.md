@@ -38,7 +38,9 @@ AcFun:https://m.acfun.cn/v/?ac=39091936&sid=bf02f7d348c84918
 
 
 #应用名称：
-鲁搬视频下载
+TobeSave
+一句话介绍
+Free downloader to fast download all videos from social webs.
 
 #应用介绍：
 最简单的视频下载,支持99%短视频平台一键解析下载。
