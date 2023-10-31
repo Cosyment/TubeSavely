@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:downloaderx/data/video_parse.dart';
-import 'package:downloaderx/pages/voide_parse_page.dart';
+import 'package:downloaderx/pages/video_parse_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

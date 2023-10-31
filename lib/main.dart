@@ -2,9 +2,12 @@ import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_not
 import 'package:downloaderx/pages/home_page.dart';
 import 'package:downloaderx/pages/mine_page.dart';
 import 'package:downloaderx/pages/push_stream_page.dart';
+import 'package:downloaderx/pages/video_parse_page.dart';
 import 'package:downloaderx/utils/pub_method.dart';
 import 'package:downloaderx/widget/agreement_dialog.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
@@ -61,13 +64,21 @@ class MainPage extends StatefulWidget {
   State<MainPage> createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   final _controller = NotchBottomBarController(index: 0);
   var currentPageIndex = 0;
 
   @override
   void dispose() {
+    WidgetsBinding.instance?.removeObserver(this);
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      getPaste();
+    }
   }
 
   final List<Widget> bottomBarPages = [
@@ -76,9 +87,48 @@ class _MainPageState extends State<MainPage> {
     const MinePage(),
   ];
 
+  getPaste() async {
+    ClipboardData? data = await Clipboard.getData(Clipboard.kTextPlain);
+      if (data != null) {
+        showCupertinoDialog(
+          barrierDismissible: true,
+          context: context,
+          builder: (context) {
+            return CupertinoAlertDialog(
+              title: Text("提示"),
+              content: Text("提取剪贴板中的链接吗？"),
+              actions: [
+                CupertinoDialogAction(
+                  child: const Text("取消"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                CupertinoDialogAction(
+                  child: const Text("提取"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => VideoParePage(
+                                  link: data.text,
+                                )));
+                    Clipboard.setData(const ClipboardData(text: ''));
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+  }
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance?.addObserver(this);
+    getPaste();
     Future.delayed(const Duration(milliseconds: 600), () {
       PubMethodUtils.getSharedPreferences("isAgree").then((value) {
         if (value == null) {
@@ -96,6 +146,7 @@ class _MainPageState extends State<MainPage> {
         }
       });
     });
+
   }
 
   void onAgreeClick() {

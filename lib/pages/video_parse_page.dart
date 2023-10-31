@@ -17,10 +17,10 @@ import '../widget/banner_widget.dart';
 import '../widget/video_label_item.dart';
 
 class VideoParePage extends StatefulWidget {
-  VideoParePage({super.key, this.bean});
+  VideoParePage({super.key, this.bean, this.link});
 
   VideoParse? bean;
-
+  String? link;
   @override
   State<VideoParePage> createState() => _VideoParePageState();
 }
@@ -48,6 +48,11 @@ class _VideoParePageState extends State<VideoParePage> {
         textController.text = widget.bean?.parseUrl ?? "";
       });
       onResult(widget.bean!);
+    }else if(widget.link!=null){
+      setState(() {
+        textController.text = widget.link?? "";
+      });
+      startParse();
     }
   }
 

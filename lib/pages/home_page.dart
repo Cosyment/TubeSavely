@@ -8,7 +8,7 @@ import '../generated/l10n.dart';
 import '../utils/pub_method.dart';
 import 'scrawl/content_page.dart';
 import 'scrawl/scrawl_page.dart';
-import 'voide_parse_page.dart';
+import 'video_parse_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
