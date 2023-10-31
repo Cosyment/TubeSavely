@@ -70,8 +70,7 @@ dependencies:
   crypto: ^3.0.3
   in_app_purchase: ^3.1.8
   shake_animation_widget: ^3.0.4
-
-
+  alipay_kit: ^6.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

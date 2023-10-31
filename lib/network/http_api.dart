@@ -10,4 +10,6 @@ class HttpApi {
   static const String submitLiveStream = "/tPushStream/submitLiveStream";
   static const String getStreamInfo = "/tPushStream/getStreamInfo";
   static const String videoParse = "/videoParse/parse";
+  static const String aliPay = "/aliPay/buildOrder";
+
 }
