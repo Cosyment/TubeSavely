@@ -54,9 +54,9 @@ dependencies:
   permission_handler: ^11.0.0
   wechat_assets_picker: ^8.6.3
   video_editor: ^3.0.0
-#  ffmpeg_kit_flutter: ^6.0.3-LTS
+  #  ffmpeg_kit_flutter: ^6.0.3-LTS
   video_trimmer: ^3.0.0-LTS
-#  video_trimmer: ^2.1.0-LTS
+  #  video_trimmer: ^2.1.0-LTS
   fraction: ^4.1.4
   lottie: ^2.6.0
   loading_animation_widget: ^1.2.0+4
@@ -70,8 +70,7 @@ dependencies:
   crypto: ^3.0.3
   in_app_purchase: ^3.1.8
   shake_animation_widget: ^3.0.4
-
-
+  alipay_kit: ^6.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
