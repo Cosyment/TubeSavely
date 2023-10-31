@@ -13,12 +13,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
 import 'constants/colors.dart';
+import 'data/local_storage_service.dart';
 import 'generated/l10n.dart';
 
 void main() async {
   await ScreenUtil.ensureScreenSize();
   runApp(const MyApp());
   AssetPicker.registerObserve();
+  LocalStorageService().init();
 }
 
 class MyApp extends StatelessWidget {
@@ -89,39 +91,39 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
 
   getPaste() async {
     ClipboardData? data = await Clipboard.getData(Clipboard.kTextPlain);
-      if (data != null) {
-        showCupertinoDialog(
-          barrierDismissible: true,
-          context: context,
-          builder: (context) {
-            return CupertinoAlertDialog(
-              title: Text("提示"),
-              content: Text("提取剪贴板中的链接吗？"),
-              actions: [
-                CupertinoDialogAction(
-                  child: const Text("取消"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                CupertinoDialogAction(
-                  child: const Text("提取"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => VideoParePage(
-                                  link: data.text,
-                                )));
-                    Clipboard.setData(const ClipboardData(text: ''));
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      }
+    if (data != null) {
+      showCupertinoDialog(
+        barrierDismissible: true,
+        context: context,
+        builder: (context) {
+          return CupertinoAlertDialog(
+            title: Text("提示"),
+            content: Text("提取剪贴板中的链接吗？"),
+            actions: [
+              CupertinoDialogAction(
+                child: const Text("取消"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              CupertinoDialogAction(
+                child: const Text("提取"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => VideoParePage(
+                                link: data.text,
+                              )));
+                  Clipboard.setData(const ClipboardData(text: ''));
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   @override
@@ -146,7 +148,6 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
         }
       });
     });
-
   }
 
   void onAgreeClick() {
