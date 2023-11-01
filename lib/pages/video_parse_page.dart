@@ -72,7 +72,7 @@ class _VideoParePageState extends State<VideoParePage> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text(
-          "视频去水印",
+          "视频解析",
           style: TextStyle(
             color: Colors.white,
           ),

@@ -1,10 +1,21 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:common_utils/common_utils.dart';
 import 'package:downloaderx/constants/colors.dart';
 import 'package:downloaderx/constants/constant.dart';
+import 'package:downloaderx/pages/video_detail.dart';
 import 'package:downloaderx/pages/video_montage_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
+import '../data/video_parse.dart';
 import '../generated/l10n.dart';
+import '../utils/exit.dart';
+import '../utils/parse/other.dart';
+import '../utils/parse/youtobe.dart';
 import '../utils/pub_method.dart';
 import 'scrawl/content_page.dart';
 import 'scrawl/scrawl_page.dart';
@@ -17,10 +28,15 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
+  TextEditingController textController = TextEditingController(text: '');
+  bool isLoading = false;
+  bool isNeedVPN = false;
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance?.addObserver(this);
     PubMethodUtils.getSharedPreferences("InAppReview").then((value) {
       if (value == null) {
         PubMethodUtils.putSharedPreferences("InAppReview", "1");
@@ -47,6 +63,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance?.removeObserver(this);
     super.dispose();
   }
 
@@ -64,30 +81,235 @@ class _HomePageState extends State<HomePage> {
       ),
       body: CustomScrollView(
         slivers: [
+         
           SliverToBoxAdapter(
-            child: SizedBox(
-              height: 50.w,
+            child: Container(
+              margin: EdgeInsets.all(30.w),
+              child: CachedNetworkImage(
+                  imageUrl: "https://img.zcool.cn/community/01bc66595a0485a8012193a37f5f50.jpg@1280w_1l_2o_100sh.jpg",
+                  width: double.infinity,
+                  height: 320.w,
+                  imageBuilder: (context, imageProvider) {
+                    return Container(
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
+                          borderRadius: BorderRadius.circular(24.r)),
+                    );
+                  },
+                  placeholder: (context, url) => ClipRRect(
+                        borderRadius: BorderRadius.circular(24.r),
+                        child: Shimmer.fromColors(
+                          baseColor: Colors.grey.shade300,
+                          highlightColor: Colors.grey.shade100,
+                          child:  Container(
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                        ),
+                      ),
+                  errorWidget: (context, url, error) => Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  )),
             ),
           ),
+
           SliverToBoxAdapter(
-            child: widgetTop(context),
+            child: inputContainer(),
           ),
           SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.all(20.w),
-              child: Text(
-                S.of(context).tvClipTxt,
-                style: TextStyle(
-                  fontSize: 40.sp,
-                  fontWeight: FontWeight.bold,
+            child: actionRow(),
+          ),
+          SliverToBoxAdapter(
+            child: Visibility(
+              visible: isNeedVPN,
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 20.w),
+                  child: Text(
+                    "该平台需要网络环境支持",
+                    style: TextStyle(fontSize: 24.sp),
+                  ),
                 ),
               ),
             ),
           ),
-          buildChildLayout(),
+          // SliverToBoxAdapter(
+          //   child: widgetTop(context),
+          // ),
+          // SliverToBoxAdapter(
+          //   child: Padding(
+          //     padding: EdgeInsets.all(20.w),
+          //     child: Text(
+          //       S.of(context).tvClipTxt,
+          //       style: TextStyle(
+          //         fontSize: 40.sp,
+          //         fontWeight: FontWeight.bold,
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          // buildChildLayout(),
         ],
       ),
     );
+  }
+
+  actionRow() {
+    return Column(
+      children: [
+        SizedBox(height: 50.h),
+        Align(
+          alignment: Alignment.center,
+          child: FloatingActionButton(
+            backgroundColor: primaryColor,
+            shape: const CircleBorder(),
+            onPressed: () {
+              startParse();
+            },
+            child: isLoading
+                ? LoadingAnimationWidget.hexagonDots(
+                    color: Colors.white,
+                    size: 40.h,
+                  )
+                : Image.asset(
+                    "assets/next.png",
+                    fit: BoxFit.fill,
+                    width: 40.w,
+                    height: 40.w,
+                  ),
+          ),
+        )
+      ],
+    );
+  }
+
+  inputContainer() {
+    return Column(
+      children: [
+        Container(
+          height: 90.h,
+          width: double.infinity,
+          margin: EdgeInsets.all(30.w),
+          decoration: BoxDecoration(
+            color: primaryColor,
+            borderRadius: BorderRadius.circular(20.r),
+          ),
+          child: TextField(
+            maxLines: 1,
+            textAlignVertical: TextAlignVertical.center,
+            controller: textController,
+            textInputAction: TextInputAction.done,
+            onSubmitted: (value) => startParse(),
+            style: TextStyle(color: Colors.white, fontSize: 30.sp),
+            decoration: InputDecoration(
+              hintText: "请输入视频地址",
+              hintStyle: const TextStyle(color: Colors.white),
+              border: const OutlineInputBorder(borderSide: BorderSide.none),
+              focusedBorder:
+                  const OutlineInputBorder(borderSide: BorderSide.none),
+              enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide.none,
+              ),
+              contentPadding: EdgeInsets.symmetric(horizontal: 15.w),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> startParse() async {
+    var parseUrl = textController.text;
+    try {
+      Match? match =
+          RegExp(r'http[s]?:\/\/[\w.]+[\w/]*[\w.]*\??[\w=&:\-+%]*[/]*')
+              .firstMatch(parseUrl);
+      var url = match?.group(0) ?? '';
+      if (!url.contains('http')) {
+        ToastExit.show("无法解析该链接地址");
+        return;
+      }
+      setState(() {
+        isLoading = true;
+      });
+      print(">>>>>>>>${url}");
+      if (parseUrl.contains("youtu.be") || parseUrl.contains("youtube.com")) {
+        isNeedVPN = true;
+        YouToBe.get().parse(url, onResult);
+      } else {
+        isNeedVPN = false;
+        Other.get().parse(url, onResult);
+      }
+    } catch (e) {
+      print(">>>>>>>>>>>>>>>${e}");
+      isLoading = false;
+    }
+  }
+
+  void onResult(VideoParse? result) {
+    // if (result != null) {
+    //   Navigator.push(context,
+    //       MaterialPageRoute(builder: (context) => VideoDetail(bean: result)));
+    // }
+    isLoading = false;
+    if (result != null && result.videoList.isNotEmpty) {
+      setState(() {});
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => VideoDetailPage(bean: result)));
+    } else {
+      ToastExit.show("解析失败");
+      setState(() {});
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      getPaste();
+    }
+  }
+
+  getPaste() async {
+    ClipboardData? data = await Clipboard.getData(Clipboard.kTextPlain);
+    if (!TextUtil.isEmpty(data?.text)) {
+      showCupertinoDialog(
+        barrierDismissible: true,
+        context: context,
+        builder: (context) {
+          return CupertinoAlertDialog(
+            title: Text("提示"),
+            content: Text("提取剪贴板中的链接吗？"),
+            actions: [
+              CupertinoDialogAction(
+                child: const Text("取消"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              CupertinoDialogAction(
+                child: const Text("提取"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  textController.text = data?.text ?? "";
+                  startParse();
+                  Clipboard.setData(const ClipboardData(text: ''));
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   widgetTop(BuildContext context) {
@@ -136,61 +358,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         SizedBox(width: 20.w),
-        // Expanded(
-        //   child: Card(
-        //     elevation: 1,
-        //     clipBehavior: Clip.hardEdge,
-        //     color: primaryColor,
-        //     shape: RoundedRectangleBorder(
-        //       borderRadius: BorderRadius.all(Radius.circular(20.r)),
-        //     ),
-        //     child: InkWell(
-        //       splashColor: Colors.blue.withAlpha(30),
-        //       child: Container(
-        //         padding: EdgeInsets.all(20.w),
-        //         child: Column(
-        //           crossAxisAlignment: CrossAxisAlignment.start,
-        //           children: [
-        //             Text(
-        //               S.of(context).pictureWatermarkingTxt,
-        //               style: TextStyle(
-        //                 color: Colors.white,
-        //                 fontSize: 30.sp,
-        //               ),
-        //             ),
-        //             Align(
-        //               alignment: Alignment.topRight,
-        //               child: Icon(
-        //                 Icons.delete,
-        //                 color: Colors.white,
-        //                 size: 80.w,
-        //               ),
-        //             ),
-        //           ],
-        //         ),
-        //       ),
-        //       onTap: () async {
-        //         List<AssetEntity>? result =
-        //             await AssetPicker.pickAssets(context,
-        //                 pickerConfig: AssetPickerConfig(
-        //                   themeColor: primaryColor,
-        //                   maxAssets: 1,
-        //                   requestType: RequestType.image,
-        //                 ));
-        //         if (result != null) {
-        //           var file2 = await result[0].file;
-        //           Navigator.push(
-        //               context,
-        //               MaterialPageRoute(
-        //                   builder: (context) => ContentPage(
-        //                         cover: file2!,
-        //                       )));
-        //         }
-        //       },
-        //     ),
-        //   ),
-        // ),
-        // SizedBox(width: 20.w),
       ],
     );
   }
@@ -246,58 +413,6 @@ class _HomePageState extends State<HomePage> {
             ),
           );
         },
-      ),
-    );
-
-    return SliverGrid(
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 200.w,
-        mainAxisSpacing: 10.w,
-        crossAxisSpacing: 10.w,
-        childAspectRatio: 1,
-      ),
-      delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          var item = Constant.meList[index];
-          return Card(
-            elevation: 1,
-            clipBehavior: Clip.hardEdge,
-            color: primaryColor,
-            child: InkWell(
-              splashColor: Colors.blue.withAlpha(30),
-              onTap: () async {
-                await skipSelectPhoto(context, item);
-              },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Image(
-                  //   image: AssetImage("assets/images/${item['bg']}"),
-                  //   width: 100.w,
-                  //   height: 100.w,
-                  //   fit: BoxFit.fill,
-                  // ),
-                  Icon(
-                    item['icon'] as IconData?,
-                    color: Colors.white,
-                    size: 60.w,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10.w),
-                    child: Text(
-                      item['title'].toString(),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 26.sp,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-        childCount: Constant.meList.length,
       ),
     );
   }

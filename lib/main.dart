@@ -67,21 +67,13 @@ class MainPage extends StatefulWidget {
   State<MainPage> createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
+class _MainPageState extends State<MainPage> {
   final _controller = NotchBottomBarController(index: 0);
   var currentPageIndex = 0;
 
   @override
   void dispose() {
-    WidgetsBinding.instance?.removeObserver(this);
     super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      getPaste();
-    }
   }
 
   final List<Widget> bottomBarPages = [
@@ -90,48 +82,9 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     const MinePage(),
   ];
 
-  getPaste() async {
-    ClipboardData? data = await Clipboard.getData(Clipboard.kTextPlain);
-    if (!TextUtil.isEmpty(data?.text)) {
-      showCupertinoDialog(
-        barrierDismissible: true,
-        context: context,
-        builder: (context) {
-          return CupertinoAlertDialog(
-            title: Text("提示"),
-            content: Text("提取剪贴板中的链接吗？"),
-            actions: [
-              CupertinoDialogAction(
-                child: const Text("取消"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              CupertinoDialogAction(
-                child: const Text("提取"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => VideoParePage(
-                                link: data?.text,
-                              )));
-                  Clipboard.setData(const ClipboardData(text: ''));
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addObserver(this);
-    getPaste();
     Future.delayed(const Duration(milliseconds: 600), () {
       PubMethodUtils.getSharedPreferences("isAgree").then((value) {
         if (value == null) {
