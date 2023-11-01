@@ -47,11 +47,11 @@ class _MinePageState extends State<MinePage> {
       "title": "设置",
       "type": 4,
     },
-    {
-      "icon": Icons.help,
-      "title": "会员",
-      "type": 5,
-    },
+    // {
+    //   "icon": Icons.help,
+    //   "title": "会员",
+    //   "type": 5,
+    // },
   ];
 
   var userId = "";

@@ -1,4 +1,5 @@
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
+import 'package:common_utils/common_utils.dart';
 import 'package:downloaderx/pages/home_page.dart';
 import 'package:downloaderx/pages/mine_page.dart';
 import 'package:downloaderx/pages/push_stream_page.dart';
@@ -91,7 +92,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
 
   getPaste() async {
     ClipboardData? data = await Clipboard.getData(Clipboard.kTextPlain);
-    if (data != null) {
+    if (!TextUtil.isEmpty(data?.text)) {
       showCupertinoDialog(
         barrierDismissible: true,
         context: context,
@@ -114,7 +115,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
                       context,
                       MaterialPageRoute(
                           builder: (context) => VideoParePage(
-                                link: data.text,
+                                link: data?.text,
                               )));
                   Clipboard.setData(const ClipboardData(text: ''));
                 },
