@@ -74,9 +74,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       appBar: AppBar(
         title: Text(
           S.of(context).videoLinkWatermarkTxt,
-          style: TextStyle(
-            color: Colors.white,
-          ),
         ),
       ),
       body: CustomScrollView(
@@ -86,7 +83,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             child: Container(
               margin: EdgeInsets.all(30.w),
               child: CachedNetworkImage(
-                  imageUrl: "https://img.zcool.cn/community/01bc66595a0485a8012193a37f5f50.jpg@1280w_1l_2o_100sh.jpg",
+                  imageUrl: "https://img.firefix.cn/downloaderx/banner.png",
                   width: double.infinity,
                   height: 320.w,
                   imageBuilder: (context, imageProvider) {
@@ -169,7 +166,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         Align(
           alignment: Alignment.center,
           child: FloatingActionButton(
-            backgroundColor: primaryColor,
+            backgroundColor: Theme.of(context).primaryColor,
             shape: const CircleBorder(),
             onPressed: () {
               startParse();
@@ -199,7 +196,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           width: double.infinity,
           margin: EdgeInsets.all(30.w),
           decoration: BoxDecoration(
-            color: primaryColor,
+            color: Theme.of(context).primaryColor,
             borderRadius: BorderRadius.circular(20.r),
           ),
           child: TextField(

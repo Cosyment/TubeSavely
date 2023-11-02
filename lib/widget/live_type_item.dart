@@ -31,12 +31,12 @@ class _LiveTypeItemState extends State<LiveTypeItem> {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      Color(0xFFFC6AEC),
-                      Color(0xFF7776FF),
+                      const Color(0xFF8983F7),
+                      const Color(0xFFA3DAFB),
                     ],
                   )
                 : null,
-            border: Border.all(color: primaryColor, width: 1.0),
+            border: Border.all(color: Theme.of(context).primaryColor, width: 1.0),
             borderRadius: const BorderRadius.all(Radius.circular(4))),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -46,7 +46,7 @@ class _LiveTypeItemState extends State<LiveTypeItem> {
                 widget.item['title'],
                 style: TextStyle(
                     fontSize: 26.sp,
-                    color: widget.isSelected ? Colors.white : Colors.black),
+                    color: widget.isSelected ?  Colors.white :  Theme.of(context).hintColor),
               ),
             ]),
       ),

@@ -1,5 +1,6 @@
 import 'package:downloaderx/pages/feedback_page.dart';
 import 'package:downloaderx/pages/history_page.dart';
+import 'package:downloaderx/pages/theme_page.dart';
 import 'package:downloaderx/utils/pub_method.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -47,6 +48,11 @@ class _MinePageState extends State<MinePage> {
       "title": "设置",
       "type": 4,
     },
+    {
+      "icon": Icons.style_outlined,
+      "title": "主题切换",
+      "type": 5,
+    },
     // {
     //   "icon": Icons.help,
     //   "title": "会员",
@@ -83,7 +89,7 @@ class _MinePageState extends State<MinePage> {
                 height: 400.w,
                 margin: EdgeInsets.only(),
                 decoration: BoxDecoration(
-                  color: primaryColor,
+                  color: Theme.of(context).primaryColor,
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(400.w),
                     bottomRight: Radius.circular(400.w),
@@ -117,8 +123,8 @@ class _MinePageState extends State<MinePage> {
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            Color(0xFFFC6AEC),
-                            Color(0xFF7776FF),
+                            const Color(0xFF8983F7),
+                            const Color(0xFFA3DAFB),
                           ],
                         )),
                     child: userId == ""
@@ -151,7 +157,7 @@ class _MinePageState extends State<MinePage> {
                 return Card(
                   elevation: 5,
                   margin: EdgeInsets.fromLTRB(40.w, 30.w, 40.w, 0),
-                  shadowColor: primaryColor,
+                  shadowColor: Theme.of(context).primaryColor,
                   clipBehavior: Clip.hardEdge,
                   child: InkWell(
                     onTap: () {
@@ -162,7 +168,7 @@ class _MinePageState extends State<MinePage> {
                       padding: EdgeInsets.fromLTRB(30.w, 0, 30.w, 0),
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        color: primaryColor.withAlpha(200),
+                        color: Theme.of(context).primaryColor.withAlpha(200),
                         borderRadius: BorderRadius.circular(20.r),
                       ),
                       child: Row(
@@ -218,8 +224,10 @@ class _MinePageState extends State<MinePage> {
         });
       });
     } else if (type == 5) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const PremiumScreenPage()));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => ThemePage()));
+      // Navigator.push(context,
+      //     MaterialPageRoute(builder: (context) => const PremiumScreenPage()));
     }
   }
 }

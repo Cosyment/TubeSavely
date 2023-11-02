@@ -54,8 +54,7 @@ class _HistoryPageState extends State<HistoryPage> {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: const Text(
-            "解析记录",
-            style: TextStyle(color: Colors.white),
+            "解析记录"
           ),
           actions: [
             GestureDetector(

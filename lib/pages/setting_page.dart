@@ -85,7 +85,7 @@ class _SettingPageState extends State<SettingPage> {
             return Card(
               elevation: 5,
               margin: EdgeInsets.fromLTRB(40.w, 30.w, 40.w, 0),
-              shadowColor: primaryColor,
+              shadowColor: Theme.of(context).primaryColor,
               child: InkWell(
                 onTap: () {
                   onItemClick(item['type']);
@@ -95,7 +95,7 @@ class _SettingPageState extends State<SettingPage> {
                   padding: EdgeInsets.fromLTRB(30.w, 0, 30.w, 0),
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: primaryColor.withAlpha(200),
+                    color: Theme.of(context).primaryColor.withAlpha(200),
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Row(

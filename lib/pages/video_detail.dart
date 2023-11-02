@@ -330,8 +330,8 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        Color(0xFFFC6AEC),
-                        Color(0xFF7776FF),
+                        const Color(0xFF8983F7),
+                        const Color(0xFFA3DAFB),
                       ],
                     ),
                   ),
@@ -359,10 +359,10 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                   radius: 70.0.r,
                   lineWidth: 4.0,
                   percent: percent,
-                  backgroundColor: primaryColor,
+                  backgroundColor: Theme.of(context).primaryColor,
                   center: Text(
                     "${(percent * 100).toStringAsFixed(0)}%",
-                    style: const TextStyle(color: primaryColor),
+                    style:  TextStyle(color: Theme.of(context).hintColor),
                   ),
                   progressColor: progressColor,
                 )),

@@ -65,14 +65,14 @@ class _FeedBackPageState extends State<FeedBackPage> {
                     disabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(14.r)),
                       borderSide: BorderSide(
-                        color: primaryColor,
+                        color: Theme.of(context).primaryColor,
                         width: 1.w,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(14.r)),
                       borderSide: BorderSide(
-                        color: primaryColor,
+                        color: Theme.of(context).primaryColor,
                         width: 4.w,
                       ),
                     ),
@@ -88,7 +88,7 @@ class _FeedBackPageState extends State<FeedBackPage> {
                   inputFormatters: <TextInputFormatter>[
                     LengthLimitingTextInputFormatter(16)
                   ],
-                  style: TextStyle(color: primaryColor, fontSize: 28.sp),
+                  style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 28.sp),
                   decoration: InputDecoration(
                     hintText: "请输入您的联系方式",
                     labelText: "联系方式",
@@ -109,14 +109,14 @@ class _FeedBackPageState extends State<FeedBackPage> {
                     disabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(14.r)),
                       borderSide: BorderSide(
-                        color: primaryColor,
+                        color: Theme.of(context).primaryColor,
                         width: 1.w,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(14.r)),
                       borderSide: BorderSide(
-                        color: primaryColor,
+                        color: Theme.of(context).primaryColor,
                         width: 4.w,
                       ),
                     ),
@@ -127,7 +127,7 @@ class _FeedBackPageState extends State<FeedBackPage> {
                 height: 120.h,
               ),
               FloatingActionButton(
-                backgroundColor: primaryColor,
+                backgroundColor: Theme.of(context).primaryColor,
                 shape: const CircleBorder(),
                 onPressed: () {
                   submit();

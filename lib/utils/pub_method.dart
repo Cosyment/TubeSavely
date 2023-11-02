@@ -39,4 +39,5 @@ class PubMethodUtils {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(key);
   }
+
 }
