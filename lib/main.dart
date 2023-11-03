@@ -2,6 +2,7 @@ import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_not
 import 'package:downloaderx/pages/home_page.dart';
 import 'package:downloaderx/pages/mine_page.dart';
 import 'package:downloaderx/pages/push_stream_page.dart';
+import 'package:downloaderx/pages/splash_page.dart';
 import 'package:downloaderx/utils/event_bus.dart';
 import 'package:downloaderx/utils/exit.dart';
 import 'package:downloaderx/utils/pub_method.dart';
@@ -63,7 +64,7 @@ class _MyAppState extends State<MyApp> {
         S.delegate,
       ],
       supportedLocales: S.delegate.supportedLocales,
-      home: const MainPage(),
+      home: const SplashPage(),
     );
   }
 }

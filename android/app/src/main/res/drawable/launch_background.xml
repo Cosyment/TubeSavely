@@ -4,19 +4,13 @@
     <item android:drawable="@color/bg" />
 
     <!-- You can insert your own image assets here -->
-    <item android:top="200dp">
-        <bitmap
-            android:gravity="top|center_horizontal"
-            android:src="@mipmap/splash_top"
-            android:tileMode="disabled" />
-    </item>
-
-    <item
-        android:bottom="50dp"
-        android:gravity="bottom">
+    <item >
         <bitmap
             android:gravity="center"
-            android:src="@mipmap/splash_bottom"
-            android:tileMode="disabled" />
+            android:src="@mipmap/ic_transparent_logo"
+            android:tileMode="disabled"
+            android:width="200dp"
+            android:height="200dp" />
     </item>
+
 </layer-list>
