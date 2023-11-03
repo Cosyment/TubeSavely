@@ -71,6 +71,7 @@ dependencies:
   in_app_purchase: ^3.1.8
   shake_animation_widget: ^3.0.4
   alipay_kit: ^6.0.0
+  flutter_animate: ^4.2.0+1
 dev_dependencies:
   flutter_test:
     sdk: flutter
