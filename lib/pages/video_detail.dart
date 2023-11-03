@@ -74,9 +74,6 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
       appBar: AppBar(
         title: const Text(
           "解析结果",
-          style: TextStyle(
-            color: Colors.white,
-          ),
         ),
       ),
       body: Container(

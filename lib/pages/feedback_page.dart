@@ -43,7 +43,7 @@ class _FeedBackPageState extends State<FeedBackPage> {
                   inputFormatters: <TextInputFormatter>[
                     LengthLimitingTextInputFormatter(200)
                   ],
-                  style: TextStyle(color: Colors.black, fontSize: 30.sp),
+                  style: TextStyle(color: Colors.grey, fontSize: 30.sp),
                   decoration: InputDecoration(
                     hintText: "请输入您的意见,我们期待您的反馈~",
                     hintStyle: TextStyle(
@@ -54,7 +54,7 @@ class _FeedBackPageState extends State<FeedBackPage> {
                         EdgeInsets.symmetric(vertical: 25.w, horizontal: 25.w),
                     labelStyle: TextStyle(fontSize: 26.sp, color: Colors.grey),
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: Colors.transparent,
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(14.r)),
                       borderSide: BorderSide(
@@ -88,7 +88,7 @@ class _FeedBackPageState extends State<FeedBackPage> {
                   inputFormatters: <TextInputFormatter>[
                     LengthLimitingTextInputFormatter(16)
                   ],
-                  style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 28.sp),
+                  style: TextStyle(color: Colors.grey, fontSize: 28.sp),
                   decoration: InputDecoration(
                     hintText: "请输入您的联系方式",
                     labelText: "联系方式",
@@ -98,7 +98,7 @@ class _FeedBackPageState extends State<FeedBackPage> {
                     ),
                     labelStyle: TextStyle(fontSize: 28.sp, color: Colors.grey),
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: Colors.transparent,
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(14.r)),
                       borderSide: BorderSide(
@@ -109,7 +109,7 @@ class _FeedBackPageState extends State<FeedBackPage> {
                     disabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(14.r)),
                       borderSide: BorderSide(
-                        color: Theme.of(context).primaryColor,
+                        color: Colors.grey,
                         width: 1.w,
                       ),
                     ),

@@ -27,7 +27,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool isDarkMode = false;
+  bool isDarkMode = true;
 
   @override
   void initState() {
@@ -52,7 +52,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context);
+    ScreenUtil.init(context, designSize: const Size(750, 1378));
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeExit.get(isDarkMode),

@@ -71,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                   inputFormatters: <TextInputFormatter>[
                     LengthLimitingTextInputFormatter(30)
                   ],
-                  style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 28.sp),
+                  style: TextStyle(color:  Colors.grey, fontSize: 28.sp),
                   decoration: InputDecoration(
                     hintText: "Enter your email",
                     labelText: "Email",
@@ -81,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     labelStyle: TextStyle(fontSize: 26.sp, color: Colors.grey),
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: Colors.transparent,
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(14.r)),
                       borderSide: BorderSide(
@@ -116,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                       inputFormatters: <TextInputFormatter>[
                         LengthLimitingTextInputFormatter(16)
                       ],
-                      style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 28.sp),
+                      style: TextStyle(color:  Colors.grey, fontSize: 28.sp),
                       decoration: InputDecoration(
                         hintText: "Enter your code",
                         labelText: "Code",
@@ -127,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                         labelStyle:
                             TextStyle(fontSize: 26.sp, color: Colors.grey),
                         filled: true,
-                        fillColor: Colors.white,
+                        fillColor: Colors.transparent,
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(14.r)),
                           borderSide: BorderSide(
