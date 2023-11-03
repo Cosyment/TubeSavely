@@ -1,18 +1,13 @@
 import 'package:downloaderx/constants/constant.dart';
-import 'package:downloaderx/pages/home_page.dart';
-import 'package:downloaderx/pages/login_page.dart';
 import 'package:downloaderx/pages/webview.dart';
 import 'package:downloaderx/utils/exit.dart';
-import 'package:downloaderx/widget/confirm_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-
-import '../constants/colors.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../constants/colors.dart';
 import '../utils/pub_method.dart';
 
 class SettingPage extends StatefulWidget {
@@ -56,9 +51,14 @@ class _SettingPageState extends State<SettingPage> {
       PubMethodUtils.getSharedPreferences("userId").then((value) {
         if (value != null) {
           itemList.add({
+            "icon": Icons.verified_user,
+            "title": "注销账号",
+            "type": 3,
+          });
+          itemList.add({
             "icon": Icons.logout,
             "title": "退出登录",
-            "type": 3,
+            "type": 4,
           });
         }
         setState(() {});
@@ -85,7 +85,7 @@ class _SettingPageState extends State<SettingPage> {
             return Card(
               elevation: 5,
               margin: EdgeInsets.fromLTRB(40.w, 30.w, 40.w, 0),
-              shadowColor: primaryColor,
+              shadowColor: Theme.of(context).primaryColor,
               child: InkWell(
                 onTap: () {
                   onItemClick(item['type']);
@@ -95,7 +95,7 @@ class _SettingPageState extends State<SettingPage> {
                   padding: EdgeInsets.fromLTRB(30.w, 0, 30.w, 0),
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: primaryColor.withAlpha(200),
+                    color: Theme.of(context).primaryColor.withAlpha(200),
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Row(
@@ -155,14 +155,14 @@ class _SettingPageState extends State<SettingPage> {
               url: Constant.privacyUrl,
             ),
           ));
-    } else if (type == 3) {
+    } else if (type == 3||type == 4) {
       showCupertinoDialog(
         barrierDismissible: true,
         context: context,
         builder: (context) {
           return CupertinoAlertDialog(
             title: Text("提示"),
-            content: Text("确认退出吗？"),
+            content: Text("确认${type==3?'注销':'退出'}吗？"),
             actions: [
               CupertinoDialogAction(
                 child: const Text("取消"),

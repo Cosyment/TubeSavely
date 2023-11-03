@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:downloaderx/data/video_parse.dart';
+import 'package:downloaderx/pages/video_detail.dart';
 import 'package:downloaderx/pages/video_parse_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -53,8 +54,7 @@ class _HistoryPageState extends State<HistoryPage> {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: const Text(
-            "解析记录",
-            style: TextStyle(color: Colors.white),
+            "解析记录"
           ),
           actions: [
             GestureDetector(
@@ -110,7 +110,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          VideoParePage(bean: info)));
+                                          VideoDetailPage(bean: info)));
                             },
                             child: Container(
                               color: Colors.white,

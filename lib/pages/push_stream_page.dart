@@ -56,10 +56,8 @@ class _PushStreamPageState extends State<PushStreamPage>
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: primaryColor,
         title: const Text(
           "直播推流",
-          style: TextStyle(color: Colors.white),
         ),
       ),
       body: Container(
@@ -146,14 +144,7 @@ class _PushStreamPageState extends State<PushStreamPage>
                         decoration: BoxDecoration(
                             borderRadius:
                                 BorderRadius.circular(isCircular ? 50.h : 40.h),
-                            gradient: const LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                Color(0xFFFC6AEC),
-                                Color(0xFF7776FF),
-                              ],
-                            )),
+                            color: Theme.of(context).primaryColor),
                         alignment: Alignment.center,
                         child: isCircular
                             ? countdown > 0
