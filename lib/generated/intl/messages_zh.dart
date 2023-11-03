@@ -83,6 +83,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "version": MessageLookupByLibrary.simpleMessage("版本"),
         "videoLinkWatermarkRemovalTxt":
             MessageLookupByLibrary.simpleMessage("视频链接去水印"),
-        "videoLinkWatermarkTxt": MessageLookupByLibrary.simpleMessage("视频去水印")
+        "videoLinkWatermarkTxt": MessageLookupByLibrary.simpleMessage("视频解析")
       };
 }
