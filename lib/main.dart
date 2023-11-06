@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:downloaderx/pages/home_page.dart';
 import 'package:downloaderx/pages/mine_page.dart';
@@ -17,9 +19,20 @@ import 'generated/l10n.dart';
 
 void main() async {
   await ScreenUtil.ensureScreenSize();
+  _loadShader();
   runApp(MyApp());
   AssetPicker.registerObserve();
   LocalStorageService().init();
+}
+
+Future<void> _loadShader() async {
+  return FragmentProgram.fromAsset('assets/shaders/shader.frag').then(
+      (FragmentProgram prgm) {
+    SplashPage.shader = prgm.fragmentShader();
+  }, onError: (Object error, StackTrace stackTrace) {
+    FlutterError.reportError(
+        FlutterErrorDetails(exception: error, stack: stackTrace));
+  });
 }
 
 class MyApp extends StatefulWidget {

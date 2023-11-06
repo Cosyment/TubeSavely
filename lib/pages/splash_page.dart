@@ -4,8 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'dart:async';
 import 'package:shimmer/shimmer.dart';
+import 'package:flutter_animate/src/effects/shader_effect.dart';
+import 'dart:ui' as ui;
 
 class SplashPage extends StatefulWidget {
+  static ui.FragmentShader? shader;
+
   const SplashPage({super.key});
 
   @override
@@ -14,31 +18,9 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage>
     with SingleTickerProviderStateMixin {
-  late AnimationController _translationAnimationController;
-  late Animation<Offset> _offsetAnimation;
-  bool isShowTitle = false;
-
   @override
   void initState() {
     super.initState();
-    // 创建动画控制器
-    _translationAnimationController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 900),
-    );
-    _offsetAnimation = Tween<Offset>(
-      begin: const Offset(0, 0),
-      end: const Offset(0, -200),
-    ).animate(_translationAnimationController);
-    _translationAnimationController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        setState(() {
-          isShowTitle = true;
-        });
-      }
-    });
-
-    _translationAnimationController.forward();
     _mockCheckForSession().then((status) {
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (BuildContext context) => MainPage()));
@@ -47,12 +29,11 @@ class _SplashPageState extends State<SplashPage>
 
   @override
   void dispose() {
-    _translationAnimationController.dispose();
     super.dispose();
   }
 
   Future<bool> _mockCheckForSession() async {
-    await Future.delayed(Duration(milliseconds: 2500), () {});
+    await Future.delayed(Duration(milliseconds: 2400), () {});
     return true;
   }
 
@@ -65,63 +46,54 @@ class _SplashPageState extends State<SplashPage>
       body: Stack(
         alignment: Alignment.center,
         children: [
-          AnimatedBuilder(
-            animation: _translationAnimationController,
-            builder: (context, child) {
-              return Transform.translate(
-                offset: _offsetAnimation.value,
-                child: Center(
-                  child: Stack(alignment: Alignment.center, children: [
-                    Positioned(
-                      child: isShowTitle
-                          ? Shimmer.fromColors(
-                              period: Duration(milliseconds: 1000),
-                              baseColor: Color(0xFF8983F7),
-                              highlightColor: Color(0xFFA3DAFB),
-                              child: Container(
-                                child: Image.asset(
-                                  'assets/ic_transparent_logo.png',
-                                  width: 255,
-                                  height: 255,
-                                ),
-                              ),
-                            )
-                          : Image.asset(
-                              'assets/ic_transparent_logo.png',
-                              width: 255,
-                              height: 255,
-                            ),
-                    ),
-                    Positioned(
-                      top: 180,
-                      child: Visibility(
-                        visible: isShowTitle,
-                        child: Shimmer.fromColors(
-                          period: Duration(milliseconds: 1000),
-                          baseColor: Color(0xFF8983F7),
-                          highlightColor: Color(0xFFA3DAFB),
-                          child: Container(
-                            alignment: Alignment.center,
-                            child: Text(
-                              "TobeSaver",
-                              style:
-                                  TextStyle(fontSize: 36.0, shadows: <Shadow>[
-                                Shadow(
-                                    blurRadius: 18.0,
-                                    color: Colors.black87,
-                                    offset: Offset.fromDirection(120, 12))
-                              ]),
-                            ).animate().fade(),
-                          ),
-                        ),
-                      ),
-                    )
-                  ]),
+          Center(
+            child: Stack(alignment: Alignment.center, children: [
+              Positioned(
+                  child: Shimmer.fromColors(
+                period: Duration(milliseconds: 1000),
+                baseColor: Color(0xFF8983F7),
+                highlightColor: Color(0xFFA3DAFB),
+                child: Container(
+                  child: Image.asset(
+                    'assets/ic_transparent_logo.png',
+                    width: 255,
+                    height: 255,
+                  ),
                 ),
-              );
-            },
-          ),
-          Positioned(
+              )),
+              Positioned(
+                top: 180,
+                child: Shimmer.fromColors(
+                  period: Duration(milliseconds: 1000),
+                  baseColor: Color(0xFF8983F7),
+                  highlightColor: Color(0xFFA3DAFB),
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      "TobeSaver",
+                      style: TextStyle(fontSize: 36.0, shadows: <Shadow>[
+                        Shadow(
+                            blurRadius: 18.0,
+                            color: Colors.black87,
+                            offset: Offset.fromDirection(120, 12))
+                      ]),
+                    ),
+                  ),
+                )
+                    .animate()
+                    .effect(delay: 750.ms, duration: 1500.ms)// this "pads out" the total duration
+                    .shader(shader: SplashPage.shader),
+              )
+            ]),
+          )
+              .animate()
+              .slideY(
+                  duration: 800.ms,
+                  curve: Curves.easeInQuad,
+                  begin: 0,
+                  end: -0.25)
+              .fadeIn(),
+          const Positioned(
             child: Text("创作高质量视频"),
             bottom: 60,
           )
