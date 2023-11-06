@@ -23,98 +23,96 @@ class _TutorialPageState extends State<TutorialPage> {
           "常见问题",
         ),
       ),
-      body: ListView(
-        children: Constant.tutorialList.map((item) {
-          return ExpansionPanelList(
-            elevation: 0,
-            expandedHeaderPadding: EdgeInsets.zero,
-            expansionCallback: (int index, bool isExpanded) {
-              setState(() {
-                item['isExpanded'] = !isExpanded;
-              });
-            },
-            children: [
-              ExpansionPanel(
-                headerBuilder: (BuildContext context, bool isExpanded) {
-                  return ListTile(
-                    title: Text(
-                      item['title'].toString(),
-                      style: const TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.bold),
-                    ),
-                  );
-                },
-                body: item['type'] == 1
-                    ? Container(
-                        margin: EdgeInsets.fromLTRB(30.w, 0, 30.w, 0),
-                        child: Column(
-                          children: [
-                            Text(item['content'].toString(),
-                                style: TextStyle(
-                                    color: Colors.black87, fontSize: 30.sp)),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ImageViewerPage(
-                                        imagePath: 'assets/images/step2.jpg',
-                                      ),
-                                    ));
-                              },
-                              child: Hero(
-                                  tag: 'image',
-                                  child: Image.asset(
-                                    'assets/images/step2.jpg',
-                                    width: 200.w,
-                                    height: 200.h,
-                                  )),
-                            )
-                          ],
-                        ),
-                      )
-                    : item['type'] == 2
-                        ? Container(
-                            margin: EdgeInsets.fromLTRB(30.w, 0, 30.w, 0),
-                            child: Column(
-                              children: [
-                                Text(item['content'].toString(),
-                                    style: TextStyle(
-                                        color: Colors.black87,
-                                        fontSize: 30.sp)),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => ImageViewerPage(
-                                            imagePath: 'assets/eg_live.jpg',
-                                          ),
-                                        ));
-                                  },
-                                  child: Hero(
-                                      tag: 'image',
-                                      child: Image.asset(
-                                        'assets/eg_live.jpg',
-                                        width: 600.w,
-                                        height: 200.h,
-                                      )),
-                                )
-                              ],
-                            ),
-                          )
-                        : ListTile(
-                            title: Text(
-                              item['content'].toString(),
-                              style: TextStyle(
-                                  color: Colors.black87, fontSize: 30.sp),
-                            ),
+      body: Container(
+        child: ListView(
+          children: Constant.tutorialList.map((item) {
+            return ExpansionPanelList(
+              elevation: 0,
+              expandedHeaderPadding: EdgeInsets.zero,
+              expansionCallback: (int index, bool isExpanded) {
+                setState(() {
+                  item['isExpanded'] = !isExpanded;
+                });
+              },
+              children: [
+                ExpansionPanel(
+                  headerBuilder: (BuildContext context, bool isExpanded) {
+                    return ListTile(
+                      title: Text(
+                        item['title'].toString(),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    );
+                  },
+                  body: item['type'] == 1
+                      ? Container(
+                          margin: EdgeInsets.fromLTRB(30.w, 0, 30.w, 0),
+                          child: Column(
+                            children: [
+                              Text(item['content'].toString(),
+                                  style: TextStyle(fontSize: 30.sp)),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ImageViewerPage(
+                                          imagePath: 'assets/images/step2.jpg',
+                                        ),
+                                      ));
+                                },
+                                child: Hero(
+                                    tag: 'image',
+                                    child: Image.asset(
+                                      'assets/images/step2.jpg',
+                                      width: 200.w,
+                                      height: 200.h,
+                                    )),
+                              )
+                            ],
                           ),
-                isExpanded: item['isExpanded'] == true,
-              ),
-            ],
-          );
-        }).toList(),
+                        )
+                      : item['type'] == 2
+                          ? Container(
+                              margin: EdgeInsets.fromLTRB(30.w, 0, 30.w, 0),
+                              child: Column(
+                                children: [
+                                  Text(item['content'].toString(),
+                                      style: TextStyle(fontSize: 30.sp)),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ImageViewerPage(
+                                              imagePath: 'assets/eg_live.jpg',
+                                            ),
+                                          ));
+                                    },
+                                    child: Hero(
+                                        tag: 'image',
+                                        child: Image.asset(
+                                          'assets/eg_live.jpg',
+                                          width: 600.w,
+                                          height: 200.h,
+                                        )),
+                                  )
+                                ],
+                              ),
+                            )
+                          : ListTile(
+                              title: Text(
+                                item['content'].toString(),
+                                style: TextStyle(fontSize: 30.sp),
+                              ),
+                            ),
+                  isExpanded: item['isExpanded'] == true,
+                ),
+              ],
+            );
+          }).toList(),
+        ),
       ),
       // body: CustomScrollView(
       //   slivers: [

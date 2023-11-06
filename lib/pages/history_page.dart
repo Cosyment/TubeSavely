@@ -113,7 +113,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                           VideoDetailPage(bean: info)));
                             },
                             child: Container(
-                              color: Colors.white,
+                              color: Theme.of(context).hintColor.withOpacity(0.5),
                               margin: EdgeInsets.only(top: 10.w),
                               child: Padding(
                                 padding: EdgeInsets.all(20.0.w),

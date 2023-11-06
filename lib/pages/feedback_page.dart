@@ -58,21 +58,21 @@ class _FeedBackPageState extends State<FeedBackPage> {
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(14.r)),
                       borderSide: BorderSide(
-                        color: Colors.grey,
-                        width: 1.w,
+                        color: Theme.of(context).hintColor,
+                        width: 3.w,
                       ),
                     ),
                     disabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(14.r)),
                       borderSide: BorderSide(
-                        color: Theme.of(context).primaryColor,
-                        width: 1.w,
+                        color: Theme.of(context).hintColor,
+                        width: 3.w,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(14.r)),
                       borderSide: BorderSide(
-                        color: Theme.of(context).primaryColor,
+                        color: Theme.of(context).highlightColor,
                         width: 4.w,
                       ),
                     ),
@@ -102,21 +102,21 @@ class _FeedBackPageState extends State<FeedBackPage> {
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(14.r)),
                       borderSide: BorderSide(
-                        color: Colors.grey,
-                        width: 1.w,
+                        color: Theme.of(context).hintColor,
+                        width: 3.w,
                       ),
                     ),
                     disabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(14.r)),
                       borderSide: BorderSide(
-                        color: Colors.grey,
-                        width: 1.w,
+                        color: Theme.of(context).hintColor,
+                        width: 3.w,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(14.r)),
                       borderSide: BorderSide(
-                        color: Theme.of(context).primaryColor,
+                        color: Theme.of(context).highlightColor,
                         width: 4.w,
                       ),
                     ),

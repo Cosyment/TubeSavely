@@ -29,12 +29,15 @@ class ThemeExit {
             useMaterial3: true,
             brightness: Brightness.dark,
             primaryColor: const Color(0XFF202123),
-            scaffoldBackgroundColor: const Color(0x3026242e))
+            hintColor: Color(0XFF202123),
+            highlightColor: Colors.grey,
+            scaffoldBackgroundColor: const Color(0x3026242e)) //背景颜色
         : ThemeData(
             useMaterial3: true,
             brightness: Brightness.light,
             primaryColor: const Color(0xFF7776FF),
-            //航栏颜色
+            hintColor: Colors.grey,
+            highlightColor: const Color(0xFF7776FF),
             scaffoldBackgroundColor: const Color(0XFFFFFFFF));
   }
 

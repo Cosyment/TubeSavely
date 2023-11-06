@@ -94,8 +94,8 @@ class _SplashPageState extends State<SplashPage>
                   end: -0.25)
               .fadeIn(),
           const Positioned(
-            child: Text("创作高质量视频"),
             bottom: 60,
+            child: Text("创作高质量视频",style: TextStyle(color: Colors.white),),
           )
         ],
       ),

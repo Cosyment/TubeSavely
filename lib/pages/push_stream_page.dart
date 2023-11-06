@@ -65,32 +65,32 @@ class _PushStreamPageState extends State<PushStreamPage>
         child: CustomScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           slivers: [
-            SliverToBoxAdapter(
-              child: Container(
-                alignment: Alignment.centerLeft,
-                margin: EdgeInsets.fromLTRB(0, 0, 0, 25.w),
-                child: Text(
-                  "选择推流平台",
-                  style:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
-                ),
-              ),
-            ),
-            SliverGrid.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 10.w,
-                  mainAxisSpacing: 10.w,
-                  childAspectRatio: 2.2),
-              itemCount: platform.length,
-              itemBuilder: (BuildContext context, int index) {
-                return PlatFormItem(
-                  item: platform[index],
-                  isSelected: index == currentIndex,
-                  onItemClick: onItemClick,
-                );
-              },
-            ),
+            // SliverToBoxAdapter(
+            //   child: Container(
+            //     alignment: Alignment.centerLeft,
+            //     margin: EdgeInsets.fromLTRB(0, 0, 0, 25.w),
+            //     child: Text(
+            //       "选择推流平台",
+            //       style:
+            //           TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
+            //     ),
+            //   ),
+            // ),
+            // SliverGrid.builder(
+            //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            //       crossAxisCount: 3,
+            //       crossAxisSpacing: 10.w,
+            //       mainAxisSpacing: 10.w,
+            //       childAspectRatio: 2.2),
+            //   itemCount: platform.length,
+            //   itemBuilder: (BuildContext context, int index) {
+            //     return PlatFormItem(
+            //       item: platform[index],
+            //       isSelected: index == currentIndex,
+            //       onItemClick: onItemClick,
+            //     );
+            //   },
+            // ),
             buildInputContainer(
                 "服务器地址:",
                 'rtmp://live-push.bilivideo.com/live-bvc/',

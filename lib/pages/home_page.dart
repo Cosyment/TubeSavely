@@ -7,6 +7,7 @@ import 'package:downloaderx/pages/video_montage_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shimmer/shimmer.dart';
@@ -78,43 +79,58 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       ),
       body: CustomScrollView(
         slivers: [
-         
           SliverToBoxAdapter(
             child: Container(
               margin: EdgeInsets.all(30.w),
-              child: CachedNetworkImage(
-                  imageUrl: "https://img.firefix.cn/downloaderx/banner.png",
-                  width: double.infinity,
-                  height: 320.w,
-                  imageBuilder: (context, imageProvider) {
-                    return Container(
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                          ),
-                          borderRadius: BorderRadius.circular(24.r)),
-                    );
-                  },
-                  placeholder: (context, url) => ClipRRect(
-                        borderRadius: BorderRadius.circular(24.r),
-                        child: Shimmer.fromColors(
-                          baseColor: Colors.grey.shade300,
-                          highlightColor: Colors.grey.shade100,
-                          child:  Container(
-                            decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                          ),
-                        ),
-                      ),
-                  errorWidget: (context, url, error) => Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                  )),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: Container(
+                  color: Theme.of(context).primaryColor,
+                  child: Image.network(
+                      "https://img.firefix.cn/downloaderx/banner.png",
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: 320.w),
+                ),
+              )
+                  .animate()
+                  .effect(
+                      duration: 3000.ms)
+                  .effect(delay: 750.ms, duration: 1500.ms)
+                  .shimmer(),
+              // child: CachedNetworkImage(
+              //     imageUrl: "https://img.firefix.cn/downloaderx/banner.png",
+              //     width: double.infinity,
+              //     height: 320.w,
+              //     imageBuilder: (context, imageProvider) {
+              //       return Container(
+              //         decoration: BoxDecoration(
+              //             image: DecorationImage(
+              //               image: imageProvider,
+              //               fit: BoxFit.cover,
+              //             ),
+              //             borderRadius: BorderRadius.circular(24.r)),
+              //       );
+              //     },
+              //     placeholder: (context, url) => ClipRRect(
+              //           borderRadius: BorderRadius.circular(24.r),
+              //           child: Shimmer.fromColors(
+              //             baseColor: Colors.grey.shade300,
+              //             highlightColor: Colors.grey.shade100,
+              //             child:  Container(
+              //               decoration: BoxDecoration(
+              //                 color: Colors.transparent,
+              //                 borderRadius: BorderRadius.circular(10.0),
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              //     errorWidget: (context, url, error) => Container(
+              //       decoration: BoxDecoration(
+              //         color: Colors.grey,
+              //         borderRadius: BorderRadius.circular(10.0),
+              //       ),
+              //     )),
             ),
           ),
 

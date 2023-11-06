@@ -71,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                   inputFormatters: <TextInputFormatter>[
                     LengthLimitingTextInputFormatter(30)
                   ],
-                  style: TextStyle(color:  Colors.grey, fontSize: 28.sp),
+                  style: TextStyle(color: Colors.grey, fontSize: 28.sp),
                   decoration: InputDecoration(
                     hintText: "Enter your email",
                     labelText: "Email",
@@ -85,21 +85,21 @@ class _LoginPageState extends State<LoginPage> {
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(14.r)),
                       borderSide: BorderSide(
-                        color: Colors.grey,
-                        width: 1.w,
+                        color: Theme.of(context).hintColor,
+                        width: 3.w,
                       ),
                     ),
                     disabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(14.r)),
                       borderSide: BorderSide(
-                        color: Theme.of(context).primaryColor,
-                        width: 1.w,
+                        color: Theme.of(context).hintColor,
+                        width: 3.w,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(14.r)),
                       borderSide: BorderSide(
-                        color: Theme.of(context).primaryColor,
+                        color: Theme.of(context).highlightColor,
                         width: 4.w,
                       ),
                     ),
@@ -116,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                       inputFormatters: <TextInputFormatter>[
                         LengthLimitingTextInputFormatter(16)
                       ],
-                      style: TextStyle(color:  Colors.grey, fontSize: 28.sp),
+                      style: TextStyle(color: Colors.grey, fontSize: 28.sp),
                       decoration: InputDecoration(
                         hintText: "Enter your code",
                         labelText: "Code",
@@ -131,21 +131,21 @@ class _LoginPageState extends State<LoginPage> {
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(14.r)),
                           borderSide: BorderSide(
-                            color: Colors.grey,
-                            width: 1.w,
+                            color: Theme.of(context).hintColor,
+                            width: 3.w,
                           ),
                         ),
                         disabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(14.r)),
                           borderSide: BorderSide(
-                            color: Theme.of(context).primaryColor,
-                            width: 1.w,
+                            color: Theme.of(context).hintColor,
+                            width: 3.w,
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(14.r)),
                           borderSide: BorderSide(
-                            color: Theme.of(context).primaryColor,
+                            color: Theme.of(context).highlightColor,
                             width: 4.w,
                           ),
                         ),
