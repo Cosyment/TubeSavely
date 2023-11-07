@@ -87,20 +87,20 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
             // SliverToBoxAdapter(
             //   child: actionRow(),
             // ),
-            SliverToBoxAdapter(
-              child: Visibility(
-                visible: isNeedVPN,
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 20.w),
-                    child: Text(
-                      "YouTobe平台需要网络环境支持",
-                      style: TextStyle(fontSize: 24.sp),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            // SliverToBoxAdapter(
+            //   child: Visibility(
+            //     visible: isNeedVPN,
+            //     child: Center(
+            //       child: Padding(
+            //         padding: EdgeInsets.only(top: 20.w),
+            //         child: Text(
+            //           "YouTobe平台需要网络环境支持",
+            //           style: TextStyle(fontSize: 24.sp),
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
             SliverToBoxAdapter(
               child: videoList.isEmpty && !isLoading ? guideContainer() : null,
             ),
@@ -261,7 +261,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "抖音、快手、西瓜视频、TikTok、YouTobe、bilibili、小红书、微博、等180个平台",
+            "抖音、快手、西瓜视频、TikTok、bilibili、小红书、微博、等180个平台",
             style: TextStyle(
                 color: primaryColor,
                 fontWeight: FontWeight.bold,

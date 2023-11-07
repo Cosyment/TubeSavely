@@ -10,6 +10,7 @@ import 'package:downloaderx/utils/exit.dart';
 import 'package:downloaderx/utils/pub_method.dart';
 import 'package:downloaderx/widget/agreement_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
