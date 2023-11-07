@@ -8,6 +8,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/colors.dart';
+import '../main.dart';
 import '../utils/pub_method.dart';
 
 class SettingPage extends StatefulWidget {
@@ -85,8 +86,8 @@ class _SettingPageState extends State<SettingPage> {
             return Card(
               elevation: 5,
               margin: EdgeInsets.fromLTRB(40.w, 30.w, 40.w, 0),
-              shadowColor: Theme.of(context).primaryColor,
-              child: InkWell(
+              // shadowColor: Theme.of(context).primaryColor,
+              child: GestureDetector(
                 onTap: () {
                   onItemClick(item['type']);
                 },
@@ -155,14 +156,14 @@ class _SettingPageState extends State<SettingPage> {
               url: Constant.privacyUrl,
             ),
           ));
-    } else if (type == 3||type == 4) {
+    } else if (type == 3 || type == 4) {
       showCupertinoDialog(
         barrierDismissible: true,
         context: context,
         builder: (context) {
           return CupertinoAlertDialog(
             title: Text("提示"),
-            content: Text("确认${type==3?'注销':'退出'}吗？"),
+            content: Text("确认${type == 3 ? '注销' : '退出'}吗？"),
             actions: [
               CupertinoDialogAction(
                 child: const Text("取消"),
@@ -175,7 +176,12 @@ class _SettingPageState extends State<SettingPage> {
                 onPressed: () async {
                   var sharedPreferences = await SharedPreferences.getInstance();
                   sharedPreferences.remove("userId");
-                  Navigator.popUntil(context, ModalRoute.withName('/'));
+                  // Navigator.popUntil(context, ModalRoute.withName('/'));
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => MainPage()),
+                    (Route<dynamic> route) => false,
+                  );
                 },
               ),
             ],

@@ -31,7 +31,7 @@ class ThemeExit {
             primaryColor: const Color(0XFF202123),
             hintColor: Color(0XFF202123),
             highlightColor: Colors.grey,
-            scaffoldBackgroundColor: const Color(0x3026242e)) //背景颜色
+            scaffoldBackgroundColor: const Color(0xFF0D0D0F)) //背景颜色0x3026242e
         : ThemeData(
             useMaterial3: true,
             brightness: Brightness.light,
