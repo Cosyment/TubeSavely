@@ -56,7 +56,7 @@ class _MinePageState extends State<MinePage> {
     // {
     //   "icon": Icons.help,
     //   "title": "会员",
-    //   "type": 5,
+    //   "type": 6,
     // },
   ];
 
@@ -226,8 +226,10 @@ class _MinePageState extends State<MinePage> {
     } else if (type == 5) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => ThemePage()));
-      // Navigator.push(context,
-      //     MaterialPageRoute(builder: (context) => const PremiumScreenPage()));
+
+    }else{
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const PremiumScreenPage()));
     }
   }
 }

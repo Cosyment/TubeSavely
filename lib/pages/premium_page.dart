@@ -29,6 +29,7 @@ class PremiumScreenPage extends StatefulWidget {
 }
 
 class _PremiumScreen extends State<StatefulWidget> {
+  var orderId = "";
   final LinearGradient gradientColor = const LinearGradient(colors: [
     Color(0xFF2EC0FF),
     Color(0xFF5394FF),
@@ -67,21 +68,30 @@ class _PremiumScreen extends State<StatefulWidget> {
               description: "仅¥0.64每天",
               price: "¥ 19.31",
               rawPrice: 19.31,
-              currencyCode: ''),
+              currencyCode: DateTime.now()
+                  .add(const Duration(days: 30))
+                  .millisecondsSinceEpoch
+                  .toString()),
           ProductDetails(
               id: 'membership_quarterly',
               title: "TubeSaver季会员",
               description: "仅¥0.32每天",
               price: "¥ 29.68",
               rawPrice: 29.68,
-              currencyCode: ''),
+              currencyCode: DateTime.now()
+                  .add(const Duration(days: 3 * 30))
+                  .millisecondsSinceEpoch
+                  .toString()),
           ProductDetails(
               id: 'membership_yearly',
               title: "TubeSaver年会员",
               description: "仅¥0.19每天",
               price: "¥ 69.25",
               rawPrice: 69.25,
-              currencyCode: '')
+              currencyCode: DateTime.now()
+                  .add(const Duration(days: 365))
+                  .millisecondsSinceEpoch
+                  .toString()),
         ];
       });
       return;
@@ -441,14 +451,16 @@ class _PremiumScreen extends State<StatefulWidget> {
                                             var map = <String, dynamic>{};
                                             map['totalAmount'] =
                                                 productDetail.rawPrice;
-                                            map['subject'] =
-                                                productDetail.title;
+                                            map['desc'] = productDetail.title;
+                                            map['expiryTime'] =
+                                                productDetail.currencyCode;
                                             var data = await HttpUtils.instance
-                                                .requestNetWorkAy(
-                                                    Method.get, HttpApi.aliPay,
+                                                .requestNetWorkAy(Method.post,
+                                                    HttpApi.submitOrder,
                                                     queryParameters: map);
                                             if (data != null &&
                                                 data['order'] != null) {
+                                              orderId = data['orderId'];
                                               AlipayKitPlatform.instance.pay(
                                                   orderInfo: data['order']);
                                             } else {
@@ -633,8 +645,13 @@ class _PremiumScreen extends State<StatefulWidget> {
         ));
   }
 
-  void listenPay(AlipayResp resp) {
+  void listenPay(AlipayResp resp) async {
     if (resp.resultStatus == 9000) {
+      var map = <String, dynamic>{};
+      map['orderId'] = orderId;
+      var data = await HttpUtils.instance.requestNetWorkAy(
+          Method.post, HttpApi.updateOrder,
+          queryParameters: map);
       Navigator.pop(context);
     }
   }
