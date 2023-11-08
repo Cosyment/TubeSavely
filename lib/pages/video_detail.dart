@@ -116,7 +116,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                       : Container()
                   : BannerWidget(
                       width: 340,
-                      height: 180,
+                      height: 380.h,
                       autoDisplayInterval: 6,
                       childWidget: videoList.map((f) {
                         return Image.network(
@@ -359,7 +359,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
                   backgroundColor: Theme.of(context).primaryColor,
                   center: Text(
                     "${(percent * 100).toStringAsFixed(0)}%",
-                    style:  TextStyle(color: Theme.of(context).hintColor),
+                    style:  TextStyle(color: Theme.of(context).highlightColor),
                   ),
                   progressColor: progressColor,
                 )),

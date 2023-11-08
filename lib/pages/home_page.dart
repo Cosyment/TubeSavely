@@ -21,6 +21,7 @@ import '../utils/pub_method.dart';
 import 'scrawl/content_page.dart';
 import 'scrawl/scrawl_page.dart';
 import 'video_parse_page.dart';
+import 'webview.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -94,8 +95,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 ),
               )
                   .animate()
-                  .effect(
-                      duration: 3000.ms)
+                  .effect(duration: 3000.ms)
                   .effect(delay: 750.ms, duration: 1500.ms)
                   .shimmer(),
               // child: CachedNetworkImage(
@@ -275,10 +275,21 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     isLoading = false;
     if (result != null && result.videoList.isNotEmpty) {
       setState(() {});
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => VideoDetailPage(bean: result)));
+      if (result.type == 1) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => WebViewPage(
+                title: '视频播放',
+                url: result.videoUrl,
+              ),
+            ));
+      } else {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => VideoDetailPage(bean: result)));
+      }
     } else {
       ToastExit.show("解析失败");
       setState(() {});

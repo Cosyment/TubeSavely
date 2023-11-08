@@ -30,15 +30,16 @@ https://www.youtube.com/watch?v=Ek1QD7AH9XQ
 梨视频:https://www.pearvideo.com/detail_1608446?st=7
 AcFun:https://m.acfun.cn/v/?ac=39091936&sid=bf02f7d348c84918
 新片场:https://www.xinpianchang.com/a10717083?from=share&channel=Link&type=URL&xpcApp=xpc
-
+小红书：http://xhslink.com/L8Qwiw
 
 全民K歌:https://static-play.kg.qq.com/node/omcM1OMtGN/play_v2?s=IVxA0rI-LedeoIMx&shareuid=639f95802724318c3347&topsource=a0_pn201001006_z11_u1285296779_l1_t1665284741__&pageId=details_of_creations
 美拍:http://www.meipai.com/video/502/6972738986315637361?client_id=1089857302&utm_media_id=6972738986315637361&utm_source=meipai_share&utm_term=meipai_android&gnum=2815466806&utm_content=9458&utm_share_type=3
 哔哩哔哩:https://b23.tv/ILY5BjE
-
+爱奇艺:https://www.iqiyi.com/v_1104irx6hew.html?vfrm=pcw_home&vfrmblk=712211_cainizaizhui&vfrmrst=712211_cainizaizhui_image2&r_area=pcw_rec_like&r_source=565%40300&bkt=tpfsfallrerank_04%3Bpcw_recall_b%3Btp_fsfall_rule_13%3Btpfsfallrank_09%3Btp_fsfall_prerank_02&e=c8fb45b042ea57eb438ef188819ec05f&stype=2&rank=1&c1=1&recext=%7B%22r_source%22%3A%22565%40300%22,%22r_originl%22%3A%224527925399108400%405921287477461900%22%7D
+腾讯视频:
 
 #应用名称：
-TobeSave
+TobeSaver-Video downloader 支持tiktok、 抖音快手、小红书
 一句话介绍
 Free downloader to fast download all videos from social webs.
 

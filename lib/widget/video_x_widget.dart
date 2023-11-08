@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:video_player/video_player.dart';
 
 import 'controls_overlay.dart';
@@ -24,7 +25,7 @@ class _VideoXWidgetState extends State<VideoXWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 180,
+      height: 380.h,
       color: Colors.black,
       child: Stack(alignment: Alignment.center, children: [
         VideoPlayer(widget.controller),

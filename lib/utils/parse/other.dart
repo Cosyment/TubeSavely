@@ -68,13 +68,13 @@ class Other {
       var videoParse = VideoParse(
           videoUrl: data['playAddr'] ?? "",
           parseUrl: parseUrl,
-          title: data['desc'],
+          title: data['desc']??"",
           author: "",
           type: data['type'] ?? 0,
           createTime: DateTime.now().millisecondsSinceEpoch,
           size: '',
           totalBytes: 0,
-          cover: data['cover'],
+          cover: data['cover']??"",
           videoList: videoList);
       DbManager.instance().add(videoParse);
       onResult(videoParse);

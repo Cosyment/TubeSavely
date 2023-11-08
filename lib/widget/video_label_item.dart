@@ -48,14 +48,14 @@ class _VideoItemState extends State<VideoItem> {
                     fontSize: 20.sp,
                     color: widget.isSelected
                         ? Colors.white
-                        : Theme.of(context).hintColor),
+                        : Theme.of(context).highlightColor),
               ),
               Text(widget.item.size,
                   style: TextStyle(
                       fontSize: 20.sp,
                       color: widget.isSelected
                           ? Colors.white
-                          : Theme.of(context).hintColor))
+                          : Theme.of(context).highlightColor))
             ]),
       ),
       onTap: () {
