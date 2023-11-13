@@ -339,7 +339,6 @@ SliverToBoxAdapter buildInputContainer(String title, String hitText,
               textAlignVertical: TextAlignVertical.center,
               controller: controller,
               textInputAction: TextInputAction.done,
-              style: const TextStyle(color: Colors.black),
               decoration: InputDecoration(
                 hintText: hitText,
                 hintStyle: const TextStyle(color: Colors.grey),

@@ -71,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                   inputFormatters: <TextInputFormatter>[
                     LengthLimitingTextInputFormatter(30)
                   ],
-                  style: TextStyle(color: Colors.grey, fontSize: 28.sp),
+                  style: TextStyle( fontSize: 28.sp),
                   decoration: InputDecoration(
                     hintText: "Enter your email",
                     labelText: "Email",
@@ -116,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                       inputFormatters: <TextInputFormatter>[
                         LengthLimitingTextInputFormatter(16)
                       ],
-                      style: TextStyle(color: Colors.grey, fontSize: 28.sp),
+                      style: TextStyle( fontSize: 28.sp),
                       decoration: InputDecoration(
                         hintText: "Enter your code",
                         labelText: "Code",

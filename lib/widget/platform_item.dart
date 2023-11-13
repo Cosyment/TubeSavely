@@ -53,7 +53,7 @@ class _PlatFormItemState extends State<PlatFormItem> {
                 widget.item['title'],
                 style: TextStyle(
                     fontSize: 24.sp,
-                    color: widget.isSelected ?  Colors.white :  Theme.of(context).hintColor),
+                    color: widget.isSelected ?  Colors.white :  Theme.of(context).highlightColor),
               ),
             ]),
       ),
