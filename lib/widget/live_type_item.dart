@@ -36,7 +36,7 @@ class _LiveTypeItemState extends State<LiveTypeItem> {
                     ],
                   )
                 : null,
-            border: Border.all(color: Theme.of(context).primaryColor, width: 1.0),
+            border: Border.all(color: Theme.of(context).highlightColor, width: 1.0),
             borderRadius: const BorderRadius.all(Radius.circular(4))),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

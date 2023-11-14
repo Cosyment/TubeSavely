@@ -83,7 +83,7 @@ class Constant {
     //   "isExpanded": false
     // },
     // {
-    //   "content": "抖音、快手、西瓜视频、TikTok、YouTobe、bilibili、小红书、微博、等180个平台",
+    //   "content": "抖音、快手、西瓜视频、""、YouTobe、bilibili、小红书、微博、等180个平台",
     //   "title": "支持哪些视频平台？",
     //   "isExpanded": false
     // },

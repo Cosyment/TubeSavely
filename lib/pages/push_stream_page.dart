@@ -72,7 +72,7 @@ class _PushStreamPageState extends State<PushStreamPage>
         ),
       ),
       body: Container(
-        margin: EdgeInsets.all(30.w),
+        margin: EdgeInsets.symmetric(vertical: 20.w,horizontal: 40.w),
         child: CustomScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           slivers: [

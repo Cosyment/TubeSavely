@@ -112,7 +112,7 @@ class _LoginPageState extends State<LoginPage> {
                     height: 88.h,
                     child: TextField(
                       controller: codeController,
-                      keyboardType: TextInputType.visiblePassword,
+                      keyboardType: TextInputType.number,
                       inputFormatters: <TextInputFormatter>[
                         LengthLimitingTextInputFormatter(16)
                       ],
@@ -162,10 +162,9 @@ class _LoginPageState extends State<LoginPage> {
                           padding: EdgeInsets.symmetric(vertical: 15),
                           child: VerticalDivider(
                             thickness: 1,
-                            color: Colors.black87,
                           ),
                         ),
-                        InkWell(
+                        GestureDetector(
                           onTap: () async {
                             if (codeEnable) {
                               sendMsm();
@@ -175,7 +174,6 @@ class _LoginPageState extends State<LoginPage> {
                             child: Text(
                               _buttonText,
                               style: TextStyle(
-                                color: Colors.black87,
                                 fontSize: 26.sp,
                               ),
                             ),
@@ -251,14 +249,14 @@ class _LoginPageState extends State<LoginPage> {
 
   Timer? _t;
   int seconds = 60;
-  String _buttonText = "Get VerCode";
+  String _buttonText = "Send VerCode";
   bool codeEnable = true;
 
   sendMsm() async {
     reset() {
       _t!.cancel();
       codeEnable = true;
-      _buttonText = "Get VerCode";
+      _buttonText = "Send VerCode";
       seconds = 60;
     }
 
