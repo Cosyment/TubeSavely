@@ -8,9 +8,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../constants/colors.dart';
 import '../network/http_api.dart';
 import '../network/http_utils.dart';
+import '../utils/event_bus.dart';
 import 'login_page.dart';
 import 'tutorial_page.dart';
 
@@ -36,7 +36,7 @@ class _PushStreamPageState extends State<PushStreamPage>
     {'title': '音乐直播', 'icon': 'iconspbilibili.png', 'type': 1},
     {'title': '电影直播', 'icon': 'icon_sp_acfun.png', 'type': 2},
   ];
-  var currentIndex = 0;
+  var currentPlatformIndex = 0;
   var currentLiveIndex = 0;
   bool isCircular = false;
   int status = -1;
@@ -49,6 +49,17 @@ class _PushStreamPageState extends State<PushStreamPage>
   void initState() {
     super.initState();
     loadPushStreamInfo();
+    EventBus.getDefault().register(this, (event) {
+      if (event.toString() == "refresh_push_stream") {
+        loadPushStreamInfo();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    EventBus.getDefault().unregister(this);
   }
 
   @override
@@ -86,7 +97,7 @@ class _PushStreamPageState extends State<PushStreamPage>
               itemBuilder: (BuildContext context, int index) {
                 return PlatFormItem(
                   item: platform[index],
-                  isSelected: index == currentIndex,
+                  isSelected: index == currentPlatformIndex,
                   onItemClick: onItemClick,
                 );
               },
@@ -171,7 +182,7 @@ class _PushStreamPageState extends State<PushStreamPage>
                                     ? '开始推流'
                                     : status == 0
                                         ? "正在排队中..."
-                                        : "观看直播",
+                                        : "正在直播中",
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 30.sp,
@@ -196,7 +207,7 @@ class _PushStreamPageState extends State<PushStreamPage>
     var host = controllerHost.value.text;
     var secretKey = controllerSecretKey.value.text;
     var liveUrl = controllerLiveUrl.value.text;
-    var plat = platform[currentIndex]['title'];
+    var plat = platform[currentPlatformIndex]['title'];
     var type = liveType[currentLiveIndex]['type'];
     if (await UserExit.isLogin() == null) {
       Navigator.push(
@@ -276,6 +287,10 @@ class _PushStreamPageState extends State<PushStreamPage>
           controllerSecretKey.text = respond['secretKey'];
           controllerLiveUrl.text = respond['liveUrl'];
           status = respond['status'];
+          currentPlatformIndex = platform
+              .indexWhere((element) => element['title'] == respond['platform']);
+          currentLiveIndex = liveType
+              .indexWhere((element) => element['type'] == respond['liveType']);
         });
       }
     }
@@ -289,7 +304,7 @@ class _PushStreamPageState extends State<PushStreamPage>
   }
 
   void onItemClick(item) {
-    currentIndex = platform.indexOf(item);
+    currentPlatformIndex = platform.indexOf(item);
     setState(() {});
   }
 

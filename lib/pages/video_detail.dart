@@ -261,7 +261,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "抖音、快手、西瓜视频、TikTok、bilibili、小红书、微博、等180个平台",
+            "抖音、快手、西瓜视频、""、bilibili、小红书、微博、等180个平台",
             style: TextStyle(
                 color: primaryColor,
                 fontWeight: FontWeight.bold,

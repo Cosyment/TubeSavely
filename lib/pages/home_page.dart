@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:common_utils/common_utils.dart';
 import 'package:downloaderx/constants/colors.dart';
 import 'package:downloaderx/constants/constant.dart';
@@ -10,16 +9,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
+
 import '../data/video_parse.dart';
 import '../generated/l10n.dart';
+import '../utils/event_bus.dart';
 import '../utils/exit.dart';
 import '../utils/parse/other.dart';
 import '../utils/parse/youtobe.dart';
 import '../utils/pub_method.dart';
-import 'scrawl/content_page.dart';
-import 'scrawl/scrawl_page.dart';
 import 'video_parse_page.dart';
 import 'webview.dart';
 
@@ -30,7 +28,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
+class _HomePageState extends State<HomePage> {
   TextEditingController textController = TextEditingController(text: '');
   bool isLoading = false;
   bool isNeedVPN = false;
@@ -38,7 +36,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addObserver(this);
     PubMethodUtils.getSharedPreferences("InAppReview").then((value) {
       if (value == null) {
         PubMethodUtils.putSharedPreferences("InAppReview", "1");
@@ -61,11 +58,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       }
       setState(() {});
     });
+    EventBus.getDefault().register(this, (event) {
+      if (event.toString() == "parse") {
+        getPaste();
+      }
+    });
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance?.removeObserver(this);
+    EventBus.getDefault().unregister(this);
     super.dispose();
   }
 
@@ -98,39 +100,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   .effect(duration: 3000.ms)
                   .effect(delay: 750.ms, duration: 1500.ms)
                   .shimmer(),
-              // child: CachedNetworkImage(
-              //     imageUrl: "https://img.firefix.cn/downloaderx/banner.png",
-              //     width: double.infinity,
-              //     height: 320.w,
-              //     imageBuilder: (context, imageProvider) {
-              //       return Container(
-              //         decoration: BoxDecoration(
-              //             image: DecorationImage(
-              //               image: imageProvider,
-              //               fit: BoxFit.cover,
-              //             ),
-              //             borderRadius: BorderRadius.circular(24.r)),
-              //       );
-              //     },
-              //     placeholder: (context, url) => ClipRRect(
-              //           borderRadius: BorderRadius.circular(24.r),
-              //           child: Shimmer.fromColors(
-              //             baseColor: Colors.grey.shade300,
-              //             highlightColor: Colors.grey.shade100,
-              //             child:  Container(
-              //               decoration: BoxDecoration(
-              //                 color: Colors.transparent,
-              //                 borderRadius: BorderRadius.circular(10.0),
-              //               ),
-              //             ),
-              //           ),
-              //         ),
-              //     errorWidget: (context, url, error) => Container(
-              //       decoration: BoxDecoration(
-              //         color: Colors.grey,
-              //         borderRadius: BorderRadius.circular(10.0),
-              //       ),
-              //     )),
             ),
           ),
 
@@ -293,13 +262,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     } else {
       ToastExit.show("解析失败");
       setState(() {});
-    }
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      getPaste();
     }
   }
 

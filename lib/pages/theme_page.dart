@@ -173,13 +173,12 @@ class _ThemePageState extends State<ThemePage>
                     ? darkMode.toggleButtonColor
                     : lightMode.toggleButtonColor,
                 shadows: isDarkMode ? darkMode.shadow : lightMode.shadow,
-                onToggleCallback: (index) async{
+                onToggleCallback: (index) async {
                   isDarkMode = !isDarkMode;
                   setState(() {});
                   changeThemeMode();
                   await ThemeExit.setDark(isDarkMode);
-                  EventBus.getDefault().post(isDarkMode);
-
+                  EventBus.getDefault().post("change_theme");
                 },
               ),
             ],

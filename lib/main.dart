@@ -49,8 +49,9 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     initTheme();
     EventBus.getDefault().register(this, (event) {
-      print(">>>>>EventBus>>>>initState>>${isDarkMode}");
-      initTheme();
+      if (event.toString() == "change_theme") {
+        initTheme();
+      }
     });
   }
 
@@ -90,13 +91,14 @@ class MainPage extends StatefulWidget {
   State<MainPage> createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   final _controller = NotchBottomBarController(index: 0);
   var currentPageIndex = 0;
 
   @override
   void dispose() {
     super.dispose();
+    WidgetsBinding.instance?.removeObserver(this);
   }
 
   final List<Widget> bottomBarPages = [
@@ -108,6 +110,7 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance?.addObserver(this);
     Future.delayed(const Duration(milliseconds: 600), () {
       PubMethodUtils.getSharedPreferences("isAgree").then((value) {
         if (value == null) {
@@ -125,6 +128,13 @@ class _MainPageState extends State<MainPage> {
         }
       });
     });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && currentPageIndex == 0) {
+      EventBus.getDefault().post("parse");
+    }
   }
 
   void onAgreeClick() {
@@ -188,6 +198,11 @@ class _MainPageState extends State<MainPage> {
           ],
           onTap: (index) {
             currentPageIndex = index;
+            if (currentPageIndex == 1) {
+              EventBus.getDefault().post("refresh_push_stream");
+            } else if (currentPageIndex == 0) {
+              EventBus.getDefault().post("parse");
+            }
             setState(() {});
           },
         ));
