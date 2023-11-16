@@ -130,7 +130,7 @@ class _SimpleAppUpgradeWidget extends State<SimpleAppUpgradeWidget> {
                         child: Container(
                             constraints: BoxConstraints(maxHeight: 230.w),
                             child: SingleChildScrollView(
-                                child: Text(widget.contents![0],
+                                child: Text(widget.contents![0].replaceAll("\\n", "\n"),
                                     style: TextStyle(
                                         height: 1.5, fontSize: 26.sp))))),
                     Visibility(

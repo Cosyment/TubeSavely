@@ -6,11 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 
-import '../constants/colors.dart';
 import '../plugin/method_plugin.dart';
 import 'login_page.dart';
 import 'premium_page.dart';
-import 'push_stream_page.dart';
 import 'setting_page.dart';
 import 'tutorial_page.dart';
 
@@ -226,8 +224,7 @@ class _MinePageState extends State<MinePage> {
     } else if (type == 5) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => ThemePage()));
-
-    }else{
+    } else {
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => const PremiumScreenPage()));
     }

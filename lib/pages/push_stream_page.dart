@@ -143,11 +143,11 @@ class _PushStreamPageState extends State<PushStreamPage>
                       child: AnimatedContainer(
                         duration: Duration(milliseconds: 600),
                         curve: Curves.linear,
-                        width: isCircular ? 100.h : 600.w,
-                        height: isCircular ? 100.h : 80.h,
+                        width: isCircular ? 110.h : 600.w,
+                        height: isCircular ? 110.h : 80.h,
                         decoration: BoxDecoration(
                             borderRadius:
-                                BorderRadius.circular(isCircular ? 50.h : 40.h),
+                                BorderRadius.circular(isCircular ? 60.h : 40.h),
                             color: Theme.of(context).primaryColor),
                         alignment: Alignment.center,
                         child: isCircular
@@ -157,7 +157,7 @@ class _PushStreamPageState extends State<PushStreamPage>
                                     children: [
                                       LoadingAnimationWidget.threeArchedCircle(
                                         color: Colors.white,
-                                        size: 60.h,
+                                        size: 65.h,
                                       ),
                                       Text(
                                         "${countdown}s",
@@ -167,7 +167,7 @@ class _PushStreamPageState extends State<PushStreamPage>
                                   )
                                 : LoadingAnimationWidget.hexagonDots(
                                     color: Colors.white,
-                                    size: 60.h,
+                                    size: 65.h,
                                   )
                             : Center(
                                 child: Text(
@@ -248,18 +248,18 @@ class _PushStreamPageState extends State<PushStreamPage>
       status = 0;
       startTimer();
     }
-    print(">>>>>>>>>>>>>>>${respond}");
   }
 
   void startTimer() {
     ToastExit.show("已提交,正在排队等候推流中~");
-    countdown = 9;
+    countdown = 60;
     Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       if (countdown == 1) {
         timer.cancel();
+        loadPushStreamInfo();
         setState(() {
           isCircular = false;
-          status = 0;
+          status = 1;
         });
       } else {
         setState(() {
@@ -273,7 +273,6 @@ class _PushStreamPageState extends State<PushStreamPage>
     if (await UserExit.isLogin() != null) {
       var respond = await HttpUtils.instance
           .requestNetWorkAy(Method.get, HttpApi.getStreamInfo);
-      print(">>>>>>loadPushStreamInfo>>>>>>>>${respond}");
       if (respond != null) {
         setState(() {
           controllerHost.text = respond['liveHost'];

@@ -11,6 +11,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../constants/colors.dart';
 import '../constants/constant.dart';
 import '../network/http_utils.dart';
+import '../utils/event_bus.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -239,6 +240,7 @@ class _LoginPageState extends State<LoginPage> {
       Constant.userId = userId;
       PubMethodUtils.putSharedPreferences("userId", userId);
       ToastExit.show("登录成功");
+      EventBus.getDefault().post("refresh_push_stream");
       Navigator.pop(context, userId);
     } else {
       setState(() {
