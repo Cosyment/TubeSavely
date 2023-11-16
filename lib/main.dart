@@ -125,8 +125,10 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
               });
         } else {
           PubMethodUtils.umengCommonSdkInit();
+          PubMethodUtils.getUpdateApp(context);
         }
       });
+
     });
   }
 

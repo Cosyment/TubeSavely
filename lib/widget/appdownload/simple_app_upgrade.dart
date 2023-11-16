@@ -1,9 +1,10 @@
-import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:downloaderx/utils/exit.dart';
+import 'package:downloaderx/utils/platform_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../../plugin/upgrade_plugin.dart';
 import '../../utils/pub_method.dart';
 import '../theme_gradient_button.dart';
@@ -111,7 +112,7 @@ class _SimpleAppUpgradeWidget extends State<SimpleAppUpgradeWidget> {
                 constraints: BoxConstraints(maxWidth: 570.w),
                 decoration: BoxDecoration(
                     color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(20)),
+                    borderRadius: BorderRadius.circular(16)),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -122,9 +123,7 @@ class _SimpleAppUpgradeWidget extends State<SimpleAppUpgradeWidget> {
                         alignment: Alignment.topLeft,
                         child: Text(widget.title ?? '',
                             style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 28.sp,
-                                fontWeight: FontWeight.bold))),
+                                fontSize: 33.sp, fontWeight: FontWeight.bold))),
                     SizedBox(height: 24.w),
                     Align(
                         alignment: Alignment.topLeft,
@@ -133,16 +132,13 @@ class _SimpleAppUpgradeWidget extends State<SimpleAppUpgradeWidget> {
                             child: SingleChildScrollView(
                                 child: Text(widget.contents![0],
                                     style: TextStyle(
-                                        height: 1.5,
-                                        color: Color(0xFF4C4C68),
-                                        fontSize: 26.sp))))),
+                                        height: 1.5, fontSize: 26.sp))))),
                     Visibility(
                         visible: isShow,
                         child: Padding(
                             padding: EdgeInsets.symmetric(vertical: 30.w),
                             child: Text('更新中 $downloadCount %',
                                 style: TextStyle(
-                                    color: Colors.black,
                                     fontSize: 24.sp,
                                     fontWeight: FontWeight.bold)))),
                     _buildAction(context),
@@ -159,7 +155,7 @@ class _SimpleAppUpgradeWidget extends State<SimpleAppUpgradeWidget> {
   /// 构建取消或者升级按钮
   _buildAction(context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 30.w),
+      padding: EdgeInsets.symmetric(vertical: 40.w),
       child: Visibility(
         visible: !isShow,
         child: Row(
@@ -181,17 +177,17 @@ class _SimpleAppUpgradeWidget extends State<SimpleAppUpgradeWidget> {
       child: ThemeGradientButton(
         text: widget.status == 3 ? "不在提醒" : "下次再说",
         w: 200.w,
-        h: 60.w,
-        fontColor: Colors.blue,
+        h: 75.w,
+        fontColor: Theme.of(context).hoverColor.withOpacity(0.5),
         highlighted: false,
+        radius: 8,
         fillColor: Colors.transparent,
-        border: Border.all(color: Colors.black, width: 0.3),
         fontsize: 28.sp,
         ontap: () {
           if (widget.status == 3) {
             PubMethodUtils.putSharedPreferences("updateAppStatus", true);
           }
-          // Get.back();
+          Navigator.pop(context);
         },
       ),
     );
@@ -203,9 +199,12 @@ class _SimpleAppUpgradeWidget extends State<SimpleAppUpgradeWidget> {
       child: ThemeGradientButton(
         text: "立即升级",
         w: 200.w,
-        h: 60.w,
-        fontColor: Colors.black,
+        h: 75.w,
         fontsize: 28.sp,
+        radius: 20,
+        fillColor: Colors.transparent,
+        highlighted: false,
+        fontColor: Theme.of(context).hoverColor,
         fontWeight: FontWeight.w700,
         ontap: () {
           _clickOk();
@@ -230,7 +229,7 @@ class _SimpleAppUpgradeWidget extends State<SimpleAppUpgradeWidget> {
   /// 点击确定按钮
   ///
   _clickOk() async {
-    if (Platform.isIOS) {
+    if (PlatformUtils.isIOS) {
       ///ios 需要跳转到app store更新，原生实现
       UpgradePlugin.toAppStore(widget.downloadUrl!.isNotEmpty
           ? widget.downloadUrl!

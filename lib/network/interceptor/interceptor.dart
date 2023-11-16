@@ -21,6 +21,7 @@ class AuthInterceptor extends Interceptor {
     options.headers['Sign'] = createSign;
     options.headers['UserAgent'] = 'mobile';
     options.headers['Channel'] = Constant.appChannelId;
+    options.headers['ApiVersion'] = 'v1.0.0'; //服务端api版本号
     options.headers['PackageNames'] = HttpUtils.appInfo;
     super.onRequest(options, handler);
   }

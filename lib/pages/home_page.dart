@@ -154,8 +154,7 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: Theme.of(context).primaryColor,
             shape: const CircleBorder(),
             onPressed: () {
-              PubMethodUtils.getUpdateApp(context);
-              // startParse();
+              startParse();
             },
             child: isLoading
                 ? LoadingAnimationWidget.hexagonDots(

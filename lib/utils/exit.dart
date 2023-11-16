@@ -30,6 +30,7 @@ class ThemeExit {
             brightness: Brightness.dark,
             primaryColor: const Color(0XFF202123),
             hintColor: Color(0XFF202123),
+            hoverColor: Colors.white,
             highlightColor: Colors.grey,
             scaffoldBackgroundColor: const Color(0xFF0D0D0F)) //背景颜色0x3026242e
         : ThemeData(
@@ -37,6 +38,7 @@ class ThemeExit {
             brightness: Brightness.light,
             primaryColor: const Color(0xFF7776FF),
             hintColor: Colors.grey,
+            hoverColor: Colors.black,
             highlightColor: const Color(0xFF7776FF),
             scaffoldBackgroundColor: const Color(0XFFFFFFFF));
   }

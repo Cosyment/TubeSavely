@@ -49,7 +49,7 @@ class PubMethodUtils {
   static Future<AppUpgradeInfo> checkAppInfo(UpdataModel data) async {
     return Future.delayed(const Duration(seconds: 1), () {
       return AppUpgradeInfo(
-          title: 'V${data.appVersion}新特性',
+          title: data.appVersion,
           contents: [data.description!],
           status: data.status,
           apkDownloadUrl: data.url);
@@ -62,15 +62,6 @@ class PubMethodUtils {
         .requestNetWorkAy<UpdataModel>(Method.get, HttpApi.updateApp);
     var appInfo = await UpgradePlugin.appInfo;
 
-    var updataModel1 = UpdataModel();
-    updataModel1.appVersion = "222222";
-    updataModel1.description = "11111111111";
-    updataModel1.status = 1;
-    updataModel1.url = "https://img.firefix.cn/downloaderx/wenjianchuanshu_release.apk";
-    AppUpgrade.appUpgrade(context, PubMethodUtils.checkAppInfo(updataModel1),
-        iosAppId: "1596691834",
-        okBackgroundColors: [Color(0xFFA3FFFF), Color(0xFF67FEFF)],
-        progressBarColor: Color(0xFF67FEFF).withOpacity(.4));
     if (updataModel == null) return;
     if (int.parse(appInfo.versionCode!) < updataModel.appCode!) {
       if (updataModel.status == 4) {
@@ -85,8 +76,8 @@ class PubMethodUtils {
       }
       AppUpgrade.appUpgrade(context, PubMethodUtils.checkAppInfo(updataModel),
           iosAppId: "1596691834",
-          okBackgroundColors: [Color(0xFFA3FFFF), Color(0xFF67FEFF)],
-          progressBarColor: Color(0xFF67FEFF).withOpacity(.4));
+          okBackgroundColors: [Theme.of(context).primaryColor.withOpacity(0.4)],
+          progressBarColor: Theme.of(context).primaryColor.withOpacity(0.4));
     }
   }
 }

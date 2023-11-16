@@ -76,17 +76,17 @@ class Constant {
   ];
 
   static List<dynamic> tutorialList = [
-    // {
-    //   "content": "打开短视频软件，播放您需要的短视频，点击分享，并滑动找到“复制链接”。",
-    //   "title": "如何获取视频解析地址？",
-    //   "type": 1,
-    //   "isExpanded": false
-    // },
-    // {
-    //   "content": "抖音、快手、西瓜视频、""、YouTobe、bilibili、小红书、微博、等180个平台",
-    //   "title": "支持哪些视频平台？",
-    //   "isExpanded": false
-    // },
+    {
+      "content": "打开短视频软件，播放您需要的短视频，点击分享，并滑动找到“复制链接”。",
+      "title": "如何获取视频解析地址？",
+      "type": 1,
+      "isExpanded": false
+    },
+    {
+      "content": "抖音、快手、西瓜视频、TikTok、YouTobe、bilibili、小红书、微博、等180个平台",
+      "title": "支持哪些视频平台？",
+      "isExpanded": false
+    },
     {
       "content": "哔哩哔哩直播 电脑网页端打开哔哩哔哩并登录,找到如下页面点击开播",
       "title": "如何获取直播服务器地址、串流秘钥？",

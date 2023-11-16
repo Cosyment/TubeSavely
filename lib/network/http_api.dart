@@ -3,7 +3,7 @@ class HttpApi {
 
   // static String baseUrl = 'http://192.168.70.85:8083';
   static const String login = "/tUser/login";
-  static const String updateApp = "";
+  static const String updateApp = "/tAppVersion/queryVersion";
   static const String sendVerCode = "/tVerCode/sendCode";
   static const String getUser = "/tUser/getUser";
   static const String submitFeedback = "/tFeedback/submit";

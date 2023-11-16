@@ -53,7 +53,7 @@ class AppUpgrade {
     Future<AppUpgradeInfo> future, {
     List<Color>? okBackgroundColors,
     Color? progressBarColor,
-    double borderRadius = 20.0,
+    double borderRadius =10.0,
     String? iosAppId,
     AppMarketInfo? appMarketInfo,
     DownloadProgressCallback? downloadProgress,

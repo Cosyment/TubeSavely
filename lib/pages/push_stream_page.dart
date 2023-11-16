@@ -72,7 +72,7 @@ class _PushStreamPageState extends State<PushStreamPage>
         ),
       ),
       body: Container(
-        margin: EdgeInsets.symmetric(vertical: 20.w,horizontal: 40.w),
+        margin: EdgeInsets.symmetric(vertical: 20.w, horizontal: 40.w),
         child: CustomScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           slivers: [
@@ -102,18 +102,11 @@ class _PushStreamPageState extends State<PushStreamPage>
                 );
               },
             ),
+            buildInputContainer("服务器地址:", '请输入服务器地址', controllerHost, context),
             buildInputContainer(
-                "服务器地址:",
-                'rtmp://live-push.bilivideo.com/live-bvc/',
-                controllerHost,
-                context),
+                "串流秘钥:", '请输入串流秘钥', controllerSecretKey, context),
             buildInputContainer(
-                "串流秘钥:",
-                '?streamname=live_1395106275_52446772&key=353e0970a59ad30ebb317984e0f6b348&schedule=rtmp&pflag=1',
-                controllerSecretKey,
-                context),
-            buildInputContainer("直播间地址:", 'http://live.bilibili.com/27521273',
-                controllerLiveUrl, context),
+                "直播间地址:", '请输入直播地址', controllerLiveUrl, context),
             SliverToBoxAdapter(
               child: Container(
                 alignment: Alignment.centerLeft,
@@ -182,7 +175,7 @@ class _PushStreamPageState extends State<PushStreamPage>
                                     ? '开始推流'
                                     : status == 0
                                         ? "正在排队中..."
-                                        : "正在直播中",
+                                        : "观看直播",
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 30.sp,
