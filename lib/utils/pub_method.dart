@@ -1,10 +1,16 @@
+import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:umeng_common_sdk/umeng_common_sdk.dart';
 
 import '../constants/constant.dart';
+import '../data/update_model.dart';
+import '../network/http_api.dart';
+import '../network/http_utils.dart';
 import '../plugin/method_plugin.dart';
+import '../plugin/upgrade_plugin.dart';
+import '../widget/appdownload/app_upgrade.dart';
 import 'platform_utils.dart';
 
 class PubMethodUtils {
@@ -40,4 +46,47 @@ class PubMethodUtils {
     return prefs.getString(key);
   }
 
+  static Future<AppUpgradeInfo> checkAppInfo(UpdataModel data) async {
+    return Future.delayed(const Duration(seconds: 1), () {
+      return AppUpgradeInfo(
+          title: 'V${data.appVersion}新特性',
+          contents: [data.description!],
+          status: data.status,
+          apkDownloadUrl: data.url);
+    });
+  }
+
+  ///版本更新
+  static getUpdateApp(context) async {
+    var updataModel = await HttpUtils.instance
+        .requestNetWorkAy<UpdataModel>(Method.get, HttpApi.updateApp);
+    var appInfo = await UpgradePlugin.appInfo;
+
+    var updataModel1 = UpdataModel();
+    updataModel1.appVersion = "222222";
+    updataModel1.description = "11111111111";
+    updataModel1.status = 1;
+    updataModel1.url = "https://img.firefix.cn/downloaderx/wenjianchuanshu_release.apk";
+    AppUpgrade.appUpgrade(context, PubMethodUtils.checkAppInfo(updataModel1),
+        iosAppId: "1596691834",
+        okBackgroundColors: [Color(0xFFA3FFFF), Color(0xFF67FEFF)],
+        progressBarColor: Color(0xFF67FEFF).withOpacity(.4));
+    if (updataModel == null) return;
+    if (int.parse(appInfo.versionCode!) < updataModel.appCode!) {
+      if (updataModel.status == 4) {
+        ///代表不更新
+        return;
+      } else if (updataModel.status == 3) {
+        var updateAppStatus =
+            PubMethodUtils.getSharedPreferences("updateAppStatus");
+        if (updateAppStatus != null) {
+          return;
+        }
+      }
+      AppUpgrade.appUpgrade(context, PubMethodUtils.checkAppInfo(updataModel),
+          iosAppId: "1596691834",
+          okBackgroundColors: [Color(0xFFA3FFFF), Color(0xFF67FEFF)],
+          progressBarColor: Color(0xFF67FEFF).withOpacity(.4));
+    }
+  }
 }

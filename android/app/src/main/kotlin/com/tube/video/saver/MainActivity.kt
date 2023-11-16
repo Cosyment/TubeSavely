@@ -9,6 +9,7 @@ class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         flutterEngine.plugins.add(MethodPlugin())
+        flutterEngine.plugins.add(FlutterAppUpgradePlugin())
     }
 
 }
