@@ -80,7 +80,7 @@ class Constant {
       "content": "打开短视频软件，播放您需要的短视频，点击分享，并滑动找到“复制链接”。",
       "title": "如何获取视频解析地址？",
       "type": 1,
-      "isExpanded": false
+      "isExpanded": true
     },
     {
       "content": "抖音、快手、西瓜视频、TikTok、YouTobe、bilibili、小红书、微博、等180个平台",
@@ -88,7 +88,7 @@ class Constant {
       "isExpanded": false
     },
     {
-      "content": "哔哩哔哩直播 电脑网页端打开哔哩哔哩并登录,找到如下页面点击开播，其他平台也是一样",
+      "content": "每个平台大致差不多举例说明:\nbilibili：无粉丝数量限制只需要实名认证后即可直播,登录网页版本然后再打开https://link.bilibili.com/p/center/index#/my-room/start-live\n 知乎：无粉丝数量限制，实名认证后即可直播,登录网页版本然后再打开https://www.zhihu.com/creator/streaming/push\n微博：粉丝大于50人，实名认证后即可直播,登录网页版本然后再打开https://weibo.com/manage/frame?furl=https%3A%2F%2Fweibo.com%2Fl%2Fwblive%2Fadmin%2Fhome%2Fauthentication\n",
       "title": "如何获取直播服务器地址、串流秘钥？",
       "type": 2,
       "isExpanded": true

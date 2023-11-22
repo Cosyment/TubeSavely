@@ -1,7 +1,9 @@
 import 'dart:ffi';
 
 import 'package:downloaderx/pages/image_viewer_page.dart';
+import 'package:downloaderx/utils/exit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../constants/colors.dart';
@@ -77,8 +79,15 @@ class _TutorialPageState extends State<TutorialPage> {
                               margin: EdgeInsets.fromLTRB(30.w, 0, 30.w, 0),
                               child: Column(
                                 children: [
-                                  Text(item['content'].toString(),
-                                      style: TextStyle(fontSize: 30.sp)),
+                                  GestureDetector(
+                                    child: Text(item['content'].toString(),
+                                        style: TextStyle(fontSize: 30.sp)),
+                                    onTap: () {
+                                      Clipboard.setData(ClipboardData(
+                                          text: item['content'].toString()));
+                                      ToastExit.show("已复制");
+                                    },
+                                  ),
                                   GestureDetector(
                                     onTap: () {
                                       Navigator.push(
