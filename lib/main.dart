@@ -1,42 +1,43 @@
 import 'dart:ui';
 
-import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
-import 'package:downloaderx/pages/home_page.dart';
-import 'package:downloaderx/pages/mine_page.dart';
-import 'package:downloaderx/pages/push_stream_page.dart';
-import 'package:downloaderx/pages/splash_page.dart';
-import 'package:downloaderx/utils/event_bus.dart';
-import 'package:downloaderx/utils/exit.dart';
-import 'package:downloaderx/utils/pub_method.dart';
-import 'package:downloaderx/widget/agreement_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tubesaverx/pages/feedback_page.dart';
+import 'package:tubesaverx/pages/help_page.dart';
+import 'package:tubesaverx/pages/history_page.dart';
+import 'package:tubesaverx/pages/home_page.dart';
+import 'package:tubesaverx/pages/invite_page.dart';
+import 'package:tubesaverx/pages/setting_page.dart';
+import 'package:tubesaverx/pages/splash_page.dart';
+import 'package:tubesaverx/utils/event_bus.dart';
+import 'package:tubesaverx/widget/drawer_controller.dart';
+import 'package:tubesaverx/widget/slide_drawer.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
+import 'app_theme.dart';
 import 'data/local_storage_service.dart';
 import 'generated/l10n.dart';
 
 void main() async {
   await ScreenUtil.ensureScreenSize();
   _loadShader();
-  runApp(MyApp());
+  runApp(const MyApp());
   AssetPicker.registerObserve();
   LocalStorageService().init();
 }
 
 Future<void> _loadShader() async {
-  return FragmentProgram.fromAsset('assets/shaders/shader.frag').then(
-      (FragmentProgram prgm) {
+  return FragmentProgram.fromAsset('assets/shaders/shader.frag').then((FragmentProgram prgm) {
     SplashPage.shader = prgm.fragmentShader();
   }, onError: (Object error, StackTrace stackTrace) {
-    FlutterError.reportError(
-        FlutterErrorDetails(exception: error, stack: stackTrace));
+    FlutterError.reportError(FlutterErrorDetails(exception: error, stack: stackTrace));
   });
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -56,7 +57,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   initTheme() async {
-    isDarkMode = await ThemeExit.isDark();
     setState(() {});
   }
 
@@ -71,7 +71,6 @@ class _MyAppState extends State<MyApp> {
     ScreenUtil.init(context, designSize: const Size(750, 1378));
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeExit.get(isDarkMode),
       localizationsDelegates: const [
         GlobalCupertinoLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -85,51 +84,33 @@ class _MyAppState extends State<MyApp> {
 }
 
 class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+  const MainPage({super.key});
 
   @override
   State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
-  final _controller = NotchBottomBarController(index: 0);
+  late String title;
   var currentPageIndex = 0;
+
+  Widget? screenView;
+  DrawerIndex? drawerIndex;
 
   @override
   void dispose() {
     super.dispose();
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
   }
-
-  final List<Widget> bottomBarPages = [
-    const HomePage(),
-    const PushStreamPage(),
-    const MinePage(),
-  ];
 
   @override
   void initState() {
+    title = "视频下载";
+    drawerIndex = DrawerIndex.Home;
+    screenView = const HomePage();
     super.initState();
-    WidgetsBinding.instance?.addObserver(this);
-    Future.delayed(const Duration(milliseconds: 600), () {
-      PubMethodUtils.getSharedPreferences("isAgree").then((value) {
-        if (value == null) {
-          showGeneralDialog(
-              context: context,
-              barrierDismissible: false,
-              barrierLabel: '',
-              transitionDuration: const Duration(milliseconds: 400),
-              pageBuilder: (BuildContext context, Animation<double> animation,
-                  Animation<double> secondaryAnimation) {
-                return AgreementDialog(onAgreeClick: onAgreeClick);
-              });
-        } else {
-          PubMethodUtils.umengCommonSdkInit();
-          PubMethodUtils.getUpdateApp(context);
-        }
-      });
-
-    });
+    WidgetsBinding.instance.addObserver(this);
+    Future.delayed(const Duration(milliseconds: 600), () {});
   }
 
   @override
@@ -139,74 +120,68 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     }
   }
 
-  void onAgreeClick() {
-    PubMethodUtils.putSharedPreferences("isAgree", "1");
-    PubMethodUtils.umengCommonSdkInit();
-  }
-
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, designSize: const Size(750, 1378));
-    return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: IndexedStack(
-          index: currentPageIndex,
-          children: List.generate(
-              bottomBarPages.length, (index) => bottomBarPages[index]),
+    return Container(
+      color: AppTheme.white,
+      child: SafeArea(
+        top: false,
+        bottom: false,
+        child: Scaffold(
+          backgroundColor: AppTheme.nearlyWhite,
+          body: CustomDrawerController(
+            screenIndex: drawerIndex,
+            drawerWidth: MediaQuery.of(context).size.width * 0.75,
+            onDrawerCall: (DrawerIndex drawerIndexData) {
+              changeIndex(drawerIndexData);
+              //callback from drawer for replace screen as user need with passing DrawerIndex(Enum index)
+            },
+            screenView: screenView,
+            //we replace screen view as we need on navigate starting screens like MyHomePage, HelpScreen, FeedbackScreen, etc...
+          ),
         ),
-        extendBody: true,
-        bottomNavigationBar: AnimatedNotchBottomBar(
-          notchBottomBarController: _controller,
-          color: Theme.of(context).scaffoldBackgroundColor,
-          showLabel: false,
-          notchColor: Theme.of(context).scaffoldBackgroundColor,
-          removeMargins: false,
-          bottomBarWidth: 0,
-          durationInMilliSeconds: 300,
-          bottomBarItems: const [
-            BottomBarItem(
-              inActiveItem: Icon(
-                Icons.home_filled,
-                color: Colors.grey,
-              ),
-              activeItem: Icon(
-                Icons.home_filled,
-                color: Colors.grey,
-              ),
-              itemLabel: 'Page 1',
-            ),
-            BottomBarItem(
-              inActiveItem: Icon(
-                Icons.video_call_sharp,
-                color: Colors.grey,
-              ),
-              activeItem: Icon(
-                Icons.video_call_sharp,
-                color: Colors.grey,
-              ),
-              itemLabel: 'Page 2',
-            ),
-            BottomBarItem(
-              inActiveItem: Icon(
-                Icons.person,
-                color: Colors.grey,
-              ),
-              activeItem: Icon(
-                Icons.person,
-                color: Colors.grey,
-              ),
-              itemLabel: 'Page 3',
-            ),
-          ],
-          onTap: (index) {
-            currentPageIndex = index;
-            if (currentPageIndex == 1) {
-              EventBus.getDefault().post("refresh_push_stream");
-            } else if (currentPageIndex == 0) {
-              EventBus.getDefault().post("parse");
-            }
-            setState(() {});
-          },
-        ));
+      ),
+    );
+  }
+
+  void changeIndex(DrawerIndex drawerIndexData) {
+    if (drawerIndex != drawerIndexData) {
+      drawerIndex = drawerIndexData;
+      switch (drawerIndex) {
+        case DrawerIndex.Home:
+          setState(() {
+            screenView = const HomePage();
+          });
+          break;
+        case DrawerIndex.History:
+          setState(() {
+            screenView = const HistoryPage();
+          });
+          break;
+        case DrawerIndex.Help:
+          setState(() {
+            screenView = HelpPage();
+          });
+          break;
+        case DrawerIndex.FeedBack:
+          setState(() {
+            screenView = FeedbackPage();
+          });
+          break;
+        case DrawerIndex.Invite:
+          setState(() {
+            screenView = InviteFriendPage();
+          });
+          break;
+        case DrawerIndex.Settings:
+          setState(() {
+            screenView = SettingPage();
+          });
+          break;
+        default:
+          break;
+      }
+    }
   }
 }

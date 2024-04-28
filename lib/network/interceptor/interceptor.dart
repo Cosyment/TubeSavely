@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:common_utils/common_utils.dart';
 import 'package:dio/dio.dart';
-import 'package:downloaderx/constants/constant.dart';
+import 'package:tubesaverx/constants/constant.dart';
 import '../../utils/encrypted_utils.dart';
 import '../../utils/log_util.dart';
 

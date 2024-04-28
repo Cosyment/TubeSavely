@@ -1,4 +1,4 @@
-import 'package:downloaderx/utils/json_utils.dart';
+import 'package:tubesaverx/utils/json_utils.dart';
 
 import '../models/video_info.dart';
 

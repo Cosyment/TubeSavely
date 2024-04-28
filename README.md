@@ -39,7 +39,7 @@ AcFun:https://m.acfun.cn/v/?ac=39091936&sid=bf02f7d348c84918
 腾讯视频:
 
 #应用名称：
-TobeSaver-Video downloader 支持tiktok、 抖音快手、小红书
+TubeSaverX - Video downloader 支持tiktok、 抖音快手、小红书
 一句话介绍
 Free downloader to fast download all videos from social webs.
 

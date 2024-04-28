@@ -1,24 +1,20 @@
 import 'package:common_utils/common_utils.dart';
-import 'package:downloaderx/constants/colors.dart';
-import 'package:downloaderx/constants/constant.dart';
-import 'package:downloaderx/pages/video_detail.dart';
-import 'package:downloaderx/pages/video_montage_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:tubesaverx/constants/colors.dart';
+import 'package:tubesaverx/constants/constant.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
+import '../app_theme.dart';
 import '../data/video_parse.dart';
 import '../generated/l10n.dart';
 import '../utils/event_bus.dart';
-import '../utils/exit.dart';
 import '../utils/parse/other.dart';
 import '../utils/parse/youtobe.dart';
-import '../utils/pub_method.dart';
-import 'video_parse_page.dart';
 import 'webview.dart';
 
 class HomePage extends StatefulWidget {
@@ -36,22 +32,9 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    PubMethodUtils.getSharedPreferences("InAppReview").then((value) {
-      if (value == null) {
-        PubMethodUtils.putSharedPreferences("InAppReview", "1");
-        Future.delayed(const Duration(milliseconds: 1000 * 10), () {
-          PubMethodUtils.getInAppReview();
-        });
-      }
-    });
-    PubMethodUtils.getSharedPreferences("userId").then((value) {
-      if (value != null) {
-        Constant.userId = value.toString();
-      }
-    });
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      var list =
-          S.of(context).tvListTxt.split(', ').map((e) => e.trim()).toList();
+      var list = S.of(context).tvListTxt.split(', ').map((e) => e.trim()).toList();
       for (int i = 0; i < Constant.meList.length; i++) {
         var item = Constant.meList[i];
         item['title'] = list[i];
@@ -84,27 +67,18 @@ class _HomePageState extends State<HomePage> {
         slivers: [
           SliverToBoxAdapter(
             child: Container(
-              margin: EdgeInsets.all(30.w),
+              margin: EdgeInsets.all(0.w),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(14),
                 child: Container(
-                  color: Theme.of(context).primaryColor,
-                  child: Image.network(
-                      "https://img.firefix.cn/downloaderx/banner.png",
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      height: 320.w),
+                  padding: const EdgeInsets.only(top: 0, left: 16, right: 16),
+                  child: Image.asset('assets/images/ic_help.png'),
                 ),
-              )
-                  .animate()
-                  .effect(duration: 3000.ms)
-                  .effect(delay: 750.ms, duration: 1500.ms)
-                  .shimmer(),
+              ).animate().effect(duration: 3000.ms).effect(delay: 750.ms, duration: 1500.ms).shimmer(),
             ),
           ),
-
           SliverToBoxAdapter(
-            child: inputContainer(),
+            // child: inputContainer(),
+            child: _buildComposer(),
           ),
           SliverToBoxAdapter(
             child: actionRow(),
@@ -123,22 +97,6 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          // SliverToBoxAdapter(
-          //   child: widgetTop(context),
-          // ),
-          // SliverToBoxAdapter(
-          //   child: Padding(
-          //     padding: EdgeInsets.all(20.w),
-          //     child: Text(
-          //       S.of(context).tvClipTxt,
-          //       style: TextStyle(
-          //         fontSize: 40.sp,
-          //         fontWeight: FontWeight.bold,
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          // buildChildLayout(),
         ],
       ),
     );
@@ -173,6 +131,42 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Widget _buildComposer() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 16, left: 32, right: 32),
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppTheme.white,
+          borderRadius: BorderRadius.circular(50),
+          boxShadow: <BoxShadow>[
+            BoxShadow(color: Colors.grey.withOpacity(0.3), offset: const Offset(4, 4), blurRadius: 30),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(25),
+          child: Container(
+            padding: const EdgeInsets.all(4.0),
+            color: AppTheme.white,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.only(left: 10, right: 10, top: 0, bottom: 0),
+              child: TextField(
+                maxLines: 1,
+                onChanged: (String text) {},
+                style: const TextStyle(
+                  fontFamily: AppTheme.fontName,
+                  fontSize: 16,
+                  color: AppTheme.dark_grey,
+                ),
+                cursorColor: Colors.blue,
+                decoration: const InputDecoration(border: InputBorder.none, hintText: 'Paste Your Youtube or Tiktok URL...'),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   inputContainer() {
     return Column(
       children: [
@@ -195,8 +189,7 @@ class _HomePageState extends State<HomePage> {
               hintText: "请输入视频地址",
               hintStyle: const TextStyle(color: Colors.white),
               border: const OutlineInputBorder(borderSide: BorderSide.none),
-              focusedBorder:
-                  const OutlineInputBorder(borderSide: BorderSide.none),
+              focusedBorder: const OutlineInputBorder(borderSide: BorderSide.none),
               enabledBorder: const OutlineInputBorder(
                 borderSide: BorderSide.none,
               ),
@@ -211,12 +204,9 @@ class _HomePageState extends State<HomePage> {
   Future<void> startParse() async {
     var parseUrl = textController.text;
     try {
-      Match? match =
-          RegExp(r'http[s]?:\/\/[\w.]+[\w/]*[\w.]*\??[\w=&:\-+%]*[/]*')
-              .firstMatch(parseUrl);
+      Match? match = RegExp(r'http[s]?:\/\/[\w.]+[\w/]*[\w.]*\??[\w=&:\-+%]*[/]*').firstMatch(parseUrl);
       var url = match?.group(0) ?? '';
       if (!url.contains('http')) {
-        ToastExit.show("无法解析该链接地址");
         return;
       }
       setState(() {
@@ -253,14 +243,8 @@ class _HomePageState extends State<HomePage> {
                 url: result.videoUrl,
               ),
             ));
-      } else {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => VideoDetailPage(bean: result)));
-      }
+      } else {}
     } else {
-      ToastExit.show("解析失败");
       setState(() {});
     }
   }
@@ -337,8 +321,8 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => VideoParePage()));
+                // Navigator.push(context,
+                //     MaterialPageRoute(builder: (context) => VideoParePage()));
               },
             ),
           ),
@@ -403,23 +387,13 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> skipSelectPhoto(
-      BuildContext context, Map<String, Object> item) async {
+  Future<void> skipSelectPhoto(BuildContext context, Map<String, Object> item) async {
     List<AssetEntity>? result = await AssetPicker.pickAssets(context,
         pickerConfig: AssetPickerConfig(
           themeColor: primaryColor,
           maxAssets: 1,
           requestType: item['type'] as RequestType,
         ));
-    if (result != null) {
-      var file2 = await result[0].file;
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => VideoMontagePage(
-                    file: file2!,
-                    title: item['title'].toString(),
-                  )));
-    }
+    if (result != null) {}
   }
 }

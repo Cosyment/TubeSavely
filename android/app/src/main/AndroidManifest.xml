@@ -12,7 +12,7 @@
     <application
         android:name=".MyApp"
         android:icon="@mipmap/ic_launcher"
-        android:label="TobeSaver"
+        android:label="TubeSaverX"
         android:theme="@style/LaunchTheme"
         android:usesCleartextTraffic="true">
         <activity

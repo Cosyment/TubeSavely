@@ -1,4 +1,4 @@
-import 'package:downloaderx/main.dart';
+import 'package:tubesaverx/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -70,7 +70,7 @@ class _SplashPageState extends State<SplashPage>
                   child: Container(
                     alignment: Alignment.center,
                     child: Text(
-                      "TobeSaver",
+                      "TubeSaverX",
                       style: TextStyle(fontSize: 36.0, shadows: <Shadow>[
                         Shadow(
                             blurRadius: 18.0,

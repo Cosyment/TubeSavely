@@ -1,15 +1,12 @@
-import 'package:downloaderx/constants/constant.dart';
-import 'package:downloaderx/pages/webview.dart';
-import 'package:downloaderx/utils/exit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tubesaverx/constants/constant.dart';
+import 'package:tubesaverx/pages/webview.dart';
 
-import '../constants/colors.dart';
 import '../main.dart';
-import '../utils/pub_method.dart';
 
 class SettingPage extends StatefulWidget {
   SettingPage({super.key});
@@ -35,6 +32,11 @@ class _SettingPageState extends State<SettingPage> {
       "title": "隐私政策",
       "type": 2,
     },
+    {
+      "icon": Icons.info,
+      "title": "关于",
+      "type": 2,
+    },
   ];
 
   var versionName = "";
@@ -48,21 +50,6 @@ class _SettingPageState extends State<SettingPage> {
         setState(() {
           versionName = value.version;
         });
-      });
-      PubMethodUtils.getSharedPreferences("userId").then((value) {
-        if (value != null) {
-          itemList.add({
-            "icon": Icons.verified_user,
-            "title": "注销账号",
-            "type": 3,
-          });
-          itemList.add({
-            "icon": Icons.logout,
-            "title": "退出登录",
-            "type": 4,
-          });
-        }
-        setState(() {});
       });
     });
   }
@@ -111,7 +98,7 @@ class _SettingPageState extends State<SettingPage> {
                       ),
                       Text(
                         item['title'],
-                        style: TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.white),
                       ),
                       Flexible(
                         flex: 1,
@@ -137,7 +124,6 @@ class _SettingPageState extends State<SettingPage> {
 
   void onItemClick(int type) async {
     if (type == 0) {
-      ToastExit.show("已是最新版本!");
     } else if (type == 1) {
       Navigator.push(
           context,

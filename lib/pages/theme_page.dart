@@ -1,7 +1,6 @@
-import 'package:downloaderx/utils/event_bus.dart';
+import 'package:tubesaverx/utils/event_bus.dart';
 import 'package:flutter/material.dart';
 import '../models/theme_color.dart';
-import '../utils/exit.dart';
 import '../widget/animated_toggle_button.dart';
 
 class ThemePage extends StatefulWidget {
@@ -56,7 +55,7 @@ class _ThemePageState extends State<ThemePage>
   );
 
   initTheme() async {
-    isDarkMode = await ThemeExit.isDark();
+    // isDarkMode = await ThemeExit.isDark();
     setState(() {
       changeThemeMode();
     });
@@ -177,7 +176,7 @@ class _ThemePageState extends State<ThemePage>
                   isDarkMode = !isDarkMode;
                   setState(() {});
                   changeThemeMode();
-                  await ThemeExit.setDark(isDarkMode);
+                  // await ThemeExit.setDark(isDarkMode);
                   EventBus.getDefault().post("change_theme");
                 },
               ),

@@ -1,178 +1,131 @@
-import 'package:downloaderx/utils/exit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:tubesaverx/app_theme.dart';
 
-import '../constants/colors.dart';
-import '../network/http_api.dart';
-import '../network/http_utils.dart';
-
-class FeedBackPage extends StatefulWidget {
-  const FeedBackPage({super.key});
-
+class FeedbackPage extends StatefulWidget {
   @override
-  State<FeedBackPage> createState() => _FeedBackPageState();
+  _FeedbackPageState createState() => _FeedbackPageState();
 }
 
-class _FeedBackPageState extends State<FeedBackPage> {
-  late TextEditingController contentController =
-      TextEditingController(text: "");
-  late TextEditingController mobileController = TextEditingController(text: "");
-  var isLoading = false;
+class _FeedbackPageState extends State<FeedbackPage> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("意见反馈"),
-      ),
-      body: Container(
-        width: double.infinity,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 60.w),
-          child: Column(
-            children: [
-              Container(
-                child: TextField(
-                  maxLines: 8,
-                  minLines: 5,
-                  autofocus: true,
-                  controller: contentController,
-                  keyboardType: TextInputType.text,
-                  inputFormatters: <TextInputFormatter>[
-                    LengthLimitingTextInputFormatter(200)
-                  ],
-                  style: TextStyle(color: Colors.grey, fontSize: 30.sp),
-                  decoration: InputDecoration(
-                    hintText: "请输入您的意见,我们期待您的反馈~",
-                    hintStyle: TextStyle(
-                      fontSize: 30.sp,
-                      color: Colors.grey,
-                    ),
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 25.w, horizontal: 25.w),
-                    labelStyle: TextStyle(fontSize: 26.sp, color: Colors.grey),
-                    filled: true,
-                    fillColor: Colors.transparent,
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(14.r)),
-                      borderSide: BorderSide(
-                        color: Theme.of(context).hintColor,
-                        width: 3.w,
-                      ),
-                    ),
-                    disabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(14.r)),
-                      borderSide: BorderSide(
-                        color: Theme.of(context).hintColor,
-                        width: 3.w,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(14.r)),
-                      borderSide: BorderSide(
-                        color: Theme.of(context).highlightColor,
-                        width: 4.w,
-                      ),
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
+    return Container(
+      color: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
+      child: SafeArea(
+        top: false,
+        child: Scaffold(
+          backgroundColor: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
+          body: SingleChildScrollView(
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top, left: 16, right: 16),
+                    child: Image.asset('assets/images/ic_feedback.png'),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      'Your FeedBack',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: isLightMode ? Colors.black : Colors.white),
                     ),
                   ),
-                ),
-              ),
-              Container(
-                height: 88.h,
-                margin: EdgeInsets.symmetric(vertical: 30.h),
-                child: TextField(
-                  controller: mobileController,
-                  keyboardType: TextInputType.visiblePassword,
-                  inputFormatters: <TextInputFormatter>[
-                    LengthLimitingTextInputFormatter(16)
-                  ],
-                  style: TextStyle(color: Colors.grey, fontSize: 28.sp),
-                  decoration: InputDecoration(
-                    hintText: "请输入您的联系方式",
-                    labelText: "联系方式",
-                    hintStyle: TextStyle(
-                      fontSize: 28.sp,
-                      color: Colors.grey,
-                    ),
-                    labelStyle: TextStyle(fontSize: 28.sp, color: Colors.grey),
-                    filled: true,
-                    fillColor: Colors.transparent,
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(14.r)),
-                      borderSide: BorderSide(
-                        color: Theme.of(context).hintColor,
-                        width: 3.w,
-                      ),
-                    ),
-                    disabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(14.r)),
-                      borderSide: BorderSide(
-                        color: Theme.of(context).hintColor,
-                        width: 3.w,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(14.r)),
-                      borderSide: BorderSide(
-                        color: Theme.of(context).highlightColor,
-                        width: 4.w,
-                      ),
+                  Container(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: Text(
+                      'Give your best time for this moment.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 16, color: isLightMode ? Colors.black : Colors.white),
                     ),
                   ),
-                ),
-              ),
-              SizedBox(
-                height: 120.h,
-              ),
-              FloatingActionButton(
-                backgroundColor: Theme.of(context).primaryColor,
-                shape: const CircleBorder(),
-                onPressed: () {
-                  submit();
-                },
-                child: isLoading
-                    ? LoadingAnimationWidget.hexagonDots(
-                        color: Colors.white,
-                        size: 40.h,
-                      )
-                    : Image.asset(
-                        "assets/next.png",
-                        fit: BoxFit.fill,
-                        width: 40.w,
-                        height: 40.w,
+                  _buildComposer(),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16, left: 30, right: 30),
+                    child: Center(
+                      child: Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: isLightMode ? Colors.blue : Colors.white,
+                          borderRadius: const BorderRadius.all(Radius.circular(50)),
+                          boxShadow: <BoxShadow>[
+                            BoxShadow(color: Colors.grey.withOpacity(0.6), offset: const Offset(4, 4), blurRadius: 8.0),
+                          ],
+                        ),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () {
+                              FocusScope.of(context).requestFocus(FocusNode());
+                            },
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  'Send',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: isLightMode ? Colors.white : Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-              )
-            ],
+                    ),
+                  )
+                ],
+              ),
+            ),
           ),
         ),
       ),
     );
   }
 
-  submit() async {
-    String content = contentController.text;
-    if (content.isEmpty) {
-      ToastExit.show('请输入内容');
-      return;
-    }
-    setState(() {
-      isLoading = true;
-    });
-    var map = <String, dynamic>{};
-    map['content'] = content;
-    map['mobile'] = mobileController.text;
-    var respond = await HttpUtils.instance.requestNetWorkAy(
-        Method.post, HttpApi.submitFeedback,
-        queryParameters: map);
-    if (respond) {
-      await Future.delayed(Duration(milliseconds: 400));
-      ToastExit.show('感谢您的反馈~');
-      setState(() {
-        isLoading = false;
-      });
-    } else {}
-    Navigator.pop(context);
+  Widget _buildComposer() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 16, left: 32, right: 32),
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppTheme.white,
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: <BoxShadow>[
+            BoxShadow(color: Colors.grey.withOpacity(0.8), offset: const Offset(4, 4), blurRadius: 8),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(25),
+          child: Container(
+            padding: const EdgeInsets.all(4.0),
+            constraints: const BoxConstraints(minHeight: 80, maxHeight: 160),
+            color: AppTheme.white,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.only(left: 10, right: 10, top: 0, bottom: 0),
+              child: TextField(
+                maxLines: null,
+                onChanged: (String txt) {},
+                style: const TextStyle(
+                  fontFamily: AppTheme.fontName,
+                  fontSize: 16,
+                  color: AppTheme.dark_grey,
+                ),
+                cursorColor: Colors.blue,
+                decoration: const InputDecoration(border: InputBorder.none, hintText: 'Enter your feedback...'),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

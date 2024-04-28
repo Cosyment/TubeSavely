@@ -1,4 +1,4 @@
-import 'package:downloaderx/constants/colors.dart';
+import 'package:tubesaverx/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

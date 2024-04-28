@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
-import 'package:downloaderx/utils/exit.dart';
 import '../utils/log_util.dart';
 import 'entity/base_entity.dart';
 import 'http_api.dart';
@@ -156,12 +155,10 @@ class HttpUtils {
       } else {
         if (result.code != null) {
           if (result.msg != null && result.msg != "") {
-            ToastExit.show(result.msg);
           }
           _onError(result.code, result.msg ?? "", null);
         } else {
           if (result.responseMsg != null && result.responseMsg != "") {
-            ToastExit.show(result.responseMsg);
           }
           _onError(result.responseCode, result.responseMsg ?? "", null);
         }
