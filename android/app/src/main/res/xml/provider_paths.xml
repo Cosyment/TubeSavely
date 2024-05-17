@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<paths xmlns:android="http://schemas.android.com/apk/res/android">
+<paths>
     <root-path
         name="root_file"
         path="/" />
@@ -25,6 +25,9 @@
     <external-path
         name="ext_root"
         path="pictures/" />
+    <external-path
+        name="external_storage_directory"
+        path="." />
     <!--4、对应外部内存卡根目录下的APP公共目录：Context.getExternalFileDir(String)-->
     <external-files-path
         name="ext_pub"
@@ -58,11 +61,21 @@
         name="beta_external_files_path"
         path="Android/data/" />
 
-    <external-path name="tt_external_root" path="." />
-    <external-path name="tt_external_download" path="Download" />
-    <external-files-path name="tt_external_files_download" path="Download" />
-    <files-path name="tt_internal_file_download" path="Download" />
-    <cache-path name="tt_internal_cache_download" path="Download" />
+    <external-path
+        name="tt_external_root"
+        path="." />
+    <external-path
+        name="tt_external_download"
+        path="Download" />
+    <external-files-path
+        name="tt_external_files_download"
+        path="Download" />
+    <files-path
+        name="tt_internal_file_download"
+        path="Download" />
+    <cache-path
+        name="tt_internal_cache_download"
+        path="Download" />
 
 
 </paths>

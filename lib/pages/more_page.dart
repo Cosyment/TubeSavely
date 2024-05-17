@@ -1,9 +1,7 @@
-import 'package:tubesaverx/pages/theme_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
-
-import 'setting_page.dart';
+import 'package:tubesaverx/pages/theme_page.dart';
 
 class MinePage extends StatefulWidget {
   const MinePage({super.key});
@@ -82,8 +80,7 @@ class _MinePageState extends State<MinePage> {
               ),
               Positioned(
                 child: InkWell(
-                  onTap: () async {
-                  },
+                  onTap: () async {},
                   child: Container(
                     width: 140.w,
                     height: 140.w,
@@ -101,10 +98,7 @@ class _MinePageState extends State<MinePage> {
                     child: userId == ""
                         ? Text(
                             "登录",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 28.sp,
-                                fontWeight: FontWeight.bold),
+                            style: TextStyle(color: Colors.white, fontSize: 28.sp, fontWeight: FontWeight.bold),
                           )
                         : ClipRRect(
                             borderRadius: BorderRadius.circular(100),
@@ -179,9 +173,7 @@ class _MinePageState extends State<MinePage> {
     } else if (type == 3) {
     } else if (type == 4) {
     } else if (type == 5) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => ThemePage()));
-    } else {
-    }
+      Navigator.push(context, MaterialPageRoute(builder: (context) => ThemePage()));
+    } else {}
   }
 }

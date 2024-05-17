@@ -1,5 +1,6 @@
 import 'dart:io';
 
+// import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -8,8 +9,7 @@ import 'platform_utils.dart';
 typedef ProgressCallback = void Function(double progress);
 
 class DownloadUtils {
-  static Future<bool> downloadVideo(
-      String url, ProgressCallback? callback) async {
+  static Future<bool> downloadVideo(String url, ProgressCallback? callback) async {
     try {
       final response = await HttpClient().getUrl(Uri.parse(url));
       final httpClientResponse = await response.close();
@@ -20,8 +20,7 @@ class DownloadUtils {
       String contentType = httpClientResponse.headers.contentType!.mimeType;
       // int lastDotIndex = url.lastIndexOf(".");
       // String mediaType = url.substring(lastDotIndex);
-      String mediaType =
-          contentType.substring(contentType.lastIndexOf("/") + 1);
+      String mediaType = contentType.substring(contentType.lastIndexOf("/") + 1);
       var fileName = "${DateTime.now().millisecondsSinceEpoch}.$mediaType";
       print(
           'Success to load appDocPath>>>>>>>>>>>>: ${appDocPath}  contentLength=${httpClientResponse.contentLength}   contentType==${contentType}');
@@ -32,8 +31,7 @@ class DownloadUtils {
         fileStream.add(data);
         receivedBytes += data.length;
         String progress = (receivedBytes / totalBytes).toStringAsFixed(2);
-        print(
-            'Download Progress: ${(progress)}>>>>>>>>>>${receivedBytes}>>>>>${totalBytes}');
+        print('Download Progress: ${(progress)}>>>>>>>>>>${receivedBytes}>>>>>${totalBytes}');
         if (callback != null) {
           callback(double.parse(progress));
         }
@@ -43,7 +41,7 @@ class DownloadUtils {
       print('File downloaded successfully');
       if (PlatformUtils.isAndroidOrIOS) {
         final result = await ImageGallerySaver.saveFile(file.path);
-        print('Success to ImageGallerySaver>>>>>>>>>>>>: ${result}');
+        print('Success to ImageGallerySaver>>>>>>>>>>>>:${file.path} , ${result}');
       }
       return true;
     } catch (e) {

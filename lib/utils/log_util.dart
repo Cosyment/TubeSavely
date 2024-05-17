@@ -1,27 +1,27 @@
 import 'dart:convert' as convert;
 
-import 'package:common_utils/common_utils.dart';
-
+import 'package:flutter/cupertino.dart';
 
 /// 输出Log工具类
 class Log {
-  static const String tag = 'TV-LOG';
+  static const String tag = 'TubeSaverX-LOG';
   static bool _inProduction = true;
 
   static init(bool inProduction) {
     _inProduction = inProduction;
-    LogUtil.init(isDebug: !_inProduction);
+    // LogUtil.init(isDebug: !_inProduction);
   }
 
   static d(String msg, {tag = tag}) {
     if (!_inProduction) {
-      LogUtil.v(msg, tag: tag);
+      // LogUtil.v(msg, tag: tag);
+      debugPrint(msg);
     }
   }
 
   static e(String msg, {tag = tag}) {
     if (!_inProduction) {
-      LogUtil.e(msg, tag: tag);
+      debugPrint(msg);
     }
   }
 
@@ -33,18 +33,17 @@ class Log {
       } else if (data is List) {
         _printList(data);
       } else {
-        LogUtil.v(msg, tag: tag);
+        debugPrint(msg);
       }
     }
   }
 
-  static void _printMap(Map data,
-      {tag = tag, int tabs = 1, bool isListItem = false, bool isLast = false}) {
+  static void _printMap(Map data, {tag = tag, int tabs = 1, bool isListItem = false, bool isLast = false}) {
     final bool isRoot = tabs == 1;
     final initialIndent = _indent(tabs);
     tabs++;
 
-    if (isRoot || isListItem) LogUtil.v('$initialIndent{', tag: tag);
+    if (isRoot || isListItem) debugPrint('$initialIndent{');
 
     data.keys.toList().asMap().forEach((index, key) {
       final isLast = index == data.length - 1;
@@ -52,27 +51,26 @@ class Log {
       if (value is String) value = '\"$value\"';
       if (value is Map) {
         if (value.isEmpty) {
-          LogUtil.v('${_indent(tabs)} $key: $value${!isLast ? ',' : ''}',
-              tag: tag);
+          debugPrint('${_indent(tabs)} $key: $value${!isLast ? ',' : ''}');
         } else {
-          LogUtil.v('${_indent(tabs)} $key: {', tag: tag);
+          debugPrint('${_indent(tabs)} $key: {');
           _printMap(value, tabs: tabs);
         }
       } else if (value is List) {
         if (value.isEmpty) {
-          LogUtil.v('${_indent(tabs)} $key: ${value.toString()}', tag: tag);
+          debugPrint('${_indent(tabs)} $key: ${value.toString()}');
         } else {
-          LogUtil.v('${_indent(tabs)} $key: [', tag: tag);
+          debugPrint('${_indent(tabs)} $key: [');
           _printList(value, tabs: tabs);
-          LogUtil.v('${_indent(tabs)} ]${isLast ? '' : ','}', tag: tag);
+          debugPrint('${_indent(tabs)} ]${isLast ? '' : ','}');
         }
       } else {
         final msg = value.toString().replaceAll('\n', '');
-        LogUtil.v('${_indent(tabs)} $key: $msg${!isLast ? ',' : ''}', tag: tag);
+        debugPrint('${_indent(tabs)} $key: $msg${!isLast ? ',' : ''}');
       }
     });
 
-    LogUtil.v('$initialIndent}${isListItem && !isLast ? ',' : ''}', tag: tag);
+    debugPrint('$initialIndent}${isListItem && !isLast ? ',' : ''}');
   }
 
   static void _printList(List list, {tag = tag, int tabs = 1}) {
@@ -80,12 +78,12 @@ class Log {
       final isLast = i == list.length - 1;
       if (e is Map) {
         if (e.isEmpty) {
-          LogUtil.v('${_indent(tabs)}  $e${!isLast ? ',' : ''}', tag: tag);
+          debugPrint('${_indent(tabs)}  $e${!isLast ? ',' : ''}');
         } else {
           _printMap(e, tabs: tabs + 1, isListItem: true, isLast: isLast);
         }
       } else {
-        LogUtil.v('${_indent(tabs + 2)} $e${isLast ? '' : ','}', tag: tag);
+        debugPrint('${_indent(tabs + 2)} $e${isLast ? '' : ','}');
       }
     });
   }

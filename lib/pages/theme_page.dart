@@ -1,5 +1,6 @@
-import 'package:tubesaverx/utils/event_bus.dart';
 import 'package:flutter/material.dart';
+import 'package:tubesaverx/utils/event_bus.dart';
+
 import '../models/theme_color.dart';
 import '../widget/animated_toggle_button.dart';
 
@@ -10,8 +11,7 @@ class ThemePage extends StatefulWidget {
   _ThemePageState createState() => _ThemePageState();
 }
 
-class _ThemePageState extends State<ThemePage>
-    with SingleTickerProviderStateMixin {
+class _ThemePageState extends State<ThemePage> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   bool isDarkMode = false;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -46,7 +46,7 @@ class _ThemePageState extends State<ThemePage>
     toggleBackgroundColor: const Color(0xFF222000),
     shadow: const <BoxShadow>[
       BoxShadow(
-        color: const Color(0x66000000),
+        color: Color(0x66000000),
         spreadRadius: 5,
         blurRadius: 10,
         offset: Offset(0, 5),
@@ -85,8 +85,7 @@ class _ThemePageState extends State<ThemePage>
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor:
-          isDarkMode ? darkMode.backgroundColor : lightMode.backgroundColor,
+      backgroundColor: isDarkMode ? darkMode.backgroundColor : lightMode.backgroundColor,
       body: SafeArea(
         child: Container(
           alignment: Alignment.center,
@@ -101,8 +100,7 @@ class _ThemePageState extends State<ThemePage>
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: LinearGradient(
-                        colors:
-                            isDarkMode ? darkMode.gradient : lightMode.gradient,
+                        colors: isDarkMode ? darkMode.gradient : lightMode.gradient,
                         begin: Alignment.bottomLeft,
                         end: Alignment.topRight,
                       ),
@@ -122,9 +120,7 @@ class _ThemePageState extends State<ThemePage>
                         height: width * 0.26,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: isDarkMode
-                              ? darkMode.backgroundColor
-                              : lightMode.backgroundColor,
+                          color: isDarkMode ? darkMode.backgroundColor : lightMode.backgroundColor,
                         ),
                       ),
                     ),
@@ -150,8 +146,7 @@ class _ThemePageState extends State<ThemePage>
                 child: Text(
                   'Pop or subtle. Day or night. Customize your interface',
                   style: TextStyle(
-                    color:
-                        isDarkMode ? darkMode.textColor : lightMode.textColor,
+                    color: isDarkMode ? darkMode.textColor : lightMode.textColor,
                     fontSize: width * 0.04,
                   ),
                   textAlign: TextAlign.center,
@@ -163,14 +158,9 @@ class _ThemePageState extends State<ThemePage>
               AnimatedToggle(
                 initialPosition: !isDarkMode,
                 values: ['Light', 'Dark'],
-                textColor:
-                    isDarkMode ? darkMode.textColor : lightMode.textColor,
-                backgroundColor: isDarkMode
-                    ? darkMode.toggleBackgroundColor
-                    : lightMode.toggleBackgroundColor,
-                buttonColor: isDarkMode
-                    ? darkMode.toggleButtonColor
-                    : lightMode.toggleButtonColor,
+                textColor: isDarkMode ? darkMode.textColor : lightMode.textColor,
+                backgroundColor: isDarkMode ? darkMode.toggleBackgroundColor : lightMode.toggleBackgroundColor,
+                buttonColor: isDarkMode ? darkMode.toggleButtonColor : lightMode.toggleButtonColor,
                 shadows: isDarkMode ? darkMode.shadow : lightMode.shadow,
                 onToggleCallback: (index) async {
                   isDarkMode = !isDarkMode;

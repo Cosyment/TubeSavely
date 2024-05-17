@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tubesaverx/constants/constant.dart';
 import 'package:tubesaverx/pages/webview.dart';
+import 'package:tubesaverx/utils/constants.dart';
 
 import '../main.dart';
 
 class SettingPage extends StatefulWidget {
-  SettingPage({super.key});
+  const SettingPage({super.key});
 
   @override
   State<SettingPage> createState() => _SettingPageState();
@@ -130,7 +130,7 @@ class _SettingPageState extends State<SettingPage> {
           MaterialPageRoute(
             builder: (context) => WebViewPage(
               title: '用户协议',
-              url: Constant.agreementUrl,
+              url: Constants.agreementUrl,
             ),
           ));
     } else if (type == 2) {
@@ -139,7 +139,7 @@ class _SettingPageState extends State<SettingPage> {
           MaterialPageRoute(
             builder: (context) => WebViewPage(
               title: '隐私政策',
-              url: Constant.privacyUrl,
+              url: Constants.privacyUrl,
             ),
           ));
     } else if (type == 3 || type == 4) {

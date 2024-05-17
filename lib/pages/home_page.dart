@@ -1,21 +1,14 @@
-import 'package:common_utils/common_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:tubesaverx/constants/colors.dart';
-import 'package:tubesaverx/constants/constant.dart';
-import 'package:wechat_assets_picker/wechat_assets_picker.dart';
+import 'package:tubesaverx/pages/video_detail_page.dart';
 
 import '../app_theme.dart';
-import '../data/video_parse.dart';
 import '../generated/l10n.dart';
 import '../utils/event_bus.dart';
-import '../utils/parse/other.dart';
-import '../utils/parse/youtobe.dart';
-import 'webview.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -25,7 +18,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  TextEditingController textController = TextEditingController(text: '');
+  TextEditingController textController = TextEditingController(
+      text:
+          // 'https://www.youtube.com/watch?v=Ek1QD7AH9XQ' //1080P
+          // 'https://www.youtube.com/watch?v=k7dy1B6bOeM' // 4K
+          'https://www.youtube.com/watch?v=Mi2vTUtKMOg' //8K
+      // 'https://www.facebook.com/100000124835838/videos/329176782997696/'
+      //  'https://www.tiktok.com/t/ZTRC5xgJp'
+      // 'https://m.acfun.cn/v/?ac=39091936&sid=bf02f7d348c84918'
+      // 'http://xhslink.com/L8Qwiw'
+      // 'https://www.xiaohongshu.com/explore/662b0d07000000000d03227c'
+      // 'https://www.kuaishou.com/f/X3WcgZrbGXVcWWa'
+      // 'https://www.bilibili.com/video/BV1kf421S7WH/?share_source=copy_web'
+      // 'https://www.douyin.com/video/6961737553342991651'
+      );
   bool isLoading = false;
   bool isNeedVPN = false;
 
@@ -33,14 +39,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      var list = S.of(context).tvListTxt.split(', ').map((e) => e.trim()).toList();
-      for (int i = 0; i < Constant.meList.length; i++) {
-        var item = Constant.meList[i];
-        item['title'] = list[i];
-      }
-      setState(() {});
-    });
     EventBus.getDefault().register(this, (event) {
       if (event.toString() == "parse") {
         getPaste();
@@ -77,8 +75,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           SliverToBoxAdapter(
-            // child: inputContainer(),
-            child: _buildComposer(),
+            child: _buildInputBox(),
           ),
           SliverToBoxAdapter(
             child: actionRow(),
@@ -131,7 +128,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildComposer() {
+  Widget _buildInputBox() {
     return Padding(
       padding: const EdgeInsets.only(top: 16, left: 32, right: 32),
       child: Container(
@@ -151,7 +148,10 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.only(left: 10, right: 10, top: 0, bottom: 0),
               child: TextField(
                 maxLines: 1,
+                controller: textController,
                 onChanged: (String text) {},
+                textInputAction: TextInputAction.done,
+                onSubmitted: (value) => startParse(),
                 style: const TextStyle(
                   fontFamily: AppTheme.fontName,
                   fontSize: 16,
@@ -203,62 +203,43 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> startParse() async {
     var parseUrl = textController.text;
-    try {
-      Match? match = RegExp(r'http[s]?:\/\/[\w.]+[\w/]*[\w.]*\??[\w=&:\-+%]*[/]*').firstMatch(parseUrl);
-      var url = match?.group(0) ?? '';
-      if (!url.contains('http')) {
-        return;
-      }
-      setState(() {
-        isLoading = true;
-      });
-      print(">>>>>>>>${url}");
-      if (parseUrl.contains("youtu.be") || parseUrl.contains("youtube.com")) {
-        isNeedVPN = true;
-        YouToBe.get().parse(url, onResult);
-      } else {
-        isNeedVPN = false;
-        Other.get().parse(url, onResult);
-      }
-    } catch (e) {
-      print(">>>>>>>>>>>>>>>${e}");
-      isLoading = false;
+    Match? match = RegExp(r'http[s]?:\/\/[\w.]+[\w/]*[\w.]*\??[\w=&:\-+%]*[/]*').firstMatch(parseUrl);
+    var url = match?.group(0) ?? '';
+    if (!url.contains('http')) {
+      return;
     }
-  }
 
-  void onResult(VideoParse? result) {
-    // if (result != null) {
-    //   Navigator.push(context,
-    //       MaterialPageRoute(builder: (context) => VideoDetail(bean: result)));
-    // }
-    isLoading = false;
-    if (result != null && result.videoList.isNotEmpty) {
-      setState(() {});
-      if (result.type == 1) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => WebViewPage(
-                title: '视频播放',
-                url: result.videoUrl,
-              ),
-            ));
-      } else {}
-    } else {
-      setState(() {});
-    }
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => VideoDetailPage(url: url)));
+
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 300),
+        pageBuilder: (BuildContext context, _, __) => VideoDetailPage(url: url),
+        transitionsBuilder:
+            (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0.0, 1.0),
+              end: Offset.zero, // 结束位置在屏幕原点
+            ).animate(animation),
+            child: child,
+          );
+        },
+      ),
+    );
   }
 
   getPaste() async {
     ClipboardData? data = await Clipboard.getData(Clipboard.kTextPlain);
-    if (!TextUtil.isEmpty(data?.text)) {
+    if (data?.text?.isNotEmpty == true) {
       showCupertinoDialog(
         barrierDismissible: true,
         context: context,
         builder: (context) {
           return CupertinoAlertDialog(
-            title: Text("提示"),
-            content: Text("提取剪贴板中的链接吗？"),
+            title: const Text("提示"),
+            content: const Text("提取剪贴板中的链接吗？"),
             actions: [
               CupertinoDialogAction(
                 child: const Text("取消"),
@@ -280,120 +261,5 @@ class _HomePageState extends State<HomePage> {
         },
       );
     }
-  }
-
-  widgetTop(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        SizedBox(width: 20.w),
-        Expanded(
-          child: Card(
-            elevation: 1,
-            clipBehavior: Clip.hardEdge,
-            color: primaryColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.r)),
-            ),
-            child: InkWell(
-              splashColor: Colors.blue.withAlpha(30),
-              child: Container(
-                padding: EdgeInsets.all(20.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      S.of(context).videoLinkWatermarkRemovalTxt,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 30.sp,
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: Icon(
-                        Icons.link,
-                        color: Colors.white,
-                        size: 80.w,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              onTap: () {
-                // Navigator.push(context,
-                //     MaterialPageRoute(builder: (context) => VideoParePage()));
-              },
-            ),
-          ),
-        ),
-        SizedBox(width: 20.w),
-      ],
-    );
-  }
-
-  buildChildLayout() {
-    return SliverPadding(
-      padding: EdgeInsets.all(20.w),
-      sliver: SliverGrid.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          childAspectRatio: 1 / 0.9,
-        ),
-        itemCount: Constant.meList.length,
-        itemBuilder: (BuildContext context, int index) {
-          var item = Constant.meList[index];
-          return Card(
-            elevation: 1,
-            clipBehavior: Clip.hardEdge,
-            color: primaryColor,
-            child: InkWell(
-              splashColor: Colors.blue.withAlpha(30),
-              onTap: () async {
-                await skipSelectPhoto(context, item);
-              },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  // Image(
-                  //   image: AssetImage("assets/images/${item['bg']}"),
-                  //   width: 100.w,
-                  //   height: 100.w,
-                  //   fit: BoxFit.fill,
-                  // ),
-                  Icon(
-                    item['icon'] as IconData?,
-                    color: Colors.white,
-                    size: 60.w,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(10.w),
-                    child: Text(
-                      item['title'].toString(),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 26.sp,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Future<void> skipSelectPhoto(BuildContext context, Map<String, Object> item) async {
-    List<AssetEntity>? result = await AssetPicker.pickAssets(context,
-        pickerConfig: AssetPickerConfig(
-          themeColor: primaryColor,
-          maxAssets: 1,
-          requestType: item['type'] as RequestType,
-        ));
-    if (result != null) {}
   }
 }

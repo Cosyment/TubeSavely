@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import '../constants/colors.dart';
+import '../theme/colors.dart';
 
 class WebViewPage extends StatefulWidget {
-  WebViewPage({super.key, required this.title, required this.url});
+  const WebViewPage({super.key, required this.title, required this.url});
 
   final String title;
   final String url;
@@ -25,8 +25,7 @@ class _WebViewState extends State<WebViewPage> {
   Widget build(BuildContext context) {
     late final PlatformWebViewControllerCreationParams params;
     final WebViewController controller =
-        WebViewController.fromPlatformCreationParams(
-            const PlatformWebViewControllerCreationParams());
+        WebViewController.fromPlatformCreationParams(const PlatformWebViewControllerCreationParams());
     controller
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(Colors.white)

@@ -3,7 +3,7 @@ package com.xhx.video.saver
 import android.app.Application
 import com.umeng.commonsdk.UMConfigure
 
-class MyApp : Application() {
+class App : Application() {
 
     override fun onCreate() {
         super.onCreate()

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:tubesaverx/app_theme.dart';
 
 class InviteFriendPage extends StatefulWidget {
+  const InviteFriendPage({super.key});
+
   @override
-  _InviteFriendPageState createState() => _InviteFriendPageState();
+  State<InviteFriendPage> createState() => _InviteFriendPageState();
 }
 
 class _InviteFriendPageState extends State<InviteFriendPage> {

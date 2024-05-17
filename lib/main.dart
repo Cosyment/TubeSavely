@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:tubesaverx/pages/feedback_page.dart';
 import 'package:tubesaverx/pages/help_page.dart';
 import 'package:tubesaverx/pages/history_page.dart';
@@ -10,20 +11,20 @@ import 'package:tubesaverx/pages/home_page.dart';
 import 'package:tubesaverx/pages/invite_page.dart';
 import 'package:tubesaverx/pages/setting_page.dart';
 import 'package:tubesaverx/pages/splash_page.dart';
+import 'package:tubesaverx/pages/task_page.dart';
 import 'package:tubesaverx/utils/event_bus.dart';
 import 'package:tubesaverx/widget/drawer_controller.dart';
 import 'package:tubesaverx/widget/slide_drawer.dart';
-import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
 import 'app_theme.dart';
-import 'data/local_storage_service.dart';
 import 'generated/l10n.dart';
+import 'storage/local_storage_service.dart';
 
 void main() async {
   await ScreenUtil.ensureScreenSize();
   _loadShader();
+  MediaKit.ensureInitialized();
   runApp(const MyApp());
-  AssetPicker.registerObserve();
   LocalStorageService().init();
 }
 
@@ -154,6 +155,10 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
             screenView = const HomePage();
           });
           break;
+        case DrawerIndex.Task:
+          setState(() {
+            screenView = const TaskPage();
+          });
         case DrawerIndex.History:
           setState(() {
             screenView = const HistoryPage();
@@ -161,22 +166,22 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
           break;
         case DrawerIndex.Help:
           setState(() {
-            screenView = HelpPage();
+            screenView = const HelpPage();
           });
           break;
         case DrawerIndex.FeedBack:
           setState(() {
-            screenView = FeedbackPage();
+            screenView = const FeedbackPage();
           });
           break;
         case DrawerIndex.Invite:
           setState(() {
-            screenView = InviteFriendPage();
+            screenView = const InviteFriendPage();
           });
           break;
         case DrawerIndex.Settings:
           setState(() {
-            screenView = SettingPage();
+            screenView = const SettingPage();
           });
           break;
         default:

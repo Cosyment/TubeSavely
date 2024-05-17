@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../constants/colors.dart';
-
 class PlatFormItem extends StatefulWidget {
-  const PlatFormItem(
-      {super.key,
-      required this.item,
-      required this.isSelected,
-      required this.onItemClick});
+  const PlatFormItem({super.key, required this.item, required this.isSelected, required this.onItemClick});
 
   final Map<String, dynamic> item;
   final bool isSelected;
@@ -34,28 +28,23 @@ class _PlatFormItemState extends State<PlatFormItem> {
                     ],
                   )
                 : null,
-            border: Border.all(color:  Theme.of(context).highlightColor, width: 1.0),
+            border: Border.all(color: Theme.of(context).highlightColor, width: 1.0),
             borderRadius: const BorderRadius.all(Radius.circular(4))),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Image(
-                image: AssetImage("assets/images/${widget.item['icon']}"),
-                width: 60.w,
-                height: 60.w,
-                fit: BoxFit.fill,
-              ),
-              SizedBox(
-                width: 10.w,
-              ),
-              Text(
-                widget.item['title'],
-                style: TextStyle(
-                    fontSize: 24.sp,
-                    color: widget.isSelected ?  Colors.white :  Theme.of(context).highlightColor),
-              ),
-            ]),
+        child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+          Image(
+            image: AssetImage("assets/images/${widget.item['icon']}"),
+            width: 60.w,
+            height: 60.w,
+            fit: BoxFit.fill,
+          ),
+          SizedBox(
+            width: 10.w,
+          ),
+          Text(
+            widget.item['title'],
+            style: TextStyle(fontSize: 24.sp, color: widget.isSelected ? Colors.white : Theme.of(context).highlightColor),
+          ),
+        ]),
       ),
       onTap: () {
         widget.onItemClick(widget.item);

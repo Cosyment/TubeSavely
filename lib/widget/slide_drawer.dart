@@ -24,8 +24,13 @@ class _HomeDrawerState extends State<HomeDrawer> {
     drawerList = <DrawerList>[
       DrawerList(
         index: DrawerIndex.Home,
-        labelName: '视频下载',
-        icon: const Icon(Icons.download_for_offline_outlined),
+        labelName: '视频解析',
+        icon: const Icon(Icons.analytics_outlined),
+      ),
+      DrawerList(
+        index: DrawerIndex.Task,
+        labelName: '任务列表',
+        icon: const Icon(Icons.add_task_outlined),
       ),
       DrawerList(
         index: DrawerIndex.History,
@@ -165,7 +170,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
         splashColor: Colors.grey.withOpacity(0.1),
         highlightColor: Colors.transparent,
         onTap: () {
-          navigationtoScreen(listData.index!);
+          navigationToScreen(listData.index!);
         },
         child: Stack(
           children: <Widget>[
@@ -239,7 +244,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
     );
   }
 
-  Future<void> navigationtoScreen(DrawerIndex indexScreen) async {
+  Future<void> navigationToScreen(DrawerIndex indexScreen) async {
     widget.callBackIndex!(indexScreen);
   }
 }
@@ -247,6 +252,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
 enum DrawerIndex {
   Home,
   History,
+  Task,
   FeedBack,
   Help,
   Share,

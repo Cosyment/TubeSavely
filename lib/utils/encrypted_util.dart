@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 
-class EncryptedUtils {
+class EncryptedUtil {
   static String createSign(Map<String, dynamic> parameters) {
     var values = parameters.values.map((e) => e.toString()).toList();
     values.sort();
