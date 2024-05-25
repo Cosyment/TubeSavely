@@ -9,7 +9,7 @@ class HomeDrawer extends StatefulWidget {
   final Function(DrawerIndex)? callBackIndex;
 
   @override
-  _HomeDrawerState createState() => _HomeDrawerState();
+  State<StatefulWidget> createState() => _HomeDrawerState();
 }
 
 class _HomeDrawerState extends State<HomeDrawer> {
@@ -160,7 +160,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
   }
 
   void onTapped() {
-    print('Doing Something...'); // Print to console.
+    debugPrint('Doing Something...'); // Print to console.
   }
 
   Widget inkwell(DrawerList listData) {

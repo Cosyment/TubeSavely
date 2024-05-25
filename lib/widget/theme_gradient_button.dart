@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 const List<Color> gradientColors = [
   Color(0xFFA3FFFF),
@@ -52,20 +51,15 @@ class ThemeGradientButton extends StatelessWidget {
             height: h,
             decoration: BoxDecoration(
                 color: enable && highlighted ? null : fillColor,
-                borderRadius:
-                    BorderRadius.all(Radius.circular(radius ?? h / 2)),
+                borderRadius: BorderRadius.all(Radius.circular(radius ?? h / 2)),
                 gradient: enable && highlighted
-                    ? LinearGradient(
-                        begin: Alignment(-1, 0),
-                        end: Alignment(1.0, 0),
-                        colors: colors)
+                    ? LinearGradient(begin: const Alignment(-1, 0), end: const Alignment(1.0, 0), colors: colors)
                     : null,
                 border: border),
             child: Center(
                 child: Text(
               text,
-              style: TextStyle(
-                  fontSize: fontsize, fontWeight: fontWeight, color: fontColor),
+              style: TextStyle(fontSize: fontsize, fontWeight: fontWeight, color: fontColor),
             ))),
         onTap: () {
           if (enable) {

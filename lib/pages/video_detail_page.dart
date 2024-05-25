@@ -61,6 +61,7 @@ class _VideoDetailPagePageState extends State<VideoDetailPage> with SingleTicker
       audioList = videoInfo?.formats
           ?.where((value) => (value.audio_ext == 'm4a' || value.audio_ext == 'webm') && value.protocol != 'm3u8_native')
           .toList();
+
       _initPlayer(url: videoList?.first.url ?? '');
     });
   }
@@ -116,7 +117,9 @@ class _VideoDetailPagePageState extends State<VideoDetailPage> with SingleTicker
             _handleDownloadResult(false);
           });
         } else {
-          Downloader.downloadAudio(audioList?.first.url ?? '', videoInfo?.title ?? '', onSuccess: () {
+          Downloader.downloadAudio(
+              audioList?.length == 0 ? videoInfo?.music ?? '' : audioList?.first.url ?? '', videoInfo?.title ?? '',
+              onSuccess: () {
             _handleDownloadResult(true);
           }, onFailure: () {
             _handleDownloadResult(false);

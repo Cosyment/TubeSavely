@@ -19,7 +19,7 @@ class AnimatedToggle extends StatefulWidget {
     this.textColor = const Color(0xFF000000),
     this.shadows = const [
       BoxShadow(
-        color: const Color(0xFFd8d7da),
+        color: Color(0xFFd8d7da),
         spreadRadius: 5,
         blurRadius: 10,
         offset: Offset(0, 5),
@@ -28,7 +28,7 @@ class AnimatedToggle extends StatefulWidget {
   });
 
   @override
-  _AnimatedToggleState createState() => _AnimatedToggleState();
+  State<StatefulWidget> createState() => _AnimatedToggleState();
 }
 
 class _AnimatedToggleState extends State<AnimatedToggle> {
@@ -38,7 +38,7 @@ class _AnimatedToggleState extends State<AnimatedToggle> {
     return Container(
       width: width * 0.7,
       height: width * 0.13,
-      margin: EdgeInsets.all(20),
+      margin: const EdgeInsets.all(20),
       child: Stack(
         children: <Widget>[
           GestureDetector(
@@ -82,8 +82,7 @@ class _AnimatedToggleState extends State<AnimatedToggle> {
           AnimatedAlign(
             duration: const Duration(milliseconds: 250),
             curve: Curves.decelerate,
-            alignment:
-            widget.initialPosition ? Alignment.centerLeft : Alignment.centerRight,
+            alignment: widget.initialPosition ? Alignment.centerLeft : Alignment.centerRight,
             child: Container(
               width: width * 0.35,
               height: width * 0.13,
@@ -94,6 +93,7 @@ class _AnimatedToggleState extends State<AnimatedToggle> {
                   borderRadius: BorderRadius.circular(width * 0.1),
                 ),
               ),
+              alignment: Alignment.center,
               child: Text(
                 widget.initialPosition ? widget.values[0] : widget.values[1],
                 style: TextStyle(
@@ -102,7 +102,6 @@ class _AnimatedToggleState extends State<AnimatedToggle> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              alignment: Alignment.center,
             ),
           ),
         ],

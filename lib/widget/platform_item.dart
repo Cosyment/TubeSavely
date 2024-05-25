@@ -23,8 +23,8 @@ class _PlatFormItemState extends State<PlatFormItem> {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      const Color(0xFF8983F7),
-                      const Color(0xFFA3DAFB),
+                      Color(0xFF8983F7),
+                      Color(0xFFA3DAFB),
                     ],
                   )
                 : null,

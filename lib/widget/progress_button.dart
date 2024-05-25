@@ -78,7 +78,7 @@ class ProgressButton extends StatefulWidget {
 
     Map<ButtonState, Widget> stateWidgets = {
       ButtonState.idle: buildChildWithIcon(iconedButtons[ButtonState.idle]!, iconPadding, textStyle),
-      ButtonState.loading: Column(),
+      ButtonState.loading: const Column(),
       ButtonState.fail: buildChildWithIcon(iconedButtons[ButtonState.fail]!, iconPadding, textStyle),
       ButtonState.success: buildChildWithIcon(iconedButtons[ButtonState.success]!, iconPadding, textStyle)
     };
@@ -124,7 +124,7 @@ class _ProgressButtonState extends State<ProgressButton> with TickerProviderStat
     }
     colorAnimation = ColorTween(begin: begin, end: end).animate(CurvedAnimation(
       parent: colorAnimationController!,
-      curve: Interval(
+      curve: const Interval(
         0,
         1,
         curve: Curves.easeIn,
@@ -151,7 +151,7 @@ class _ProgressButtonState extends State<ProgressButton> with TickerProviderStat
 
     progressIndicator = widget.progressIndicator ??
         CircularProgressIndicator(
-            backgroundColor: widget.stateColors[widget.state!], valueColor: AlwaysStoppedAnimation<Color>(Colors.white));
+            backgroundColor: widget.stateColors[widget.state!], valueColor: const AlwaysStoppedAnimation<Color>(Colors.white));
   }
 
   @override

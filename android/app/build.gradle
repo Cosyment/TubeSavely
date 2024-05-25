@@ -33,7 +33,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     namespace "com.xhx.video.saver"
-    compileSdkVersion 34
+    compileSdk 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -45,6 +45,7 @@ android {
         jvmTarget = '1.8'
     }
 
+    android.buildFeatures.buildConfig true
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -55,13 +56,11 @@ android {
         applicationId "com.xhx.video.saver"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion 24
-        targetSdkVersion 34
+        minSdk 24
+        targetSdk 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
-
-        flavorDimensions "versionCode"
 
         ndk {
             //选择要添加的对应 cpu 类型的 .so 库。
@@ -72,12 +71,6 @@ android {
 
     signingConfigs {
         config {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
-        }
-        debug {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
             storeFile file(keystoreProperties['storeFile'])
@@ -108,25 +101,6 @@ android {
         }
     }
 
-    productFlavors {
-        pgyer {}   // 蒲公英
-        huawei {}       // 华为商店
-        google {}       // 谷歌商店
-        baidu {}        // 百度手机助手
-        tencent {}   // 应用宝
-        xiaomi {}   // 小米
-        oppo {}   // OPPO
-        vivo {}   // VIVO
-        s360 {}   // 360
-        lenovo {}   // 联想
-        aliuc {}   // 阿里UC
-        official {}   // 官方包
-    }
-    productFlavors.all { flavor ->
-        // 友盟推送渠道包， UMENG_CHANNEL 是根据你AndroidManifest.xml来配置的，请看下面。
-        flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
-    }
-
     lintOptions {
         checkDependencies true
         checkReleaseBuilds false
@@ -145,4 +119,6 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.annotation:annotation-jvm:1.7.0'
+    implementation 'androidx.core:core:1.13.1'
 }

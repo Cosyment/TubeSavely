@@ -48,7 +48,7 @@ class Log {
     data.keys.toList().asMap().forEach((index, key) {
       final isLast = index == data.length - 1;
       var value = data[key];
-      if (value is String) value = '\"$value\"';
+      if (value is String) value = '"$value"';
       if (value is Map) {
         if (value.isEmpty) {
           debugPrint('${_indent(tabs)} $key: $value${!isLast ? ',' : ''}');

@@ -22,16 +22,15 @@ class _HomePageState extends State<HomePage> {
       text:
           // 'https://www.youtube.com/watch?v=Ek1QD7AH9XQ' //1080P
           // 'https://www.youtube.com/watch?v=k7dy1B6bOeM' // 4K
-          'https://www.youtube.com/watch?v=Mi2vTUtKMOg' //8K
-      // 'https://www.facebook.com/100000124835838/videos/329176782997696/'
-      //  'https://www.tiktok.com/t/ZTRC5xgJp'
-      // 'https://m.acfun.cn/v/?ac=39091936&sid=bf02f7d348c84918'
-      // 'http://xhslink.com/L8Qwiw'
-      // 'https://www.xiaohongshu.com/explore/662b0d07000000000d03227c'
-      // 'https://www.kuaishou.com/f/X3WcgZrbGXVcWWa'
-      // 'https://www.bilibili.com/video/BV1kf421S7WH/?share_source=copy_web'
-      // 'https://www.douyin.com/video/6961737553342991651'
-      );
+          // 'https://www.youtube.com/watch?v=Mi2vTUtKMOg' //8K
+          // 'https://www.facebook.com/100000124835838/videos/329176782997696/'
+          //  'https://www.tiktok.com/t/ZTRC5xgJp'
+          // 'https://m.acfun.cn/v/?ac=39091936&sid=bf02f7d348c84918'
+          // 'http://xhslink.com/L8Qwiw'
+          // 'https://www.xiaohongshu.com/explore/662b0d07000000000d03227c'
+          // 'https://www.kuaishou.com/f/X3WcgZrbGXVcWWa'
+          // 'https://www.bilibili.com/video/BV1kf421S7WH/?share_source=copy_web'
+          'https://www.douyin.com/video/6961737553342991651');
   bool isLoading = false;
   bool isNeedVPN = false;
 
@@ -54,49 +53,61 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: Text(
-          S.of(context).videoLinkWatermarkTxt,
-        ),
-      ),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Container(
-              margin: EdgeInsets.all(0.w),
-              child: ClipRRect(
-                child: Container(
-                  padding: const EdgeInsets.only(top: 0, left: 16, right: 16),
-                  child: Image.asset('assets/images/ic_help.png'),
-                ),
-              ).animate().effect(duration: 3000.ms).effect(delay: 750.ms, duration: 1500.ms).shimmer(),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: _buildInputBox(),
-          ),
-          SliverToBoxAdapter(
-            child: actionRow(),
-          ),
-          SliverToBoxAdapter(
-            child: Visibility(
-              visible: isNeedVPN,
-              child: Center(
-                child: Padding(
-                  padding: EdgeInsets.only(top: 20.w),
-                  child: Text(
-                    "该平台需要网络环境支持",
-                    style: TextStyle(fontSize: 24.sp),
-                  ),
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
+    return Container(
+        color: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
+        child: SafeArea(
+            top: false,
+            bottom: false,
+            child: Scaffold(
+              appBar: AppBar(
+                // leading: const SizedBox(
+                //   width: 50,
+                //   height: 60,
+                // ),
+                backgroundColor: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
+                title: Text(
+                  S.of(context).videoLinkWatermarkTxt,
                 ),
               ),
-            ),
-          ),
-        ],
-      ),
-    );
+              backgroundColor: isLightMode ? AppTheme.white : AppTheme.nearlyBlack,
+              body: CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: Container(
+                      margin: EdgeInsets.all(0.w),
+                      child: ClipRRect(
+                        child: Container(
+                          padding: const EdgeInsets.only(top: 0, left: 16, right: 16),
+                          child: Image.asset('assets/images/ic_help.png'),
+                        ),
+                      ).animate().effect(duration: 3000.ms).effect(delay: 750.ms, duration: 1500.ms).shimmer(),
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: _buildInputBox(),
+                  ),
+                  SliverToBoxAdapter(
+                    child: actionRow(),
+                  ),
+                  SliverToBoxAdapter(
+                    child: Visibility(
+                      visible: isNeedVPN,
+                      child: Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 20.w),
+                          child: Text(
+                            "该平台需要网络环境支持",
+                            style: TextStyle(fontSize: 24.sp),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )));
   }
 
   actionRow() {

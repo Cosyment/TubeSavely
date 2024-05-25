@@ -23,7 +23,7 @@ class CustomDrawerController extends StatefulWidget {
   final DrawerIndex? screenIndex;
 
   @override
-  _CustomDrawerControllerState createState() => _CustomDrawerControllerState();
+  State<StatefulWidget> createState() => _CustomDrawerControllerState();
 }
 
 class _CustomDrawerControllerState extends State<CustomDrawerController> with TickerProviderStateMixin {
@@ -81,7 +81,7 @@ class _CustomDrawerControllerState extends State<CustomDrawerController> with Ti
     var brightness = MediaQuery.of(context).platformBrightness;
     bool isLightMode = brightness == Brightness.light;
     return Scaffold(
-      backgroundColor: isLightMode ? AppTheme.white : AppTheme.nearlyBlack,
+      backgroundColor: isLightMode ? AppTheme.white : AppTheme.dark_grey,
       body: SingleChildScrollView(
         controller: scrollController,
         scrollDirection: Axis.horizontal,

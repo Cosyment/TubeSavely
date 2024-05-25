@@ -2,6 +2,8 @@ import 'package:background_downloader/background_downloader.dart';
 import 'package:flutter/material.dart';
 import 'package:tubesaverx/utils/common.dart';
 
+import '../app_theme.dart';
+
 class TaskPage extends StatefulWidget {
   const TaskPage({super.key});
 
@@ -23,21 +25,27 @@ class _TaskPageState extends State<TaskPage> {
     fetchData();
 
     FileDownloader().registerCallbacks(taskStatusCallback: (status) {
-      print('---------..>${status}');
+      debugPrint('---------..>$status');
     }, taskProgressCallback: (progress) {
-      print('-------->>>$progress');
+      debugPrint('-------->>>$progress');
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: const Text('任务列表')),
-        body: ListView.builder(
-            itemCount: taskList.length,
-            itemBuilder: (context, index) {
-              return _buildItem(taskList[index] as DownloadTask);
-            }));
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
+    return Container(
+        color: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
+        child: SafeArea(
+            top: false,
+            child: Scaffold(
+                appBar: AppBar(title: const Text('任务列表')),
+                body: ListView.builder(
+                    itemCount: taskList.length,
+                    itemBuilder: (context, index) {
+                      return _buildItem(taskList[index] as DownloadTask);
+                    }))));
   }
 
   Widget _buildItem(DownloadTask task) {
@@ -45,36 +53,33 @@ class _TaskPageState extends State<TaskPage> {
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Material(
-          color: Colors.white,
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          elevation: 10,
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Expanded(
-                    child: FutureBuilder(
-                  future: task.expectedFileSize(),
-                  builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                    return Text(
-                      task.filename + "--" + Common.formatSize(snapshot.data ?? 0),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w500,
-                      ),
-                    );
-                  },
-                )),
-                IconButton(
-                  onPressed: () {
-                    FileDownloader().pause(task);
-                  },
-                  icon: const Icon(Icons.pause),
-                ),
-              ],
-            ),
-          ),
-        ));
+            color: Colors.white,
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            elevation: 10,
+            child: Container(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Expanded(
+                          child: FutureBuilder(
+                        future: task.expectedFileSize(),
+                        builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                          return Text(
+                            task.filename + "--" + Common.formatSize(snapshot.data ?? 0),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                            ),
+                          );
+                        },
+                      )),
+                      IconButton(
+                        onPressed: () {
+                          FileDownloader().pause(task);
+                        },
+                        icon: const Icon(Icons.pause),
+                      )
+                    ]))));
   }
 }

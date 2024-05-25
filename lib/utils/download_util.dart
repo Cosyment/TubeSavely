@@ -1,6 +1,6 @@
 import 'dart:io';
 
-// import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:flutter/material.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -22,8 +22,8 @@ class DownloadUtils {
       // String mediaType = url.substring(lastDotIndex);
       String mediaType = contentType.substring(contentType.lastIndexOf("/") + 1);
       var fileName = "${DateTime.now().millisecondsSinceEpoch}.$mediaType";
-      print(
-          'Success to load appDocPath>>>>>>>>>>>>: ${appDocPath}  contentLength=${httpClientResponse.contentLength}   contentType==${contentType}');
+      debugPrint(
+          'Success to load appDocPath>>>>>>>>>>>>: $appDocPath  contentLength=${httpClientResponse.contentLength}   contentType==$contentType');
       File file = File('$appDocPath/$fileName');
       var fileStream = file.openWrite();
       var receivedBytes = 0;
@@ -31,17 +31,17 @@ class DownloadUtils {
         fileStream.add(data);
         receivedBytes += data.length;
         String progress = (receivedBytes / totalBytes).toStringAsFixed(2);
-        print('Download Progress: ${(progress)}>>>>>>>>>>${receivedBytes}>>>>>${totalBytes}');
+        debugPrint('Download Progress: ${(progress)}>>>>>>>>>>$receivedBytes>>>>>$totalBytes');
         if (callback != null) {
           callback(double.parse(progress));
         }
       }
       await fileStream.flush();
       await fileStream.close();
-      print('File downloaded successfully');
+      debugPrint('File downloaded successfully');
       if (PlatformUtils.isAndroidOrIOS) {
         final result = await ImageGallerySaver.saveFile(file.path);
-        print('Success to ImageGallerySaver>>>>>>>>>>>>:${file.path} , ${result}');
+        debugPrint('Success to ImageGallerySaver>>>>>>>>>>>>:${file.path} , $result');
       }
       return true;
     } catch (e) {

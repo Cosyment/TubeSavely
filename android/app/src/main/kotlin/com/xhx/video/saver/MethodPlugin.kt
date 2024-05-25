@@ -5,7 +5,8 @@ import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.net.Uri
-import com.umeng.commonsdk.UMConfigure
+import android.os.Build
+//import com.umeng.commonsdk.UMConfigure
 import com.xhx.video.saver.AppInfo.getAppChannelId
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -22,13 +23,14 @@ class MethodPlugin : MethodChannel.MethodCallHandler, FlutterPlugin, ActivityAwa
     private val FLUTTERPLUGIN = "com.xhx.video.saver/plugin"
     private var flutterResult: MethodChannel.Result? = null
 
+    @androidx.annotation.RequiresApi(Build.VERSION_CODES.DONUT)
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         if (flutterResult == null) {
             flutterResult == result
         }
         when (call.method) {
             "isAgree" -> {
-                UMConfigure.submitPolicyGrantResult(activity, true)
+//                UMConfigure.submitPolicyGrantResult(activity, true)
                 result.success("isAgree")
             }
 

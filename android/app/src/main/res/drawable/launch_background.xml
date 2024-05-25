@@ -7,7 +7,7 @@
     <item >
         <bitmap
             android:gravity="center"
-            android:src="@mipmap/ic_transparent_logo"
+            android:src="@mipmap/ic_launcher_foreground"
             android:tileMode="disabled"
             android:width="200dp"
             android:height="200dp" />

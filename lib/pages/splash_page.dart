@@ -13,7 +13,7 @@ class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
 
   @override
-  _SplashPageState createState() => _SplashPageState();
+  State<StatefulWidget> createState() => _SplashPageState();
 }
 
 class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateMixin {
@@ -21,17 +21,12 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
   void initState() {
     super.initState();
     _mockCheckForSession().then((status) {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => MainPage()));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => const MainPage()));
     });
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   Future<bool> _mockCheckForSession() async {
-    await Future.delayed(Duration(milliseconds: 2400), () {});
+    await Future.delayed(const Duration(milliseconds: 2400), () {});
     return true;
   }
 
@@ -39,7 +34,7 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     return Scaffold(
-      backgroundColor: Color(0XFF26242e),
+      backgroundColor: const Color(0XFF26242e),
       body: Stack(
         alignment: Alignment.center,
         children: [
@@ -59,9 +54,9 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
               Positioned(
                 top: 180,
                 child: Shimmer.fromColors(
-                  period: Duration(milliseconds: 1000),
-                  baseColor: Color(0xFF8983F7),
-                  highlightColor: Color(0xFFA3DAFB),
+                  period: const Duration(milliseconds: 1000),
+                  baseColor: const Color(0xFF8983F7),
+                  highlightColor: const Color(0xFFA3DAFB),
                   child: Container(
                     alignment: Alignment.center,
                     child: Text(

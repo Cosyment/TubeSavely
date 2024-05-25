@@ -133,7 +133,7 @@ class _VideoListPageState extends State<VideoListPage> {
                         Text(
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          '${formatInfo?.resolution?.toUpperCase() ?? formatInfo?.format_note?.toUpperCase() ?? ''} ${Common.formatSize(formatInfo?.filesize ?? 0)}',
+                          '${formatInfo.resolution?.toUpperCase() ?? formatInfo.format_note?.toUpperCase() ?? ''} ${Common.formatSize(formatInfo.filesize ?? 0)}',
                           style: const TextStyle(fontSize: 15),
                         ),
                       ],

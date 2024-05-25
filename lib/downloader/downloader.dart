@@ -8,7 +8,6 @@ import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_session.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart' as path;
@@ -77,14 +76,18 @@ class Downloader {
   }
 
   static downloadAudio(String url, String title, {VoidCallback? onSuccess, VoidCallback? onFailure}) async {
-    Task task = await _download(url, '$title.mp3');
-    final result = await OpenFile.open(await task.filePath());
-    if (result.type == ResultType.done) {
-      onSuccess?.call();
-    } else {
-      onFailure?.call();
+    DownloadTask task = await _download(url, '$title.mp3');
+    File file = File(await task.filePath());
+    if (file.existsSync()) {
+      final result = await OpenFile.open(await task.filePath());
+      if (result.type == ResultType.done) {
+        onSuccess?.call();
+        ToastUtil.success('Download Success');
+      } else {
+        onFailure?.call();
+        ToastUtil.error('Download error please try again');
+      }
     }
-    // _save(await task.filePath(), onSuccess: onSuccess, onFailure: onFailure);
   }
 
   static _downloadM3U8(String m3u8Url, String title, VoidCallback? onSuccess, VoidCallback? onFailure) async {
@@ -107,7 +110,7 @@ class Downloader {
     }
   }
 
-  static Future<Task> _download(String? url, String? fileName) async {
+  static Future<DownloadTask> _download(String? url, String? fileName) async {
     final task = DownloadTask(
       url: url ?? '',
       filename: fileName,
@@ -125,8 +128,6 @@ class Downloader {
       file.deleteSync();
       debugPrint('download exists file : ${await file.exists()}');
     }
-
-    // FileDownloader().addTaskQueue(task);
 
     final result = await FileDownloader().download(task,
         onProgress: (progress) => debugPrint('Download Task Progress: ${progress * 100}% ${task.filename}'),
@@ -185,21 +186,9 @@ class Downloader {
       case TaskStatus.complete:
         var result = await ImageGallerySaver.saveFile(await task.filePath(), name: fileName, isReturnPathOfIOS: true);
         if (result['isSuccess']) {
-          Fluttertoast.showToast(
-              msg: "Download Success!",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.green,
-              textColor: Colors.white);
+          ToastUtil.success('Download Success');
         } else {
-          Fluttertoast.showToast(
-              msg: result['errorMessage'],
-              toastLength: Toast.LENGTH_LONG,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.red,
-              textColor: Colors.white);
+          ToastUtil.error(result['errorMessage']);
         }
       case TaskStatus.canceled:
         debugPrint('Download was canceled');
@@ -224,7 +213,7 @@ class Downloader {
       String mediaType = contentType.substring(contentType.lastIndexOf("/") + 1);
       var fileName = "${DateTime.now().millisecondsSinceEpoch}.$mediaType";
       debugPrint(
-          'Success to load appDocPath>>>>>>>>>>>>: ${appDocPath}  contentLength=${httpClientResponse.contentLength}   contentType==${contentType}');
+          'Success to load appDocPath>>>>>>>>>>>>: $appDocPath  contentLength=${httpClientResponse.contentLength}   contentType==$contentType');
       File file = File('$appDocPath/$fileName');
       var fileStream = file.openWrite();
       var receivedBytes = 0;
@@ -232,7 +221,7 @@ class Downloader {
         fileStream.add(data);
         receivedBytes += data.length;
         String progress = (receivedBytes / totalBytes).toStringAsFixed(2);
-        debugPrint('Download Progress: ${(progress)}>>>>>>>>>>${receivedBytes}>>>>>${totalBytes}');
+        debugPrint('Download Progress: ${(progress)}>>>>>>>>>>$receivedBytes>>>>>$totalBytes');
         // if (callback != null) {
         //   callback(double.parse(progress));
         // }

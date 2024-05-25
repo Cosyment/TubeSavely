@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../../utils/constants.dart';
 import '../../utils/encrypted_util.dart';
@@ -51,7 +52,7 @@ class LoggingInterceptor extends Interceptor {
     RequestOptions options = response.requestOptions;
     Log.d('---------- Response Start ----------');
     Log.d('ResponseUrl: ${options.baseUrl}${options.path}?${Transformer.urlEncodeMap(options.queryParameters)}');
-    print(
+    debugPrint(
         'ResponseUrl: ${options.baseUrl}${options.path}?${Transformer.urlEncodeMap(options.queryParameters)}  response=${response.data.toString()}');
     endTime = DateTime.now();
     int duration = endTime.difference(startTime).inMilliseconds;

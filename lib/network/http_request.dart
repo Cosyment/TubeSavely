@@ -39,7 +39,7 @@ class HttpRequest {
         return fromJson('');
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       errorMessage = 'server internal exception';
       exception?.call(e);
     }
@@ -59,7 +59,7 @@ class HttpRequest {
       Utf8Decoder decoder = const Utf8Decoder();
       return jsonDecode(decoder.convert(response.bodyBytes));
     } else {
-      print('Request failed with status: ${response.statusCode}.');
+      debugPrint('Request failed with status: ${response.statusCode}.');
       return {};
     }
   }

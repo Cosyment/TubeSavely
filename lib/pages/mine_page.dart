@@ -69,7 +69,7 @@ class _MinePageState extends State<MinePage> {
               Container(
                 width: double.infinity,
                 height: 400.w,
-                margin: EdgeInsets.only(),
+                margin: const EdgeInsets.only(),
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
                   borderRadius: BorderRadius.only(
@@ -87,12 +87,12 @@ class _MinePageState extends State<MinePage> {
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(100.r),
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            const Color(0xFF8983F7),
-                            const Color(0xFFA3DAFB),
+                            Color(0xFF8983F7),
+                            Color(0xFFA3DAFB),
                           ],
                         )),
                     child: userId == ""
@@ -148,7 +148,7 @@ class _MinePageState extends State<MinePage> {
                           ),
                           Text(
                             item['title'],
-                            style: TextStyle(color: Colors.white),
+                            style: const TextStyle(color: Colors.white),
                           ),
                         ],
                       ),
@@ -173,7 +173,7 @@ class _MinePageState extends State<MinePage> {
     } else if (type == 3) {
     } else if (type == 4) {
     } else if (type == 5) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => ThemePage()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const ThemePage()));
     } else {}
   }
 }

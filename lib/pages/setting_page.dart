@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubesaverx/pages/webview.dart';
 import 'package:tubesaverx/utils/constants.dart';
 
+import '../app_theme.dart';
 import '../main.dart';
 
 class SettingPage extends StatefulWidget {
@@ -61,65 +62,71 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("设置"),
-      ),
-      body: Container(
-        margin: EdgeInsets.fromLTRB(0, 40.w, 0, 0),
-        child: Column(
-          children: List.generate(itemList.length, (index) {
-            var item = itemList[index];
-            return Card(
-              elevation: 5,
-              margin: EdgeInsets.fromLTRB(40.w, 30.w, 40.w, 0),
-              // shadowColor: Theme.of(context).primaryColor,
-              child: GestureDetector(
-                onTap: () {
-                  onItemClick(item['type']);
-                },
-                child: Container(
-                  height: 100.w,
-                  padding: EdgeInsets.fromLTRB(30.w, 0, 30.w, 0),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor.withAlpha(200),
-                    borderRadius: BorderRadius.circular(20.r),
-                  ),
-                  child: Row(
-                    children: [
-                      // Image(image: image),
-                      Icon(
-                        item['icon'],
-                        color: Colors.white,
-                      ),
-                      SizedBox(
-                        width: 30.w,
-                      ),
-                      Text(
-                        item['title'],
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                      Flexible(
-                        flex: 1,
-                        child: Container(),
-                      ),
-                      Visibility(
-                        visible: item['type'] == 0,
-                        child: Text(
-                          versionName,
-                          style: TextStyle(color: Colors.white),
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
+    return Container(
+        color: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
+        child: SafeArea(
+            top: false,
+            child: Scaffold(
+              appBar: AppBar(
+                title: const Text("设置"),
+              ),
+              body: Container(
+                margin: EdgeInsets.fromLTRB(0, 40.w, 0, 0),
+                child: Column(
+                  children: List.generate(itemList.length, (index) {
+                    var item = itemList[index];
+                    return Card(
+                      elevation: 5,
+                      margin: EdgeInsets.fromLTRB(40.w, 30.w, 40.w, 0),
+                      // shadowColor: Theme.of(context).primaryColor,
+                      child: GestureDetector(
+                        onTap: () {
+                          onItemClick(item['type']);
+                        },
+                        child: Container(
+                          height: 100.w,
+                          padding: EdgeInsets.fromLTRB(30.w, 0, 30.w, 0),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor.withAlpha(200),
+                            borderRadius: BorderRadius.circular(20.r),
+                          ),
+                          child: Row(
+                            children: [
+                              // Image(image: image),
+                              Icon(
+                                item['icon'],
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 30.w,
+                              ),
+                              Text(
+                                item['title'],
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              Flexible(
+                                flex: 1,
+                                child: Container(),
+                              ),
+                              Visibility(
+                                visible: item['type'] == 0,
+                                child: Text(
+                                  versionName,
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
-                      )
-                    ],
-                  ),
+                      ),
+                    );
+                  }),
                 ),
               ),
-            );
-          }),
-        ),
-      ),
-    );
+            )));
   }
 
   void onItemClick(int type) async {
@@ -128,7 +135,7 @@ class _SettingPageState extends State<SettingPage> {
       Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => WebViewPage(
+            builder: (context) => const WebViewPage(
               title: '用户协议',
               url: Constants.agreementUrl,
             ),
@@ -137,7 +144,7 @@ class _SettingPageState extends State<SettingPage> {
       Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => WebViewPage(
+            builder: (context) => const WebViewPage(
               title: '隐私政策',
               url: Constants.privacyUrl,
             ),
@@ -148,7 +155,7 @@ class _SettingPageState extends State<SettingPage> {
         context: context,
         builder: (context) {
           return CupertinoAlertDialog(
-            title: Text("提示"),
+            title: const Text("提示"),
             content: Text("确认${type == 3 ? '注销' : '退出'}吗？"),
             actions: [
               CupertinoDialogAction(
@@ -165,7 +172,7 @@ class _SettingPageState extends State<SettingPage> {
                   // Navigator.popUntil(context, ModalRoute.withName('/'));
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => MainPage()),
+                    MaterialPageRoute(builder: (context) => const MainPage()),
                     (Route<dynamic> route) => false,
                   );
                 },

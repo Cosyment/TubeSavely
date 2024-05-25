@@ -20,13 +20,12 @@ class AppTheme {
   static const String fontName = 'WorkSans';
 
   static const TextTheme textTheme = TextTheme(
-    headline4: display1,
-    headline5: headline,
-    headline6: title,
-    subtitle2: subtitle,
-    bodyText2: body2,
-    bodyText1: body1,
-    caption: caption,
+    headlineLarge: display1,
+    headlineMedium: headline,
+    headlineSmall: title,
+    labelLarge: subtitle,
+    bodyLarge: body2,
+    bodyMedium: body1,
   );
 
   static const TextStyle display1 = TextStyle(

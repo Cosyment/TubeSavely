@@ -40,7 +40,7 @@ class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
-  _MyAppState createState() => _MyAppState();
+  State<StatefulWidget> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
@@ -128,12 +128,11 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
       color: AppTheme.white,
       child: SafeArea(
         top: false,
-        bottom: false,
         child: Scaffold(
-          backgroundColor: AppTheme.nearlyWhite,
+          // backgroundColor: AppTheme.white,
           body: CustomDrawerController(
             screenIndex: drawerIndex,
-            drawerWidth: MediaQuery.of(context).size.width * 0.75,
+            drawerWidth: MediaQuery.of(context).size.width * 0.60,
             onDrawerCall: (DrawerIndex drawerIndexData) {
               changeIndex(drawerIndexData);
               //callback from drawer for replace screen as user need with passing DrawerIndex(Enum index)
