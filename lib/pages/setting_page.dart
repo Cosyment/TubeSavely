@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tubesaverx/pages/webview.dart';
-import 'package:tubesaverx/utils/constants.dart';
+import 'package:tubesavely/pages/webview.dart';
+import 'package:tubesavely/utils/constants.dart';
 
 import '../app_theme.dart';
 import '../main.dart';
@@ -20,22 +20,22 @@ class _SettingPageState extends State<SettingPage> {
   List itemList = [
     {
       "icon": Icons.verified,
-      "title": "版本信息",
+      "title": "Version",
       "type": 0,
     },
     {
       "icon": Icons.account_box,
-      "title": "用户协议",
+      "title": "User Agreement",
       "type": 1,
     },
     {
       "icon": Icons.privacy_tip,
-      "title": "隐私政策",
+      "title": "Privacy Policy",
       "type": 2,
     },
     {
       "icon": Icons.info,
-      "title": "关于",
+      "title": "About",
       "type": 2,
     },
   ];
@@ -68,58 +68,59 @@ class _SettingPageState extends State<SettingPage> {
         color: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
         child: SafeArea(
             top: false,
+            bottom: false,
             child: Scaffold(
               appBar: AppBar(
-                title: const Text("设置"),
+                leading: const Spacer(),
+                backgroundColor: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
+                title: Text(
+                  'Settings',
+                  style: TextStyle(color: isLightMode ? AppTheme.nearlyBlack : AppTheme.white),
+                ),
               ),
+              backgroundColor: isLightMode ? AppTheme.white : AppTheme.nearlyBlack,
               body: Container(
                 margin: EdgeInsets.fromLTRB(0, 40.w, 0, 0),
                 child: Column(
                   children: List.generate(itemList.length, (index) {
                     var item = itemList[index];
-                    return Card(
-                      elevation: 5,
-                      margin: EdgeInsets.fromLTRB(40.w, 30.w, 40.w, 0),
-                      // shadowColor: Theme.of(context).primaryColor,
-                      child: GestureDetector(
-                        onTap: () {
-                          onItemClick(item['type']);
-                        },
-                        child: Container(
-                          height: 100.w,
-                          padding: EdgeInsets.fromLTRB(30.w, 0, 30.w, 0),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor.withAlpha(200),
-                            borderRadius: BorderRadius.circular(20.r),
-                          ),
-                          child: Row(
-                            children: [
-                              // Image(image: image),
-                              Icon(
-                                item['icon'],
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 30.w,
-                              ),
-                              Text(
-                                item['title'],
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                              Flexible(
-                                flex: 1,
-                                child: Container(),
-                              ),
-                              Visibility(
-                                visible: item['type'] == 0,
-                                child: Text(
-                                  versionName,
-                                  style: const TextStyle(color: Colors.white),
-                                ),
-                              )
-                            ],
-                          ),
+                    return GestureDetector(
+                      onTap: () {
+                        onItemClick(item['type']);
+                      },
+                      child: Container(
+                        height: 100.w,
+                        padding: EdgeInsets.fromLTRB(30.w, 0, 30.w, 0),
+                        width: double.infinity,
+                        color: Colors.transparent,
+                        child: Row(
+                          children: [
+                            // Image(image: image),
+                            Icon(
+                              item['icon'],
+                              color: Colors.grey,
+                            ),
+                            SizedBox(
+                              width: 30.w,
+                            ),
+                            Text(
+                              item['title'],
+                              style: const TextStyle(color: Colors.grey, fontSize: 18),
+                            ),
+                            Flexible(
+                              flex: 1,
+                              child: Container(),
+                            ),
+                            item['type'] == 0
+                                ? Text(
+                                    versionName,
+                                    style: const TextStyle(color: Colors.grey),
+                                  )
+                                : const Icon(
+                                    Icons.arrow_forward,
+                                    color: Colors.grey,
+                                  ),
+                          ],
                         ),
                       ),
                     );
@@ -136,7 +137,7 @@ class _SettingPageState extends State<SettingPage> {
           context,
           MaterialPageRoute(
             builder: (context) => const WebViewPage(
-              title: '用户协议',
+              title: 'User Agreement',
               url: Constants.agreementUrl,
             ),
           ));
@@ -145,7 +146,7 @@ class _SettingPageState extends State<SettingPage> {
           context,
           MaterialPageRoute(
             builder: (context) => const WebViewPage(
-              title: '隐私政策',
+              title: 'Privacy Policy',
               url: Constants.privacyUrl,
             ),
           ));

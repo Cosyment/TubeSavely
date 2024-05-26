@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 
 /// 输出Log工具类
 class Log {
-  static const String tag = 'TubeSaverX-LOG';
+  static const String tag = 'TubeSavely-LOG';
   static bool _inProduction = true;
 
   static init(bool inProduction) {

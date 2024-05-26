@@ -9,7 +9,7 @@
     <application
         android:name=".App"
         android:icon="@mipmap/ic_launcher"
-        android:label="TubeSaverX"
+        android:label="TubeSavely"
         android:theme="@style/LaunchTheme"
         android:usesCleartextTraffic="true">
 

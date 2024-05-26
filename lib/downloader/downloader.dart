@@ -12,7 +12,7 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
-import 'package:tubesaverx/utils/toast_util.dart';
+import 'package:tubesavely/utils/toast_util.dart';
 
 class Downloader {
   static combineDownload(String videoUrl, String title,

@@ -2,10 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:tubesaverx/network/http_request.dart';
-import 'package:tubesaverx/pages/video_playback_page.dart';
-import 'package:tubesaverx/utils/common.dart';
-import 'package:tubesaverx/utils/constants.dart';
+import 'package:tubesavely/network/http_request.dart';
+import 'package:tubesavely/pages/video_playback_page.dart';
+import 'package:tubesavely/utils/common.dart';
+import 'package:tubesavely/utils/constants.dart';
 
 import '../app_theme.dart';
 import '../models/video_info.dart';

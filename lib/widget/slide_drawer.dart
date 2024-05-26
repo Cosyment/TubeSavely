@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tubesaverx/app_theme.dart';
+import 'package:tubesavely/app_theme.dart';
 
 class HomeDrawer extends StatefulWidget {
   const HomeDrawer({super.key, this.screenIndex, this.iconAnimationController, this.callBackIndex});
@@ -14,6 +14,7 @@ class HomeDrawer extends StatefulWidget {
 
 class _HomeDrawerState extends State<HomeDrawer> {
   List<DrawerList>? drawerList;
+
   @override
   void initState() {
     setDrawerListArray();
@@ -24,17 +25,17 @@ class _HomeDrawerState extends State<HomeDrawer> {
     drawerList = <DrawerList>[
       DrawerList(
         index: DrawerIndex.Home,
-        labelName: '视频解析',
+        labelName: 'Parse',
         icon: const Icon(Icons.analytics_outlined),
       ),
       DrawerList(
         index: DrawerIndex.Task,
-        labelName: '任务列表',
+        labelName: 'Tasks',
         icon: const Icon(Icons.add_task_outlined),
       ),
       DrawerList(
         index: DrawerIndex.History,
-        labelName: '历史记录',
+        labelName: 'History',
         icon: const Icon(Icons.manage_history_rounded),
       ),
       // DrawerList(
@@ -45,23 +46,28 @@ class _HomeDrawerState extends State<HomeDrawer> {
       // ),
       DrawerList(
         index: DrawerIndex.FeedBack,
-        labelName: '意见反馈',
+        labelName: 'Feedback',
         icon: const Icon(Icons.feedback_outlined),
       ),
+      // DrawerList(
+      //   index: DrawerIndex.Invite,
+      //   labelName: '邀请好友',
+      //   icon: const Icon(Icons.group),
+      // ),
+      // DrawerList(
+      //   index: DrawerIndex.Share,
+      //   labelName: '给个好评',
+      //   icon: const Icon(Icons.recommend_outlined),
+      // ),
+      // DrawerList(
+      //   index: DrawerIndex.Settings,
+      //   labelName: 'Settings',
+      //   icon: const Icon(Icons.settings_outlined),
+      // ),
       DrawerList(
-        index: DrawerIndex.Invite,
-        labelName: '邀请好友',
-        icon: const Icon(Icons.group),
-      ),
-      DrawerList(
-        index: DrawerIndex.Share,
-        labelName: '给个好评',
-        icon: const Icon(Icons.recommend_outlined),
-      ),
-      DrawerList(
-        index: DrawerIndex.Settings,
-        labelName: '设置',
-        icon: const Icon(Icons.settings_outlined),
+        index: DrawerIndex.More,
+        labelName: 'More',
+        icon: const Icon(Icons.more_horiz),
       ),
       // DrawerList(
       //   index: DrawerIndex.About,
@@ -76,7 +82,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
     var brightness = MediaQuery.of(context).platformBrightness;
     bool isLightMode = brightness == Brightness.light;
     return Scaffold(
-      backgroundColor: AppTheme.notWhite.withOpacity(0.5),
+      backgroundColor: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -111,7 +117,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                             ),
                             child: ClipRRect(
                               borderRadius: const BorderRadius.all(Radius.circular(60.0)),
-                              child: Image.asset('assets/images/ic_logo.png'),
+                              child: Image.asset('assets/images/ic_logo_white.png'),
                             ),
                           ),
                         ),
@@ -121,7 +127,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   Padding(
                     padding: const EdgeInsets.only(top: 8, left: 4),
                     child: Text(
-                      'TubeSaverX',
+                      'TubeSavely',
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         color: isLightMode ? AppTheme.grey : AppTheme.white,
@@ -190,10 +196,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
                           width: 24,
                           height: 24,
                           child: Image.asset(listData.imageName,
-                              color: widget.screenIndex == listData.index ? Colors.blue : AppTheme.nearlyBlack),
+                              color: widget.screenIndex == listData.index ? AppTheme.accentColor : AppTheme.deactivatedText),
                         )
                       : Icon(listData.icon?.icon,
-                          color: widget.screenIndex == listData.index ? Colors.blue : AppTheme.nearlyBlack),
+                          color: widget.screenIndex == listData.index ? AppTheme.accentColor : AppTheme.deactivatedText),
                   const Padding(
                     padding: EdgeInsets.all(4.0),
                   ),
@@ -202,7 +208,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 16,
-                      color: widget.screenIndex == listData.index ? Colors.black : AppTheme.nearlyBlack,
+                      color: widget.screenIndex == listData.index ? AppTheme.accentColor : AppTheme.deactivatedText,
                     ),
                     textAlign: TextAlign.left,
                   ),
@@ -224,7 +230,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                             width: MediaQuery.of(context).size.width * 0.75 - 64,
                             height: 46,
                             decoration: BoxDecoration(
-                              color: Colors.blue.withOpacity(0.2),
+                              color: AppTheme.accentColor.withOpacity(0.2),
                               borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(0),
                                 topRight: Radius.circular(28),
@@ -258,6 +264,7 @@ enum DrawerIndex {
   Share,
   Invite,
   Settings,
+  More,
   About,
 }
 

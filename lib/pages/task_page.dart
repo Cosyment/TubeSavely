@@ -1,6 +1,6 @@
 import 'package:background_downloader/background_downloader.dart';
 import 'package:flutter/material.dart';
-import 'package:tubesaverx/utils/common.dart';
+import 'package:tubesavely/utils/common.dart';
 
 import '../app_theme.dart';
 
@@ -39,8 +39,17 @@ class _TaskPageState extends State<TaskPage> {
         color: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
         child: SafeArea(
             top: false,
+            bottom: false,
             child: Scaffold(
-                appBar: AppBar(title: const Text('任务列表')),
+                appBar: AppBar(
+                  leading: const Spacer(),
+                  backgroundColor: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
+                  title: Text(
+                    'Tasks',
+                    style: TextStyle(color: isLightMode ? AppTheme.nearlyBlack : AppTheme.white),
+                  ),
+                ),
+                backgroundColor: isLightMode ? AppTheme.white : AppTheme.nearlyBlack,
                 body: ListView.builder(
                     itemCount: taskList.length,
                     itemBuilder: (context, index) {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tubesaverx/utils/event_bus.dart';
+import 'package:tubesavely/utils/event_bus.dart';
 
 import '../models/theme_color.dart';
 import '../widget/animated_toggle_button.dart';

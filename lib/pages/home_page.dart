@@ -1,16 +1,19 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:tubesaverx/pages/video_detail_page.dart';
+import 'package:shake_animation_widget/shake_animation_widget.dart';
+import 'package:tubesavely/pages/video_detail_page.dart';
 
 import '../app_theme.dart';
-import '../generated/l10n.dart';
 import '../utils/event_bus.dart';
 
 class HomePage extends StatefulWidget {
+  static ui.FragmentShader? shader;
+
   const HomePage({super.key});
 
   @override
@@ -31,8 +34,8 @@ class _HomePageState extends State<HomePage> {
           // 'https://www.kuaishou.com/f/X3WcgZrbGXVcWWa'
           // 'https://www.bilibili.com/video/BV1kf421S7WH/?share_source=copy_web'
           'https://www.douyin.com/video/6961737553342991651');
-  bool isLoading = false;
-  bool isNeedVPN = false;
+
+  final ShakeAnimationController _shakeAnimationController = ShakeAnimationController();
 
   @override
   void initState() {
@@ -43,6 +46,17 @@ class _HomePageState extends State<HomePage> {
         getPaste();
       }
     });
+
+    startShake();
+  }
+
+  void startShake() async {
+    Future.delayed(const Duration(seconds: 1), () async {
+      _shakeAnimationController.start(shakeCount: 1);
+      await Future.delayed(const Duration(milliseconds: 2500));
+      startShake();
+    });
+    // Future.delayed(const Duration(seconds: 3), () => {startShake()});
   }
 
   @override
@@ -62,13 +76,11 @@ class _HomePageState extends State<HomePage> {
             bottom: false,
             child: Scaffold(
               appBar: AppBar(
-                // leading: const SizedBox(
-                //   width: 50,
-                //   height: 60,
-                // ),
+                leading: const Spacer(),
                 backgroundColor: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
                 title: Text(
-                  S.of(context).videoLinkWatermarkTxt,
+                  'Parse',
+                  style: TextStyle(color: isLightMode ? AppTheme.nearlyBlack : AppTheme.white),
                 ),
               ),
               backgroundColor: isLightMode ? AppTheme.white : AppTheme.nearlyBlack,
@@ -89,50 +101,76 @@ class _HomePageState extends State<HomePage> {
                     child: _buildInputBox(),
                   ),
                   SliverToBoxAdapter(
-                    child: actionRow(),
-                  ),
-                  SliverToBoxAdapter(
-                    child: Visibility(
-                      visible: isNeedVPN,
-                      child: Center(
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 20.w),
-                          child: Text(
-                            "该平台需要网络环境支持",
-                            style: TextStyle(fontSize: 24.sp),
-                          ),
-                        ),
-                      ),
-                    ),
+                    // child: _buildButton(),
+                    child: _buildDownloadButton(),
                   ),
                 ],
               ),
             )));
   }
 
-  actionRow() {
+  Widget _buildDownloadButton() {
+    return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 100),
+        child: ShakeAnimationWidget(
+          //抖动控制器
+          shakeAnimationController: _shakeAnimationController,
+          //微旋转的抖动
+          shakeAnimationType: ShakeAnimationType.RoateShake,
+          //设置不开启抖动
+          isForward: false,
+          //默认为 0 无限执行
+          shakeCount: 0,
+          //抖动的幅度 取值范围为[0,1]
+          shakeRange: 0.03,
+          //执行抖动动画的子Widget
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () {
+                startParse();
+              },
+              child: Container(
+                height: 45,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: AppTheme.accentColor,
+                  borderRadius: BorderRadius.circular(50),
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(color: Colors.grey.withOpacity(0.3), offset: const Offset(4, 4), blurRadius: 50),
+                  ],
+                ),
+                child: const Text(
+                  'Download',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                // onTap: () {
+                //   startParse();
+                // },
+              ),
+            ),
+          ),
+        ));
+  }
+
+  Widget _buildButton() {
     return Column(
       children: [
-        SizedBox(height: 50.h),
+        SizedBox(height: 100.h),
         Align(
           alignment: Alignment.center,
           child: FloatingActionButton(
-            backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: AppTheme.accentColor,
             shape: const CircleBorder(),
             onPressed: () {
               startParse();
             },
-            child: isLoading
-                ? LoadingAnimationWidget.hexagonDots(
-                    color: Colors.white,
-                    size: 40.h,
-                  )
-                : Image.asset(
-                    "assets/next.png",
-                    fit: BoxFit.fill,
-                    width: 40.w,
-                    height: 40.w,
-                  ),
+            child: Image.asset(
+              "assets/next.png",
+              fit: BoxFit.fill,
+              width: 40.w,
+              height: 40.w,
+            ),
           ),
         )
       ],
@@ -175,40 +213,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-    );
-  }
-
-  inputContainer() {
-    return Column(
-      children: [
-        Container(
-          height: 90.h,
-          width: double.infinity,
-          margin: EdgeInsets.all(30.w),
-          decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor,
-            borderRadius: BorderRadius.circular(20.r),
-          ),
-          child: TextField(
-            maxLines: 1,
-            textAlignVertical: TextAlignVertical.center,
-            controller: textController,
-            textInputAction: TextInputAction.done,
-            onSubmitted: (value) => startParse(),
-            style: TextStyle(color: Colors.white, fontSize: 30.sp),
-            decoration: InputDecoration(
-              hintText: "请输入视频地址",
-              hintStyle: const TextStyle(color: Colors.white),
-              border: const OutlineInputBorder(borderSide: BorderSide.none),
-              focusedBorder: const OutlineInputBorder(borderSide: BorderSide.none),
-              enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide.none,
-              ),
-              contentPadding: EdgeInsets.symmetric(horizontal: 15.w),
-            ),
-          ),
-        ),
-      ],
     );
   }
 

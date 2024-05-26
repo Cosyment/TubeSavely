@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tubesaverx/app_theme.dart';
-import 'package:tubesaverx/widget/slide_drawer.dart';
+import 'package:tubesavely/app_theme.dart';
+import 'package:tubesavely/widget/slide_drawer.dart';
 
 class CustomDrawerController extends StatefulWidget {
   const CustomDrawerController({
@@ -143,7 +143,7 @@ class _CustomDrawerControllerState extends State<CustomDrawerController> with Ti
                         ),
                       // this just menu and arrow icon animation
                       Padding(
-                        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 8, left: 8),
+                        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 3, left: 8),
                         child: SizedBox(
                           width: AppBar().preferredSize.height - 8,
                           height: AppBar().preferredSize.height - 8,

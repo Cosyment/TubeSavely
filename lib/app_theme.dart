@@ -18,6 +18,7 @@ class AppTheme {
   static const Color chipBackground = Color(0xFFEEF1F3);
   static const Color spacer = Color(0xFFF2F2F2);
   static const String fontName = 'WorkSans';
+  static const Color accentColor = Color(0xFFFF0014);
 
   static const TextTheme textTheme = TextTheme(
     headlineLarge: display1,

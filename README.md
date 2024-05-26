@@ -1,4 +1,4 @@
-# TubeSaverX
+# TubeSavely
 
 Flutter video download tools
 
@@ -7,7 +7,7 @@ Flutter video download tools
 This project is a starting point for a Flutter application.
 
 #应用名称：
-TubeSaverX - Video downloader 支持tiktok、 抖音快手、小红书
+TubeSavely - Video downloader 支持tiktok、 抖音快手、小红书
 一句话介绍
 Free downloader to fast download all videos from social webs.
 

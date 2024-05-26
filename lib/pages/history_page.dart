@@ -18,8 +18,17 @@ class _HistoryPageState extends State<HistoryPage> {
         color: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
         child: SafeArea(
             top: false,
+            bottom: false,
             child: Scaffold(
-              appBar: AppBar(title: const Text('历史记录')),
+              appBar: AppBar(
+                leading: const Spacer(),
+                backgroundColor: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
+                title: Text(
+                  'History',
+                  style: TextStyle(color: isLightMode ? AppTheme.nearlyBlack : AppTheme.white),
+                ),
+              ),
+              backgroundColor: isLightMode ? AppTheme.white : AppTheme.nearlyBlack,
               body: const Text('data'),
             )));
   }

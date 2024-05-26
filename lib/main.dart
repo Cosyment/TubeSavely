@@ -1,20 +1,22 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:media_kit/media_kit.dart';
-import 'package:tubesaverx/pages/feedback_page.dart';
-import 'package:tubesaverx/pages/help_page.dart';
-import 'package:tubesaverx/pages/history_page.dart';
-import 'package:tubesaverx/pages/home_page.dart';
-import 'package:tubesaverx/pages/invite_page.dart';
-import 'package:tubesaverx/pages/setting_page.dart';
-import 'package:tubesaverx/pages/splash_page.dart';
-import 'package:tubesaverx/pages/task_page.dart';
-import 'package:tubesaverx/utils/event_bus.dart';
-import 'package:tubesaverx/widget/drawer_controller.dart';
-import 'package:tubesaverx/widget/slide_drawer.dart';
+import 'package:tubesavely/pages/feedback_page.dart';
+import 'package:tubesavely/pages/help_page.dart';
+import 'package:tubesavely/pages/history_page.dart';
+import 'package:tubesavely/pages/home_page.dart';
+import 'package:tubesavely/pages/invite_page.dart';
+import 'package:tubesavely/pages/more_page.dart';
+import 'package:tubesavely/pages/setting_page.dart';
+import 'package:tubesavely/pages/splash_page.dart';
+import 'package:tubesavely/pages/task_page.dart';
+import 'package:tubesavely/utils/event_bus.dart';
+import 'package:tubesavely/widget/drawer_controller.dart';
+import 'package:tubesavely/widget/slide_drawer.dart';
 
 import 'app_theme.dart';
 import 'generated/l10n.dart';
@@ -106,7 +108,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    title = "视频下载";
+    title = "Video download";
     drawerIndex = DrawerIndex.Home;
     screenView = const HomePage();
     super.initState();
@@ -124,22 +126,23 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, designSize: const Size(750, 1378));
-    return Container(
-      color: AppTheme.white,
-      child: SafeArea(
-        top: false,
-        child: Scaffold(
-          // backgroundColor: AppTheme.white,
-          body: CustomDrawerController(
-            screenIndex: drawerIndex,
-            drawerWidth: MediaQuery.of(context).size.width * 0.60,
-            onDrawerCall: (DrawerIndex drawerIndexData) {
-              changeIndex(drawerIndexData);
-              //callback from drawer for replace screen as user need with passing DrawerIndex(Enum index)
-            },
-            screenView: screenView,
-            //we replace screen view as we need on navigate starting screens like MyHomePage, HelpScreen, FeedbackScreen, etc...
-          ),
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        systemNavigationBarColor: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack, statusBarColor: Colors.transparent));
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        // backgroundColor: AppTheme.white,
+        body: CustomDrawerController(
+          screenIndex: drawerIndex,
+          drawerWidth: MediaQuery.of(context).size.width * 0.60,
+          onDrawerCall: (DrawerIndex drawerIndexData) {
+            changeIndex(drawerIndexData);
+            //callback from drawer for replace screen as user need with passing DrawerIndex(Enum index)
+          },
+          screenView: screenView,
+          //we replace screen view as we need on navigate starting screens like MyHomePage, HelpScreen, FeedbackScreen, etc...
         ),
       ),
     );
@@ -181,6 +184,11 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
         case DrawerIndex.Settings:
           setState(() {
             screenView = const SettingPage();
+          });
+          break;
+        case DrawerIndex.More:
+          setState(() {
+            screenView = const MorePage();
           });
           break;
         default:

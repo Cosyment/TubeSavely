@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:tubesaverx/app_theme.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:tubesavely/app_theme.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class FeedbackPage extends StatefulWidget {
   const FeedbackPage({super.key});
@@ -9,6 +13,8 @@ class FeedbackPage extends StatefulWidget {
 }
 
 class _FeedbackPageState extends State<FeedbackPage> {
+  TextEditingController textController = TextEditingController(text: '');
+
   @override
   void initState() {
     super.initState();
@@ -23,6 +29,14 @@ class _FeedbackPageState extends State<FeedbackPage> {
       child: SafeArea(
         top: false,
         child: Scaffold(
+          appBar: AppBar(
+            leading: const Spacer(),
+            backgroundColor: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
+            title: Text(
+              'Feedback',
+              style: TextStyle(color: isLightMode ? AppTheme.nearlyBlack : AppTheme.white),
+            ),
+          ),
           backgroundColor: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
           body: SingleChildScrollView(
             child: SizedBox(
@@ -56,7 +70,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                       child: Container(
                         height: 40,
                         decoration: BoxDecoration(
-                          color: isLightMode ? Colors.blue : Colors.white,
+                          color: AppTheme.accentColor,
                           borderRadius: const BorderRadius.all(Radius.circular(50)),
                           boxShadow: <BoxShadow>[
                             BoxShadow(color: Colors.grey.withOpacity(0.6), offset: const Offset(4, 4), blurRadius: 8.0),
@@ -66,16 +80,17 @@ class _FeedbackPageState extends State<FeedbackPage> {
                           color: Colors.transparent,
                           child: InkWell(
                             onTap: () {
-                              FocusScope.of(context).requestFocus(FocusNode());
+                              // FocusScope.of(context).requestFocus(FocusNode());
+                              _sendMail();
                             },
-                            child: Center(
+                            child: const Center(
                               child: Padding(
-                                padding: const EdgeInsets.all(4.0),
+                                padding: EdgeInsets.all(4.0),
                                 child: Text(
                                   'Send',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
-                                    color: isLightMode ? Colors.white : Colors.black,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
@@ -115,13 +130,14 @@ class _FeedbackPageState extends State<FeedbackPage> {
               padding: const EdgeInsets.only(left: 10, right: 10, top: 0, bottom: 0),
               child: TextField(
                 maxLines: null,
+                controller: textController,
                 onChanged: (String txt) {},
                 style: const TextStyle(
                   fontFamily: AppTheme.fontName,
                   fontSize: 16,
                   color: AppTheme.dark_grey,
                 ),
-                cursorColor: Colors.blue,
+                cursorColor: AppTheme.accentColor,
                 decoration: const InputDecoration(border: InputBorder.none, hintText: 'Enter your feedback...'),
               ),
             ),
@@ -129,5 +145,20 @@ class _FeedbackPageState extends State<FeedbackPage> {
         ),
       ),
     );
+  }
+
+  _sendMail() async {
+    String subject = 'TubaSavely';
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String body = 'Platform: ${Platform.operatingSystem}%0D%0A'
+            'Version: ${packageInfo.version}%0D%0A'
+            'PlatformVersion: ${Platform.operatingSystemVersion}%0D%0A'
+            'Language: ${Platform.localeName}%0D%0A'
+            'BuildNumber: ${packageInfo.buildNumber}%0D%0A'
+            'CreateTime: ${HttpDate.format(DateTime.timestamp())}%0D%0A'
+        // 'Content: ${textController.text}%0D%0A'
+        .replaceAll(' ', '%20');
+    String url = 'mailto:waitinghc@gmail.com?body=$body&subject=$subject';
+    await launchUrlString(url);
   }
 }

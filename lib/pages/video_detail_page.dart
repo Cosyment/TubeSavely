@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:tubesaverx/models/Pair.dart';
-import 'package:tubesaverx/models/video_info.dart';
-import 'package:tubesaverx/network/http_request.dart';
-import 'package:tubesaverx/utils/common.dart';
-import 'package:tubesaverx/utils/constants.dart';
-import 'package:tubesaverx/utils/resolution_util.dart';
-import 'package:tubesaverx/widget/iconed_button.dart';
-import 'package:tubesaverx/widget/radio_group.dart';
+import 'package:tubesavely/app_theme.dart';
+import 'package:tubesavely/models/Pair.dart';
+import 'package:tubesavely/models/video_info.dart';
+import 'package:tubesavely/network/http_request.dart';
+import 'package:tubesavely/utils/common.dart';
+import 'package:tubesavely/utils/constants.dart';
+import 'package:tubesavely/utils/resolution_util.dart';
+import 'package:tubesavely/widget/iconed_button.dart';
+import 'package:tubesavely/widget/radio_group.dart';
 
 import '../downloader/downloader.dart';
 import '../widget/progress_button.dart';
@@ -161,6 +163,9 @@ class _VideoDetailPagePageState extends State<VideoDetailPage> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(systemNavigationBarColor: Colors.black, statusBarColor: Colors.transparent));
+
     return Scaffold(
       appBar: AppBar(
           leading: IconButton(
@@ -169,8 +174,6 @@ class _VideoDetailPagePageState extends State<VideoDetailPage> with SingleTicker
               },
               icon: const Icon(Icons.close)),
           title: Text(videoInfo?.title ?? '', style: const TextStyle(color: Colors.white70)),
-          // title: Marquee(
-          //     text: 'There once was a boy who told this story about a boy: "', style: const TextStyle(color: Colors.white70)),
           iconTheme: const IconThemeData(color: Colors.white70),
           backgroundColor: Colors.black38),
       backgroundColor: Colors.black,
@@ -293,7 +296,7 @@ class _VideoDetailPagePageState extends State<VideoDetailPage> with SingleTicker
         ButtonState.idle: const IconedButton(
           text: "Download",
           icon: Icon(Icons.download, color: Colors.white),
-          color: Colors.blue,
+          color: AppTheme.accentColor,
         ),
         ButtonState.loading: const IconedButton(text: "Downloading", color: Colors.blue),
         ButtonState.fail: IconedButton(

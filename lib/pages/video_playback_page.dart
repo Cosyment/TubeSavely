@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:tubesaverx/downloader/downloader.dart';
+import 'package:tubesavely/downloader/downloader.dart';
 
 class VideoPlaybackPage extends StatefulWidget {
   final String? title;

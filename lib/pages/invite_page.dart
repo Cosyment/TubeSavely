@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tubesaverx/app_theme.dart';
+import 'package:tubesavely/app_theme.dart';
 
 class InviteFriendPage extends StatefulWidget {
   const InviteFriendPage({super.key});
