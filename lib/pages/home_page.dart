@@ -141,7 +141,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
                 child: const Text(
-                  'Download',
+                  'Start Parse',
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
                 // onTap: () {

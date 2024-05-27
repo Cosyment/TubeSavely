@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tubesavely/app_theme.dart';
 import 'package:tubesavely/models/Pair.dart';
 
 class RadioGroup extends StatefulWidget {
@@ -52,7 +53,7 @@ class _RadioGroupState extends State<RadioGroup> {
               margin: const EdgeInsets.symmetric(horizontal: 5),
               padding: const EdgeInsets.all(5),
               child: Material(
-                  color: _selectedIndex == entry.key ? Colors.blue : Colors.grey,
+                  color: _selectedIndex == entry.key ? AppTheme.accentColor.withRed(200) : Colors.grey,
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
                   child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10),

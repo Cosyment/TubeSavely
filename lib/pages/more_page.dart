@@ -114,11 +114,11 @@ class _MorePageState extends State<MorePage> {
                             item['type'] == 0
                                 ? Text(
                                     versionName,
-                                    style: const TextStyle(color: Colors.grey),
+                                    style: TextStyle(color: isLightMode ? AppTheme.nearlyBlack : AppTheme.nearlyWhite),
                                   )
-                                : const Icon(
+                                : Icon(
                                     Icons.arrow_forward,
-                                    color: Colors.grey,
+                                    color: isLightMode ? AppTheme.nearlyBlack : AppTheme.nearlyWhite,
                                   ),
                           ],
                         ),

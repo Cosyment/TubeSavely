@@ -14,7 +14,7 @@ class Constants {
   static String appChannelId = "";
   static const siteList = [
     {
-      "bg": "iconspxkx.png",
+      "bg": "iconspxkx0.png",
       "isLock": false,
       "title": "皮皮虾",
     },
@@ -24,7 +24,7 @@ class Constants {
       "title": "YouTube",
     },
     {
-      "bg": "iconspzy.png",
+      "bg": "iconspz0y.png",
       "isLock": false,
       "title": "最右",
     },

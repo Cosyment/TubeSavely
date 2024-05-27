@@ -50,11 +50,15 @@ class _TaskPageState extends State<TaskPage> {
                   ),
                 ),
                 backgroundColor: isLightMode ? AppTheme.white : AppTheme.nearlyBlack,
-                body: ListView.builder(
-                    itemCount: taskList.length,
-                    itemBuilder: (context, index) {
-                      return _buildItem(taskList[index] as DownloadTask);
-                    }))));
+                body: taskList.isEmpty
+                    ? Center(
+                        child: Image.asset('assets/images/ic_empty.png'),
+                      )
+                    : ListView.builder(
+                        itemCount: taskList.length,
+                        itemBuilder: (context, index) {
+                          return _buildItem(taskList[index] as DownloadTask);
+                        }))));
   }
 
   Widget _buildItem(DownloadTask task) {

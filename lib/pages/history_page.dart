@@ -29,7 +29,9 @@ class _HistoryPageState extends State<HistoryPage> {
                 ),
               ),
               backgroundColor: isLightMode ? AppTheme.white : AppTheme.nearlyBlack,
-              body: const Text('data'),
+              body: Center(
+                child: Image.asset('assets/images/ic_empty.png'),
+              ),
             )));
   }
 }

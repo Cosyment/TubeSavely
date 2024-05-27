@@ -7,10 +7,10 @@
     <item >
         <bitmap
             android:gravity="center"
-            android:src="@mipmap/ic_launcher_foreground"
+            android:src="@mipmap/ic_launcher_foreground_large"
             android:tileMode="disabled"
-            android:width="200dp"
-            android:height="200dp" />
+            android:width="500dp"
+            android:height="500dp" />
     </item>
 
 </layer-list>
