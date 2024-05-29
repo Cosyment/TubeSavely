@@ -14,11 +14,11 @@ import 'package:tubesavely/pages/more_page.dart';
 import 'package:tubesavely/pages/setting_page.dart';
 import 'package:tubesavely/pages/splash_page.dart';
 import 'package:tubesavely/pages/task_page.dart';
+import 'package:tubesavely/theme/app_theme.dart';
 import 'package:tubesavely/utils/event_bus.dart';
 import 'package:tubesavely/widget/drawer_controller.dart';
 import 'package:tubesavely/widget/slide_drawer.dart';
 
-import 'app_theme.dart';
 import 'generated/l10n.dart';
 import 'storage/local_storage_service.dart';
 
@@ -28,6 +28,8 @@ void main() async {
   MediaKit.ensureInitialized();
   runApp(const MyApp());
   LocalStorageService().init();
+
+  // DbManager().createTable();
 }
 
 Future<void> _loadShader() async {
@@ -108,7 +110,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    title = "Video download";
+    title = "TubeSavely";
     drawerIndex = DrawerIndex.Home;
     screenView = const HomePage();
     super.initState();
@@ -130,8 +132,10 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
     bool isLightMode = brightness == Brightness.light;
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         systemNavigationBarColor: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack, statusBarColor: Colors.transparent));
+
     return SafeArea(
       top: false,
+      bottom: false,
       child: Scaffold(
         // backgroundColor: AppTheme.white,
         body: CustomDrawerController(

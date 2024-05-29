@@ -6,8 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubesavely/pages/webview.dart';
 import 'package:tubesavely/utils/constants.dart';
 
-import '../app_theme.dart';
 import '../main.dart';
+import '../theme/app_theme.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});

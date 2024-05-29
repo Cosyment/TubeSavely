@@ -1,8 +1,7 @@
 import 'package:background_downloader/background_downloader.dart';
 import 'package:flutter/material.dart';
-import 'package:tubesavely/utils/common.dart';
 
-import '../app_theme.dart';
+import '../theme/app_theme.dart';
 
 class TaskPage extends StatefulWidget {
   const TaskPage({super.key});
@@ -24,11 +23,7 @@ class _TaskPageState extends State<TaskPage> {
     super.initState();
     fetchData();
 
-    FileDownloader().registerCallbacks(taskStatusCallback: (status) {
-      debugPrint('---------..>$status');
-    }, taskProgressCallback: (progress) {
-      debugPrint('-------->>>$progress');
-    });
+    FileDownloader().registerCallbacks(taskStatusCallback: (status) {}, taskProgressCallback: (progress) {});
   }
 
   @override
@@ -42,7 +37,7 @@ class _TaskPageState extends State<TaskPage> {
             bottom: false,
             child: Scaffold(
                 appBar: AppBar(
-                  leading: const Spacer(),
+                  leading: const SizedBox(width: 50),
                   backgroundColor: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
                   title: Text(
                     'Tasks',
@@ -80,19 +75,19 @@ class _TaskPageState extends State<TaskPage> {
                         future: task.expectedFileSize(),
                         builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
                           return Text(
-                            task.filename + "--" + Common.formatSize(snapshot.data ?? 0),
+                            task.filename,
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
                             ),
                           );
                         },
                       )),
-                      IconButton(
-                        onPressed: () {
-                          FileDownloader().pause(task);
-                        },
-                        icon: const Icon(Icons.pause),
-                      )
+                      // IconButton(
+                      //   onPressed: () {
+                      //     FileDownloader().pause(task);
+                      //   },
+                      //   icon: const Icon(Icons.pause),
+                      // )
                     ]))));
   }
 }

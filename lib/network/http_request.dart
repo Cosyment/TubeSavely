@@ -18,7 +18,7 @@ class HttpRequest {
     String errorMessage = '';
     try {
       if (method == 'GET') {
-        response = await _httpClient.get(Uri.http(Urls.hostname, url, params), headers: headers);
+        response = await _httpClient.get(Uri.https(Urls.hostname, url, params), headers: headers);
       } else {
         response = await _httpClient.post(Uri.https(Urls.hostname, url), headers: headers, body: params);
       }

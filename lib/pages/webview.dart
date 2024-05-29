@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import '../app_theme.dart';
-import '../theme/colors.dart';
+import '../theme/app_theme.dart';
 
 class WebViewPage extends StatefulWidget {
   const WebViewPage({super.key, required this.title, required this.url});
@@ -61,7 +60,7 @@ class _WebViewState extends State<WebViewPage> {
                   backgroundColor: AppTheme.grey,
                   color: AppTheme.accentColor,
                   minHeight: 1,
-                  valueColor: const AlwaysStoppedAnimation<Color>(progressColor),
+                  valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.accentColor),
                   value: linearProgress,
                 ),
                 WebViewWidget(controller: controller)

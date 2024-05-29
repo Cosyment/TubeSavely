@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '../app_theme.dart';
+import '../theme/app_theme.dart';
 
 class AboutPage extends StatefulWidget {
   const AboutPage({super.key});

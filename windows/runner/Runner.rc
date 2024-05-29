@@ -94,12 +94,12 @@ BEGIN
 BEGIN
         VALUE
 "CompanyName", "com.xhx.video.saver" "\0"
-VALUE "FileDescription", "TubeSaverX" "\0"
+VALUE "FileDescription", "TubeSavely" "\0"
 VALUE "FileVersion", VERSION_AS_STRING "\0"
-VALUE "InternalName", "TubeSaverX" "\0"
+VALUE "InternalName", "TubeSavely" "\0"
 VALUE "LegalCopyright", "Copyright (C) 2023 com.xhx.downloaderx. All rights reserved." "\0"
-VALUE "OriginalFilename", "TubeSaverX.exe" "\0"
-VALUE "ProductName", "TubeSaverX" "\0"
+VALUE "OriginalFilename", "TubeSavely.exe" "\0"
+VALUE "ProductName", "TubeSavely" "\0"
 VALUE "ProductVersion", VERSION_AS_STRING "\0"
 END
         END

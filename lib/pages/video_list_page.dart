@@ -4,11 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tubesavely/network/http_request.dart';
 import 'package:tubesavely/pages/video_playback_page.dart';
-import 'package:tubesavely/utils/common.dart';
+import 'package:tubesavely/utils/common_util.dart';
 import 'package:tubesavely/utils/constants.dart';
 
-import '../app_theme.dart';
 import '../models/video_info.dart';
+import '../theme/app_theme.dart';
 
 class VideoListPage extends StatefulWidget {
   final String url;
@@ -133,7 +133,7 @@ class _VideoListPageState extends State<VideoListPage> {
                         Text(
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          '${formatInfo.resolution?.toUpperCase() ?? formatInfo.format_note?.toUpperCase() ?? ''} ${Common.formatSize(formatInfo.filesize ?? 0)}',
+                          '${formatInfo.resolution?.toUpperCase() ?? formatInfo.format_note?.toUpperCase() ?? ''} ${CommonUtil.formatSize(formatInfo.filesize ?? 0)}',
                           style: const TextStyle(fontSize: 15),
                         ),
                       ],

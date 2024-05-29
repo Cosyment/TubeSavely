@@ -114,7 +114,7 @@ class Downloader {
     final task = DownloadTask(
       url: url ?? '',
       filename: fileName,
-      directory: 'TubeSaverX/Files',
+      directory: 'TubeSavely/Files',
       baseDirectory: BaseDirectory.temporary,
       updates: Updates.statusAndProgress,
       requiresWiFi: false,
@@ -170,7 +170,7 @@ class Downloader {
     final task = DownloadTask(
       url: url ?? '',
       filename: '$fileName.mp4',
-      directory: 'TubeSaverX/Files',
+      directory: 'TubeSavely/Files',
       updates: Updates.statusAndProgress,
       requiresWiFi: false,
       retries: 5,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../app_theme.dart';
+import '../theme/app_theme.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
@@ -10,6 +10,11 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var brightness = MediaQuery.of(context).platformBrightness;
@@ -21,7 +26,7 @@ class _HistoryPageState extends State<HistoryPage> {
             bottom: false,
             child: Scaffold(
               appBar: AppBar(
-                leading: const Spacer(),
+                leading: const SizedBox(width: 50),
                 backgroundColor: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
                 title: Text(
                   'History',

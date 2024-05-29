@@ -6,8 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubesavely/pages/webview.dart';
 import 'package:tubesavely/utils/constants.dart';
 
-import '../app_theme.dart';
 import '../main.dart';
+import '../theme/app_theme.dart';
 
 class MorePage extends StatefulWidget {
   const MorePage({super.key});
@@ -23,21 +23,21 @@ class _MorePageState extends State<MorePage> {
       "title": "Version",
       "type": 0,
     },
-    {
-      "icon": Icons.account_box,
-      "title": "User Agreement",
-      "type": 1,
-    },
+    // {
+    //   "icon": Icons.account_box,
+    //   "title": "User Agreement",
+    //   "type": 1,
+    // },
     {
       "icon": Icons.privacy_tip,
       "title": "Privacy Policy",
       "type": 2,
     },
-    {
-      "icon": Icons.info,
-      "title": "About",
-      "type": 2,
-    },
+    // {
+    //   "icon": Icons.info,
+    //   "title": "About",
+    //   "type": 2,
+    // },
   ];
 
   var versionName = "";
@@ -71,7 +71,7 @@ class _MorePageState extends State<MorePage> {
             bottom: false,
             child: Scaffold(
               appBar: AppBar(
-                leading: const Spacer(),
+                leading: const SizedBox(width: 50),
                 backgroundColor: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
                 title: Text(
                   'More',

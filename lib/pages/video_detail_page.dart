@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:tubesavely/app_theme.dart';
 import 'package:tubesavely/models/Pair.dart';
 import 'package:tubesavely/models/video_info.dart';
 import 'package:tubesavely/network/http_request.dart';
-import 'package:tubesavely/utils/common.dart';
+import 'package:tubesavely/storage/database.dart';
+import 'package:tubesavely/theme/app_theme.dart';
+import 'package:tubesavely/utils/common_util.dart';
 import 'package:tubesavely/utils/constants.dart';
 import 'package:tubesavely/utils/resolution_util.dart';
 import 'package:tubesavely/widget/iconed_button.dart';
@@ -63,6 +64,12 @@ class _VideoDetailPagePageState extends State<VideoDetailPage> with SingleTicker
       audioList = videoInfo?.formats
           ?.where((value) => (value.audio_ext == 'm4a' || value.audio_ext == 'webm') && value.protocol != 'm3u8_native')
           .toList();
+
+      // DbManager.db?.add(videoInfo);
+      if (videoInfo != null) {
+        // DbManager.insert(widget.url ?? '', videoInfo!);
+        DatabaseHelper().insert(widget.url ?? '', videoInfo!).then((onValue) => {debugPrint('------->>>>onValue ${onValue}')});
+      }
 
       _initPlayer(url: videoList?.first.url ?? '');
     });
@@ -164,130 +171,87 @@ class _VideoDetailPagePageState extends State<VideoDetailPage> with SingleTicker
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
-        const SystemUiOverlayStyle(systemNavigationBarColor: Colors.black, statusBarColor: Colors.transparent));
+        const SystemUiOverlayStyle(systemNavigationBarColor: Colors.red, statusBarColor: Colors.red));
 
-    return Scaffold(
-      appBar: AppBar(
-          leading: IconButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              icon: const Icon(Icons.close)),
-          title: Text(videoInfo?.title ?? '', style: const TextStyle(color: Colors.white70)),
-          iconTheme: const IconThemeData(color: Colors.white70),
-          backgroundColor: Colors.black38),
-      backgroundColor: Colors.black,
-      body: Column(children: [
-        AnimatedBuilder(
-            animation: _marginTopAnimation,
-            builder: (context, child) {
-              return SizedBox(
-                height: _marginTopAnimation.value,
-              );
-            }),
-        AnimatedBuilder(
-            animation: _videoHeightAnimation,
-            builder: (context, child) {
-              return SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: _videoHeightAnimation.value,
-                child: Video(
-                  controller: _videoController,
-                ),
-              );
-            }),
-        const SizedBox(
-          height: 10,
-        ),
-        if ((videoList?.length ?? 0) > 1)
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              children: [
-                const Text(
-                  '分辨率：',
-                  style: TextStyle(color: Colors.white70, fontSize: 16),
-                ),
-                RadioGroup(
-                    items: videoList
-                        ?.where((element) => element.resolution != null)
-                        .map((e) => Pair(VideoResolutionUtil.format(e.resolution ?? ''), Common.formatSize(e.filesize ?? 0)))
-                        .toList(),
-                    onItemSelected: (index) {
-                      videoTypeIndex = index;
-                      _player.open(Media(videoList?[index].url ?? ''), play: true);
-                    }),
-              ],
+    return SafeArea(
+        top: false,
+        bottom: false,
+        child: Scaffold(
+          appBar: AppBar(
+              leading: IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  icon: const Icon(Icons.close)),
+              title: Text(videoInfo?.title ?? '', style: const TextStyle(color: Colors.white70)),
+              iconTheme: const IconThemeData(color: Colors.white70),
+              backgroundColor: Colors.black38),
+          backgroundColor: Colors.black,
+          body: Column(children: [
+            AnimatedBuilder(
+                animation: _marginTopAnimation,
+                builder: (context, child) {
+                  return SizedBox(
+                    height: _marginTopAnimation.value,
+                  );
+                }),
+            AnimatedBuilder(
+                animation: _videoHeightAnimation,
+                builder: (context, child) {
+                  return SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: _videoHeightAnimation.value,
+                    child: Video(
+                      controller: _videoController,
+                    ),
+                  );
+                }),
+            const SizedBox(
+              height: 10,
             ),
-          ),
-        if ((audioList?.length ?? 0) >= 1 || videoInfo?.music?.isNotEmpty == true)
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              children: [
-                const Text(
-                  '下载选项：',
-                  style: TextStyle(color: Colors.white70, fontSize: 16),
+            if ((videoList?.length ?? 0) > 1)
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  children: [
+                    const Text(
+                      'Resolution：',
+                      style: TextStyle(color: Colors.white70, fontSize: 16),
+                    ),
+                    RadioGroup(
+                        items: videoList
+                            ?.where((element) => element.resolution != null)
+                            .map((e) =>
+                                Pair(VideoResolutionUtil.format(e.resolution ?? ''), CommonUtil.formatSize(e.filesize ?? 0)))
+                            .toList(),
+                        onItemSelected: (index) {
+                          videoTypeIndex = index;
+                          _player.open(Media(videoList?[index].url ?? ''), play: true);
+                        }),
+                  ],
                 ),
-                RadioGroup(
-                    items: [Pair('视频', null), Pair('音频', null)],
-                    onItemSelected: (index) {
-                      downloadTypeIndex = index;
-                    })
-              ],
-            ),
-          ),
-        const SizedBox(height: 30),
-        _buildButton(),
-        // Padding(
-        //     padding: const EdgeInsets.only(left: 30, right: 30),
-        //     child: Center(
-        //       child: Container(
-        //         height: 50,
-        //         decoration: BoxDecoration(
-        //           color: Colors.blue,
-        //           borderRadius: const BorderRadius.all(Radius.circular(50)),
-        //           boxShadow: <BoxShadow>[
-        //             BoxShadow(color: Colors.grey.withOpacity(0.6), offset: const Offset(4, 4), blurRadius: 8.0),
-        //           ],
-        //         ),
-        //         child: Material(
-        //           color: Colors.transparent,
-        //           child: InkWell(
-        //             onTap: () {
-        //               // Downloader.download('https://www.baidu.com', videoInfo?.title);
-        //               Downloader.combineDownload(videoList?.first.url ?? '', videoInfo?.title ?? '',
-        //                   audioUrl: audioList?.first.url);
-        //             },
-        //             child: const Center(
-        //               child: Row(
-        //                 mainAxisAlignment: MainAxisAlignment.center,
-        //                 crossAxisAlignment: CrossAxisAlignment.center,
-        //                 children: <Widget>[
-        //                   Icon(
-        //                     Icons.save_alt,
-        //                     color: Colors.white,
-        //                     size: 22,
-        //                   ),
-        //                   Padding(
-        //                     padding: EdgeInsets.all(4.0),
-        //                     child: Text(
-        //                       'Download',
-        //                       style: TextStyle(
-        //                         fontWeight: FontWeight.w500,
-        //                         color: Colors.white,
-        //                       ),
-        //                     ),
-        //                   ),
-        //                 ],
-        //               ),
-        //             ),
-        //           ),
-        //         ),
-        //       ),
-        //     ))
-      ]),
-    );
+              ),
+            if ((audioList?.length ?? 0) >= 1 || videoInfo?.music?.isNotEmpty == true)
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  children: [
+                    const Text(
+                      'Download Option：',
+                      style: TextStyle(color: Colors.white70, fontSize: 16),
+                    ),
+                    RadioGroup(
+                        items: [Pair('Video', null), Pair('Audio', null)],
+                        onItemSelected: (index) {
+                          downloadTypeIndex = index;
+                        })
+                  ],
+                ),
+              ),
+            const SizedBox(height: 30),
+            _buildButton(),
+          ]),
+        ));
   }
 
   Widget _buildButton() {
@@ -298,7 +262,7 @@ class _VideoDetailPagePageState extends State<VideoDetailPage> with SingleTicker
           icon: Icon(Icons.download, color: Colors.white),
           color: AppTheme.accentColor,
         ),
-        ButtonState.loading: const IconedButton(text: "Downloading", color: Colors.blue),
+        ButtonState.loading: const IconedButton(text: "Downloading", color: AppTheme.accentColor),
         ButtonState.fail: IconedButton(
             text: "Download Failure", icon: const Icon(Icons.cancel, color: Colors.white), color: Colors.red.shade300),
         ButtonState.success: IconedButton(

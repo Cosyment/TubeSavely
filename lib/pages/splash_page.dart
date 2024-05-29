@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:tubesavely/app_theme.dart';
+import 'package:tubesavely/theme/app_theme.dart';
 
 import '../main.dart';
 
@@ -23,7 +23,25 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
   void initState() {
     super.initState();
     _mockCheckForSession().then((status) {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => const MainPage()));
+      // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => const MainPage()));
+
+      Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+          transitionDuration: const Duration(milliseconds: 300),
+          pageBuilder: (BuildContext context, _, __) => const MainPage(),
+          transitionsBuilder:
+              (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+            return FadeTransition(
+              opacity: Tween<double>(
+                begin: 0,
+                end: 1, // 结束位置在屏幕原点
+              ).animate(animation),
+              child: child,
+            );
+          },
+        ),
+      );
     });
   }
 

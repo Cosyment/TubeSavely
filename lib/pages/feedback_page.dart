@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:tubesavely/app_theme.dart';
+import 'package:tubesavely/theme/app_theme.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class FeedbackPage extends StatefulWidget {
@@ -30,7 +30,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
         top: false,
         child: Scaffold(
           appBar: AppBar(
-            leading: const Spacer(),
+            leading: const SizedBox(width: 50),
             backgroundColor: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
             title: Text(
               'Feedback',

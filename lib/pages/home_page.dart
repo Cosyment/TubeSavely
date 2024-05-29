@@ -8,7 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shake_animation_widget/shake_animation_widget.dart';
 import 'package:tubesavely/pages/video_detail_page.dart';
 
-import '../app_theme.dart';
+import '../theme/app_theme.dart';
 import '../utils/event_bus.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,18 +22,19 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   TextEditingController textController = TextEditingController(
-      text:
+      text: ''
           // 'https://www.youtube.com/watch?v=Ek1QD7AH9XQ' //1080P
           // 'https://www.youtube.com/watch?v=k7dy1B6bOeM' // 4K
           // 'https://www.youtube.com/watch?v=Mi2vTUtKMOg' //8K
           // 'https://www.facebook.com/100000124835838/videos/329176782997696/'
-          //  'https://www.tiktok.com/t/ZTRC5xgJp'
-          // 'https://m.acfun.cn/v/?ac=39091936&sid=bf02f7d348c84918'
-          // 'http://xhslink.com/L8Qwiw'
-          // 'https://www.xiaohongshu.com/explore/662b0d07000000000d03227c'
-          // 'https://www.kuaishou.com/f/X3WcgZrbGXVcWWa'
-          // 'https://www.bilibili.com/video/BV1kf421S7WH/?share_source=copy_web'
-          'https://www.douyin.com/video/6961737553342991651');
+          // 'https://www.tiktok.com/t/ZTRC5xgJp'
+          'https://m.acfun.cn/v/?ac=39091936&sid=bf02f7d348c84918'
+      // 'http://xhslink.com/L8Qwiw'
+      // 'https://www.xiaohongshu.com/explore/662b0d07000000000d03227c'
+      // 'https://www.kuaishou.com/f/X3WcgZrbGXVcWWa'
+      // 'https://www.bilibili.com/video/BV1kf421S7WH/?share_source=copy_web'
+      // 'https://www.douyin.com/video/6961737553342991651'
+      );
 
   final ShakeAnimationController _shakeAnimationController = ShakeAnimationController();
 
@@ -76,7 +77,7 @@ class _HomePageState extends State<HomePage> {
             bottom: false,
             child: Scaffold(
               appBar: AppBar(
-                leading: const Spacer(),
+                leading: const SizedBox(width: 50),
                 backgroundColor: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
                 title: Text(
                   'Parse',
@@ -110,7 +111,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildDownloadButton() {
-    return Padding(
+    return Container(
         padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 100),
         child: ShakeAnimationWidget(
           //抖动控制器
@@ -144,37 +145,10 @@ class _HomePageState extends State<HomePage> {
                   'Start Parse',
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
-                // onTap: () {
-                //   startParse();
-                // },
               ),
             ),
           ),
         ));
-  }
-
-  Widget _buildButton() {
-    return Column(
-      children: [
-        SizedBox(height: 100.h),
-        Align(
-          alignment: Alignment.center,
-          child: FloatingActionButton(
-            backgroundColor: AppTheme.accentColor,
-            shape: const CircleBorder(),
-            onPressed: () {
-              startParse();
-            },
-            child: Image.asset(
-              "assets/next.png",
-              fit: BoxFit.fill,
-              width: 40.w,
-              height: 40.w,
-            ),
-          ),
-        )
-      ],
-    );
   }
 
   Widget _buildInputBox() {

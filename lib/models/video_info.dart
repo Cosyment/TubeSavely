@@ -33,6 +33,21 @@ class VideoInfo {
       extractor: json['extractor'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {
+      'title': title,
+      'uploader': uploader,
+      'url': url,
+      'formats': FormatInfo.toListJson(formats),
+      'thumbnail': thumbnail,
+      'music': music,
+      'duration': duration,
+      'filesize': filesize,
+      'extractor': extractor,
+    };
+    return data;
+  }
 }
 
 class FormatInfo {
@@ -77,5 +92,29 @@ class FormatInfo {
       format.add(FormatInfo.fromJson(item));
     }
     return format;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {
+      'url': url,
+      'resolution': resolution,
+      'filesize': filesize,
+      'ext': ext,
+      'video_ext': video_ext,
+      'audio_ext': audio_ext,
+      'protocol': protocol,
+      'format': format,
+      'format_note': format_note,
+    };
+
+    return data;
+  }
+
+  static List<Map<String, dynamic>> toListJson(List<FormatInfo>? formats) {
+    final List<Map<String, dynamic>> data = <Map<String, dynamic>>[];
+    for (var action in formats!) {
+      data.add(action.toJson());
+    }
+    return data;
   }
 }
