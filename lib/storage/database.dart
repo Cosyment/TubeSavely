@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:tubesavely/models/video_info.dart';
+import 'package:tubesavely/models/video_model.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
@@ -43,7 +43,7 @@ class DatabaseHelper {
   }
 
   //插入数据
-  insert(String url, VideoInfo video) async {
+  insert(String url, VideoModel video) async {
     Database? db = await _instance.db;
     print("insert function called");
     print("插入的数据:${video.toJson()}");

@@ -63,39 +63,22 @@ class _FeedbackPageState extends State<FeedbackPage> {
                       style: TextStyle(fontSize: 16, color: isLightMode ? Colors.black : Colors.white),
                     ),
                   ),
-                  _buildComposer(),
+                  // _buildComposer(),
                   Padding(
                     padding: const EdgeInsets.only(top: 16, left: 30, right: 30),
                     child: Center(
-                      child: Container(
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: AppTheme.accentColor,
-                          borderRadius: const BorderRadius.all(Radius.circular(50)),
-                          boxShadow: <BoxShadow>[
-                            BoxShadow(color: Colors.grey.withOpacity(0.6), offset: const Offset(4, 4), blurRadius: 8.0),
-                          ],
-                        ),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () {
-                              // FocusScope.of(context).requestFocus(FocusNode());
-                              _sendMail();
-                            },
-                            child: const Center(
-                              child: Padding(
-                                padding: EdgeInsets.all(4.0),
-                                child: Text(
-                                  'Send',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                      child: MaterialButton(
+                        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+                        elevation: 20,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50), side: const BorderSide(color: Colors.transparent, width: 0)),
+                        color: AppTheme.accentColor,
+                        onPressed: () {
+                          _sendMail();
+                        },
+                        child: const Text(
+                          'Send Feedback',
+                          style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
                       ),
                     ),
@@ -148,7 +131,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
   }
 
   _sendMail() async {
-    String subject = 'TubaSavely';
+    String subject = 'TubeSavely';
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String body = 'Platform: ${Platform.operatingSystem}%0D%0A'
             'Version: ${packageInfo.version}%0D%0A'
@@ -156,7 +139,6 @@ class _FeedbackPageState extends State<FeedbackPage> {
             'Language: ${Platform.localeName}%0D%0A'
             'BuildNumber: ${packageInfo.buildNumber}%0D%0A'
             'CreateTime: ${HttpDate.format(DateTime.timestamp())}%0D%0A'
-        // 'Content: ${textController.text}%0D%0A'
         .replaceAll(' ', '%20');
     String url = 'mailto:waitinghc@gmail.com?body=$body&subject=$subject';
     await launchUrlString(url);

@@ -17,7 +17,7 @@ class Constants {
 class Urls {
   // static const String hostname = 'openai.api.firefix.cn';
   // static const String hostname = '175.178.252.202:9527';
-  static const String hostname = 'shortvideo.cosyment.com';
+  static const String hostname = 'tubesavely.cosyment.com';
   static const String submitOrder = "/tOrder/submitOrder";
   static const String updateOrder = "/tOrder/updateOrder";
   static const queryCountry = 'http://ip-api.com/json';

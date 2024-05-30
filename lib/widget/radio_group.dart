@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tubesavely/models/Pair.dart';
-import 'package:tubesavely/theme/app_theme.dart';
 
 class RadioGroup extends StatefulWidget {
   final List<Pair>? items;
@@ -41,33 +40,33 @@ class _RadioGroupState extends State<RadioGroup> {
     List<Widget> widgets = items
         .asMap()
         .entries
-        .map((entry) => InkWell(
-            onTap: () {
-              setState(() {
-                // 确保在StatefulWidget中调用setState以更新UI
-                _selectedIndex = entry.key;
-              });
-              onItemSelected(entry.key); // 触发外部回调
-            },
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 5),
-              padding: const EdgeInsets.all(5),
-              child: Material(
-                  color: _selectedIndex == entry.key ? AppTheme.accentColor.withRed(200) : Colors.grey,
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+        .map((entry) => Row(children: [
+              MaterialButton(
+                  onPressed: () {
+                    setState(() {
+                      // 确保在StatefulWidget中调用setState以更新UI
+                      _selectedIndex = entry.key;
+                    });
+                    onItemSelected(entry.key); // 触发外部回调
+                  },
+                  color: _selectedIndex == entry.key ? Color(0xFF3E2723) : Colors.grey.withOpacity(0.2),
+                  elevation: 20,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50), side: const BorderSide(color: Colors.transparent, width: 0)),
                   child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      height: 40,
-                      child: Row(
-                        children: [
-                          Text(entry.value.first,
-                              style: const TextStyle(color: Colors.white70, fontSize: 15, fontWeight: FontWeight.bold)),
-                          if (entry.value.second != null && entry.value.second != '')
-                            Text(' (${entry.value.second})', style: const TextStyle(color: Colors.white60, fontSize: 12))
-                        ],
-                      ))),
-              // Text(entry.value, style: const TextStyle(color: Colors.white70, fontSize: 15, fontWeight: FontWeight.bold)),
-            )))
+                    // margin: const EdgeInsets.symmetric(horizontal: 0),
+                    // padding: const EdgeInsets.all(0),
+                    child: Row(children: [
+                      Text(entry.value.first,
+                          style: const TextStyle(color: Colors.white70, fontSize: 15, fontWeight: FontWeight.bold)),
+                      if (entry.value.second != null && entry.value.second != '')
+                        Text(' (${entry.value.second})', style: const TextStyle(color: Colors.white60, fontSize: 12))
+                    ]),
+                  )),
+              const SizedBox(
+                width: 10,
+              )
+            ]))
         .toList();
     return widgets;
   }

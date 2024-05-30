@@ -15,15 +15,16 @@ class VideoResolutionUtil {
       width = height;
       height = temp;
     }
+    debugPrint('video width:$width,height:$height');
 
     String? resolution = '';
-    if (width == 256 || height == 256) {
+    if (width == 256 || height == 256 || (width == 192 || height == 192)) {
       //256x144
       resolution = '144P';
-    } else if (width == 426 || height == 426) {
+    } else if (width == 426 || height == 426 || (width == 240 || height == 240)) {
       //426x240
       resolution = '240P';
-    } else if (width == 640 || height == 640) {
+    } else if (width == 640 || height == 640 || (width == 360 || height == 360)) {
       //640x360
       resolution = '360P';
     } else if (width == 845 || (height == 450 || height == 480)) {
@@ -35,7 +36,7 @@ class VideoResolutionUtil {
     } else if (width == 1280 || height == 1280) {
       //1280x720
       resolution = '720P';
-    } else if (width == 1920 || height == 1920) {
+    } else if (width == 1920 || height == 1920 || (width == 1080 || height == 1080)) {
       //1920x1080
       resolution = '1080P';
     } else if (width == 2560 || height == 2560) {

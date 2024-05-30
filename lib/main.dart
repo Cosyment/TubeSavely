@@ -11,23 +11,19 @@ import 'package:tubesavely/pages/history_page.dart';
 import 'package:tubesavely/pages/home_page.dart';
 import 'package:tubesavely/pages/invite_page.dart';
 import 'package:tubesavely/pages/more_page.dart';
-import 'package:tubesavely/pages/setting_page.dart';
 import 'package:tubesavely/pages/splash_page.dart';
 import 'package:tubesavely/pages/task_page.dart';
 import 'package:tubesavely/theme/app_theme.dart';
-import 'package:tubesavely/utils/event_bus.dart';
 import 'package:tubesavely/widget/drawer_controller.dart';
 import 'package:tubesavely/widget/slide_drawer.dart';
 
 import 'generated/l10n.dart';
-import 'storage/local_storage_service.dart';
 
 void main() async {
   await ScreenUtil.ensureScreenSize();
   _loadShader();
   MediaKit.ensureInitialized();
   runApp(const MyApp());
-  LocalStorageService().init();
 
   // DbManager().createTable();
 }
@@ -53,22 +49,10 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    initTheme();
-    EventBus.getDefault().register(this, (event) {
-      if (event.toString() == "change_theme") {
-        initTheme();
-      }
-    });
   }
 
   initTheme() async {
     setState(() {});
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    EventBus.getDefault().unregister(this);
   }
 
   @override
@@ -120,9 +104,7 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed && currentPageIndex == 0) {
-      EventBus.getDefault().post("parse");
-    }
+    if (state == AppLifecycleState.resumed && currentPageIndex == 0) {}
   }
 
   @override
@@ -185,11 +167,11 @@ class _MainPageState extends State<MainPage> with WidgetsBindingObserver {
             screenView = const InviteFriendPage();
           });
           break;
-        case DrawerIndex.Settings:
-          setState(() {
-            screenView = const SettingPage();
-          });
-          break;
+        // case DrawerIndex.Settings:
+        //   setState(() {
+        //     screenView = const SettingPage();
+        //   });
+        //   break;
         case DrawerIndex.More:
           setState(() {
             screenView = const MorePage();

@@ -1,15 +1,15 @@
-class VideoInfo {
+class VideoModel {
   final String? title;
   final String? uploader;
   final String? url;
-  final List<FormatInfo>? formats;
+  final List<FormatModel>? formats;
   final String? thumbnail;
   final String? music;
   final num? duration;
   final int? filesize;
   final String? extractor;
 
-  VideoInfo(
+  VideoModel(
       {required this.title,
       required this.uploader,
       required this.formats,
@@ -20,12 +20,12 @@ class VideoInfo {
       required this.extractor,
       required this.filesize});
 
-  factory VideoInfo.fromJson(Map<String, dynamic> json) {
-    return VideoInfo(
+  factory VideoModel.fromJson(Map<String, dynamic> json) {
+    return VideoModel(
       title: json['title'],
       uploader: json['uploader'],
       url: json['url'],
-      formats: FormatInfo.fromListJson(json['formats']),
+      formats: FormatModel.fromListJson(json['formats']),
       thumbnail: json['thumbnail'],
       music: json['music'],
       duration: json['duration'],
@@ -39,7 +39,7 @@ class VideoInfo {
       'title': title,
       'uploader': uploader,
       'url': url,
-      'formats': FormatInfo.toListJson(formats),
+      'formats': FormatModel.toListJson(formats),
       'thumbnail': thumbnail,
       'music': music,
       'duration': duration,
@@ -50,7 +50,7 @@ class VideoInfo {
   }
 }
 
-class FormatInfo {
+class FormatModel {
   final String? url;
   final String? ext;
   final String? video_ext;
@@ -61,7 +61,7 @@ class FormatInfo {
   final String? format;
   final String? format_note;
 
-  FormatInfo(
+  FormatModel(
       {required this.url,
       required this.resolution,
       required this.filesize,
@@ -72,8 +72,8 @@ class FormatInfo {
       required this.format,
       required this.format_note});
 
-  factory FormatInfo.fromJson(Map<String, dynamic> json) {
-    return FormatInfo(
+  factory FormatModel.fromJson(Map<String, dynamic> json) {
+    return FormatModel(
       url: json['url'],
       resolution: json['resolution'],
       filesize: json['filesize'],
@@ -86,10 +86,10 @@ class FormatInfo {
     );
   }
 
-  static List<FormatInfo> fromListJson(List json) {
-    final format = <FormatInfo>[];
+  static List<FormatModel> fromListJson(List json) {
+    final format = <FormatModel>[];
     for (final item in json) {
-      format.add(FormatInfo.fromJson(item));
+      format.add(FormatModel.fromJson(item));
     }
     return format;
   }
@@ -110,7 +110,7 @@ class FormatInfo {
     return data;
   }
 
-  static List<Map<String, dynamic>> toListJson(List<FormatInfo>? formats) {
+  static List<Map<String, dynamic>> toListJson(List<FormatModel>? formats) {
     final List<Map<String, dynamic>> data = <Map<String, dynamic>>[];
     for (var action in formats!) {
       data.add(action.toJson());

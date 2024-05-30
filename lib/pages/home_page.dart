@@ -9,7 +9,6 @@ import 'package:shake_animation_widget/shake_animation_widget.dart';
 import 'package:tubesavely/pages/video_detail_page.dart';
 
 import '../theme/app_theme.dart';
-import '../utils/event_bus.dart';
 
 class HomePage extends StatefulWidget {
   static ui.FragmentShader? shader;
@@ -42,12 +41,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    EventBus.getDefault().register(this, (event) {
-      if (event.toString() == "parse") {
-        getPaste();
-      }
-    });
-
     startShake();
   }
 
@@ -58,12 +51,6 @@ class _HomePageState extends State<HomePage> {
       startShake();
     });
     // Future.delayed(const Duration(seconds: 3), () => {startShake()});
-  }
-
-  @override
-  void dispose() {
-    EventBus.getDefault().unregister(this);
-    super.dispose();
   }
 
   @override
@@ -80,7 +67,7 @@ class _HomePageState extends State<HomePage> {
                 leading: const SizedBox(width: 50),
                 backgroundColor: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
                 title: Text(
-                  'Parse',
+                  'TubeSavely',
                   style: TextStyle(color: isLightMode ? AppTheme.nearlyBlack : AppTheme.white),
                 ),
               ),
@@ -102,53 +89,43 @@ class _HomePageState extends State<HomePage> {
                     child: _buildInputBox(),
                   ),
                   SliverToBoxAdapter(
-                    // child: _buildButton(),
-                    child: _buildDownloadButton(),
+                    child: _buildButton(),
+                    // child: _buildDownloadButton(),
                   ),
                 ],
               ),
             )));
   }
 
-  Widget _buildDownloadButton() {
-    return Container(
-        padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 100),
-        child: ShakeAnimationWidget(
-          //抖动控制器
-          shakeAnimationController: _shakeAnimationController,
-          //微旋转的抖动
-          shakeAnimationType: ShakeAnimationType.RoateShake,
-          //设置不开启抖动
-          isForward: false,
-          //默认为 0 无限执行
-          shakeCount: 0,
-          //抖动的幅度 取值范围为[0,1]
-          shakeRange: 0.03,
-          //执行抖动动画的子Widget
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () {
+  Widget _buildButton() {
+    return ShakeAnimationWidget(
+        //抖动控制器
+        shakeAnimationController: _shakeAnimationController,
+        //微旋转的抖动
+        shakeAnimationType: ShakeAnimationType.RoateShake,
+        //设置不开启抖动
+        isForward: false,
+        //默认为 0 无限执行
+        shakeCount: 0,
+        //抖动的幅度 取值范围为[0,1]
+        shakeRange: 0.03,
+        //执行抖动动画的子Widget
+        child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 80),
+            child: MaterialButton(
+              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+              elevation: 20,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50), side: const BorderSide(color: Colors.transparent, width: 0)),
+              color: AppTheme.accentColor,
+              onPressed: () {
                 startParse();
               },
-              child: Container(
-                height: 45,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: AppTheme.accentColor,
-                  borderRadius: BorderRadius.circular(50),
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(color: Colors.grey.withOpacity(0.3), offset: const Offset(4, 4), blurRadius: 50),
-                  ],
-                ),
-                child: const Text(
-                  'Start Parse',
-                  style: TextStyle(color: Colors.white, fontSize: 20),
-                ),
+              child: const Text(
+                'Get Video',
+                style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700),
               ),
-            ),
-          ),
-        ));
+            )));
   }
 
   Widget _buildInputBox() {

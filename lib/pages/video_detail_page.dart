@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:tubesavely/models/Pair.dart';
-import 'package:tubesavely/models/video_info.dart';
+import 'package:tubesavely/models/video_model.dart';
 import 'package:tubesavely/network/http_request.dart';
 import 'package:tubesavely/storage/database.dart';
 import 'package:tubesavely/theme/app_theme.dart';
@@ -14,6 +13,7 @@ import 'package:tubesavely/widget/iconed_button.dart';
 import 'package:tubesavely/widget/radio_group.dart';
 
 import '../downloader/downloader.dart';
+import '../models/Pair.dart';
 import '../widget/progress_button.dart';
 
 class VideoDetailPage extends StatefulWidget {
@@ -26,11 +26,11 @@ class VideoDetailPage extends StatefulWidget {
 }
 
 class _VideoDetailPagePageState extends State<VideoDetailPage> with SingleTickerProviderStateMixin {
-  VideoInfo? videoInfo;
+  VideoModel? videoModel;
   ButtonState stateOnlyText = ButtonState.idle;
 
-  List<FormatInfo>? videoList;
-  List<FormatInfo>? audioList;
+  List<FormatModel>? videoList;
+  List<FormatModel>? audioList;
 
   late final _player = Player();
   late final _videoController = VideoController(_player);
@@ -43,15 +43,15 @@ class _VideoDetailPagePageState extends State<VideoDetailPage> with SingleTicker
   int downloadTypeIndex = 0;
 
   void _extractVideo(String url) async {
-    videoInfo = await HttpRequest.request<VideoInfo>(
+    videoModel = await HttpRequest.request<VideoModel>(
         Urls.shortVideoParse,
         params: {'url': url},
-        (jsonData) => VideoInfo.fromJson(jsonData),
+        (jsonData) => VideoModel.fromJson(jsonData),
         exception: (e) => {debugPrint('parse exception $e')});
 
     setState(() {
       //过滤全部全部视频
-      videoList = videoInfo?.formats?.where((value) => value.video_ext == 'mp4').toList();
+      videoList = videoModel?.formats?.where((value) => value.video_ext == 'mp4').toList();
       //过滤全部m3u8视频（主要处理类似youtube返回相同分辨率的mp4和m3u8场景）
       videoList = (videoList?.every((element) => element.protocol == 'm3u8_native') ?? false)
           ? videoList
@@ -61,14 +61,14 @@ class _VideoDetailPagePageState extends State<VideoDetailPage> with SingleTicker
         ...{for (var person in videoList as Iterable) person?.resolution: person}.values
       ];
 
-      audioList = videoInfo?.formats
+      audioList = videoModel?.formats
           ?.where((value) => (value.audio_ext == 'm4a' || value.audio_ext == 'webm') && value.protocol != 'm3u8_native')
           .toList();
 
       // DbManager.db?.add(videoInfo);
-      if (videoInfo != null) {
+      if (videoModel != null) {
         // DbManager.insert(widget.url ?? '', videoInfo!);
-        DatabaseHelper().insert(widget.url ?? '', videoInfo!).then((onValue) => {debugPrint('------->>>>onValue ${onValue}')});
+        DatabaseHelper().insert(widget.url ?? '', videoModel!).then((onValue) => {debugPrint('------->>>>onValue ${onValue}')});
       }
 
       _initPlayer(url: videoList?.first.url ?? '');
@@ -118,7 +118,7 @@ class _VideoDetailPagePageState extends State<VideoDetailPage> with SingleTicker
           stateOnlyText = ButtonState.loading;
         });
         if (downloadTypeIndex == 0) {
-          Downloader.combineDownload(videoList?[videoTypeIndex].url ?? '', videoInfo?.title ?? '',
+          Downloader.combineDownload(videoList?[videoTypeIndex].url ?? '', videoModel?.title ?? '',
               audioUrl: audioList?.length == 0 ? null : audioList?.first.url,
               resolution: VideoResolutionUtil.format(videoList?[videoTypeIndex].resolution ?? ''), onSuccess: () {
             _handleDownloadResult(true);
@@ -127,7 +127,7 @@ class _VideoDetailPagePageState extends State<VideoDetailPage> with SingleTicker
           });
         } else {
           Downloader.downloadAudio(
-              audioList?.length == 0 ? videoInfo?.music ?? '' : audioList?.first.url ?? '', videoInfo?.title ?? '',
+              audioList?.length == 0 ? videoModel?.music ?? '' : audioList?.first.url ?? '', videoModel?.title ?? '',
               onSuccess: () {
             _handleDownloadResult(true);
           }, onFailure: () {
@@ -183,7 +183,7 @@ class _VideoDetailPagePageState extends State<VideoDetailPage> with SingleTicker
                     Navigator.of(context).pop();
                   },
                   icon: const Icon(Icons.close)),
-              title: Text(videoInfo?.title ?? '', style: const TextStyle(color: Colors.white70)),
+              title: Text(videoModel?.title ?? '', style: const TextStyle(color: Colors.white70)),
               iconTheme: const IconThemeData(color: Colors.white70),
               backgroundColor: Colors.black38),
           backgroundColor: Colors.black,
@@ -211,13 +211,15 @@ class _VideoDetailPagePageState extends State<VideoDetailPage> with SingleTicker
             ),
             if ((videoList?.length ?? 0) > 1)
               Padding(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Row(
                   children: [
-                    const Text(
-                      'Resolution：',
-                      style: TextStyle(color: Colors.white70, fontSize: 16),
-                    ),
+                    const SizedBox(
+                        width: 75,
+                        child: Text(
+                          'Quality:',
+                          style: TextStyle(color: Colors.white70, fontSize: 16),
+                        )),
                     RadioGroup(
                         items: videoList
                             ?.where((element) => element.resolution != null)
@@ -231,24 +233,26 @@ class _VideoDetailPagePageState extends State<VideoDetailPage> with SingleTicker
                   ],
                 ),
               ),
-            if ((audioList?.length ?? 0) >= 1 || videoInfo?.music?.isNotEmpty == true)
+            if ((audioList?.length ?? 0) >= 1 || videoModel?.music?.isNotEmpty == true)
               Padding(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Row(
                   children: [
-                    const Text(
-                      'Download Option：',
-                      style: TextStyle(color: Colors.white70, fontSize: 16),
-                    ),
+                    const SizedBox(
+                        width: 75,
+                        child: Text(
+                          'Option:',
+                          style: TextStyle(color: Colors.white70, fontSize: 16),
+                        )),
                     RadioGroup(
-                        items: [Pair('Video', null), Pair('Audio', null)],
+                        items: const [Pair("Video", null), Pair("Audio", null)],
                         onItemSelected: (index) {
                           downloadTypeIndex = index;
                         })
                   ],
                 ),
               ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
             _buildButton(),
           ]),
         ));

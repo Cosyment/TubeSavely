@@ -23,8 +23,6 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
   void initState() {
     super.initState();
     _mockCheckForSession().then((status) {
-      // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => const MainPage()));
-
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(

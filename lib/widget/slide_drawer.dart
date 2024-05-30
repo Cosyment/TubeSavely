@@ -25,8 +25,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
     drawerList = <DrawerList>[
       DrawerList(
         index: DrawerIndex.Home,
-        labelName: 'Parse',
-        icon: const Icon(Icons.analytics_outlined),
+        labelName: 'Home',
+        icon: const Icon(Icons.add_home_outlined),
       ),
       DrawerList(
         index: DrawerIndex.Task,
