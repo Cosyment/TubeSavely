@@ -62,8 +62,8 @@ dependencies:
   media_kit_video: ^1.2.4
   media_kit_libs_video: ^1.0.4
   image_gallery_saver: ^2.0.3
-  #  ffmpeg_kit_flutter: ^6.0.3
-  ffmpeg_kit_flutter_full_gpl: ^6.0.3
+  ffmpeg_kit_flutter: ^6.0.3
+#  ffmpeg_kit_flutter_full_gpl: ^6.0.3
   open_file: ^3.3.2
 dev_dependencies:
   flutter_test:
@@ -83,21 +83,21 @@ flutter_launcher_icons:
     image_path_android: "assets/images/ic_logo.png"
     # min_sdk_android: 21 # android min sdk min:16, default 21
   ios:
-    generate: true
+    generate: false
     remove_alpha_ios: true
     image_path_ios: "assets/images/ic_logo_white.png"
   web:
     generate: false
-    image_path: "assets/images/ic_logo_white.png"
+    image_path: "assets/images/ic_logo.png"
     background_color: "#hexcode"
     theme_color: "#hexcode"
   windows:
     generate: false
-    image_path: "assets/images/ic_logo_white.png"
+    image_path: "assets/images/ic_logo.png"
     icon_size: 48 # min:48, max:256, default: 48
   macos:
-    generate: false
-    image_path: "assets/images/ic_logo_white.png"
+    generate: true
+    image_path: "assets/ic_logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

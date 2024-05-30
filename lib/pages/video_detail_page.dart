@@ -284,6 +284,7 @@ class _VideoDetailPagePageState extends State<VideoDetailPage> with SingleTicker
       //   ButtonState.fail: Colors.red.shade300,
       //   ButtonState.success: Colors.green.shade400,
       // },
+      textStyle: const TextStyle(fontSize: 20, color: Colors.white),
       onPressed: onPressedDownload,
       state: stateOnlyText,
       padding: const EdgeInsets.all(8.0),

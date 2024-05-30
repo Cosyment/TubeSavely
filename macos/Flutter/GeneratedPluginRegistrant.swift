@@ -5,7 +5,7 @@
 import FlutterMacOS
 import Foundation
 
-import ffmpeg_kit_flutter_full_gpl
+import ffmpeg_kit_flutter
 import media_kit_libs_macos_video
 import media_kit_video
 import package_info_plus
