@@ -47,15 +47,6 @@ class _MyAppState extends State<MyApp> {
   bool isDarkMode = true;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  initTheme() async {
-    setState(() {});
-  }
-
-  @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, designSize: const Size(750, 1378));
     return MaterialApp(
@@ -66,6 +57,10 @@ class _MyAppState extends State<MyApp> {
         GlobalMaterialLocalizations.delegate,
         S.delegate,
       ],
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
+        useMaterial3: true,
+      ),
       supportedLocales: S.delegate.supportedLocales,
       home: const SplashPage(),
     );

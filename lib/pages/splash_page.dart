@@ -52,8 +52,11 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
         const SystemUiOverlayStyle(systemNavigationBarColor: Color(0XFF26242e), statusBarColor: Colors.transparent));
+
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     return Scaffold(
-      backgroundColor: const Color(0XFF26242e),
+      backgroundColor: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
       body: Stack(
         alignment: Alignment.center,
         children: [
@@ -63,7 +66,7 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
                   child: Shimmer.fromColors(
                 period: const Duration(milliseconds: 1000),
                 baseColor: AppTheme.accentColor,
-                highlightColor: const Color(0xFFFFFFFF),
+                highlightColor: Colors.white,
                 child: Image.asset(
                   'assets/ic_logo_small.webp',
                   width: 255,
@@ -74,7 +77,7 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
                 top: 180,
                 child: Shimmer.fromColors(
                   period: const Duration(milliseconds: 1000),
-                  baseColor: const Color(0xFFFFFFFF),
+                  baseColor: Colors.white,
                   highlightColor: AppTheme.accentColor,
                   child: Container(
                     alignment: Alignment.center,
