@@ -1,6 +1,6 @@
 {
-    "name": "DownloaderX",
-    "short_name": "DownloaderX",
+    "name": "TubeSavely",
+    "short_name": "TubeSavely",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#hexcode",

@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:tubesavely/http/http_request.dart';
 import 'package:tubesavely/models/video_model.dart';
-import 'package:tubesavely/network/http_request.dart';
 import 'package:tubesavely/storage/database.dart';
-import 'package:tubesavely/theme/app_theme.dart';
 import 'package:tubesavely/utils/common_util.dart';
 import 'package:tubesavely/utils/constants.dart';
 import 'package:tubesavely/utils/resolution_util.dart';
-import 'package:tubesavely/widget/iconed_button.dart';
 import 'package:tubesavely/widget/radio_group.dart';
 
 import '../downloader/downloader.dart';
 import '../models/Pair.dart';
+import '../theme/app_theme.dart';
+import '../widget/iconed_button.dart';
 import '../widget/progress_button.dart';
 
 class VideoDetailPage extends StatefulWidget {

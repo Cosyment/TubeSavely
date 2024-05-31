@@ -1,8 +1,6 @@
 import 'dart:ui' as ui;
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shake_animation_widget/shake_animation_widget.dart';
@@ -20,14 +18,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  TextEditingController textController = TextEditingController(
-      text: ''
-          // 'https://www.youtube.com/watch?v=Ek1QD7AH9XQ' //1080P
-          // 'https://www.youtube.com/watch?v=k7dy1B6bOeM' // 4K
-          // 'https://www.youtube.com/watch?v=Mi2vTUtKMOg' //8K
-          // 'https://www.facebook.com/100000124835838/videos/329176782997696/'
-          // 'https://www.tiktok.com/t/ZTRC5xgJp'
-          'https://m.acfun.cn/v/?ac=39091936&sid=bf02f7d348c84918'
+  TextEditingController textController = TextEditingController(text: ''
+      // 'https://www.youtube.com/watch?v=Ek1QD7AH9XQ' //1080P
+      // 'https://www.youtube.com/watch?v=k7dy1B6bOeM' // 4K
+      // 'https://www.youtube.com/watch?v=Mi2vTUtKMOg' //8K
+      // 'https://www.facebook.com/100000124835838/videos/329176782997696/'
+      // 'https://www.tiktok.com/t/ZTRC5xgJp'
+      // 'https://m.acfun.cn/v/?ac=39091936&sid=bf02f7d348c84918'
       // 'http://xhslink.com/L8Qwiw'
       // 'https://www.xiaohongshu.com/explore/662b0d07000000000d03227c'
       // 'https://www.kuaishou.com/f/X3WcgZrbGXVcWWa'
@@ -111,7 +108,7 @@ class _HomePageState extends State<HomePage> {
         shakeRange: 0.03,
         //执行抖动动画的子Widget
         child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 80),
+            padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 60),
             child: MaterialButton(
               padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
               elevation: 20,
@@ -158,7 +155,7 @@ class _HomePageState extends State<HomePage> {
                   color: AppTheme.dark_grey,
                 ),
                 cursorColor: Colors.blue,
-                decoration: const InputDecoration(border: InputBorder.none, hintText: 'Paste Your Youtube or Tiktok URL...'),
+                decoration: const InputDecoration(border: InputBorder.none, hintText: 'Type Video URL...'),
               ),
             ),
           ),
@@ -174,8 +171,6 @@ class _HomePageState extends State<HomePage> {
     if (!url.contains('http')) {
       return;
     }
-
-    // Navigator.push(context, MaterialPageRoute(builder: (context) => VideoDetailPage(url: url)));
 
     Navigator.push(
       context,
@@ -194,38 +189,5 @@ class _HomePageState extends State<HomePage> {
         },
       ),
     );
-  }
-
-  getPaste() async {
-    ClipboardData? data = await Clipboard.getData(Clipboard.kTextPlain);
-    if (data?.text?.isNotEmpty == true) {
-      showCupertinoDialog(
-        barrierDismissible: true,
-        context: context,
-        builder: (context) {
-          return CupertinoAlertDialog(
-            title: const Text("提示"),
-            content: const Text("提取剪贴板中的链接吗？"),
-            actions: [
-              CupertinoDialogAction(
-                child: const Text("取消"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              CupertinoDialogAction(
-                child: const Text("提取"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  textController.text = data?.text ?? "";
-                  startParse();
-                  Clipboard.setData(const ClipboardData(text: ''));
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
   }
 }
