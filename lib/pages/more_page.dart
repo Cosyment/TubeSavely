@@ -48,7 +48,7 @@ class _MorePageState extends State<MorePage> {
               ),
               backgroundColor: isLightMode ? AppTheme.white : AppTheme.nearlyBlack,
               body: Container(
-                margin: const EdgeInsets.fromLTRB(0, 40, 0, 0),
+                margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                 child: Column(
                   children: [
                     InkWell(
@@ -93,7 +93,7 @@ class _MorePageState extends State<MorePage> {
           ),
           Text(
             title,
-            style: const TextStyle(color: Colors.grey, fontSize: 18),
+            style: const TextStyle(color: Colors.black, fontSize: 18),
           ),
           Flexible(
             flex: 1,

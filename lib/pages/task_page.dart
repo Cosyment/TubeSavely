@@ -14,16 +14,18 @@ class _TaskPageState extends State<TaskPage> {
   List<Task> taskList = [];
 
   void fetchData() async {
-    taskList = await FileDownloader().allTasks();
-    setState(() {});
+    FileDownloader().allTasks().then((onValue) => {
+          setState(() {
+            taskList = onValue;
+          })
+        });
   }
 
   @override
   void initState() {
     super.initState();
     fetchData();
-
-    FileDownloader().registerCallbacks(taskStatusCallback: (status) {}, taskProgressCallback: (progress) {});
+    // FileDownloader().registerCallbacks(taskStatusCallback: (status) {}, taskProgressCallback: (progress) {});
   }
 
   @override
