@@ -45,5 +45,5 @@ class PlatformUtils {
 
   static bool get isLinux => _isLinux();
 
-  static bool get isAndroidOrIOS => _isAndroid() || _isIOS();
+  static bool get isMobile => _isAndroid() || _isIOS();
 }

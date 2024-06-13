@@ -1,24 +1,23 @@
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class ToastUtil {
+  ToastUtil._() {
+    // EasyLoading.init();
+  }
+
   static success(String msg) {
-    Fluttertoast.showToast(
-        msg: msg,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.green,
-        textColor: Colors.white);
+    EasyLoading.showSuccess(msg);
   }
 
   static error(String msg) {
-    Fluttertoast.showToast(
-        msg: msg,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white);
+    EasyLoading.showError(msg);
+  }
+
+  static loading({String msg = 'loading'}) {
+    EasyLoading.show(status: 'loading...');
+  }
+
+  static dismiss() {
+    EasyLoading.dismiss();
   }
 }

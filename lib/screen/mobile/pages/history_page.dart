@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../theme/app_theme.dart';
+import 'package:tubesavely/theme/app_theme.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});

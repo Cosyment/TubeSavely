@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tubesavely/models/Pair.dart';
+import 'package:tubesavely/model/pair.dart';
 
 class RadioGroup extends StatefulWidget {
   final List<Pair>? items;

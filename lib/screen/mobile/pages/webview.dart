@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tubesavely/theme/app_theme.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-
-import '../theme/app_theme.dart';
 
 class WebViewPage extends StatefulWidget {
   const WebViewPage({super.key, required this.title, required this.url});

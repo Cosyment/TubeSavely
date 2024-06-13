@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:tubesavely/pages/webview.dart';
-
-import '../theme/app_theme.dart';
-import '../utils/constants.dart';
+import 'package:tubesavely/screen/mobile/pages/webview.dart';
+import 'package:tubesavely/theme/app_theme.dart';
+import 'package:tubesavely/utils/constants.dart';
 
 class MorePage extends StatefulWidget {
   const MorePage({super.key});

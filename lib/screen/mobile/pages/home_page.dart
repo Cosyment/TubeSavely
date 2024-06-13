@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shake_animation_widget/shake_animation_widget.dart';
-import 'package:tubesavely/pages/video_detail_page.dart';
-
-import '../theme/app_theme.dart';
+import 'package:tubesavely/screen/mobile/pages/video_detail_page.dart';
+import 'package:tubesavely/theme/app_theme.dart';
 
 class HomePage extends StatefulWidget {
   static ui.FragmentShader? shader;

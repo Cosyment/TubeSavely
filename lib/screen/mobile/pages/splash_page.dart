@@ -1,17 +1,14 @@
 import 'dart:async';
-import 'dart:ui' as ui;
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:tubesavely/main.dart';
 import 'package:tubesavely/theme/app_theme.dart';
 
-import '../main.dart';
-
 class SplashPage extends StatefulWidget {
-  static ui.FragmentShader? shader;
-
   const SplashPage({super.key});
 
   @override
@@ -75,23 +72,30 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
               )),
               Positioned(
                 top: 180,
-                child: Shimmer.fromColors(
-                  period: const Duration(milliseconds: 1000),
-                  baseColor: Colors.white,
-                  highlightColor: AppTheme.accentColor,
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: Text(
-                      "TubeSavely",
-                      style: TextStyle(fontSize: 36.0, shadows: <Shadow>[
-                        Shadow(blurRadius: 18.0, color: Colors.black87, offset: Offset.fromDirection(120, 12))
-                      ]),
-                    ),
-                  ),
-                )
-                    .animate()
-                    .effect(delay: 750.ms, duration: 1500.ms) // this "pads out" the total duration
-                    .shader(shader: SplashPage.shader),
+                child: FutureBuilder<FragmentShader>(
+                  builder: (context, snapshot) {
+                    return Shimmer.fromColors(
+                      period: const Duration(milliseconds: 1000),
+                      baseColor: Colors.white,
+                      highlightColor: AppTheme.accentColor,
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "TubeSavely",
+                          style: TextStyle(fontSize: 36.0, shadows: <Shadow>[
+                            Shadow(blurRadius: 18.0, color: Colors.black87, offset: Offset.fromDirection(120, 12))
+                          ]),
+                        ),
+                      ),
+                    )
+                        .animate()
+                        .effect(delay: 750.ms, duration: 1500.ms) // this "pads out" the total duration
+                        .shader(shader: snapshot.data);
+                  },
+                  future: FragmentProgram.fromAsset('assets/shaders/shader.frag').then((FragmentProgram prgm) {
+                    return prgm.fragmentShader();
+                  }),
+                ),
               )
             ]),
           ).animate().slideY(duration: 800.ms, curve: Curves.easeInQuad, begin: 0, end: -0.25).fadeIn(),

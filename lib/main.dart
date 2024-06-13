@@ -1,30 +1,45 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:media_kit/media_kit.dart';
-import 'package:tubesavely/pages/feedback_page.dart';
-import 'package:tubesavely/pages/history_page.dart';
-import 'package:tubesavely/pages/home_page.dart';
-import 'package:tubesavely/pages/more_page.dart';
-import 'package:tubesavely/pages/splash_page.dart';
-import 'package:tubesavely/pages/task_page.dart';
+import 'package:tubesavely/screen/desktop/main.dart';
+import 'package:tubesavely/screen/mobile/pages/feedback_page.dart';
+import 'package:tubesavely/screen/mobile/pages/history_page.dart';
+import 'package:tubesavely/screen/mobile/pages/home_page.dart';
+import 'package:tubesavely/screen/mobile/pages/more_page.dart';
+import 'package:tubesavely/screen/mobile/pages/splash_page.dart';
+import 'package:tubesavely/screen/mobile/pages/task_page.dart';
 import 'package:tubesavely/theme/app_theme.dart';
+import 'package:tubesavely/utils/platform_util.dart';
 import 'package:tubesavely/widget/drawer_controller.dart';
 import 'package:tubesavely/widget/slide_drawer.dart';
+import 'package:window_manager/window_manager.dart';
 
 void main() async {
-  await ScreenUtil.ensureScreenSize();
-  _loadShader();
-  MediaKit.ensureInitialized();
-  runApp(const MyApp());
-}
+  WidgetsFlutterBinding.ensureInitialized();
 
-Future<void> _loadShader() async {
-  return FragmentProgram.fromAsset('assets/shaders/shader.frag').then((FragmentProgram prgm) {
-    SplashPage.shader = prgm.fragmentShader();
-  }, onError: (Object error, StackTrace stackTrace) {});
+  if (PlatformUtils.isMobile) {
+    await ScreenUtil.ensureScreenSize();
+    MediaKit.ensureInitialized();
+    runApp(const MyApp());
+  } else {
+    windowManager.ensureInitialized();
+    WindowOptions windowOptions = const WindowOptions(
+      size: Size(950, 650),
+      minimumSize: Size(800, 550),
+      center: true,
+      backgroundColor: Colors.transparent,
+      windowButtonVisibility: true,
+      skipTaskbar: false,
+      titleBarStyle: TitleBarStyle.hidden,
+    );
+    windowManager.waitUntilReadyToShow(windowOptions, () async {
+      await windowManager.show();
+      await windowManager.focus();
+    });
+    runApp(const DesktopApp());
+  }
 }
 
 class MyApp extends StatefulWidget {
@@ -47,6 +62,7 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       home: const SplashPage(),
+      builder: EasyLoading.init(),
     );
   }
 }

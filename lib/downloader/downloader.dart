@@ -12,6 +12,7 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
+import 'package:tubesavely/utils/platform_util.dart';
 import 'package:tubesavely/utils/toast_util.dart';
 
 class Downloader {
@@ -114,7 +115,8 @@ class Downloader {
     final task = DownloadTask(
       url: url ?? '',
       filename: fileName,
-      directory: 'TubeSavely/Files',
+      // directory: 'TubeSavely/Files',
+      directory: (await getDownloadsDirectory())?.path ?? '',
       baseDirectory: BaseDirectory.temporary,
       updates: Updates.statusAndProgress,
       requiresWiFi: false,
@@ -170,7 +172,9 @@ class Downloader {
     final task = DownloadTask(
       url: url ?? '',
       filename: '$fileName.mp4',
-      directory: 'TubeSavely/Files',
+      // directory: 'TubeSavely/Files',
+      // baseDirectory: BaseDirectory.applicationDocuments,
+      directory: (await getDownloadsDirectory())?.path ?? '',
       updates: Updates.statusAndProgress,
       requiresWiFi: false,
       retries: 5,
@@ -184,11 +188,27 @@ class Downloader {
 
     switch (result.status) {
       case TaskStatus.complete:
-        var result = await ImageGallerySaver.saveFile(await task.filePath(), name: fileName, isReturnPathOfIOS: true);
-        if (result['isSuccess']) {
-          ToastUtil.success('Download Success');
-        } else {
-          ToastUtil.error(result['errorMessage']);
+        if (PlatformUtils.isMacOS) {
+          try {
+            // 获取文档目录路径
+            Directory? appDocDir = await getDownloadsDirectory();
+
+            // 文件名和路径
+            String filePath = await task.filePath();
+
+            print('文件名: $fileName');
+            print('文件已保存至: $filePath');
+          } catch (e) {
+            print('保存文件时发生错误: $e');
+          }
+        }
+        if (PlatformUtils.isMobile) {
+          var result = await ImageGallerySaver.saveFile(await task.filePath(), name: fileName, isReturnPathOfIOS: true);
+          if (result['isSuccess']) {
+            ToastUtil.success('Download Success');
+          } else {
+            ToastUtil.error(result['errorMessage']);
+          }
         }
       case TaskStatus.canceled:
         debugPrint('Download was canceled');
