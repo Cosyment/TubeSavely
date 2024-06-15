@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'package:tubesavely/downloader/downloader.dart';
+import 'package:tubesavely/core/downloader/downloader.dart';
 import 'package:tubesavely/http/http_request.dart';
 import 'package:tubesavely/model/pair.dart';
 import 'package:tubesavely/model/video_model.dart';

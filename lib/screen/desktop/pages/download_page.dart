@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:tubesavely/downloader/downloader.dart';
+import 'package:tubesavely/core/downloader/downloader.dart';
 import 'package:tubesavely/extension/extension.dart';
 import 'package:tubesavely/http/http_request.dart';
 import 'package:tubesavely/theme/app_theme.dart';

@@ -25,12 +25,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     return SafeArea(
         top: true,
         child: Scaffold(
           body: Container(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-            color: Colors.white,
+            color: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
             child: Column(
               children: [
                 Stack(

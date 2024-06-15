@@ -1,7 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:io';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:tubesavely/core/ffmpeg/ffmpeg_executor.dart';
 
 import '../../../theme/app_theme.dart';
 
@@ -63,7 +65,6 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
             child: Container(
           margin: const EdgeInsets.only(top: 10, bottom: 20),
           decoration: BoxDecoration(
-            color: Colors.white,
             border: Border.all(color: Colors.black12),
             borderRadius: BorderRadius.circular(8),
           ),
@@ -117,18 +118,16 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
               clipBehavior: Clip.antiAliasWithSaveLayer,
               decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8))),
-              child: CachedNetworkImage(
-                imageUrl: file.path ?? '',
-                fit: BoxFit.cover,
-                placeholder: (context, url) => const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: Center(
-                      child: CircularProgressIndicator(
-                    color: Colors.grey,
-                  )),
-                ),
-                errorWidget: (context, url, error) => const Image(image: AssetImage('assets/ic_logo.png')),
+              child: FutureBuilder(
+                builder: (context, snapshot) {
+                  return snapshot.data == null
+                      ? Image.asset('assets/ic_logo.png')
+                      : Image.file(
+                          File(snapshot.data ?? ''),
+                          fit: BoxFit.fitWidth,
+                        );
+                },
+                future: FFmpegExecutor.extractThumbnail(file.path ?? ''),
               )),
           const SizedBox(
             width: 10,
@@ -143,7 +142,8 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
             children: [
               IconButton(
                   onPressed: () {
-                    setState(() {});
+                    // setState(() {});
+                    FFmpegExecutor.convertToFormat(file.path ?? '', VideoFormat.values.byName(videoFormat));
                   },
                   icon: const Icon(Icons.start)),
               IconButton(
