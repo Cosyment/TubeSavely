@@ -188,7 +188,7 @@ class Downloader {
 
     switch (result.status) {
       case TaskStatus.complete:
-        if (PlatformUtils.isMacOS) {
+        if (PlatformUtil.isMacOS) {
           try {
             // 获取文档目录路径
             Directory? appDocDir = await getDownloadsDirectory();
@@ -202,7 +202,7 @@ class Downloader {
             print('保存文件时发生错误: $e');
           }
         }
-        if (PlatformUtils.isMobile) {
+        if (PlatformUtil.isMobile) {
           var result = await ImageGallerySaver.saveFile(await task.filePath(), name: fileName, isReturnPathOfIOS: true);
           if (result['isSuccess']) {
             ToastUtil.success('Download Success');

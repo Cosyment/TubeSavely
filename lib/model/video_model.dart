@@ -2,6 +2,7 @@ class VideoModel {
   final String? title;
   final String? uploader;
   final String? url;
+  final String? original_url;
   final List<FormatModel>? formats;
   final String? thumbnail;
   final String? music;
@@ -14,6 +15,7 @@ class VideoModel {
       required this.uploader,
       required this.formats,
       required this.url,
+      required this.original_url,
       required this.thumbnail,
       required this.music,
       required this.duration,
@@ -25,6 +27,7 @@ class VideoModel {
       title: json['title'],
       uploader: json['uploader'],
       url: json['url'],
+      original_url: json['original_url'],
       formats: FormatModel.fromListJson(json['formats']),
       thumbnail: json['thumbnail'],
       music: json['music'],
@@ -40,6 +43,7 @@ class VideoModel {
       'uploader': uploader,
       'url': url,
       'formats': FormatModel.toListJson(formats),
+      'original_url': original_url,
       'thumbnail': thumbnail,
       'music': music,
       'duration': duration,

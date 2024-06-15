@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tubesavely/downloader/downloader.dart';
 import 'package:tubesavely/extension/extension.dart';
 import 'package:tubesavely/http/http_request.dart';
+import 'package:tubesavely/theme/app_theme.dart';
 import 'package:tubesavely/utils/toast_util.dart';
 
 import '../../../model/video_model.dart';
@@ -26,7 +28,6 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
       ToastUtil.error('请输入正确的链接');
       return;
     }
-    print('--------------->>>>>url ${url}');
     ToastUtil.loading();
     VideoModel videoModel = await HttpRequest.request<VideoModel>(
         Urls.shortVideoParse,
@@ -69,7 +70,11 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            TextButton(
+            OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: AppTheme.accentColor.withOpacity(0.2)),
+                  overlayColor: AppTheme.accentColor,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
               onPressed: () async {
                 String? result = await getClipboardData();
                 if (result?.isNotEmpty == true) {
@@ -80,29 +85,33 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
               },
               child: const Text(
                 '粘贴链接',
-                style: TextStyle(color: Colors.blue),
+                style: TextStyle(color: AppTheme.accentColor),
               ),
             ),
-            TextButton(
+            OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: AppTheme.accentColor.withOpacity(0.2)),
+                  overlayColor: AppTheme.accentColor,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
               onPressed: () {},
-              child: const Text('立即下载'),
+              child: const Text('立即下载', style: TextStyle(color: AppTheme.accentColor)),
             )
           ],
         ),
         Expanded(
             child: Container(
           margin: const EdgeInsets.only(top: 10, bottom: 20),
-          padding: const EdgeInsets.symmetric(vertical: 10),
+          padding: const EdgeInsets.symmetric(vertical: 0),
           decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(color: Colors.black45),
+            // color: Colors.white,
+            border: Border.all(color: Colors.black12),
             borderRadius: BorderRadius.circular(8),
           ),
           width: double.infinity,
           child: videoModelList.isEmpty
               ? const Center(
                   child: Text(
-                    '请粘贴视频链接 e.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+                    '请粘贴视频链接 e.g. https://www.example.com/watch?v=dQw4w9WgXcQ',
                     style: TextStyle(color: Colors.grey),
                   ),
                 )
@@ -118,22 +127,32 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
 
   _buildItem(VideoModel model) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      margin: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+      margin: const EdgeInsets.only(top: 15, bottom: 0, left: 10, right: 10),
       width: double.infinity,
+      clipBehavior: Clip.antiAliasWithSaveLayer,
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: Colors.black26),
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 2,
+            offset: const Offset(0, 1), // changes position of shadow
+          ),
+        ],
       ),
       child: Row(
         children: [
-          SizedBox(
-              width: 100,
-              height: 60,
+          Container(
+              width: 130,
+              height: 90,
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8))),
               child: CachedNetworkImage(
-                // imageUrl: model.thumbnail ?? '',
-                imageUrl: 'http://e.hiphotos.baidu.com/image/pic/item/a1ec08fa513d2697e542494057fbb2fb4316d81e.jpg',
+                imageUrl: model.thumbnail ?? '',
+                fit: BoxFit.cover,
                 placeholder: (context, url) => const SizedBox(
                   width: 20,
                   height: 20,
@@ -144,6 +163,9 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
                 ),
                 errorWidget: (context, url, error) => const Icon(Icons.error),
               )),
+          const SizedBox(
+            width: 10,
+          ),
           Expanded(
               child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -151,12 +173,18 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
             children: [
               Text(
                 model.title ?? '',
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16, color: Colors.black87),
               ),
-              Text(
-                model.url ?? '',
-                style: const TextStyle(fontSize: 12, color: Colors.grey),
-              )
+              const SizedBox(
+                height: 5,
+              ),
+              model.original_url != null
+                  ? Text(
+                      model.original_url ?? '',
+                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                      maxLines: 1,
+                    )
+                  : const SizedBox(),
             ],
           )),
           Row(
@@ -166,7 +194,13 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
                     Downloader.download(model.url, model.title);
                   },
                   icon: const Icon(Icons.save_alt)),
-              IconButton(onPressed: () {}, icon: const Icon(Icons.folder_open)),
+              IconButton(
+                  onPressed: () {
+                    FilePicker.platform.getDirectoryPath(
+                      dialogTitle: '打开文件',
+                    );
+                  },
+                  icon: const Icon(Icons.folder_open)),
               IconButton(
                   onPressed: () {
                     setState(() {

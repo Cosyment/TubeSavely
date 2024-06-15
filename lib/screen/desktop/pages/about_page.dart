@@ -6,37 +6,39 @@ class AboutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Container(
-      // width: 450,
-      // padding: const EdgeInsets.all(20),
-      child: Column(
-        children: [
-          const SizedBox(width: 150, height: 100, child: Image(image: AssetImage('assets/ic_logo.png'))),
-          const Text(
-            'TubeSavely',
-            style: TextStyle(fontSize: 20),
-          ),
-          FutureBuilder<PackageInfo>(
-              future: PackageInfo.fromPlatform(),
-              builder: (context, snapshot) {
-                return Text(
-                  'Version ${snapshot.data?.version}',
-                  style: const TextStyle(fontSize: 12, color: Colors.black45),
-                );
-              }),
-          const SizedBox(height: 10),
-          const Text(
-            '这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍',
-            style: TextStyle(fontSize: 12, color: Colors.black45),
-          ),
-          const SizedBox(height: 5),
-          const Text(
-            'Copyright © 2023 TubeSavely. All rights reserved.',
-            style: TextStyle(fontSize: 10),
-          ),
-        ],
-      ),
-    ));
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const SizedBox(
+            width: 100,
+            height: 100,
+            child: Image(
+              image: AssetImage('assets/ic_logo.png'),
+              fit: BoxFit.cover,
+            )),
+        const Text(
+          'TubeSavely',
+          style: TextStyle(fontSize: 20),
+        ),
+        FutureBuilder<PackageInfo>(
+            future: PackageInfo.fromPlatform(),
+            builder: (context, snapshot) {
+              return Text(
+                'Version ${snapshot.data?.version}',
+                style: const TextStyle(fontSize: 12, color: Colors.black45),
+              );
+            }),
+        const SizedBox(height: 10),
+        const Text(
+          '这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍',
+          style: TextStyle(fontSize: 12, color: Colors.black45),
+        ),
+        const SizedBox(height: 5),
+        const Text(
+          'Copyright © 2023 TubeSavely. All rights reserved.',
+          style: TextStyle(fontSize: 10),
+        ),
+      ],
+    );
   }
 }

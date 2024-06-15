@@ -19,7 +19,7 @@ import 'package:window_manager/window_manager.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  if (PlatformUtils.isMobile) {
+  if (PlatformUtil.isMobile) {
     await ScreenUtil.ensureScreenSize();
     MediaKit.ensureInitialized();
     runApp(const MyApp());
@@ -27,7 +27,7 @@ void main() async {
     windowManager.ensureInitialized();
     WindowOptions windowOptions = const WindowOptions(
       size: Size(950, 650),
-      minimumSize: Size(800, 550),
+      minimumSize: Size(800, 600),
       center: true,
       backgroundColor: Colors.transparent,
       windowButtonVisibility: true,

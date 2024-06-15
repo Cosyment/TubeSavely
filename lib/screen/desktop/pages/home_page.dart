@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tubesavely/screen/desktop/pages/about_page.dart';
-import 'package:tubesavely/screen/desktop/pages/setting_page.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:tubesavely/screen/desktop/main.dart';
 
+import '../../../theme/app_theme.dart';
 import 'convert_page.dart';
 import 'download_page.dart';
 
@@ -22,58 +23,6 @@ class _HomePageState extends State<HomePage> {
   Widget body = const DownloadPage();
   PageController controller = PageController();
 
-  showSettingDialog() {
-    return showAdaptiveDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog.adaptive(
-            title: Text('设置'),
-            content: SettingPage(),
-            actions: [
-              MaterialButton(
-                child: Text('Close'),
-                onPressed: () {
-                  Navigator.of(context).pop(); // 关闭对话框
-                },
-              ),
-              MaterialButton(
-                child: Text('Confirm'),
-                onPressed: () {
-                  Navigator.of(context).pop(); // 关闭对话框
-                },
-              ),
-            ],
-          );
-        });
-  }
-
-  showAboutDialog() {
-    return showAdaptiveDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog.adaptive(
-          title: const Text('关于'),
-          content: ConstrainedBox(
-            constraints: BoxConstraints(minWidth: 300),
-            child: const AboutPage(),
-          ),
-          actions: [
-            MaterialButton(
-              child: Container(
-                height: 50,
-                alignment: Alignment.center,
-                child: Text('Close'),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop(); // 关闭对话框
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -86,24 +35,35 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Stack(
                   children: [
-                    const Row(
+                    Row(
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           width: 60,
                           height: 80,
                           child: Image(image: AssetImage('assets/images/ic_logo.png')),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
-                        Text(
+                        const Text(
                           'TubeSavely',
                           style: TextStyle(fontSize: 20, color: Colors.black),
                         ),
-                        Text(
-                          '1.0',
-                          style: TextStyle(fontSize: 15, color: Colors.grey),
-                        )
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        FutureBuilder<PackageInfo>(
+                            future: PackageInfo.fromPlatform(),
+                            builder: (context, snapshot) {
+                              return Text(
+                                '${snapshot.data?.version}',
+                                style: const TextStyle(fontSize: 15, color: Colors.grey),
+                              );
+                            }),
+                        // Text(
+                        //   '1.0',
+                        //   style: TextStyle(fontSize: 15, color: Colors.grey),
+                        // )
                       ],
                     ),
                     Container(
@@ -112,13 +72,29 @@ class _HomePageState extends State<HomePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SegmentedButton(
+                              style: SegmentedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50.0),
+                                  ),
+                                  side: const BorderSide(width: 0.5, color: AppTheme.accentColor),
+                                  selectedBackgroundColor: AppTheme.accentColor,
+                                  selectedForegroundColor: Colors.white,
+                                  backgroundColor: Colors.white,
+                                  foregroundColor: AppTheme.accentColor,
+                                  surfaceTintColor: Colors.blue,
+                                  shadowColor: Colors.amber),
                               segments: [
                                 ButtonSegment<SegmentType>(
                                   value: SegmentType.download,
                                   label: Container(
                                       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                                       child: const Row(
-                                        children: [Icon(Icons.save_alt), Text("下载")],
+                                        children: [
+                                          Icon(Icons.save_alt),
+                                          Text(
+                                            "下载",
+                                          )
+                                        ],
                                       )),
                                   //icon: Icon(Icons.add),
                                   enabled: true,
@@ -128,7 +104,12 @@ class _HomePageState extends State<HomePage> {
                                   label: Container(
                                       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                                       child: const Row(
-                                        children: [Icon(Icons.refresh_sharp), Text("转换")],
+                                        children: [
+                                          Icon(Icons.refresh_sharp),
+                                          Text(
+                                            "转换",
+                                          )
+                                        ],
                                       )),
                                   // icon: Icon(Icons.safety_check),
                                 ),
@@ -151,18 +132,20 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             IconButton(
                                 onPressed: () {
-                                  showSettingDialog();
+                                  showSettingDialog(context);
                                 },
-                                icon: const Icon(Icons.settings)),
+                                icon: const Icon(
+                                  Icons.settings,
+                                  color: Colors.black26,
+                                )),
                             IconButton(
                                 onPressed: () {
-                                  showAboutDialog();
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(builder: (context) => const AboutPage()),
-                                  // );
+                                  showAppAboutDialog(context);
                                 },
-                                icon: const Icon(Icons.info_outlined))
+                                icon: const Icon(
+                                  Icons.info_outlined,
+                                  color: Colors.black26,
+                                ))
                           ],
                         )),
                   ],

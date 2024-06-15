@@ -1,5 +1,6 @@
 class Constants {
-  static const privacyUrl = 'https://www.cosyment.com/privacy-renee.html';
+  static const privacyUrl = 'https://www.cosyment.com/privacy.html';
+  static const website = 'https://unwatermarker.cn';
 }
 
 class Urls {
