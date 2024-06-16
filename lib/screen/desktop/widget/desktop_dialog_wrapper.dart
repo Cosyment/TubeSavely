@@ -33,6 +33,7 @@ class DesktopDialogWrapper extends StatelessWidget {
                   mainAxisAlignment: PlatformUtil.isMacOS ? MainAxisAlignment.start : MainAxisAlignment.end,
                   children: [
                     WindowCaptionButton.close(
+                      brightness: brightness,
                       onPressed: () {
                         Navigator.pop(context);
                       },

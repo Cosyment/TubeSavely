@@ -6,6 +6,9 @@ class AboutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -16,27 +19,27 @@ class AboutPage extends StatelessWidget {
               image: AssetImage('assets/ic_logo.png'),
               fit: BoxFit.cover,
             )),
-        const Text(
+        Text(
           'TubeSavely',
-          style: TextStyle(fontSize: 20),
+          style: TextStyle(fontSize: 20, color: isLightMode ? Colors.black87 : Colors.white),
         ),
         FutureBuilder<PackageInfo>(
             future: PackageInfo.fromPlatform(),
             builder: (context, snapshot) {
               return Text(
                 'Version ${snapshot.data?.version}',
-                style: const TextStyle(fontSize: 12, color: Colors.black45),
+                style: TextStyle(fontSize: 12, color: isLightMode ? Colors.black54 : Colors.grey),
               );
             }),
         const SizedBox(height: 10),
-        const Text(
+        Text(
           '这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍',
-          style: TextStyle(fontSize: 12, color: Colors.black45),
+          style: TextStyle(fontSize: 12, color: isLightMode ? Colors.black45 : Colors.grey.shade600),
         ),
         const SizedBox(height: 5),
-        const Text(
+        Text(
           'Copyright © 2023 TubeSavely. All rights reserved.',
-          style: TextStyle(fontSize: 10),
+          style: TextStyle(fontSize: 10, color: isLightMode ? Colors.black54 : Colors.grey),
         ),
       ],
     );

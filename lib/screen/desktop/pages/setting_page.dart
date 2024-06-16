@@ -1,6 +1,5 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tubesavely/theme/app_theme.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -33,6 +32,8 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     if (currentThemeMode == ThemeMode.System) {
       // currentThemeMode = Theme.of(context).brightness == Brightness.dark ? ThemeMode.Dark : ThemeMode.Light;
     }
@@ -42,28 +43,51 @@ class _SettingPageState extends State<SettingPage> {
       children: [
         _buildTitle('通用设置'),
         _buildItem(
+            isLightMode,
             '主题',
-            CupertinoSegmentedControl(
-                borderColor: AppTheme.accentColor.withOpacity(0.2),
-                unselectedColor: AppTheme.white,
-                selectedColor: AppTheme.accentColor,
-                groupValue: currentThemeMode,
-                pressedColor: AppTheme.accentColor.withOpacity(0.2),
-                children: {
-                  ThemeMode.Light: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Text(ThemeMode.Light.name),
+            SegmentedButton(
+              style: SegmentedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50.0),
                   ),
-                  ThemeMode.Dark: Text(ThemeMode.Dark.name),
-                  ThemeMode.System:
-                      Container(padding: const EdgeInsets.symmetric(horizontal: 10), child: Text(ThemeMode.System.name))
-                },
-                onValueChanged: (value) {
-                  setState(() {
-                    currentThemeMode = value;
-                  });
-                })),
+                  side: const BorderSide(width: 0.5, color: AppTheme.accentColor),
+                  selectedBackgroundColor: AppTheme.accentColor,
+                  selectedForegroundColor: Colors.white,
+                  backgroundColor: isLightMode ? Colors.white : Colors.black12,
+                  foregroundColor: AppTheme.accentColor),
+              segments: [
+                ButtonSegment<ThemeMode>(
+                  value: ThemeMode.Light,
+                  label: Text(
+                    ThemeMode.Light.name,
+                  ),
+                  enabled: true,
+                ),
+                ButtonSegment<ThemeMode>(
+                  value: ThemeMode.Dark,
+                  label: Text(
+                    ThemeMode.Dark.name,
+                  ),
+                  // icon: Icon(Icons.safety_check),
+                ),
+                ButtonSegment<ThemeMode>(
+                  value: ThemeMode.System,
+                  label: Text(
+                    ThemeMode.System.name,
+                  ),
+                  // icon: Icon(Icons.safety_check),
+                )
+              ],
+              showSelectedIcon: false,
+              selected: {currentThemeMode},
+              onSelectionChanged: (Set<ThemeMode> newSelection) {
+                setState(() {
+                  currentThemeMode = newSelection.first;
+                });
+              },
+            )),
         _buildItem(
+            isLightMode,
             '缓存目录',
             Row(
               children: [
@@ -75,7 +99,8 @@ class _SettingPageState extends State<SettingPage> {
                       textAlign: TextAlign.end,
                       softWrap: true,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 12, overflow: TextOverflow.ellipsis),
+                      style: TextStyle(
+                          fontSize: 12, color: isLightMode ? Colors.grey : Colors.white60, overflow: TextOverflow.ellipsis),
                     )),
                 IconButton(
                     onPressed: () async {
@@ -92,8 +117,9 @@ class _SettingPageState extends State<SettingPage> {
               ],
             )),
         _buildItem(
+            isLightMode,
             '语言',
-            _buildDropButton2(language, ['中文', 'English', '日本語'], (value) {
+            _buildDropButton2(isLightMode, language, ['中文', 'English', '日本語'], (value) {
               setState(() {
                 language = value;
               });
@@ -101,20 +127,23 @@ class _SettingPageState extends State<SettingPage> {
         _buildDivider(),
         _buildTitle('下载设置'),
         _buildItem(
+            isLightMode,
             '失败重试次数',
-            _buildDropButton2(retryCount, ['1', '2', '3', '4', '5'], (value) {
+            _buildDropButton2(isLightMode, retryCount, ['1', '2', '3', '4', '5'], (value) {
               setState(() {
                 retryCount = value;
               });
             })),
         _buildItem(
+            isLightMode,
             '默认下载分辨率',
-            _buildDropButton2(downloadQuality, ['360P', '720P', '1080P', '1920P', '2K', '4K'], (value) {
+            _buildDropButton2(isLightMode, downloadQuality, ['360P', '720P', '1080P', '1920P', '2K', '4K'], (value) {
               setState(() {
                 downloadQuality = value;
               });
             })),
         _buildItem(
+            isLightMode,
             'Youtube视频自动合并音频',
             Switch.adaptive(
                 activeColor: AppTheme.white,
@@ -130,8 +159,10 @@ class _SettingPageState extends State<SettingPage> {
         _buildDivider(),
         _buildTitle('视频转换设置'),
         _buildItem(
+            isLightMode,
             '默认转换格式',
-            _buildDropButton2(videoFormat, ['MOV', 'AVI', 'MKV', 'MP4', 'FLV', 'WMV', 'RMVB', '3GP', 'MPG', 'MPE', 'M4V'],
+            _buildDropButton2(
+                isLightMode, videoFormat, ['MOV', 'AVI', 'MKV', 'MP4', 'FLV', 'WMV', 'RMVB', '3GP', 'MPG', 'MPE', 'M4V'],
                 (value) {
               setState(() {
                 videoFormat = value;
@@ -139,13 +170,13 @@ class _SettingPageState extends State<SettingPage> {
             })),
         _buildDivider(),
         _buildTitle('其他'),
-        _buildInkItem('访问网页版', () {
+        _buildInkItem(isLightMode, '访问网页版', () {
           launchUrlString(Constants.website);
         }),
-        _buildInkItem('隐私政策', () {
+        _buildInkItem(isLightMode, '隐私政策', () {
           launchUrlString(Constants.privacyUrl);
         }),
-        _buildInkItem('关于', () {
+        _buildInkItem(isLightMode, '关于', () {
           showAppAboutDialog(context);
         })
       ],
@@ -154,7 +185,7 @@ class _SettingPageState extends State<SettingPage> {
 
   _buildTitle(String title) {
     return Title(
-        color: Colors.amber,
+        color: Colors.grey,
         child: Text(
           title,
           style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
@@ -168,20 +199,20 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  _buildItem(String title, Widget child) {
+  _buildItem(bool isLightMode, String title, Widget child) {
     return SizedBox(
         height: 38,
         child: Row(children: [
           Text(
             title,
-            style: const TextStyle(fontSize: 14),
+            style: TextStyle(fontSize: 14, color: isLightMode ? Colors.black.withOpacity(0.7) : Colors.white70),
           ),
           const Spacer(),
           child
         ]));
   }
 
-  _buildInkItem(String title, Function callback) {
+  _buildInkItem(bool isLightMode, String title, Function callback) {
     return SizedBox(
         height: 30,
         child: InkWell(
@@ -190,7 +221,7 @@ class _SettingPageState extends State<SettingPage> {
             },
             child: Row(
               children: [
-                Text(title),
+                Text(title, style: TextStyle(fontSize: 14, color: isLightMode ? Colors.black.withOpacity(0.7) : Colors.white70)),
                 const Spacer(),
                 const Icon(
                   Icons.navigate_next,
@@ -200,12 +231,10 @@ class _SettingPageState extends State<SettingPage> {
             )));
   }
 
-  _buildDropButton2(String? value, List<String> items, Function callback) {
+  _buildDropButton2(bool isLightMode, String? value, List<String> items, Function callback) {
     return DropdownButtonHideUnderline(
         child: DropdownButton2<String>(
             isExpanded: false,
-            isDense: true,
-            autofocus: true,
             // hint: Text(
             //   'Select Item',
             //   style: TextStyle(
@@ -219,8 +248,9 @@ class _SettingPageState extends State<SettingPage> {
                       value: item,
                       child: Text(
                         item,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
+                          color: isLightMode ? Colors.black87 : Colors.white60,
                         ),
                       ),
                     ))
@@ -237,7 +267,7 @@ class _SettingPageState extends State<SettingPage> {
               maxHeight: 200,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                color: AppTheme.white,
+                color: isLightMode ? Colors.white : AppTheme.nearlyBlack,
               ),
             ),
             menuItemStyleData: const MenuItemStyleData(

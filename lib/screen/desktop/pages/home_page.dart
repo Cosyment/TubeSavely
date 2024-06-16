@@ -47,9 +47,9 @@ class _HomePageState extends State<HomePage> {
                         const SizedBox(
                           width: 10,
                         ),
-                        const Text(
+                        Text(
                           'TubeSavely',
-                          style: TextStyle(fontSize: 20, color: Colors.black),
+                          style: TextStyle(fontSize: 20, color: isLightMode ? Colors.black : Colors.white),
                         ),
                         const SizedBox(
                           width: 5,
@@ -81,7 +81,7 @@ class _HomePageState extends State<HomePage> {
                                   side: const BorderSide(width: 0.5, color: AppTheme.accentColor),
                                   selectedBackgroundColor: AppTheme.accentColor,
                                   selectedForegroundColor: Colors.white,
-                                  backgroundColor: Colors.white,
+                                  backgroundColor: isLightMode ? Colors.white : Colors.black12,
                                   foregroundColor: AppTheme.accentColor,
                                   surfaceTintColor: Colors.blue,
                                   shadowColor: Colors.amber),
@@ -98,7 +98,6 @@ class _HomePageState extends State<HomePage> {
                                           )
                                         ],
                                       )),
-                                  //icon: Icon(Icons.add),
                                   enabled: true,
                                 ),
                                 ButtonSegment<SegmentType>(
@@ -136,17 +135,17 @@ class _HomePageState extends State<HomePage> {
                                 onPressed: () {
                                   showSettingDialog(context);
                                 },
-                                icon: const Icon(
+                                icon: Icon(
                                   Icons.settings,
-                                  color: Colors.black26,
+                                  color: isLightMode ? Colors.black26 : Colors.grey,
                                 )),
                             IconButton(
                                 onPressed: () {
                                   showAppAboutDialog(context);
                                 },
-                                icon: const Icon(
+                                icon: Icon(
                                   Icons.info_outlined,
-                                  color: Colors.black26,
+                                  color: isLightMode ? Colors.black26 : Colors.grey,
                                 ))
                           ],
                         )),

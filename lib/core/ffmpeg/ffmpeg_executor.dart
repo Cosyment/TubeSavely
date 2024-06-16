@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_session.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
@@ -24,7 +26,15 @@ class FFmpegExecutor {
   static Future<String?> convertToFormat(String videoPath, VideoFormat format, {String? outputPath}) async {
     outputPath ??=
         '${await getApplicationDocumentsDirectory().then((value) => value.path)}/${path.basename(videoPath)}.${format.name}';
-    final command = '-i "$videoPath" -c:v libx264 -preset slow -crf 23 -c:a copy "$outputPath"';
+    File videoFile = File(videoPath);
+    // if (videoFile.existsSync()) {
+    //   return outputPath;
+    // }
+    String progressLogPath =
+        '${await getApplicationDocumentsDirectory().then((value) => value.path)}/${path.basename(videoPath)}.log';
+    // ffmpeg -i input.mp4 -c:v libx264 -preset slow -progress /path/to/progress.log output.mp4
+    final command =
+        '-hide_banner -i "$videoPath" -c:v libx264 -preset slow -progress "$progressLogPath" -crf 23 -c:a copy "$outputPath"';
     if (await _execute(command)) {
       return outputPath;
     }
@@ -33,6 +43,11 @@ class FFmpegExecutor {
 
   static Future<String?> extractThumbnail(String videoPath, {String? outputPath}) async {
     outputPath ??= '${await getApplicationDocumentsDirectory().then((value) => value.path)}/${path.basename(videoPath)}.jpg';
+    File thumbnailFile = File(outputPath);
+    if (thumbnailFile.existsSync()) {
+      debugPrint('----------->>>>outputPath: $outputPath');
+      return outputPath;
+    }
     // final command = '-i "$videoPath" -y -f mjpeg -ss 00:00:03 -vframes 1 -s 320x240 "$outputPath"';
     final command =
         '-i "$videoPath" -ss 00:00:03 -vf scale=w=1280:h=-2:force_original_aspect_ratio=decrease -vframes 1 -y "$outputPath"';
@@ -69,28 +84,7 @@ class FFmpegExecutor {
   static Future<bool> _execute(String command) async {
     FFmpegSession session = await FFmpegKit.execute(command);
     ReturnCode? code = await session.getReturnCode();
-    // session.getState().then((onValue) {
-    //   debugPrint('-------->>>>getState ${onValue}');
-    // });
-    // session.getDuration().then((onValue) {
-    //   debugPrint('--------->>>getDuration  ${onValue}');
-    // });
-    //
-    // session.getLogsAsString().then((onValue) {
-    //   debugPrint('--------->>>getLogsAsString  ${onValue}');
-    // });
-    //
-    // session.getStatistics().then((onValue) {
-    //   debugPrint('--------->>>getStatistics  ${onValue.length}');
-    // });
-    //
-    // session.getAllStatistics().then((onValue) {
-    //   debugPrint('--------->>>getAllStatistics  ${onValue.length}');
-    // });
-    //
-    // session.getEndTime().then((onValue) {
-    //   debugPrint('--------->>>getEndTime  ${onValue}');
-    // });
+
     if (ReturnCode.isSuccess(code)) {
       debugPrint('ffmpeg execute result : Success $command');
       return true;

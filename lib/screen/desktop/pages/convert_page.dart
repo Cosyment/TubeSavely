@@ -29,6 +29,8 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
 
   @override
   Widget build(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     super.build(context);
     return Column(
       children: [
@@ -47,11 +49,12 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
             ),
             Row(
               children: [
-                const Text(
+                Text(
                   '转换成',
-                  style: TextStyle(fontSize: 14, color: AppTheme.grey),
+                  style: TextStyle(fontSize: 14, color: isLightMode ? Colors.black54 : Colors.white38),
                 ),
-                _buildDropButton2(videoFormat, ['MOV', 'AVI', 'MKV', 'MP4', 'FLV', 'WMV', 'RMVB', '3GP', 'MPG', 'MPE', 'M4V'],
+                _buildDropButton2(
+                    isLightMode, videoFormat, ['MOV', 'AVI', 'MKV', 'MP4', 'FLV', 'WMV', 'RMVB', '3GP', 'MPG', 'MPE', 'M4V'],
                     (value) {
                   setState(() {
                     videoFormat = value;
@@ -65,7 +68,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
             child: Container(
           margin: const EdgeInsets.only(top: 10, bottom: 20),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.black12),
+            border: Border.all(color: isLightMode ? Colors.black12 : Colors.white12),
             borderRadius: BorderRadius.circular(8),
           ),
           // height: 500,
@@ -86,24 +89,24 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
               : ListView.builder(
                   itemCount: videoList.length,
                   itemBuilder: (context, index) {
-                    return _buildItem(videoList[index]);
+                    return _buildItem(isLightMode, videoList[index]);
                   }),
         ))
       ],
     );
   }
 
-  _buildItem(PlatformFile file) {
+  _buildItem(bool isLightMode, PlatformFile file) {
     return Container(
       margin: const EdgeInsets.only(top: 15, bottom: 0, left: 10, right: 10),
       width: double.infinity,
       clipBehavior: Clip.antiAliasWithSaveLayer,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isLightMode ? Colors.white : Colors.grey.shade900,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
+            color: isLightMode ? Colors.grey.withOpacity(0.5) : Colors.grey.shade900.withOpacity(0.5),
             spreadRadius: 1,
             blurRadius: 2,
             offset: const Offset(0, 1), // changes position of shadow
@@ -136,7 +139,19 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
               child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [Text(file.name), Text(file.path ?? '')],
+            children: [
+              Text(
+                file.name,
+                style: TextStyle(fontSize: 16, color: isLightMode ? Colors.black87 : Colors.white),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Text(
+                file.path ?? '',
+                style: TextStyle(fontSize: 12, color: isLightMode ? Colors.black54 : Colors.white54),
+              )
+            ],
           )),
           Row(
             children: [
@@ -145,19 +160,28 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
                     // setState(() {});
                     FFmpegExecutor.convertToFormat(file.path ?? '', VideoFormat.values.byName(videoFormat));
                   },
-                  icon: const Icon(Icons.start)),
+                  icon: Icon(
+                    Icons.start,
+                    color: AppTheme.accentColor.withOpacity(0.8),
+                  )),
               IconButton(
                   onPressed: () async {
                     await FilePicker.platform.getDirectoryPath(initialDirectory: file.path, lockParentWindow: true);
                   },
-                  icon: const Icon(Icons.folder_open)),
+                  icon: const Icon(
+                    Icons.folder_open,
+                    color: Colors.grey,
+                  )),
               IconButton(
                   onPressed: () {
                     setState(() {
                       videoList.remove(file);
                     });
                   },
-                  icon: const Icon(Icons.delete)),
+                  icon: const Icon(
+                    Icons.delete,
+                    color: Colors.grey,
+                  )),
             ],
           )
         ],
@@ -168,12 +192,10 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
   @override
   bool get wantKeepAlive => true;
 
-  _buildDropButton2(String? value, List<String> items, Function callback) {
+  _buildDropButton2(bool isLightMode, String? value, List<String> items, Function callback) {
     return DropdownButtonHideUnderline(
         child: DropdownButton2<String>(
             isExpanded: false,
-            isDense: true,
-            autofocus: true,
             // hint: Text(
             //   'Select Item',
             //   style: TextStyle(
@@ -187,9 +209,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
                       value: item,
                       child: Text(
                         item,
-                        style: const TextStyle(
-                          fontSize: 14,
-                        ),
+                        style: TextStyle(fontSize: 14, color: isLightMode ? Colors.black87 : Colors.white60),
                       ),
                     ))
                 .toList(),
@@ -205,7 +225,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
               maxHeight: 200,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                color: AppTheme.white,
+                color: isLightMode ? Colors.white : AppTheme.nearlyBlack,
               ),
             ),
             menuItemStyleData: const MenuItemStyleData(

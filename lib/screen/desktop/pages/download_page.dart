@@ -64,7 +64,10 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
 
   @override
   Widget build(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isLightMode = brightness == Brightness.light;
     super.build(context);
+
     return Column(
       children: [
         Row(
@@ -104,7 +107,7 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
           padding: const EdgeInsets.symmetric(vertical: 0),
           decoration: BoxDecoration(
             // color: Colors.white,
-            border: Border.all(color: Colors.black12),
+            border: Border.all(color: isLightMode ? Colors.black12 : Colors.white12),
             borderRadius: BorderRadius.circular(8),
           ),
           width: double.infinity,
@@ -118,24 +121,24 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
               : ListView.builder(
                   itemCount: videoModelList.length,
                   itemBuilder: (context, index) {
-                    return _buildItem(videoModelList[index]);
+                    return _buildItem(isLightMode, videoModelList[index]);
                   }),
         ))
       ],
     );
   }
 
-  _buildItem(VideoModel model) {
+  _buildItem(bool isLightMode, VideoModel model) {
     return Container(
       margin: const EdgeInsets.only(top: 15, bottom: 0, left: 10, right: 10),
       width: double.infinity,
       clipBehavior: Clip.antiAliasWithSaveLayer,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isLightMode ? Colors.white : Colors.grey.shade900,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
+            color: isLightMode ? Colors.grey.withOpacity(0.5) : Colors.grey.shade900.withOpacity(0.5),
             spreadRadius: 1,
             blurRadius: 2,
             offset: const Offset(0, 1), // changes position of shadow
@@ -173,7 +176,7 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
             children: [
               Text(
                 model.title ?? '',
-                style: const TextStyle(fontSize: 16, color: Colors.black87),
+                style: TextStyle(fontSize: 16, color: isLightMode ? Colors.black87 : Colors.white),
               ),
               const SizedBox(
                 height: 5,
@@ -181,7 +184,7 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
               model.original_url != null
                   ? Text(
                       model.original_url ?? '',
-                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                      style: TextStyle(fontSize: 12, color: isLightMode ? Colors.black54 : Colors.white54),
                       maxLines: 1,
                     )
                   : const SizedBox(),
@@ -193,21 +196,30 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
                   onPressed: () {
                     Downloader.download(model.url, model.title);
                   },
-                  icon: const Icon(Icons.save_alt)),
+                  icon: Icon(
+                    Icons.save_alt,
+                    color: AppTheme.accentColor.withOpacity(0.8),
+                  )),
               IconButton(
                   onPressed: () {
                     FilePicker.platform.getDirectoryPath(
                       dialogTitle: '打开文件',
                     );
                   },
-                  icon: const Icon(Icons.folder_open)),
+                  icon: const Icon(
+                    Icons.folder_open,
+                    color: Colors.grey,
+                  )),
               IconButton(
                   onPressed: () {
                     setState(() {
                       videoModelList.remove(model);
                     });
                   },
-                  icon: const Icon(Icons.delete)),
+                  icon: const Icon(
+                    Icons.delete,
+                    color: Colors.grey,
+                  )),
             ],
           )
         ],
