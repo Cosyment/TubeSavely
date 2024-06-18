@@ -6,7 +6,7 @@ class ToastUtil {
   }
 
   static success(String msg) {
-    EasyLoading.showSuccess(msg);
+    EasyLoading.showSuccess(msg, duration: const Duration(seconds: 1));
   }
 
   static error(String msg) {

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:media_kit/media_kit.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:tubesavely/screen/desktop/main.dart';
 import 'package:tubesavely/screen/mobile/pages/feedback_page.dart';
 import 'package:tubesavely/screen/mobile/pages/history_page.dart';
@@ -40,6 +41,10 @@ void main() async {
       await windowManager.focus();
     });
     runApp(const DesktopApp());
+  }
+
+  if (Storage().getString(StorageKeys.CACHE_DIR_KEY) == null) {
+    Storage().set(StorageKeys.CACHE_DIR_KEY, (await getApplicationDocumentsDirectory()).path);
   }
 }
 

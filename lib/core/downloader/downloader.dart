@@ -104,7 +104,7 @@ class Downloader {
       filename: fileName,
       // directory: 'TubeSavely/Files',
       directory: await baseOutputPath,
-      // baseDirectory: BaseDirectory.temporary,
+      baseDirectory: BaseDirectory.root,
       updates: Updates.statusAndProgress,
       requiresWiFi: false,
       retries: Storage().getInt(StorageKeys.RETRY_COUNT_KEY) ?? 3,
@@ -134,7 +134,6 @@ class Downloader {
       //部分视频在ios设备无法播放，因此保存前先用ffmpeg对视频重编码为MPEG-4以便支持ios设备
       // await FFmpegKit.execute('-i "$path" -err_detect ignore_err -c:v mpeg4 -y "$outputPath"');
       savePath = await FFmpegExecutor.reEncode(path, outputPath: outputPath);
-      debugPrint('----------reEncode_>>>>savePath $savePath');
     }
     if (PlatformUtil.isMobile) {
       dynamic result = await ImageGallerySaver.saveFile(savePath ?? outputPath, name: title, isReturnPathOfIOS: true);

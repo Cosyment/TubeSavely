@@ -6,8 +6,7 @@ import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
-
-enum VideoFormat { MOV, AVI, MKV, MP4, FLV, WMV, RMVB, _3GP, MPG, MPE, M4V }
+import 'package:tubesavely/storage/storage.dart';
 
 class FFmpegExecutor {
   static const String defaultOutputPath = 'output'; // 获取应用文档目录
@@ -23,11 +22,10 @@ class FFmpegExecutor {
     return null;
   }
 
-  static Future<String?> convertToFormat(String videoPath, VideoFormat format, {String? outputPath}) async {
-    outputPath ??=
-        '${await getApplicationDocumentsDirectory().then((value) => value.path)}/${path.basename(videoPath)}.${format.name}';
-    File videoFile = File(videoPath);
-    if (videoFile.existsSync()) {
+  static Future<String?> convert(String videoPath, {String? outputPath}) async {
+    outputPath ??= '${Storage().getString(StorageKeys.CACHE_DIR_KEY)}/${path.basename(videoPath)}.mp4';
+    File outputFile = File(outputPath);
+    if (outputFile.existsSync()) {
       return outputPath;
     }
     String progressLogPath =
@@ -49,7 +47,7 @@ class FFmpegExecutor {
     }
     // final command = '-i "$videoPath" -y -f mjpeg -ss 00:00:03 -vframes 1 -s 320x240 "$outputPath"';
     final command =
-        '-i "$videoPath" -ss 00:00:03 -vf scale=w=1280:h=-2:force_original_aspect_ratio=decrease -vframes 1 -y "$outputPath"';
+        '-hide_banner -i "$videoPath" -ss 00:00:03 -vf scale=w=1280:h=-2:force_original_aspect_ratio=decrease -vframes 1 -y "$outputPath"';
     if (await _execute(command)) {
       return outputPath;
     }
@@ -65,7 +63,13 @@ class FFmpegExecutor {
   }
 
   static Future<String?> reEncode(String videoPath, {String? outputPath}) async {
-    final command = '-i "$videoPath" -err_detect ignore_err -c:v mpeg4 -y "$outputPath"';
+    final command = '-hide_banner -i "$videoPath" -err_detect ignore_err -c:v mpeg4 -y "$outputPath"';
+    if (outputPath?.isNotEmpty == true) {
+      File file = File(outputPath!);
+      if (file.existsSync()) {
+        file.deleteSync();
+      }
+    }
     if (await _execute(command)) {
       return outputPath;
     }
@@ -73,7 +77,7 @@ class FFmpegExecutor {
   }
 
   static Future<String?> downloadM3U8(String m3u8Url, {String? outputPath}) async {
-    final command = '-i "$m3u8Url" -c copy -bsf:a aac_adtstoasc -y "$outputPath"';
+    final command = '-hide_banner -i "$m3u8Url" -c copy -bsf:a aac_adtstoasc -y "$outputPath"';
     if (await _execute(command)) {
       return outputPath;
     }
@@ -87,7 +91,7 @@ class FFmpegExecutor {
       debugPrint('ffmpeg execute result : Success $command');
       return true;
     } else {
-      debugPrint('ffmpeg execute result : Failure $code, $command ${await session.getFailStackTrace()}');
+      debugPrint('ffmpeg execute result : Failure $code, $command');
       return false;
     }
   }
