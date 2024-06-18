@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:tubesavely/core/downloader/downloader.dart';
 import 'package:tubesavely/extension/extension.dart';
 import 'package:tubesavely/http/http_request.dart';
+import 'package:tubesavely/storage/storage.dart';
 import 'package:tubesavely/theme/app_theme.dart';
 import 'package:tubesavely/utils/toast_util.dart';
 
@@ -194,7 +195,7 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
             children: [
               IconButton(
                   onPressed: () {
-                    Downloader.download(model.url, model.title);
+                    Downloader.combineDownload(model.url ?? '', model.title ?? '');
                   },
                   icon: Icon(
                     Icons.save_alt,
@@ -202,9 +203,7 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
                   )),
               IconButton(
                   onPressed: () {
-                    FilePicker.platform.getDirectoryPath(
-                      dialogTitle: '打开文件',
-                    );
+                    FilePicker.platform.getDirectoryPath(initialDirectory: Storage().getString(StorageKeys.CACHE_DIR_KEY));
                   },
                   icon: const Icon(
                     Icons.folder_open,

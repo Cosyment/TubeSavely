@@ -23,6 +23,7 @@ class _DesktopAppState extends State<DesktopApp> {
       debugShowCheckedModeBanner: false,
       color: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
       builder: EasyLoading.init(),
+      theme: ThemeData.light(),
       home: const HomePage(),
     );
   }

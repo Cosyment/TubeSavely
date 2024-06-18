@@ -10,6 +10,7 @@ import 'package:tubesavely/screen/mobile/pages/home_page.dart';
 import 'package:tubesavely/screen/mobile/pages/more_page.dart';
 import 'package:tubesavely/screen/mobile/pages/splash_page.dart';
 import 'package:tubesavely/screen/mobile/pages/task_page.dart';
+import 'package:tubesavely/storage/storage.dart';
 import 'package:tubesavely/theme/app_theme.dart';
 import 'package:tubesavely/utils/platform_util.dart';
 import 'package:tubesavely/widget/drawer_controller.dart';
@@ -18,7 +19,7 @@ import 'package:window_manager/window_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await Storage().init();
   if (PlatformUtil.isMobile) {
     await ScreenUtil.ensureScreenSize();
     MediaKit.ensureInitialized();

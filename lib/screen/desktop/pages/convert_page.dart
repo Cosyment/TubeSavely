@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:tubesavely/core/ffmpeg/ffmpeg_executor.dart';
 
+import '../../../storage/storage.dart';
 import '../../../theme/app_theme.dart';
 
 class ConvertPage extends StatefulWidget {
@@ -15,7 +16,7 @@ class ConvertPage extends StatefulWidget {
 }
 
 class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClientMixin<ConvertPage> {
-  String videoFormat = 'MP4';
+  String videoFormat = Storage().getString(StorageKeys.CONVERT_FORMAT_KEY) ?? 'MP4';
   List<PlatformFile> videoList = [];
 
   _pickVideo() async {
@@ -161,7 +162,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
                     FFmpegExecutor.convertToFormat(file.path ?? '', VideoFormat.values.byName(videoFormat));
                   },
                   icon: Icon(
-                    Icons.start,
+                    Icons.cached_outlined,
                     color: AppTheme.accentColor.withOpacity(0.8),
                   )),
               IconButton(

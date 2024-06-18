@@ -27,9 +27,9 @@ class FFmpegExecutor {
     outputPath ??=
         '${await getApplicationDocumentsDirectory().then((value) => value.path)}/${path.basename(videoPath)}.${format.name}';
     File videoFile = File(videoPath);
-    // if (videoFile.existsSync()) {
-    //   return outputPath;
-    // }
+    if (videoFile.existsSync()) {
+      return outputPath;
+    }
     String progressLogPath =
         '${await getApplicationDocumentsDirectory().then((value) => value.path)}/${path.basename(videoPath)}.log';
     // ffmpeg -i input.mp4 -c:v libx264 -preset slow -progress /path/to/progress.log output.mp4
@@ -45,7 +45,6 @@ class FFmpegExecutor {
     outputPath ??= '${await getApplicationDocumentsDirectory().then((value) => value.path)}/${path.basename(videoPath)}.jpg';
     File thumbnailFile = File(outputPath);
     if (thumbnailFile.existsSync()) {
-      debugPrint('----------->>>>outputPath: $outputPath');
       return outputPath;
     }
     // final command = '-i "$videoPath" -y -f mjpeg -ss 00:00:03 -vframes 1 -s 320x240 "$outputPath"';
@@ -66,7 +65,7 @@ class FFmpegExecutor {
   }
 
   static Future<String?> reEncode(String videoPath, {String? outputPath}) async {
-    final command = '-i "$videoPath" -err_detect ignore_err -c:v mpeg4 -y "${outputPath ?? defaultOutputPath}"';
+    final command = '-i "$videoPath" -err_detect ignore_err -c:v mpeg4 -y "$outputPath"';
     if (await _execute(command)) {
       return outputPath;
     }
@@ -84,7 +83,6 @@ class FFmpegExecutor {
   static Future<bool> _execute(String command) async {
     FFmpegSession session = await FFmpegKit.execute(command);
     ReturnCode? code = await session.getReturnCode();
-
     if (ReturnCode.isSuccess(code)) {
       debugPrint('ffmpeg execute result : Success $command');
       return true;

@@ -20,8 +20,33 @@ enum SegmentType {
 
 class _HomePageState extends State<HomePage> {
   SegmentType currentSegment = SegmentType.download;
-  Widget body = const DownloadPage();
+  List<Widget> pages = [const DownloadPage(), const ConvertPage()];
   PageController controller = PageController();
+  List<ButtonSegment<SegmentType>> buttonSegments = [];
+
+  @override
+  void initState() {
+    super.initState();
+    currentSegment = pages.first is DownloadPage ? SegmentType.download : SegmentType.convert;
+    buttonSegments = pages
+        .map((item) => ButtonSegment<SegmentType>(
+              value: item is DownloadPage ? SegmentType.download : SegmentType.convert,
+              label: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                  child: Row(
+                    children: [
+                      Icon(item is DownloadPage ? Icons.save_alt : Icons.cached_outlined),
+                      Text(
+                        item is DownloadPage ? "下载" : "转换",
+                      )
+                    ],
+                  )),
+            ))
+        .toList();
+    setState(() {
+      // controller.jumpToPage(0);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,10 +87,6 @@ class _HomePageState extends State<HomePage> {
                                 style: const TextStyle(fontSize: 15, color: Colors.grey),
                               );
                             }),
-                        // Text(
-                        //   '1.0',
-                        //   style: TextStyle(fontSize: 15, color: Colors.grey),
-                        // )
                       ],
                     ),
                     Container(
@@ -85,36 +106,7 @@ class _HomePageState extends State<HomePage> {
                                   foregroundColor: AppTheme.accentColor,
                                   surfaceTintColor: Colors.blue,
                                   shadowColor: Colors.amber),
-                              segments: [
-                                ButtonSegment<SegmentType>(
-                                  value: SegmentType.download,
-                                  label: Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-                                      child: const Row(
-                                        children: [
-                                          Icon(Icons.save_alt),
-                                          Text(
-                                            "下载",
-                                          )
-                                        ],
-                                      )),
-                                  enabled: true,
-                                ),
-                                ButtonSegment<SegmentType>(
-                                  value: SegmentType.convert,
-                                  label: Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-                                      child: const Row(
-                                        children: [
-                                          Icon(Icons.refresh_sharp),
-                                          Text(
-                                            "转换",
-                                          )
-                                        ],
-                                      )),
-                                  // icon: Icon(Icons.safety_check),
-                                ),
-                              ],
+                              segments: buttonSegments,
                               showSelectedIcon: false,
                               selected: {currentSegment},
                               onSelectionChanged: (Set<SegmentType> newSelection) {
@@ -151,7 +143,7 @@ class _HomePageState extends State<HomePage> {
                         )),
                   ],
                 ),
-                Flexible(
+                Expanded(
                     child: PageView(
                   controller: controller,
                   onPageChanged: (int index) {
@@ -159,7 +151,7 @@ class _HomePageState extends State<HomePage> {
                       currentSegment = SegmentType.values[index];
                     });
                   },
-                  children: const [DownloadPage(), ConvertPage()],
+                  children: pages,
                 ))
               ],
             ),

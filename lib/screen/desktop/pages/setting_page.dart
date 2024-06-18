@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:tubesavely/theme/app_theme.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+import '../../../storage/storage.dart';
 import '../../../utils/constants.dart';
 import '../main.dart';
 
@@ -17,13 +18,14 @@ class SettingPage extends StatefulWidget {
 enum ThemeMode { Light, Dark, System }
 
 class _SettingPageState extends State<SettingPage> {
-  ThemeMode currentThemeMode = ThemeMode.System;
-  String cacheDir = '';
-  String language = '中文';
-  String retryCount = '2';
-  String downloadQuality = '720P';
-  bool mergeAudio = true;
-  String videoFormat = 'MP4';
+  ThemeMode currentThemeMode = ThemeMode.values.byName(Storage().getString(StorageKeys.THEME_MODE_KEY) ?? ThemeMode.System.name);
+  String cacheDir = Storage().getString(StorageKeys.CACHE_DIR_KEY) ?? '';
+  String language = Storage().getString(StorageKeys.LANGUAGE_KEY) ?? '中文';
+  bool reCode = Storage().getBool(StorageKeys.AUTO_RECODE_KEY);
+  int retryCount = Storage().getInt(StorageKeys.RETRY_COUNT_KEY) ?? 2;
+  String downloadQuality = Storage().getString(StorageKeys.DOWNLOAD_QUALITY_KEY) ?? '720P';
+  bool mergeAudio = Storage().getBool(StorageKeys.AUTO_MERGE_AUDIO_KEY);
+  String videoFormat = Storage().getString(StorageKeys.CONVERT_FORMAT_KEY) ?? 'MP4';
 
   @override
   void initState() {
@@ -83,9 +85,21 @@ class _SettingPageState extends State<SettingPage> {
               onSelectionChanged: (Set<ThemeMode> newSelection) {
                 setState(() {
                   currentThemeMode = newSelection.first;
+                  Storage().set(StorageKeys.THEME_MODE_KEY, currentThemeMode.name);
                 });
               },
             )),
+        _buildItem(
+            isLightMode,
+            '语言',
+            _buildDropButton2(isLightMode, language, ['中文', 'English', '日本語'], (value) {
+              setState(() {
+                language = value;
+                Storage().set(StorageKeys.LANGUAGE_KEY, value);
+              });
+            })),
+        _buildDivider(),
+        _buildTitle('视频下载&转换设置'),
         _buildItem(
             isLightMode,
             '缓存目录',
@@ -111,6 +125,7 @@ class _SettingPageState extends State<SettingPage> {
                       }
                       setState(() {
                         cacheDir = path ?? '';
+                        Storage().set(StorageKeys.CACHE_DIR_KEY, path);
                       });
                     },
                     icon: const Icon(Icons.folder_open))
@@ -118,20 +133,26 @@ class _SettingPageState extends State<SettingPage> {
             )),
         _buildItem(
             isLightMode,
-            '语言',
-            _buildDropButton2(isLightMode, language, ['中文', 'English', '日本語'], (value) {
-              setState(() {
-                language = value;
-              });
-            })),
-        _buildDivider(),
-        _buildTitle('下载设置'),
+            '自动重编码视频',
+            Switch.adaptive(
+                activeColor: AppTheme.white,
+                inactiveThumbColor: Colors.white,
+                activeTrackColor: AppTheme.accentColor,
+                inactiveTrackColor: AppTheme.grey.withOpacity(0.2),
+                value: reCode,
+                onChanged: (value) {
+                  setState(() {
+                    reCode = value;
+                    Storage().set(StorageKeys.AUTO_RECODE_KEY, value);
+                  });
+                })),
         _buildItem(
             isLightMode,
             '失败重试次数',
-            _buildDropButton2(isLightMode, retryCount, ['1', '2', '3', '4', '5'], (value) {
+            _buildDropButton2(isLightMode, retryCount.toString(), ['1', '2', '3', '4', '5'], (value) {
               setState(() {
-                retryCount = value;
+                retryCount = int.parse(value);
+                Storage().set(StorageKeys.RETRY_COUNT_KEY, retryCount);
               });
             })),
         _buildItem(
@@ -140,6 +161,7 @@ class _SettingPageState extends State<SettingPage> {
             _buildDropButton2(isLightMode, downloadQuality, ['360P', '720P', '1080P', '1920P', '2K', '4K'], (value) {
               setState(() {
                 downloadQuality = value;
+                Storage().set(StorageKeys.DOWNLOAD_QUALITY_KEY, value);
               });
             })),
         _buildItem(
@@ -154,10 +176,9 @@ class _SettingPageState extends State<SettingPage> {
                 onChanged: (value) {
                   setState(() {
                     mergeAudio = value;
+                    Storage().set(StorageKeys.AUTO_MERGE_AUDIO_KEY, value);
                   });
                 })),
-        _buildDivider(),
-        _buildTitle('视频转换设置'),
         _buildItem(
             isLightMode,
             '默认转换格式',
@@ -166,6 +187,7 @@ class _SettingPageState extends State<SettingPage> {
                 (value) {
               setState(() {
                 videoFormat = value;
+                Storage().set(StorageKeys.CONVERT_FORMAT_KEY, value);
               });
             })),
         _buildDivider(),
@@ -188,7 +210,7 @@ class _SettingPageState extends State<SettingPage> {
         color: Colors.grey,
         child: Text(
           title,
-          style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
+          style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
         ));
   }
 
