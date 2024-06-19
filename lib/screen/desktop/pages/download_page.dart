@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tubesavely/core/downloader/downloader.dart';
@@ -7,7 +6,9 @@ import 'package:tubesavely/extension/extension.dart';
 import 'package:tubesavely/http/http_request.dart';
 import 'package:tubesavely/storage/storage.dart';
 import 'package:tubesavely/theme/app_theme.dart';
+import 'package:tubesavely/utils/platform_util.dart';
 import 'package:tubesavely/utils/toast_util.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../model/video_model.dart';
 import '../../../utils/constants.dart';
@@ -203,7 +204,9 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
                   )),
               IconButton(
                   onPressed: () {
-                    FilePicker.platform.getDirectoryPath(initialDirectory: Storage().getString(StorageKeys.CACHE_DIR_KEY));
+                    launchUrlString(
+                        Uri.file(Storage().getString(StorageKeys.CACHE_DIR_KEY) ?? '', windows: PlatformUtil.isWindows)
+                            .toString());
                   },
                   icon: const Icon(
                     Icons.folder_open,

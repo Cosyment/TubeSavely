@@ -16,7 +16,11 @@ class Downloader {
       Storage().getString(StorageKeys.CACHE_DIR_KEY) ?? (await getTemporaryDirectory()).path;
 
   static combineDownload(String videoUrl, String title,
-      {String? audioUrl, String? resolution, VoidCallback? onSuccess, VoidCallback? onFailure}) async {
+      {String? audioUrl,
+      String? resolution,
+      ProgressCallback? onProgress,
+      VoidCallback? onSuccess,
+      VoidCallback? onFailure}) async {
     if (videoUrl.isEmpty) {
       ToastUtil.error('下载链接无效！');
     }
@@ -28,11 +32,11 @@ class Downloader {
     }
 
     final videoFileName = resolution != null && resolution != '' ? "$title-$resolution.mp4" : '$title.mp4';
-    Task videoTask = await _download(videoUrl, videoFileName);
+    Task videoTask = await _download(videoUrl, videoFileName, progressCallback: onProgress);
     Task? audioTask;
     if (audioUrl != null) {
       final audioFileName = "$title.mp3";
-      audioTask = await _download(audioUrl, audioFileName);
+      audioTask = await _download(audioUrl, audioFileName, progressCallback: onProgress);
     }
     File videoFile = File(await videoTask.filePath());
     if (audioTask != null) {
@@ -60,13 +64,15 @@ class Downloader {
     }
   }
 
-  static downloadVideo(String url, String title, {VoidCallback? onSuccess, VoidCallback? onFailure}) async {
-    Task task = await _download(url, '$title.mp4');
+  static downloadVideo(String url, String title,
+      {ProgressCallback? progressCallback, VoidCallback? onSuccess, VoidCallback? onFailure}) async {
+    Task task = await _download(url, '$title.mp4', progressCallback: progressCallback);
     _save(await task.filePath(), onSuccess: onSuccess, onFailure: onFailure);
   }
 
-  static downloadAudio(String url, String title, {VoidCallback? onSuccess, VoidCallback? onFailure}) async {
-    DownloadTask task = await _download(url, '$title.mp3');
+  static downloadAudio(String url, String title,
+      {ProgressCallback? progressCallback, VoidCallback? onSuccess, VoidCallback? onFailure}) async {
+    DownloadTask task = await _download(url, '$title.mp3', progressCallback: progressCallback);
     File file = File(await task.filePath());
     if (file.existsSync()) {
       final result = await OpenFile.open(await task.filePath());
@@ -89,7 +95,7 @@ class Downloader {
       file.deleteSync();
       debugPrint('m3u8 download exists file : ${await file.exists()}');
     }
-    String? savePath = await FFmpegExecutor.downloadM3U8(m3u8Url, outputPath: outputPath);
+    String? savePath = await FFmpegExecutor.download(m3u8Url, outputPath: outputPath);
 
     if (savePath?.isNotEmpty == true) {
       _save(outputPath, title: path.basename(File(outputPath).path), onSuccess: onSuccess, onFailure: onFailure);
@@ -98,7 +104,7 @@ class Downloader {
     }
   }
 
-  static Future<DownloadTask> _download(String? url, String? fileName) async {
+  static Future<DownloadTask> _download(String? url, String? fileName, {ProgressCallback? progressCallback}) async {
     final task = DownloadTask(
       url: url ?? '',
       filename: fileName,
@@ -119,7 +125,8 @@ class Downloader {
     }
 
     final result = await FileDownloader().download(task,
-        onProgress: (progress) => debugPrint('Download Task Progress: ${progress * 100}% ${task.filename}'),
+        onProgress: (progress) =>
+            {debugPrint('Download Task Progress: ${progress * 100}% ${task.filename}'), progressCallback?.call(progress)},
         onStatus: (status) => debugPrint('Download Task Status: $status'));
 
     debugPrint('_download result $result');

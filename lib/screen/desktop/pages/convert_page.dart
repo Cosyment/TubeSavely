@@ -5,10 +5,12 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:tubesavely/core/converter/converter.dart';
 import 'package:tubesavely/core/ffmpeg/ffmpeg_executor.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../model/emuns.dart';
 import '../../../storage/storage.dart';
 import '../../../theme/app_theme.dart';
+import '../../../utils/platform_util.dart';
 
 class ConvertPage extends StatefulWidget {
   const ConvertPage({super.key});
@@ -100,6 +102,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
   }
 
   _buildItem(bool isLightMode, PlatformFile file) {
+    var progress = 0.0;
     return Container(
       margin: const EdgeInsets.only(top: 15, bottom: 0, left: 10, right: 10),
       width: double.infinity,
@@ -153,6 +156,25 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
               Text(
                 file.path ?? '',
                 style: TextStyle(fontSize: 12, color: isLightMode ? Colors.black54 : Colors.white54),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                      child: LinearProgressIndicator(
+                    value: progress,
+                    minHeight: 2,
+                    color: AppTheme.accentColor,
+                    borderRadius: BorderRadius.circular(50),
+                    backgroundColor: AppTheme.accentColor.withOpacity(0.2),
+                  )),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text('$progress%')
+                ],
               )
             ],
           )),
@@ -160,8 +182,12 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
             children: [
               IconButton(
                   onPressed: () {
-                    // setState(() {});
-                    Converter.convertToFormat(file.path ?? '', VideoFormat.values.byName(videoFormat));
+                    Converter.convertToFormat(file.path ?? '', VideoFormat.values.byName(videoFormat), progressCallback: (value) {
+                      setState(() {
+                        print('---------_value>>>>> ${value}');
+                        progress = value;
+                      });
+                    });
                   },
                   icon: Icon(
                     Icons.cached_outlined,
@@ -169,7 +195,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
                   )),
               IconButton(
                   onPressed: () async {
-                    await FilePicker.platform.getDirectoryPath(initialDirectory: file.path, lockParentWindow: true);
+                    launchUrlString(Uri.file((await Converter.baseOutputPath ?? ''), windows: PlatformUtil.isWindows).toString());
                   },
                   icon: const Icon(
                     Icons.folder_open,

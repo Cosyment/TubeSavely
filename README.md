@@ -1,10 +1,6 @@
 # TubeSavely
 
-Flutter video download tools
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
+Flutter video downloader
 
 #应用名称：
 TubeSavely - Video downloader 支持tiktok、 抖音快手、小红书
