@@ -166,7 +166,7 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
                     color: Colors.grey,
                   )),
                 ),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
+                errorWidget: (context, url, error) => Image.asset('assets/ic_logo.png'),
               )),
           const SizedBox(
             width: 10,
