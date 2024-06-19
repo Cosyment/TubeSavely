@@ -1,8 +1,8 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit_config.dart';
-import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_session.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/ffprobe_kit.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/media_information.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/media_information_session.dart';
@@ -37,9 +37,7 @@ class FFmpegExecutor {
       progressCallback?.call(100);
       return outputPath;
     }
-    String progressLogPath =
-        '${await getApplicationDocumentsDirectory().then((value) => value.path)}/${path.basename(videoPath)}.log';
-    // ffmpeg -i input.mp4 -c:v libx264 -preset slow -progress /path/to/progress.log output.mp4
+
     // final command =
     //     '-hide_banner -i "$videoPath" -c:v libx264 -preset slow -progress "$progressLogPath" -crf 23 -c:a copy -y "$outputPath"';
     final command = '-hide_banner -i "$videoPath" -c:v libx264 -preset veryfast -crf 23 -c:a copy -y "$outputPath"';
@@ -108,27 +106,35 @@ class FFmpegExecutor {
     fileSize = mediaInformation?['size'] ?? 0;
     totalDuration = mediaInformation?['duration'] ?? 0;
 
-    FFmpegSession session = await FFmpegKit.executeAsync(command, (session) {}, (log) {}, (statistics) {
-      num currentDuration = num.parse((statistics.getTime() / 1000).toStringAsFixed(2));
-      num currentSize = statistics.getSize();
+    // 使用Completer来创建一个可控制完成的Future
+    final completer = Completer<bool>(); // 使用Completer来创建一个可控制完成的Future
 
-      debugPrint('currentDuration $currentDuration, totalDuration $totalDuration, currentSize $currentSize, fileSize $fileSize');
+    FFmpegKit.executeAsync(
+        command,
+        (session) async {
+          ReturnCode? code = await session.getReturnCode();
+          if (ReturnCode.isSuccess(code)) {
+            debugPrint('ffmpeg execute result : Success $command');
+            progressCallback?.call(100);
+            completer.complete(true); // 成功时，完成Future并返回true
+          } else {
+            debugPrint('ffmpeg execute result : Failure $code, $command');
+            completer.complete(false); // 成功时，完成Future并返回true
+          }
+        },
+        (log) {},
+        (statistics) {
+          num currentDuration = num.parse((statistics.getTime() / 1000).toStringAsFixed(2));
+          num currentSize = statistics.getSize();
+          // debugPrint(
+          //     'currentDuration $currentDuration, totalDuration $totalDuration, currentSize $currentSize, fileSize $fileSize');
 
-      if (currentDuration > 0 && totalDuration > 0) {
-        double progress = (currentDuration / totalDuration) * 100;
-        progressCallback?.call(progress);
-        debugPrint('execute progress : $progress');
-      }
-    });
-    return (await session.getReturnCode()) == ReturnCode.success;
-    // ReturnCode? code = await session.getReturnCode();
-    // if (ReturnCode.isSuccess(code)) {
-    //   debugPrint('ffmpeg execute result : Success $command');
-    //   progressCallback?.call(100);
-    //   return true;
-    // } else {
-    //   debugPrint('ffmpeg execute result : Failure $code, $command');
-    //   return false;
-    // }
+          if (currentDuration > 0 && totalDuration > 0) {
+            double progress = (currentDuration / totalDuration) * 100;
+            progressCallback?.call(progress);
+            debugPrint('execute progress : $progress');
+          }
+        });
+    return completer.future;
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:tubesavely/core/downloader/downloader.dart';
 import 'package:tubesavely/extension/extension.dart';
 import 'package:tubesavely/http/http_request.dart';
+import 'package:tubesavely/model/emuns.dart';
 import 'package:tubesavely/storage/storage.dart';
 import 'package:tubesavely/theme/app_theme.dart';
 import 'package:tubesavely/utils/platform_util.dart';
@@ -24,6 +25,9 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
   List<VideoModel> videoModelList = [];
   List<FormatModel>? videoList;
   List<FormatModel>? audioList;
+
+  Map<String, double> progressMap = {};
+  Map<String, ExecuteStatus> statusMap = {};
 
   void _extractVideo(String url) async {
     if (!url.isValidUrl()) {
@@ -190,18 +194,59 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
                       maxLines: 1,
                     )
                   : const SizedBox(),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                      child: LinearProgressIndicator(
+                    value: (progressMap[model.url] ?? 0) / 100,
+                    minHeight: 2,
+                    color: AppTheme.accentColor,
+                    borderRadius: BorderRadius.circular(50),
+                    backgroundColor: AppTheme.accentColor.withOpacity(0.2),
+                  )),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text('${(progressMap[model.url]?.toStringAsFixed(2) ?? 0)}%',
+                      style: TextStyle(fontSize: 12, color: isLightMode ? Colors.black54 : Colors.white54))
+                ],
+              )
             ],
           )),
           Row(
             children: [
-              IconButton(
-                  onPressed: () {
-                    Downloader.combineDownload(model.url ?? '', model.title ?? '');
-                  },
-                  icon: Icon(
-                    Icons.save_alt,
-                    color: AppTheme.accentColor.withOpacity(0.8),
-                  )),
+              statusMap[model.url ?? ''] == ExecuteStatus.Executing
+                  ? Container(
+                      width: 40,
+                      height: 40,
+                      padding: const EdgeInsets.all(10),
+                      child: const CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AppTheme.accentColor,
+                      ))
+                  : IconButton(
+                      onPressed: () {
+                        setState(() {
+                          progressMap[model.url ?? ''] = 0;
+                          statusMap[model.url ?? ''] = ExecuteStatus.Executing;
+                        });
+                        statusMap[model.url ?? ''] = ExecuteStatus.Executing;
+                        Downloader.combineDownload(model.url ?? '', model.title ?? '', onProgress: (value) {
+                          setState(() {
+                            progressMap[model.url ?? ''] = value;
+                            if (value == 100) {
+                              statusMap[model.url ?? ''] = ExecuteStatus.Success;
+                            }
+                          });
+                        });
+                      },
+                      icon: Icon(
+                        Icons.save_alt,
+                        color: AppTheme.accentColor.withOpacity(0.8),
+                      )),
               IconButton(
                   onPressed: () {
                     launchUrlString(

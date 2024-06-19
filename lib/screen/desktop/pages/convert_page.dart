@@ -22,6 +22,8 @@ class ConvertPage extends StatefulWidget {
 class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClientMixin<ConvertPage> {
   String videoFormat = Storage().getString(StorageKeys.CONVERT_FORMAT_KEY) ?? 'MP4';
   List<PlatformFile> videoList = [];
+  Map<String, double> progressMap = {};
+  Map<String, ExecuteStatus> statusMap = {};
 
   _pickVideo() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(dialogTitle: '选择视频', type: FileType.video);
@@ -102,7 +104,6 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
   }
 
   _buildItem(bool isLightMode, PlatformFile file) {
-    var progress = 0.0;
     return Container(
       margin: const EdgeInsets.only(top: 15, bottom: 0, left: 10, right: 10),
       width: double.infinity,
@@ -133,7 +134,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
                       ? Image.asset('assets/ic_logo.png')
                       : Image.file(
                           File(snapshot.data ?? ''),
-                          fit: BoxFit.fitWidth,
+                          fit: BoxFit.cover,
                         );
                 },
                 future: FFmpegExecutor.extractThumbnail(file.path ?? ''),
@@ -155,6 +156,8 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
               ),
               Text(
                 file.path ?? '',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontSize: 12, color: isLightMode ? Colors.black54 : Colors.white54),
               ),
               const SizedBox(
@@ -164,7 +167,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
                 children: [
                   Expanded(
                       child: LinearProgressIndicator(
-                    value: progress,
+                    value: (progressMap[file.path ?? ''] ?? 0) / 100,
                     minHeight: 2,
                     color: AppTheme.accentColor,
                     borderRadius: BorderRadius.circular(50),
@@ -173,26 +176,43 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
                   const SizedBox(
                     width: 10,
                   ),
-                  Text('$progress%')
+                  Text('${(progressMap[file.path ?? '']?.toStringAsFixed(2) ?? 0)}%',
+                      style: TextStyle(fontSize: 12, color: isLightMode ? Colors.black54 : Colors.white54))
                 ],
               )
             ],
           )),
           Row(
             children: [
-              IconButton(
-                  onPressed: () {
-                    Converter.convertToFormat(file.path ?? '', VideoFormat.values.byName(videoFormat), progressCallback: (value) {
-                      setState(() {
-                        print('---------_value>>>>> ${value}');
-                        progress = value;
-                      });
-                    });
-                  },
-                  icon: Icon(
-                    Icons.cached_outlined,
-                    color: AppTheme.accentColor.withOpacity(0.8),
-                  )),
+              statusMap[file.path ?? ''] == ExecuteStatus.Executing
+                  ? Container(
+                      width: 40,
+                      height: 40,
+                      padding: const EdgeInsets.all(10),
+                      child: const CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AppTheme.accentColor,
+                      ))
+                  : IconButton(
+                      onPressed: () {
+                        setState(() {
+                          progressMap[file.path ?? ''] = 0;
+                          statusMap[file.path ?? ''] = ExecuteStatus.Executing;
+                        });
+                        Converter.convertToFormat(file.path ?? '', VideoFormat.values.byName(videoFormat),
+                            progressCallback: (value) {
+                          setState(() {
+                            progressMap[file.path ?? ''] = value;
+                            if (value == 100) {
+                              statusMap[file.path ?? ''] = ExecuteStatus.Success;
+                            }
+                          });
+                        });
+                      },
+                      icon: Icon(
+                        Icons.cached_outlined,
+                        color: AppTheme.accentColor.withOpacity(0.8),
+                      )),
               IconButton(
                   onPressed: () async {
                     launchUrlString(Uri.file((await Converter.baseOutputPath ?? ''), windows: PlatformUtil.isWindows).toString());
@@ -225,13 +245,6 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
     return DropdownButtonHideUnderline(
         child: DropdownButton2<String>(
             isExpanded: false,
-            // hint: Text(
-            //   'Select Item',
-            //   style: TextStyle(
-            //     fontSize: 14,
-            //     color: Theme.of(context).hintColor,
-            //   ),
-            // ),
             value: value,
             items: items
                 .map((String item) => DropdownMenuItem<String>(

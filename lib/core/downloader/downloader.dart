@@ -27,7 +27,7 @@ class Downloader {
     debugPrint('video url $videoUrl');
 
     if (videoUrl.contains('.m3u8')) {
-      _downloadM3U8(videoUrl, title, onSuccess, onFailure);
+      _downloadM3U8(videoUrl, title, onProgress, onSuccess, onFailure);
       return;
     }
 
@@ -86,7 +86,8 @@ class Downloader {
     }
   }
 
-  static _downloadM3U8(String m3u8Url, String title, VoidCallback? onSuccess, VoidCallback? onFailure) async {
+  static _downloadM3U8(
+      String m3u8Url, String title, ProgressCallback? progressCallback, VoidCallback? onSuccess, VoidCallback? onFailure) async {
     String outputPath = "${(await baseOutputPath)}/$title.mp4";
 
     File file = File(outputPath);
@@ -95,7 +96,7 @@ class Downloader {
       file.deleteSync();
       debugPrint('m3u8 download exists file : ${await file.exists()}');
     }
-    String? savePath = await FFmpegExecutor.download(m3u8Url, outputPath: outputPath);
+    String? savePath = await FFmpegExecutor.download(m3u8Url, outputPath: outputPath, progressCallback: progressCallback);
 
     if (savePath?.isNotEmpty == true) {
       _save(outputPath, title: path.basename(File(outputPath).path), onSuccess: onSuccess, onFailure: onFailure);
@@ -126,7 +127,7 @@ class Downloader {
 
     final result = await FileDownloader().download(task,
         onProgress: (progress) =>
-            {debugPrint('Download Task Progress: ${progress * 100}% ${task.filename}'), progressCallback?.call(progress)},
+            {debugPrint('Download Task Progress: ${progress * 100}% ${task.filename}'), progressCallback?.call(progress * 100)},
         onStatus: (status) => debugPrint('Download Task Status: $status'));
 
     debugPrint('_download result $result');
