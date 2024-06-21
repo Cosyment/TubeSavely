@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tubesavely/core/downloader/downloader.dart';
 import 'package:tubesavely/extension/extension.dart';
+import 'package:tubesavely/generated/l10n.dart';
 import 'package:tubesavely/http/http_request.dart';
 import 'package:tubesavely/model/emuns.dart';
 import 'package:tubesavely/storage/storage.dart';
 import 'package:tubesavely/theme/app_theme.dart';
+import 'package:tubesavely/theme/theme_provider.dart';
 import 'package:tubesavely/utils/platform_util.dart';
 import 'package:tubesavely/utils/toast_util.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -31,7 +33,7 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
 
   void _extractVideo(String url) async {
     if (!url.isValidUrl()) {
-      ToastUtil.error('请输入正确的链接');
+      ToastUtil.error('请粘贴正确的链接');
       return;
     }
     ToastUtil.loading();
@@ -70,8 +72,6 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
 
   @override
   Widget build(BuildContext context) {
-    var brightness = MediaQuery.of(context).platformBrightness;
-    bool isLightMode = brightness == Brightness.light;
     super.build(context);
 
     return Column(
@@ -81,8 +81,8 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
           children: [
             OutlinedButton(
               style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: AppTheme.accentColor.withOpacity(0.2)),
-                  overlayColor: AppTheme.accentColor,
+                  side: BorderSide(color: ThemeProvider.accentColor.withOpacity(0.2)),
+                  overlayColor: ThemeProvider.accentColor,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
               onPressed: () async {
                 String? result = await getClipboardData();
@@ -92,9 +92,9 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
                   ToastUtil.error('请先复制视频链接');
                 }
               },
-              child: const Text(
-                '粘贴链接',
-                style: TextStyle(color: AppTheme.accentColor),
+              child: Text(
+                S.current.download,
+                style: TextStyle(color: ThemeProvider.accentColor),
               ),
             ),
             OutlinedButton(
@@ -113,7 +113,7 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
           padding: const EdgeInsets.symmetric(vertical: 0),
           decoration: BoxDecoration(
             // color: Colors.white,
-            border: Border.all(color: isLightMode ? Colors.black12 : Colors.white12),
+            border: Border.all(color: Theme.of(context).dividerColor),
             borderRadius: BorderRadius.circular(8),
           ),
           width: double.infinity,
@@ -127,24 +127,24 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
               : ListView.builder(
                   itemCount: videoModelList.length,
                   itemBuilder: (context, index) {
-                    return _buildItem(isLightMode, videoModelList[index]);
+                    return _buildItem(videoModelList[index]);
                   }),
         ))
       ],
     );
   }
 
-  _buildItem(bool isLightMode, VideoModel model) {
+  _buildItem(VideoModel model) {
     return Container(
       margin: const EdgeInsets.only(top: 15, bottom: 0, left: 10, right: 10),
       width: double.infinity,
       clipBehavior: Clip.antiAliasWithSaveLayer,
       decoration: BoxDecoration(
-        color: isLightMode ? Colors.white : Colors.grey.shade900,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: isLightMode ? Colors.grey.withOpacity(0.5) : Colors.grey.shade900.withOpacity(0.5),
+            color: Theme.of(context).shadowColor,
             spreadRadius: 1,
             blurRadius: 2,
             offset: const Offset(0, 1), // changes position of shadow
@@ -182,7 +182,7 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
             children: [
               Text(
                 model.title ?? '',
-                style: TextStyle(fontSize: 16, color: isLightMode ? Colors.black87 : Colors.white),
+                style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
               ),
               const SizedBox(
                 height: 5,
@@ -190,7 +190,7 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
               model.original_url != null
                   ? Text(
                       model.original_url ?? '',
-                      style: TextStyle(fontSize: 12, color: isLightMode ? Colors.black54 : Colors.white54),
+                      style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
                       maxLines: 1,
                     )
                   : const SizedBox(),
@@ -203,15 +203,15 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
                       child: LinearProgressIndicator(
                     value: (progressMap[model.url] ?? 0) / 100,
                     minHeight: 2,
-                    color: AppTheme.accentColor,
+                    color: Theme.of(context).primaryColor,
                     borderRadius: BorderRadius.circular(50),
-                    backgroundColor: AppTheme.accentColor.withOpacity(0.2),
+                    backgroundColor: Theme.of(context).primaryColor.withOpacity(0.2),
                   )),
                   const SizedBox(
                     width: 10,
                   ),
                   Text('${(progressMap[model.url]?.toStringAsFixed(2) ?? 0)}%',
-                      style: TextStyle(fontSize: 12, color: isLightMode ? Colors.black54 : Colors.white54))
+                      style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)))
                 ],
               )
             ],
@@ -223,9 +223,9 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
                       width: 40,
                       height: 40,
                       padding: const EdgeInsets.all(10),
-                      child: const CircularProgressIndicator(
+                      child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        color: AppTheme.accentColor,
+                        color: Theme.of(context).primaryColor,
                       ))
                   : IconButton(
                       onPressed: () {
@@ -245,7 +245,7 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
                       },
                       icon: Icon(
                         Icons.save_alt,
-                        color: AppTheme.accentColor.withOpacity(0.8),
+                        color: Theme.of(context).primaryColor.withOpacity(0.8),
                       )),
               IconButton(
                   onPressed: () {
@@ -261,6 +261,8 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
                   onPressed: () {
                     setState(() {
                       videoModelList.remove(model);
+                      statusMap.remove(model.url ?? '');
+                      progressMap.remove(model.url ?? '');
                     });
                   },
                   icon: const Icon(

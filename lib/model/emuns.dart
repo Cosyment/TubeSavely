@@ -1,10 +1,4 @@
-enum ThemeMode {
-  System,
-  Light,
-  Dark,
-}
-
-enum VideoFormat { MOV, AVI, MKV, MP4, FLV, WMV, RMVB, _3GP, MPG, MPE, M4V }
+enum VideoFormat { mov, avi, mkv, mp4, flv, wmv, rmvb, _3gp, mpg, mpe, m4v }
 
 enum ExecuteStatus {
   Idle,

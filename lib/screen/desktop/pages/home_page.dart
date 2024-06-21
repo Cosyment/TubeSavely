@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:tubesavely/screen/desktop/main.dart';
 
+import '../../../generated/l10n.dart';
 import '../../../theme/app_theme.dart';
 import 'convert_page.dart';
 import 'download_page.dart';
@@ -37,7 +38,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Icon(item is DownloadPage ? Icons.save_alt : Icons.cached_outlined),
                       Text(
-                        item is DownloadPage ? "下载" : "转换",
+                        item is DownloadPage ? S.current.download : S.current.convert,
                       )
                     ],
                   )),
@@ -50,14 +51,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var brightness = MediaQuery.of(context).platformBrightness;
-    bool isLightMode = brightness == Brightness.light;
+    // var brightness = MediaQuery.of(context).platformBrightness;
+    // bool isLightMode = brightness == Brightness.light;
     return SafeArea(
         top: true,
         child: Scaffold(
           body: Container(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-            color: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
+            color: Theme.of(context).colorScheme.surface,
             child: Column(
               children: [
                 Stack(
@@ -73,8 +74,8 @@ class _HomePageState extends State<HomePage> {
                           width: 10,
                         ),
                         Text(
-                          'TubeSavely',
-                          style: TextStyle(fontSize: 20, color: isLightMode ? Colors.black : Colors.white),
+                          S.current.appName,
+                          style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 20),
                         ),
                         const SizedBox(
                           width: 5,
@@ -96,16 +97,14 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             SegmentedButton(
                               style: SegmentedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(50.0),
-                                  ),
-                                  side: const BorderSide(width: 0.5, color: AppTheme.accentColor),
-                                  selectedBackgroundColor: AppTheme.accentColor,
-                                  selectedForegroundColor: Colors.white,
-                                  backgroundColor: isLightMode ? Colors.white : Colors.black12,
-                                  foregroundColor: AppTheme.accentColor,
-                                  surfaceTintColor: Colors.blue,
-                                  shadowColor: Colors.amber),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50.0),
+                                ),
+                                side: const BorderSide(width: 0.5, color: AppTheme.accentColor),
+                                selectedBackgroundColor: AppTheme.accentColor,
+                                selectedForegroundColor: Colors.white,
+                                foregroundColor: AppTheme.accentColor,
+                              ),
                               segments: buttonSegments,
                               showSelectedIcon: false,
                               selected: {currentSegment},
@@ -129,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                                 },
                                 icon: Icon(
                                   Icons.settings,
-                                  color: isLightMode ? Colors.black26 : Colors.grey,
+                                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                                 )),
                             IconButton(
                                 onPressed: () {
@@ -137,7 +136,7 @@ class _HomePageState extends State<HomePage> {
                                 },
                                 icon: Icon(
                                   Icons.info_outlined,
-                                  color: isLightMode ? Colors.black26 : Colors.grey,
+                                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                                 ))
                           ],
                         )),

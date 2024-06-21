@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:tubesavely/generated/l10n.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -20,26 +21,26 @@ class AboutPage extends StatelessWidget {
               fit: BoxFit.cover,
             )),
         Text(
-          'TubeSavely',
-          style: TextStyle(fontSize: 20, color: isLightMode ? Colors.black87 : Colors.white),
+          S.current.appName,
+          style: TextStyle(fontSize: 20, color: Theme.of(context).colorScheme.onSurface),
         ),
         FutureBuilder<PackageInfo>(
             future: PackageInfo.fromPlatform(),
             builder: (context, snapshot) {
               return Text(
                 'Version ${snapshot.data?.version}',
-                style: TextStyle(fontSize: 12, color: isLightMode ? Colors.black54 : Colors.grey),
+                style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
               );
             }),
         const SizedBox(height: 10),
         Text(
-          '这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍这是App介绍，很长的一段介绍',
-          style: TextStyle(fontSize: 12, color: isLightMode ? Colors.black45 : Colors.grey.shade600),
+          S.current.download,
+          style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4)),
         ),
         const SizedBox(height: 5),
         Text(
           'Copyright © 2023 TubeSavely. All rights reserved.',
-          style: TextStyle(fontSize: 10, color: isLightMode ? Colors.black54 : Colors.grey),
+          style: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
         ),
       ],
     );

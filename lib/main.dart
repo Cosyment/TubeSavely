@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:tubesavely/screen/desktop/main.dart';
 import 'package:tubesavely/screen/mobile/pages/feedback_page.dart';
 import 'package:tubesavely/screen/mobile/pages/history_page.dart';
@@ -13,10 +15,14 @@ import 'package:tubesavely/screen/mobile/pages/splash_page.dart';
 import 'package:tubesavely/screen/mobile/pages/task_page.dart';
 import 'package:tubesavely/storage/storage.dart';
 import 'package:tubesavely/theme/app_theme.dart';
+import 'package:tubesavely/theme/theme_manager.dart';
+import 'package:tubesavely/theme/theme_provider.dart';
 import 'package:tubesavely/utils/platform_util.dart';
 import 'package:tubesavely/widget/drawer_controller.dart';
 import 'package:tubesavely/widget/slide_drawer.dart';
 import 'package:window_manager/window_manager.dart';
+
+import 'generated/l10n.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,7 +30,10 @@ void main() async {
   if (PlatformUtil.isMobile) {
     await ScreenUtil.ensureScreenSize();
     MediaKit.ensureInitialized();
-    runApp(const MyApp());
+    ChangeNotifierProvider(
+      create: (context) => ThemeManager(),
+      child: const MyApp(),
+    );
   } else {
     windowManager.ensureInitialized();
     WindowOptions windowOptions = const WindowOptions(
@@ -40,7 +49,12 @@ void main() async {
       await windowManager.show();
       await windowManager.focus();
     });
-    runApp(const DesktopApp());
+    runApp(
+      ChangeNotifierProvider(
+        create: (context) => ThemeManager(),
+        child: const DesktopApp(),
+      ),
+    );
   }
 
   if (Storage().getString(StorageKeys.CACHE_DIR_KEY) == null) {
@@ -61,15 +75,22 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, designSize: const Size(750, 1378));
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
-        useMaterial3: true,
-      ),
-      home: const SplashPage(),
-      builder: EasyLoading.init(),
-    );
+    return Consumer<ThemeManager>(builder: (context, themeManager, _) {
+      return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          themeMode: themeManager.currentTheme,
+          theme: ThemeProvider.lightThemeData,
+          darkTheme: ThemeProvider.darkThemeData,
+          localizationsDelegates: const [
+            S.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate
+          ],
+          supportedLocales: S.delegate.supportedLocales,
+          builder: EasyLoading.init(),
+          home: const SplashPage());
+    });
   }
 }
 

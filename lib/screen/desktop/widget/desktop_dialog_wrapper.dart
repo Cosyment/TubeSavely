@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:tubesavely/utils/platform_util.dart';
 import 'package:window_manager/window_manager.dart';
 
-import '../../../theme/app_theme.dart';
-
 class DesktopDialogWrapper extends StatelessWidget {
   const DesktopDialogWrapper({
     super.key,
@@ -16,16 +14,14 @@ class DesktopDialogWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var brightness = MediaQuery.of(context).platformBrightness;
-    bool isLightMode = brightness == Brightness.light;
-
+    Brightness brightness = MediaQuery.of(context).platformBrightness;
     return Dialog(
         child: Container(
             constraints: BoxConstraints(minWidth: 350, maxWidth: width),
             padding: const EdgeInsets.only(left: 0, right: 0, bottom: 10),
             clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10), color: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack),
+            decoration:
+                BoxDecoration(borderRadius: BorderRadius.circular(10), color: Theme.of(context).colorScheme.surfaceContainer),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

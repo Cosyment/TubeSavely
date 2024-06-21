@@ -10,6 +10,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 import '../../../model/emuns.dart';
 import '../../../storage/storage.dart';
 import '../../../theme/app_theme.dart';
+import '../../../theme/theme_provider.dart';
 import '../../../utils/platform_util.dart';
 
 class ConvertPage extends StatefulWidget {
@@ -36,8 +37,6 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
 
   @override
   Widget build(BuildContext context) {
-    var brightness = MediaQuery.of(context).platformBrightness;
-    bool isLightMode = brightness == Brightness.light;
     super.build(context);
     return Column(
       children: [
@@ -46,22 +45,21 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
           children: [
             OutlinedButton(
               style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: AppTheme.accentColor.withOpacity(0.2)),
-                  overlayColor: AppTheme.accentColor,
+                  side: BorderSide(color: ThemeProvider.accentColor.withOpacity(0.2)),
+                  overlayColor: ThemeProvider.accentColor,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
               onPressed: () {
                 _pickVideo();
               },
-              child: const Text('添加视频', style: TextStyle(color: AppTheme.accentColor)),
+              child: Text('添加视频', style: TextStyle(color: Theme.of(context).primaryColor)),
             ),
             Row(
               children: [
                 Text(
                   '转换成',
-                  style: TextStyle(fontSize: 14, color: isLightMode ? Colors.black54 : Colors.white38),
+                  style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurface),
                 ),
-                _buildDropButton2(
-                    isLightMode, videoFormat, ['MOV', 'AVI', 'MKV', 'MP4', 'FLV', 'WMV', 'RMVB', '3GP', 'MPG', 'MPE', 'M4V'],
+                _buildDropButton2(videoFormat, ['MOV', 'AVI', 'MKV', 'MP4', 'FLV', 'WMV', 'RMVB', '3GP', 'MPG', 'MPE', 'M4V'],
                     (value) {
                   setState(() {
                     videoFormat = value;
@@ -75,7 +73,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
             child: Container(
           margin: const EdgeInsets.only(top: 10, bottom: 20),
           decoration: BoxDecoration(
-            border: Border.all(color: isLightMode ? Colors.black12 : Colors.white12),
+            border: Border.all(color: Theme.of(context).dividerColor),
             borderRadius: BorderRadius.circular(8),
           ),
           // height: 500,
@@ -91,29 +89,29 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
                       onPressed: () async {
                         _pickVideo();
                       },
-                      child: const Text('选择视频')),
+                      child: const Text('选择视频', style: TextStyle(color: Colors.white, fontSize: 16))),
                 ))
               : ListView.builder(
                   itemCount: videoList.length,
                   itemBuilder: (context, index) {
-                    return _buildItem(isLightMode, videoList[index]);
+                    return _buildItem(videoList[index]);
                   }),
         ))
       ],
     );
   }
 
-  _buildItem(bool isLightMode, PlatformFile file) {
+  _buildItem(PlatformFile file) {
     return Container(
       margin: const EdgeInsets.only(top: 15, bottom: 0, left: 10, right: 10),
       width: double.infinity,
       clipBehavior: Clip.antiAliasWithSaveLayer,
       decoration: BoxDecoration(
-        color: isLightMode ? Colors.white : Colors.grey.shade900,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: isLightMode ? Colors.grey.withOpacity(0.5) : Colors.grey.shade900.withOpacity(0.5),
+            color: Theme.of(context).shadowColor,
             spreadRadius: 1,
             blurRadius: 2,
             offset: const Offset(0, 1), // changes position of shadow
@@ -149,7 +147,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
             children: [
               Text(
                 file.name,
-                style: TextStyle(fontSize: 16, color: isLightMode ? Colors.black87 : Colors.white),
+                style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
               ),
               const SizedBox(
                 height: 5,
@@ -158,7 +156,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
                 file.path ?? '',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 12, color: isLightMode ? Colors.black54 : Colors.white54),
+                style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
               ),
               const SizedBox(
                 height: 10,
@@ -177,7 +175,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
                     width: 10,
                   ),
                   Text('${(progressMap[file.path ?? '']?.toStringAsFixed(2) ?? 0)}%',
-                      style: TextStyle(fontSize: 12, color: isLightMode ? Colors.black54 : Colors.white54))
+                      style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)))
                 ],
               )
             ],
@@ -189,9 +187,9 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
                       width: 40,
                       height: 40,
                       padding: const EdgeInsets.all(10),
-                      child: const CircularProgressIndicator(
+                      child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        color: AppTheme.accentColor,
+                        color: Theme.of(context).primaryColor,
                       ))
                   : IconButton(
                       onPressed: () {
@@ -199,7 +197,8 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
                           progressMap[file.path ?? ''] = 0;
                           statusMap[file.path ?? ''] = ExecuteStatus.Executing;
                         });
-                        Converter.convertToFormat(file.path ?? '', VideoFormat.values.byName(videoFormat),
+                        Converter.convertToFormat(
+                            file.path ?? '', VideoFormat.values.byName(videoFormat == '3GP' ? '_3gp' : videoFormat),
                             progressCallback: (value) {
                           setState(() {
                             progressMap[file.path ?? ''] = value;
@@ -211,7 +210,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
                       },
                       icon: Icon(
                         Icons.cached_outlined,
-                        color: AppTheme.accentColor.withOpacity(0.8),
+                        color: Theme.of(context).primaryColor.withOpacity(0.8),
                       )),
               IconButton(
                   onPressed: () async {
@@ -225,6 +224,8 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
                   onPressed: () {
                     setState(() {
                       videoList.remove(file);
+                      statusMap.remove(file.path ?? '');
+                      progressMap.remove(file.path ?? '');
                     });
                   },
                   icon: const Icon(
@@ -241,7 +242,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
   @override
   bool get wantKeepAlive => true;
 
-  _buildDropButton2(bool isLightMode, String? value, List<String> items, Function callback) {
+  _buildDropButton2(String? value, List<String> items, Function callback) {
     return DropdownButtonHideUnderline(
         child: DropdownButton2<String>(
             isExpanded: false,
@@ -251,7 +252,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
                       value: item,
                       child: Text(
                         item,
-                        style: TextStyle(fontSize: 14, color: isLightMode ? Colors.black87 : Colors.white60),
+                        style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8)),
                       ),
                     ))
                 .toList(),
@@ -267,7 +268,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
               maxHeight: 200,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                color: isLightMode ? Colors.white : AppTheme.nearlyBlack,
+                color: Theme.of(context).dialogBackgroundColor,
               ),
             ),
             menuItemStyleData: const MenuItemStyleData(
