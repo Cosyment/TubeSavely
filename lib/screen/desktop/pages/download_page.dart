@@ -6,15 +6,13 @@ import 'package:tubesavely/extension/extension.dart';
 import 'package:tubesavely/generated/l10n.dart';
 import 'package:tubesavely/http/http_request.dart';
 import 'package:tubesavely/model/emuns.dart';
+import 'package:tubesavely/model/video_model.dart';
 import 'package:tubesavely/storage/storage.dart';
-import 'package:tubesavely/theme/app_theme.dart';
 import 'package:tubesavely/theme/theme_provider.dart';
+import 'package:tubesavely/utils/constants.dart';
 import 'package:tubesavely/utils/platform_util.dart';
 import 'package:tubesavely/utils/toast_util.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-
-import '../../../model/video_model.dart';
-import '../../../utils/constants.dart';
 
 class DownloadPage extends StatefulWidget {
   const DownloadPage({super.key});
@@ -33,7 +31,7 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
 
   void _extractVideo(String url) async {
     if (!url.isValidUrl()) {
-      ToastUtil.error('请粘贴正确的链接');
+      ToastUtil.error(S.current.toastLinkInvalid);
       return;
     }
     ToastUtil.loading();
@@ -89,21 +87,21 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
                 if (result?.isNotEmpty == true) {
                   _extractVideo(result!);
                 } else {
-                  ToastUtil.error('请先复制视频链接');
+                  ToastUtil.error(S.current.toastLinkEmpty);
                 }
               },
               child: Text(
-                S.current.download,
-                style: TextStyle(color: ThemeProvider.accentColor),
+                S.current.parseLink,
+                style: TextStyle(color: Theme.of(context).primaryColor),
               ),
             ),
             OutlinedButton(
               style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: AppTheme.accentColor.withOpacity(0.2)),
-                  overlayColor: AppTheme.accentColor,
+                  side: BorderSide(color: Theme.of(context).primaryColor.withOpacity(0.2)),
+                  overlayColor: Theme.of(context).primaryColor,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
               onPressed: () {},
-              child: const Text('立即下载', style: TextStyle(color: AppTheme.accentColor)),
+              child: Text(S.current.downloadNow, style: TextStyle(color: Theme.of(context).primaryColor)),
             )
           ],
         ),
@@ -118,10 +116,10 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
           ),
           width: double.infinity,
           child: videoModelList.isEmpty
-              ? const Center(
+              ? Center(
                   child: Text(
-                    '请粘贴视频链接 e.g. https://www.example.com/watch?v=dQw4w9WgXcQ',
-                    style: TextStyle(color: Colors.grey),
+                    S.current.downloadTips,
+                    style: const TextStyle(color: Colors.grey),
                   ),
                 )
               : ListView.builder(

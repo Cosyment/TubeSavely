@@ -5,13 +5,13 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:tubesavely/core/converter/converter.dart';
 import 'package:tubesavely/core/ffmpeg/ffmpeg_executor.dart';
+import 'package:tubesavely/generated/l10n.dart';
+import 'package:tubesavely/model/emuns.dart';
+import 'package:tubesavely/storage/storage.dart';
+import 'package:tubesavely/theme/app_theme.dart';
+import 'package:tubesavely/theme/theme_provider.dart';
+import 'package:tubesavely/utils/platform_util.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-
-import '../../../model/emuns.dart';
-import '../../../storage/storage.dart';
-import '../../../theme/app_theme.dart';
-import '../../../theme/theme_provider.dart';
-import '../../../utils/platform_util.dart';
 
 class ConvertPage extends StatefulWidget {
   const ConvertPage({super.key});
@@ -27,7 +27,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
   Map<String, ExecuteStatus> statusMap = {};
 
   _pickVideo() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(dialogTitle: '选择视频', type: FileType.video);
+    FilePickerResult? result = await FilePicker.platform.pickFiles(dialogTitle: S.current.pickVideo, type: FileType.video);
     if (result != null && result.files.isNotEmpty) {
       setState(() {
         videoList.add(result.files.first);
@@ -51,12 +51,12 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
               onPressed: () {
                 _pickVideo();
               },
-              child: Text('添加视频', style: TextStyle(color: Theme.of(context).primaryColor)),
+              child: Text(S.current.addVideo, style: TextStyle(color: Theme.of(context).primaryColor)),
             ),
             Row(
               children: [
                 Text(
-                  '转换成',
+                  S.current.convertTo,
                   style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurface),
                 ),
                 _buildDropButton2(videoFormat, ['MOV', 'AVI', 'MKV', 'MP4', 'FLV', 'WMV', 'RMVB', '3GP', 'MPG', 'MPE', 'M4V'],
@@ -89,7 +89,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
                       onPressed: () async {
                         _pickVideo();
                       },
-                      child: const Text('选择视频', style: TextStyle(color: Colors.white, fontSize: 16))),
+                      child: Text(S.current.pickVideo, style: const TextStyle(color: Colors.white, fontSize: 16))),
                 ))
               : ListView.builder(
                   itemCount: videoList.length,

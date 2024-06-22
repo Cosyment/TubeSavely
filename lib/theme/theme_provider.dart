@@ -10,8 +10,8 @@ class ThemeProvider {
   static ThemeData themeData(ColorScheme colorScheme, Color focusColor) {
     return ThemeData(
         colorScheme: colorScheme,
-        canvasColor: colorScheme.background,
-        scaffoldBackgroundColor: colorScheme.background,
+        canvasColor: colorScheme.surfaceContainer,
+        scaffoldBackgroundColor: colorScheme.surface,
         primaryColor: colorScheme.primary,
         highlightColor: Colors.transparent,
         cardColor: colorScheme.surfaceContainer,
@@ -19,6 +19,7 @@ class ThemeProvider {
         dividerColor: colorScheme.onSurface.withOpacity(0.1),
         dialogBackgroundColor: colorScheme.surfaceContainer,
         textTheme: textTheme,
+        iconTheme: IconThemeData(color: colorScheme.onSurface.withOpacity(0.5)),
         focusColor: focusColor);
   }
 

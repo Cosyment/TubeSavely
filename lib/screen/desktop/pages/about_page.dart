@@ -7,9 +7,6 @@ class AboutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var brightness = MediaQuery.of(context).platformBrightness;
-    bool isLightMode = brightness == Brightness.light;
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -34,12 +31,12 @@ class AboutPage extends StatelessWidget {
             }),
         const SizedBox(height: 10),
         Text(
-          S.current.download,
+          S.current.summary,
           style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4)),
         ),
         const SizedBox(height: 5),
         Text(
-          'Copyright © 2023 TubeSavely. All rights reserved.',
+          S.current.copyright,
           style: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
         ),
       ],

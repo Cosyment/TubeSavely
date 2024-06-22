@@ -10,6 +10,7 @@ class StorageKeys {
   static const String AUTO_MERGE_AUDIO_KEY = 'AUTO_MERGE_AUDIO_KEY';
   static const String AUTO_RECODE_KEY = 'AUTO_RECODE_KEY';
   static const String CONVERT_FORMAT_KEY = 'CONVERT_FORMAT_KEY';
+  static const String SHOW_APPREVIEW_KEY = 'SHOW_APPREVIEW_KEY';
 }
 
 class Storage {

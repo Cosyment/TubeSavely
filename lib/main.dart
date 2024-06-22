@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +24,7 @@ import 'package:tubesavely/widget/slide_drawer.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'generated/l10n.dart';
+import 'locale/locale_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,17 +51,33 @@ void main() async {
       await windowManager.show();
       await windowManager.focus();
     });
+    // runApp(
+    //   ChangeNotifierProvider(
+    //     create: (context) => ThemeManager(),
+    //     child: const DesktopApp(),
+    //   ),
+    // );
+
     runApp(
-      ChangeNotifierProvider(
-        create: (context) => ThemeManager(),
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => ThemeManager()),
+          ChangeNotifierProvider(create: (_) => LocaleManager.instance),
+        ],
         child: const DesktopApp(),
       ),
     );
+
+    Future.delayed(const Duration(seconds: 20), () {
+      _showAppReview();
+    });
   }
 
   if (Storage().getString(StorageKeys.CACHE_DIR_KEY) == null) {
     Storage().set(StorageKeys.CACHE_DIR_KEY, (await getApplicationDocumentsDirectory()).path);
   }
+
+  // S.delegate.load(Locale((Storage().getString(StorageKeys.LANGUAGE_KEY) ?? 'English').parseLanguageCode()));
 }
 
 class MyApp extends StatefulWidget {
@@ -70,8 +88,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool isDarkMode = true;
-
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, designSize: const Size(750, 1378));
@@ -107,6 +123,9 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor, statusBarColor: Colors.transparent));
+
     drawerIndex = DrawerIndex.Home;
     screenView = const HomePage();
     super.initState();
@@ -183,6 +202,19 @@ class _MainPageState extends State<MainPage> {
         default:
           break;
       }
+    }
+  }
+}
+
+void _showAppReview() async {
+  if (!Storage().getBool(StorageKeys.SHOW_APPREVIEW_KEY) && (PlatformUtil.isMobile || PlatformUtil.isMacOS)) {
+    if (await InAppReview.instance.isAvailable()) {
+      if (PlatformUtil.isIOS || PlatformUtil.isMacOS) {
+        InAppReview.instance.openStoreListing(appStoreId: '6503423677');
+      } else {
+        InAppReview.instance.requestReview();
+      }
+      Storage().set(StorageKeys.SHOW_APPREVIEW_KEY, true);
     }
   }
 }

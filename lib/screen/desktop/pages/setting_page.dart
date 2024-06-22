@@ -2,14 +2,16 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tubesavely/extension/extension.dart';
+import 'package:tubesavely/generated/l10n.dart';
+import 'package:tubesavely/locale/locale_manager.dart';
+import 'package:tubesavely/screen/desktop/main.dart';
+import 'package:tubesavely/storage/storage.dart';
 import 'package:tubesavely/theme/app_theme.dart';
+import 'package:tubesavely/theme/theme_manager.dart';
 import 'package:tubesavely/theme/theme_provider.dart';
+import 'package:tubesavely/utils/constants.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-
-import '../../../storage/storage.dart';
-import '../../../theme/theme_manager.dart';
-import '../../../utils/constants.dart';
-import '../main.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -21,7 +23,7 @@ class SettingPage extends StatefulWidget {
 class _SettingPageState extends State<SettingPage> {
   ThemeMode currentThemeMode = ThemeMode.values.byName(Storage().getString(StorageKeys.THEME_MODE_KEY) ?? ThemeMode.system.name);
   String cacheDir = Storage().getString(StorageKeys.CACHE_DIR_KEY) ?? '';
-  String language = Storage().getString(StorageKeys.LANGUAGE_KEY) ?? '中文';
+  String language = Storage().getString(StorageKeys.LANGUAGE_KEY) ?? 'English';
   bool reCode = Storage().getBool(StorageKeys.AUTO_RECODE_KEY);
   int retryCount = Storage().getInt(StorageKeys.RETRY_COUNT_KEY) ?? 2;
   String downloadQuality = Storage().getString(StorageKeys.DOWNLOAD_QUALITY_KEY) ?? '720P';
@@ -39,9 +41,9 @@ class _SettingPageState extends State<SettingPage> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildTitle('通用设置'),
+        _buildTitle(S.current.generalSettings),
         _buildItem(
-            '主题',
+            S.current.settingTheme,
             SegmentedButton(
               style: SegmentedButton.styleFrom(
                   shape: RoundedRectangleBorder(
@@ -55,21 +57,21 @@ class _SettingPageState extends State<SettingPage> {
                 ButtonSegment<ThemeMode>(
                   value: ThemeMode.light,
                   label: Text(
-                    ThemeMode.light.name,
+                    ThemeMode.light.name.capitalizeWords(),
                   ),
                   enabled: true,
                 ),
                 ButtonSegment<ThemeMode>(
                   value: ThemeMode.dark,
                   label: Text(
-                    ThemeMode.dark.name,
+                    ThemeMode.dark.name.capitalizeWords(),
                   ),
                   // icon: Icon(Icons.safety_check),
                 ),
                 ButtonSegment<ThemeMode>(
                   value: ThemeMode.system,
                   label: Text(
-                    ThemeMode.system.name,
+                    ThemeMode.system.name.capitalizeWords(),
                   ),
                   // icon: Icon(Icons.safety_check),
                 )
@@ -85,21 +87,23 @@ class _SettingPageState extends State<SettingPage> {
               },
             )),
         _buildItem(
-            '语言',
-            _buildDropButton2(language, ['中文', 'English', '日本語'], (value) {
+            S.current.settingLanguage,
+            _buildDropButton2(language, ['简体中文', 'English', '日本語', '한국어'], (value) {
               setState(() {
                 language = value;
                 Storage().set(StorageKeys.LANGUAGE_KEY, value);
+                Provider.of<LocaleManager>(context, listen: false).changeLocale(value);
+                S.delegate.load(Locale(value.toString().toLanguageCode()));
               });
             })),
         _buildDivider(),
-        _buildTitle('视频下载&转换设置'),
+        _buildTitle(S.current.videoSettings),
         _buildItem(
-            '缓存目录',
+            S.current.settingCacheDir,
             Row(
               children: [
                 SizedBox(
-                    width: 300.0,
+                    width: 250.0,
                     child: Text(
                       cacheDir,
                       maxLines: 1,
@@ -127,7 +131,7 @@ class _SettingPageState extends State<SettingPage> {
               ],
             )),
         _buildItem(
-            '自动重编码视频',
+            S.current.settingRecode,
             Switch.adaptive(
                 activeColor: AppTheme.white,
                 inactiveThumbColor: Colors.white,
@@ -141,7 +145,7 @@ class _SettingPageState extends State<SettingPage> {
                   });
                 })),
         _buildItem(
-            '失败重试次数',
+            S.current.settingRetryCount,
             _buildDropButton2(retryCount.toString(), ['1', '2', '3', '4', '5'], (value) {
               setState(() {
                 retryCount = int.parse(value);
@@ -149,7 +153,7 @@ class _SettingPageState extends State<SettingPage> {
               });
             })),
         _buildItem(
-            '默认下载分辨率',
+            S.current.settingDownloadQuality,
             _buildDropButton2(downloadQuality, ['360P', '720P', '1080P', '1920P', '2K', '4K'], (value) {
               setState(() {
                 downloadQuality = value;
@@ -157,7 +161,7 @@ class _SettingPageState extends State<SettingPage> {
               });
             })),
         _buildItem(
-            'Youtube视频自动合并音频',
+            S.current.settingYoutubeMerge,
             Switch.adaptive(
                 activeColor: AppTheme.white,
                 inactiveThumbColor: Colors.white,
@@ -171,7 +175,7 @@ class _SettingPageState extends State<SettingPage> {
                   });
                 })),
         _buildItem(
-            '默认转换格式',
+            S.current.settingConvertFormat,
             _buildDropButton2(videoFormat, ['MOV', 'AVI', 'MKV', 'MP4', 'FLV', 'WMV', 'RMVB', '3GP', 'MPG', 'MPE', 'M4V'],
                 (value) {
               setState(() {
@@ -180,14 +184,14 @@ class _SettingPageState extends State<SettingPage> {
               });
             })),
         _buildDivider(),
-        _buildTitle('其他'),
-        _buildInkItem('访问网页版', () {
+        _buildTitle(S.current.otherSettings),
+        _buildInkItem(S.current.visitWebsite, () {
           launchUrlString(Constants.website);
         }),
-        _buildInkItem('隐私政策', () {
+        _buildInkItem(S.current.privacyPolicy, () {
           launchUrlString(Constants.privacyUrl);
         }),
-        _buildInkItem('关于', () {
+        _buildInkItem(S.current.aboutUs, () {
           showAppAboutDialog(context);
         })
       ],

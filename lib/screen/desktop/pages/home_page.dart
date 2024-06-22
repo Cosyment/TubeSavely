@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:tubesavely/generated/l10n.dart';
 import 'package:tubesavely/screen/desktop/main.dart';
 
-import '../../../generated/l10n.dart';
-import '../../../theme/app_theme.dart';
 import 'convert_page.dart';
 import 'download_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<StatefulWidget> createState() => _HomePageState();
@@ -33,13 +32,16 @@ class _HomePageState extends State<HomePage> {
         .map((item) => ButtonSegment<SegmentType>(
               value: item is DownloadPage ? SegmentType.download : SegmentType.convert,
               label: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
                   child: Row(
                     children: [
-                      Icon(item is DownloadPage ? Icons.save_alt : Icons.cached_outlined),
-                      Text(
-                        item is DownloadPage ? S.current.download : S.current.convert,
-                      )
+                      Icon(
+                        item is DownloadPage ? Icons.save_alt : Icons.cached_outlined,
+                        size: 25,
+                      ),
+                      // Text(
+                      //   item is DownloadPage ? S.current.download : S.current.convert,
+                      // )
                     ],
                   )),
             ))
@@ -51,8 +53,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // var brightness = MediaQuery.of(context).platformBrightness;
-    // bool isLightMode = brightness == Brightness.light;
     return SafeArea(
         top: true,
         child: Scaffold(
@@ -100,10 +100,10 @@ class _HomePageState extends State<HomePage> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(50.0),
                                 ),
-                                side: const BorderSide(width: 0.5, color: AppTheme.accentColor),
-                                selectedBackgroundColor: AppTheme.accentColor,
+                                side: BorderSide(width: 0.5, color: Theme.of(context).primaryColor),
+                                selectedBackgroundColor: Theme.of(context).primaryColor,
                                 selectedForegroundColor: Colors.white,
-                                foregroundColor: AppTheme.accentColor,
+                                foregroundColor: Theme.of(context).primaryColor,
                               ),
                               segments: buttonSegments,
                               showSelectedIcon: false,
@@ -111,7 +111,6 @@ class _HomePageState extends State<HomePage> {
                               onSelectionChanged: (Set<SegmentType> newSelection) {
                                 setState(() {
                                   currentSegment = newSelection.first;
-                                  // body = currentSegment == SegmentType.download ? const DownloadPage() : const ConvertPage();
                                   controller.jumpToPage(currentSegment.index);
                                 });
                               },
