@@ -43,6 +43,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingDownloadQuality":
             MessageLookupByLibrary.simpleMessage("默认下载分辨率"),
         "settingLanguage": MessageLookupByLibrary.simpleMessage("语言"),
+        "settingMergeAudio": MessageLookupByLibrary.simpleMessage("自动合并音频"),
         "settingRecode": MessageLookupByLibrary.simpleMessage("自动重编码视频"),
         "settingRetryCount": MessageLookupByLibrary.simpleMessage("下载失败重试"),
         "settingTheme": MessageLookupByLibrary.simpleMessage("主题"),
@@ -50,8 +51,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingThemeLight": MessageLookupByLibrary.simpleMessage("浅色"),
         "settingThemeSystem": MessageLookupByLibrary.simpleMessage("跟随系统"),
         "settingVideoQuality": MessageLookupByLibrary.simpleMessage("视频质量"),
-        "settingYoutubeMerge":
-            MessageLookupByLibrary.simpleMessage("Youtube视频自动合并音频"),
+        "statusComplete": MessageLookupByLibrary.simpleMessage("完成"),
+        "statusConvertFailed": MessageLookupByLibrary.simpleMessage("转换失败"),
+        "statusConvertProgress": MessageLookupByLibrary.simpleMessage("转换中"),
+        "statusDownloadFailed": MessageLookupByLibrary.simpleMessage("下载失败"),
+        "statusDownloadProgress": MessageLookupByLibrary.simpleMessage("下载中"),
+        "statusFailed": MessageLookupByLibrary.simpleMessage("处理失败"),
+        "statusMergeFailed": MessageLookupByLibrary.simpleMessage("合并失败"),
+        "statusMergeProgress": MessageLookupByLibrary.simpleMessage("合并中"),
+        "statusRecodeFailed": MessageLookupByLibrary.simpleMessage("编码失败"),
+        "statusRecodeProgress": MessageLookupByLibrary.simpleMessage("编码中"),
         "summary": MessageLookupByLibrary.simpleMessage(
             "TubeSavely自豪地支持超过1800个国内外主流及小众视频平台，覆盖YouTube、Instagram、TikTok、Bilibili、Vimeo等热门站点，甚至是那些鲜为人知的专业领域平台。无论您钟情于哪个角落的精彩，TubeSavely都能成为您的专属桥梁，一键下载，轻松收藏。采用先进的多线程下载技术，TubeSavely极大地缩短了下载时间，即使面对超大体积的视频文件也能迅速完成。告别漫长等待，让精彩内容即刻呈现，享受即下即看的畅快体验。"),
         "toastConvertFailed": MessageLookupByLibrary.simpleMessage("转换失败"),
@@ -61,10 +70,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "toastDownloadFailed":
             MessageLookupByLibrary.simpleMessage("下载失败，请稍后再试"),
         "toastDownloadInvalid": MessageLookupByLibrary.simpleMessage("下载链接无效"),
+        "toastDownloadProgress": MessageLookupByLibrary.simpleMessage("下载中"),
         "toastDownloadStart": MessageLookupByLibrary.simpleMessage("开始下载"),
         "toastDownloadSuccess": MessageLookupByLibrary.simpleMessage("下载成功"),
         "toastLinkEmpty": MessageLookupByLibrary.simpleMessage("请先复制视频链接"),
+        "toastLinkExists": MessageLookupByLibrary.simpleMessage("链接已添加"),
         "toastLinkInvalid": MessageLookupByLibrary.simpleMessage("请粘贴正确的链接"),
+        "toastMergeProgress": MessageLookupByLibrary.simpleMessage("合并中"),
+        "toastRecodeProgress": MessageLookupByLibrary.simpleMessage("编码中"),
         "toastVideoExecuteError":
             MessageLookupByLibrary.simpleMessage("视频信息解析异常，请确认地址是否正确"),
         "videoSettings": MessageLookupByLibrary.simpleMessage("视频设置"),

@@ -37,8 +37,9 @@ class HttpRequest {
       var content = jsonDecode(decoder.convert(response!.bodyBytes));
       debugPrint("response： $content");
       errorMessage = content['msg'];
-      var data = content['data'];
-      if (content['code'] == 200 && data != null) {
+
+      if (content['code'] == 200) {
+        var data = content['data'];
         if (data is List) {
           return List<T>.from(data.map((e) => fromJson(e)));
         } else {

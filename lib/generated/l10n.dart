@@ -80,10 +80,10 @@ class S {
     );
   }
 
-  /// `Paste the link`
+  /// `Paste Link`
   String get parseLink {
     return Intl.message(
-      'Paste the link',
+      'Paste Link',
       name: 'parseLink',
       desc: '',
       args: [],
@@ -105,26 +105,6 @@ class S {
     return Intl.message(
       'Please paste the video link, e.g. https://www.example.com/watch?v=dQw4w9WgXcQ',
       name: 'downloadTips',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Please copy the video link first`
-  String get toastLinkEmpty {
-    return Intl.message(
-      'Please copy the video link first',
-      name: 'toastLinkEmpty',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Please paste the correct link`
-  String get toastLinkInvalid {
-    return Intl.message(
-      'Please paste the correct link',
-      name: 'toastLinkInvalid',
       desc: '',
       args: [],
     );
@@ -270,11 +250,11 @@ class S {
     );
   }
 
-  /// `Auto Merge Audio for YouTube Videos`
-  String get settingYoutubeMerge {
+  /// `Automatically merge audio`
+  String get settingMergeAudio {
     return Intl.message(
-      'Auto Merge Audio for YouTube Videos',
-      name: 'settingYoutubeMerge',
+      'Automatically merge audio',
+      name: 'settingMergeAudio',
       desc: '',
       args: [],
     );
@@ -370,11 +350,51 @@ class S {
     );
   }
 
+  /// `Please copy the video link first`
+  String get toastLinkEmpty {
+    return Intl.message(
+      'Please copy the video link first',
+      name: 'toastLinkEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please paste the correct link`
+  String get toastLinkInvalid {
+    return Intl.message(
+      'Please paste the correct link',
+      name: 'toastLinkInvalid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Link is already Added`
+  String get toastLinkExists {
+    return Intl.message(
+      'Link is already Added',
+      name: 'toastLinkExists',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Download has started`
   String get toastDownloadStart {
     return Intl.message(
       'Download has started',
       name: 'toastDownloadStart',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Downloading`
+  String get toastDownloadProgress {
+    return Intl.message(
+      'Downloading',
+      name: 'toastDownloadProgress',
       desc: '',
       args: [],
     );
@@ -405,6 +425,26 @@ class S {
     return Intl.message(
       'Download link invalid',
       name: 'toastDownloadInvalid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recoding`
+  String get toastRecodeProgress {
+    return Intl.message(
+      'Recoding',
+      name: 'toastRecodeProgress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Merging`
+  String get toastMergeProgress {
+    return Intl.message(
+      'Merging',
+      name: 'toastMergeProgress',
       desc: '',
       args: [],
     );
@@ -445,6 +485,106 @@ class S {
     return Intl.message(
       'Converting',
       name: 'toastConvertProgress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `下载中`
+  String get statusDownloadProgress {
+    return Intl.message(
+      '下载中',
+      name: 'statusDownloadProgress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Download failed`
+  String get statusDownloadFailed {
+    return Intl.message(
+      'Download failed',
+      name: 'statusDownloadFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Converting`
+  String get statusConvertProgress {
+    return Intl.message(
+      'Converting',
+      name: 'statusConvertProgress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Convert failed`
+  String get statusConvertFailed {
+    return Intl.message(
+      'Convert failed',
+      name: 'statusConvertFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Merging`
+  String get statusMergeProgress {
+    return Intl.message(
+      'Merging',
+      name: 'statusMergeProgress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Merge failed`
+  String get statusMergeFailed {
+    return Intl.message(
+      'Merge failed',
+      name: 'statusMergeFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recoding`
+  String get statusRecodeProgress {
+    return Intl.message(
+      'Recoding',
+      name: 'statusRecodeProgress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recode failed`
+  String get statusRecodeFailed {
+    return Intl.message(
+      'Recode failed',
+      name: 'statusRecodeFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Completed`
+  String get statusComplete {
+    return Intl.message(
+      'Completed',
+      name: 'statusComplete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Process failed`
+  String get statusFailed {
+    return Intl.message(
+      'Process failed',
+      name: 'statusFailed',
       desc: '',
       args: [],
     );

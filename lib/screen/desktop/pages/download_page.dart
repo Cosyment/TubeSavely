@@ -6,11 +6,12 @@ import 'package:tubesavely/extension/extension.dart';
 import 'package:tubesavely/generated/l10n.dart';
 import 'package:tubesavely/http/http_request.dart';
 import 'package:tubesavely/model/emuns.dart';
+import 'package:tubesavely/model/pair.dart';
 import 'package:tubesavely/model/video_model.dart';
 import 'package:tubesavely/storage/storage.dart';
-import 'package:tubesavely/theme/theme_provider.dart';
 import 'package:tubesavely/utils/constants.dart';
 import 'package:tubesavely/utils/platform_util.dart';
+import 'package:tubesavely/utils/resolution_util.dart';
 import 'package:tubesavely/utils/toast_util.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -23,10 +24,10 @@ class DownloadPage extends StatefulWidget {
 
 class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClientMixin<DownloadPage> {
   List<VideoModel> videoModelList = [];
-  List<FormatModel>? videoList;
-  List<FormatModel>? audioList;
+  List<String> taskList = [];
 
   Map<String, double> progressMap = {};
+  Map<String, String> progressTextMap = {};
   Map<String, ExecuteStatus> statusMap = {};
 
   void _extractVideo(String url) async {
@@ -43,22 +44,66 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
 
     setState(() {
       videoModelList.add(videoModel);
-      //过滤全部全部视频
-      videoList = videoModel.formats?.where((value) => value.video_ext == 'mp4').toList();
-      //过滤全部m3u8视频（主要处理类似youtube返回相同分辨率的mp4和m3u8场景）
-      videoList = (videoList?.every((element) => element.protocol == 'm3u8_native') ?? false)
-          ? videoList
-          : videoList?.where((element) => element.protocol != 'm3u8_native').toList();
-      //根据分辨率去重
-      videoList = [
-        ...{for (var person in videoList as Iterable) person?.resolution: person}.values
-      ];
 
-      audioList = videoModel.formats
-          ?.where((value) => (value.audio_ext == 'm4a' || value.audio_ext == 'webm') && value.protocol != 'm3u8_native')
-          .toList();
-
+      taskList.add(url);
       ToastUtil.dismiss();
+    });
+  }
+
+  Pair<List<FormatModel>, List<FormatModel>> _duplicateFormat(VideoModel model) {
+    //过滤全部全部视频
+    List<FormatModel>? videoList = model.formats?.where((value) => value.video_ext == 'mp4').toList();
+    //过滤全部m3u8视频（主要处理类似youtube返回相同分辨率的mp4和m3u8场景）
+    videoList = (videoList?.every((element) => element.protocol == 'm3u8_native') ?? false)
+        ? videoList
+        : videoList?.where((element) => element.protocol != 'm3u8_native').toList();
+    //根据分辨率去重
+    videoList = [
+      ...{for (var person in videoList as Iterable) person?.resolution: person}.values
+    ];
+
+    List<FormatModel>? audioList = model.formats
+        ?.where((value) => (value.audio_ext == 'm4a' || value.audio_ext == 'webm') && value.protocol != 'm3u8_native')
+        .toList();
+    return Pair(videoList, audioList);
+  }
+
+  void _download(VideoModel model) async {
+    setState(() {
+      progressMap[model.original_url ?? ''] = 0;
+      statusMap[model.original_url ?? ''] = ExecuteStatus.Executing;
+      progressTextMap[model.original_url ?? ''] = S.current.statusDownloadProgress;
+    });
+
+    final quality = Storage().getString(StorageKeys.DOWNLOAD_QUALITY_KEY);
+    List<FormatModel>? videoList = _duplicateFormat(model).first;
+    List<FormatModel>? audioList = _duplicateFormat(model).second;
+    FormatModel? target = videoList?.firstWhere((item) => VideoResolutionUtil.format(item.resolution ?? '') == quality,
+        orElse: () => videoList.first);
+
+    Downloader.start(target?.url ?? '', model.title ?? '',
+        audioUrl: audioList?.isEmpty == true ? null : audioList?[1].url,
+        resolution: VideoResolutionUtil.format(target?.resolution ?? ''), onProgress: (type, value) {
+      setState(() {
+        progressMap[model.original_url ?? ''] = value;
+        if (type == ProgressType.download) {
+          progressTextMap[model.original_url ?? ''] = S.current.statusDownloadProgress;
+        } else if (type == ProgressType.recode) {
+          progressTextMap[model.original_url ?? ''] = S.current.statusRecodeProgress;
+        } else if (type == ProgressType.merge) {
+          progressTextMap[model.original_url ?? ''] = S.current.statusMergeProgress;
+        }
+        if (value >= 100) {
+          statusMap[model.original_url ?? ''] = ExecuteStatus.Success;
+          progressTextMap[model.original_url ?? ''] = S.current.statusComplete;
+        }
+      });
+    }, onFailure: (error) {
+      setState(() {
+        statusMap[model.original_url ?? ''] = ExecuteStatus.Idle;
+        progressMap[model.original_url ?? ''] = 0;
+        progressTextMap[model.original_url ?? ''] = S.current.statusFailed;
+      });
     });
   }
 
@@ -73,13 +118,17 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
           children: [
             OutlinedButton(
               style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: ThemeProvider.accentColor.withOpacity(0.2)),
-                  overlayColor: ThemeProvider.accentColor,
+                  side: BorderSide(color: Theme.of(context).primaryColor.withOpacity(0.2)),
+                  overlayColor: Theme.of(context).primaryColor,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
               onPressed: () async {
                 String? result = await getClipboardData();
                 if (result?.isNotEmpty == true) {
-                  _extractVideo(result!);
+                  if (taskList.contains(result)) {
+                    ToastUtil.error(S.current.toastLinkExists);
+                  } else {
+                    _extractVideo(result!);
+                  }
                 } else {
                   ToastUtil.error(S.current.toastLinkEmpty);
                 }
@@ -94,7 +143,14 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
                   side: BorderSide(color: Theme.of(context).primaryColor.withOpacity(0.2)),
                   overlayColor: Theme.of(context).primaryColor,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
-              onPressed: () {},
+              onPressed: () async {
+                videoModelList.forEach((model) async {
+                  print('--------->>>>${statusMap[model.original_url ?? '']}');
+                  if (statusMap[model.original_url ?? ''] == null) {
+                    _download(model);
+                  }
+                });
+              },
               child: Text(S.current.downloadNow, style: TextStyle(color: Theme.of(context).primaryColor)),
             )
           ],
@@ -193,7 +249,7 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
                 children: [
                   Expanded(
                       child: LinearProgressIndicator(
-                    value: (progressMap[model.url] ?? 0) / 100,
+                    value: (progressMap[model.original_url] ?? 0) / 100,
                     minHeight: 2,
                     color: Theme.of(context).primaryColor,
                     borderRadius: BorderRadius.circular(50),
@@ -202,7 +258,8 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
                   const SizedBox(
                     width: 10,
                   ),
-                  Text('${(progressMap[model.url]?.toStringAsFixed(2) ?? 0)}%',
+                  Text(
+                      '${progressTextMap[model.original_url] ?? ''} ${(progressMap[model.original_url]?.toStringAsFixed(2) ?? 0)}%',
                       style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)))
                 ],
               )
@@ -210,7 +267,7 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
           )),
           Row(
             children: [
-              statusMap[model.url ?? ''] == ExecuteStatus.Executing
+              statusMap[model.original_url ?? ''] == ExecuteStatus.Executing
                   ? Container(
                       width: 40,
                       height: 40,
@@ -221,23 +278,10 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
                       ))
                   : IconButton(
                       onPressed: () {
-                        setState(() {
-                          progressMap[model.url ?? ''] = 0;
-                          statusMap[model.url ?? ''] = ExecuteStatus.Executing;
-                        });
-                        statusMap[model.url ?? ''] = ExecuteStatus.Executing;
-                        Downloader.start(model.url ?? '', model.title ?? '', onProgress: (value) {
-                          setState(() {
-                            progressMap[model.url ?? ''] = value;
-                            if (value == 100) {
-                              statusMap[model.url ?? ''] = ExecuteStatus.Success;
-                            }
-                          });
-                        }, onFailure: (error) {
-                          setState(() {
-                            statusMap[model.url ?? ''] = ExecuteStatus.Idle;
-                          });
-                        });
+                        if (model.formats == null) {
+                          return;
+                        }
+                        _download(model);
                       },
                       icon: Icon(
                         Icons.save_alt,
@@ -257,8 +301,10 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
                   onPressed: () {
                     setState(() {
                       videoModelList.remove(model);
-                      statusMap.remove(model.url ?? '');
-                      progressMap.remove(model.url ?? '');
+                      statusMap.remove(model.original_url ?? '');
+                      progressMap.remove(model.original_url ?? '');
+                      progressTextMap.remove(model.original_url ?? '');
+                      taskList.remove(model.original_url);
                     });
                   },
                   icon: const Icon(

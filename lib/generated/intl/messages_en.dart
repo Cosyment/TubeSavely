@@ -36,7 +36,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "generalSettings":
             MessageLookupByLibrary.simpleMessage("General Settings"),
         "otherSettings": MessageLookupByLibrary.simpleMessage("Other Settings"),
-        "parseLink": MessageLookupByLibrary.simpleMessage("Paste the link"),
+        "parseLink": MessageLookupByLibrary.simpleMessage("Paste Link"),
         "pickVideo": MessageLookupByLibrary.simpleMessage("Pick Video"),
         "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy Policy"),
         "settingCacheDir":
@@ -46,6 +46,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingDownloadQuality":
             MessageLookupByLibrary.simpleMessage("Default Download Quality"),
         "settingLanguage": MessageLookupByLibrary.simpleMessage("Language"),
+        "settingMergeAudio":
+            MessageLookupByLibrary.simpleMessage("Automatically merge audio"),
         "settingRecode":
             MessageLookupByLibrary.simpleMessage("Auto Re-encode Videos"),
         "settingRetryCount": MessageLookupByLibrary.simpleMessage(
@@ -56,8 +58,22 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingThemeSystem": MessageLookupByLibrary.simpleMessage("System"),
         "settingVideoQuality":
             MessageLookupByLibrary.simpleMessage("Video Quality"),
-        "settingYoutubeMerge": MessageLookupByLibrary.simpleMessage(
-            "Auto Merge Audio for YouTube Videos"),
+        "statusComplete": MessageLookupByLibrary.simpleMessage("Completed"),
+        "statusConvertFailed":
+            MessageLookupByLibrary.simpleMessage("Convert failed"),
+        "statusConvertProgress":
+            MessageLookupByLibrary.simpleMessage("Converting"),
+        "statusDownloadFailed":
+            MessageLookupByLibrary.simpleMessage("Download failed"),
+        "statusDownloadProgress": MessageLookupByLibrary.simpleMessage("下载中"),
+        "statusFailed": MessageLookupByLibrary.simpleMessage("Process failed"),
+        "statusMergeFailed":
+            MessageLookupByLibrary.simpleMessage("Merge failed"),
+        "statusMergeProgress": MessageLookupByLibrary.simpleMessage("Merging"),
+        "statusRecodeFailed":
+            MessageLookupByLibrary.simpleMessage("Recode failed"),
+        "statusRecodeProgress":
+            MessageLookupByLibrary.simpleMessage("Recoding"),
         "summary": MessageLookupByLibrary.simpleMessage(
             "TubeSavely proudly supports over 1800 mainstream and niche video platforms at home and abroad, covering popular sites such as YouTube, Instagram, TikTok, Bilibili, Vimeo, and even some lesser-known professional platforms. No matter which corner of the wonderful content you prefer, TubeSavely can become your exclusive bridge, one-click download, easy collection. Using advanced multi-threaded download technology, TubeSavely greatly shortens the download time, and can quickly complete even for very large video files. Say goodbye to long waiting times and let the wonderful content be presented immediately, enjoying the immediate download and watch experience."),
         "toastConvertFailed":
@@ -72,14 +88,20 @@ class MessageLookup extends MessageLookupByLibrary {
             "Download failed please try again later"),
         "toastDownloadInvalid":
             MessageLookupByLibrary.simpleMessage("Download link invalid"),
+        "toastDownloadProgress":
+            MessageLookupByLibrary.simpleMessage("Downloading"),
         "toastDownloadStart":
             MessageLookupByLibrary.simpleMessage("Download has started"),
         "toastDownloadSuccess":
             MessageLookupByLibrary.simpleMessage("Download successful"),
         "toastLinkEmpty": MessageLookupByLibrary.simpleMessage(
             "Please copy the video link first"),
+        "toastLinkExists":
+            MessageLookupByLibrary.simpleMessage("Link is already Added"),
         "toastLinkInvalid": MessageLookupByLibrary.simpleMessage(
             "Please paste the correct link"),
+        "toastMergeProgress": MessageLookupByLibrary.simpleMessage("Merging"),
+        "toastRecodeProgress": MessageLookupByLibrary.simpleMessage("Recoding"),
         "toastVideoExecuteError": MessageLookupByLibrary.simpleMessage(
             "Video information parsing exception, please confirm if the link is correct"),
         "videoSettings": MessageLookupByLibrary.simpleMessage("Video Settings"),

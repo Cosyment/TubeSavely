@@ -44,6 +44,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingDownloadQuality":
             MessageLookupByLibrary.simpleMessage("ダウンロード品質のデフォルト"),
         "settingLanguage": MessageLookupByLibrary.simpleMessage("言語"),
+        "settingMergeAudio":
+            MessageLookupByLibrary.simpleMessage("オーディオの自動マージ"),
         "settingRecode": MessageLookupByLibrary.simpleMessage("ビデオを自動再エンコード"),
         "settingRetryCount":
             MessageLookupByLibrary.simpleMessage("ダウンロード失敗時の再試行回数"),
@@ -52,8 +54,18 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingThemeLight": MessageLookupByLibrary.simpleMessage("ライト"),
         "settingThemeSystem": MessageLookupByLibrary.simpleMessage("システム"),
         "settingVideoQuality": MessageLookupByLibrary.simpleMessage("ビデオ品質"),
-        "settingYoutubeMerge":
-            MessageLookupByLibrary.simpleMessage("YouTubeビデオの音声を自動結合"),
+        "statusComplete": MessageLookupByLibrary.simpleMessage("完了"),
+        "statusConvertFailed": MessageLookupByLibrary.simpleMessage("変換失敗"),
+        "statusConvertProgress": MessageLookupByLibrary.simpleMessage("変換中"),
+        "statusDownloadFailed":
+            MessageLookupByLibrary.simpleMessage("ダウンロード失敗"),
+        "statusDownloadProgress":
+            MessageLookupByLibrary.simpleMessage("ダウンロード中"),
+        "statusFailed": MessageLookupByLibrary.simpleMessage("処理失敗"),
+        "statusMergeFailed": MessageLookupByLibrary.simpleMessage("マージ失敗"),
+        "statusMergeProgress": MessageLookupByLibrary.simpleMessage("マージ中"),
+        "statusRecodeFailed": MessageLookupByLibrary.simpleMessage("エンコード失敗"),
+        "statusRecodeProgress": MessageLookupByLibrary.simpleMessage("エンコード中"),
         "summary": MessageLookupByLibrary.simpleMessage(
             "TubeSavelyは、国内外の主流やニッチなビデオプラットフォーム1800を超えています。YouTube、Instagram、TikTok、Bilibili、Vimeoなどの人気サイトを含む、さらにはあまり知られていない専門分野のプラットフォームもカバーしています。どの素晴らしいコンテンツが好きであれ、TubeSavelyはあなたの専用の架け橋になり、ワンクリックでダウンロードし、簡単に収集できます。高度なマルチスレッドダウンロード技術を採用しており、ダウンロード時間を大幅に短縮。長い待ち時間を辞退し、すぐに素晴らしいコンテンツを表示し、ダウンロード＆すぐに見る体験を楽しんでください。"),
         "toastConvertFailed": MessageLookupByLibrary.simpleMessage("変換失敗"),
@@ -64,14 +76,19 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("ダウンロードに失敗しました。後で再試行してください"),
         "toastDownloadInvalid":
             MessageLookupByLibrary.simpleMessage("ダウンロードリンクが無効です"),
+        "toastDownloadProgress":
+            MessageLookupByLibrary.simpleMessage("ダウンロード中"),
         "toastDownloadStart":
             MessageLookupByLibrary.simpleMessage("ダウンロードを開始しました"),
         "toastDownloadSuccess":
             MessageLookupByLibrary.simpleMessage("ダウンロード成功"),
         "toastLinkEmpty":
             MessageLookupByLibrary.simpleMessage("ビデオリンクをコピーしてください"),
+        "toastLinkExists": MessageLookupByLibrary.simpleMessage("リンクが追加されました"),
         "toastLinkInvalid":
             MessageLookupByLibrary.simpleMessage("正しいリンクを貼り付けてください"),
+        "toastMergeProgress": MessageLookupByLibrary.simpleMessage("マージ中"),
+        "toastRecodeProgress": MessageLookupByLibrary.simpleMessage("再エンコード"),
         "toastVideoExecuteError":
             MessageLookupByLibrary.simpleMessage("ビデオ情報解析異常、リンクが正しいか確認してください"),
         "videoSettings": MessageLookupByLibrary.simpleMessage("ビデオダウンロード＆変換設定"),

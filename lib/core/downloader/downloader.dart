@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:tubesavely/core/callback/callback.dart';
 import 'package:tubesavely/core/ffmpeg/ffmpeg_executor.dart';
 import 'package:tubesavely/generated/l10n.dart';
+import 'package:tubesavely/model/emuns.dart';
 import 'package:tubesavely/storage/storage.dart';
 import 'package:tubesavely/utils/platform_util.dart';
 import 'package:tubesavely/utils/toast_util.dart';
@@ -37,11 +38,12 @@ class Downloader {
     }
 
     final videoFileName = resolution != null && resolution != '' ? "$fileName-$resolution.mp4" : '$fileName.mp4';
+    final recode = Storage().getBool(StorageKeys.AUTO_RECODE_KEY);
     String? videoPath = await downloadVideo(videoUrl, videoFileName,
-        onProgress: onProgress, onSuccess: onSuccess, onFailure: onFailure, manualSave: audioUrl != null);
+        onProgress: onProgress, onSuccess: onSuccess, onFailure: onFailure, manualSave: audioUrl != null || recode);
 
-    if (audioUrl != null) {
-      final audioFileName = "$fileName.mp3";
+    if (Storage().getBool(StorageKeys.AUTO_MERGE_AUDIO_KEY) && audioUrl != null) {
+      final audioFileName = "$fileName.m4a";
       String? audioPath = await downloadAudio(audioUrl, audioFileName,
           onProgress: onProgress, onSuccess: onSuccess, onFailure: onFailure, manualSave: true);
       if (audioPath != null) {
@@ -66,6 +68,24 @@ class Downloader {
       //音频文件下载失败，只保存视频
       else {
         _save(videoPath, fileName: videoFileName, onSuccess: onSuccess, onFailure: onFailure);
+      }
+    }
+
+    //启动下载重编码
+    if (recode) {
+      final videoFileName = resolution != null && resolution != '' ? "$fileName-$resolution-recode.mp4" : '$fileName-recode.mp4';
+      final recodeOutputPath = "${(await baseOutputPath)}/$videoFileName";
+      //部分视频在ios设备无法播放，因此保存前先用ffmpeg对视频重编码为MPEG-4以便支持ios设备
+      final savePath = await FFmpegExecutor.recode(videoPath ?? '',
+          outputPath: recodeOutputPath, onProgress: onProgress, onFailure: onFailure);
+
+      //重编码成功后删除原视频
+      if (savePath != null) {
+        File file = File(videoPath ?? '');
+        if (file.existsSync()) {
+          file.deleteSync();
+        }
+        _save(savePath, fileName: videoFileName, onSuccess: onSuccess, onFailure: onFailure);
       }
     }
   }
@@ -159,8 +179,10 @@ class Downloader {
     final completer = Completer<String>();
 
     final result = await FileDownloader().download(task,
-        onProgress: (progress) =>
-            {debugPrint('Download Task Progress: ${progress * 100}% ${task.filename}'), onProgress?.call(progress * 100)},
+        onProgress: (progress) => {
+              debugPrint('Download Task Progress: ${progress * 100}% ${task.filename}'),
+              onProgress?.call(ProgressType.download, progress * 100)
+            },
         onStatus: (status) async => {
               debugPrint('Download Task Status: $status'),
               if (status == TaskStatus.complete)
@@ -204,17 +226,11 @@ class Downloader {
     }
     String outputPath = "${(await baseOutputPath)}/$fileName";
 
-    String? savePath = outputPath;
-    if (Storage().getBool(StorageKeys.AUTO_RECODE_KEY)) {
-//部分视频在ios设备无法播放，因此保存前先用ffmpeg对视频重编码为MPEG-4以便支持ios设备
-// await FFmpegKit.execute('-i "$path" -err_detect ignore_err -c:v mpeg4 -y "$outputPath"');
-      savePath = await FFmpegExecutor.reEncode(path, outputPath: outputPath, onFailure: onFailure);
-    }
     if (PlatformUtil.isMobile) {
-      dynamic result = await ImageGallerySaver.saveFile(savePath ?? outputPath, name: fileName, isReturnPathOfIOS: true);
+      dynamic result = await ImageGallerySaver.saveFile(outputPath, name: fileName, isReturnPathOfIOS: true);
       debugPrint('save result $result');
       if (result['isSuccess']) {
-        onSuccess?.call(savePath!);
+        onSuccess?.call(outputPath);
         ToastUtil.success(S.current.toastDownloadSuccess);
       } else {
 // onFailure?.call();
@@ -228,9 +244,6 @@ class Downloader {
         }
       }
     } else {
-      if (savePath == null) {
-        debugPrint('video download success but recode failure');
-      }
       onSuccess?.call(outputPath);
       ToastUtil.success(S.current.toastDownloadSuccess);
     }

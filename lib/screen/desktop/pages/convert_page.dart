@@ -8,8 +8,6 @@ import 'package:tubesavely/core/ffmpeg/ffmpeg_executor.dart';
 import 'package:tubesavely/generated/l10n.dart';
 import 'package:tubesavely/model/emuns.dart';
 import 'package:tubesavely/storage/storage.dart';
-import 'package:tubesavely/theme/app_theme.dart';
-import 'package:tubesavely/theme/theme_provider.dart';
 import 'package:tubesavely/utils/platform_util.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -24,6 +22,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
   String videoFormat = Storage().getString(StorageKeys.CONVERT_FORMAT_KEY) ?? 'MP4';
   List<PlatformFile> videoList = [];
   Map<String, double> progressMap = {};
+  Map<String, String> progressTextMap = {};
   Map<String, ExecuteStatus> statusMap = {};
 
   _pickVideo() async {
@@ -35,9 +34,33 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
     }
   }
 
+  _convert(PlatformFile file) {
+    setState(() {
+      progressMap[file.path ?? ''] = 0;
+      statusMap[file.path ?? ''] = ExecuteStatus.Executing;
+      progressTextMap[file.path ?? ''] = S.current.statusConvertProgress;
+    });
+    Converter.convertToFormat(
+        file.path ?? '', VideoFormat.values.byName(videoFormat == '3GP' ? '_3gp' : videoFormat.toLowerCase()),
+        onProgress: (type, value) {
+      setState(() {
+        progressMap[file.path ?? ''] = value;
+        progressTextMap[file.path ?? ''] = S.current.statusConvertProgress;
+        if (value >= 100) {
+          statusMap[file.path ?? ''] = ExecuteStatus.Success;
+          progressTextMap[file.path ?? ''] = S.current.statusComplete;
+        }
+      });
+    }, onFailure: (error) {
+      statusMap[file.path ?? ''] = ExecuteStatus.Idle;
+      progressTextMap[file.path ?? ''] = S.current.statusConvertFailed;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
     return Column(
       children: [
         Row(
@@ -45,8 +68,8 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
           children: [
             OutlinedButton(
               style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: ThemeProvider.accentColor.withOpacity(0.2)),
-                  overlayColor: ThemeProvider.accentColor,
+                  side: BorderSide(color: Theme.of(context).primaryColor.withOpacity(0.2)),
+                  overlayColor: Theme.of(context).primaryColor,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
               onPressed: () {
                 _pickVideo();
@@ -73,25 +96,24 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
         Expanded(
             child: Container(
           margin: const EdgeInsets.only(top: 10, bottom: 20),
+          padding: const EdgeInsets.symmetric(vertical: 0),
           decoration: BoxDecoration(
             border: Border.all(color: Theme.of(context).dividerColor),
             borderRadius: BorderRadius.circular(8),
           ),
-          // height: 500,
           width: double.infinity,
           child: videoList.isEmpty
-              ? Expanded(
-                  child: Center(
+              ? Center(
                   child: FilledButton(
                       style: FilledButton.styleFrom(
-                        backgroundColor: AppTheme.accentColor,
+                        backgroundColor: Theme.of(context).primaryColor,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
                       ),
                       onPressed: () async {
                         _pickVideo();
                       },
                       child: Text(S.current.pickVideo, style: const TextStyle(color: Colors.white, fontSize: 16))),
-                ))
+                )
               : ListView.builder(
                   itemCount: videoList.length,
                   itemBuilder: (context, index) {
@@ -169,14 +191,14 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
                       child: LinearProgressIndicator(
                     value: (progressMap[file.path ?? ''] ?? 0) / 100,
                     minHeight: 2,
-                    color: AppTheme.accentColor,
+                    color: Theme.of(context).primaryColor,
                     borderRadius: BorderRadius.circular(50),
-                    backgroundColor: AppTheme.accentColor.withOpacity(0.2),
+                    backgroundColor: Theme.of(context).primaryColor.withOpacity(0.2),
                   )),
                   const SizedBox(
                     width: 10,
                   ),
-                  Text('${(progressMap[file.path ?? '']?.toStringAsFixed(2) ?? 0)}%',
+                  Text('${progressTextMap[file.path ?? ''] ?? ''} ${(progressMap[file.path ?? '']?.toStringAsFixed(2) ?? 0)}%',
                       style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)))
                 ],
               )
@@ -195,20 +217,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
                       ))
                   : IconButton(
                       onPressed: () {
-                        setState(() {
-                          progressMap[file.path ?? ''] = 0;
-                          statusMap[file.path ?? ''] = ExecuteStatus.Executing;
-                        });
-                        Converter.convertToFormat(
-                            file.path ?? '', VideoFormat.values.byName(videoFormat == '3GP' ? '_3gp' : videoFormat.toLowerCase()),
-                            onProgress: (value) {
-                          setState(() {
-                            progressMap[file.path ?? ''] = value;
-                            if (value == 100) {
-                              statusMap[file.path ?? ''] = ExecuteStatus.Success;
-                            }
-                          });
-                        });
+                        _convert(file);
                       },
                       icon: Icon(
                         Icons.cached_outlined,
@@ -228,6 +237,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
                       videoList.remove(file);
                       statusMap.remove(file.path ?? '');
                       progressMap.remove(file.path ?? '');
+                      progressTextMap.remove(file.path ?? '');
                     });
                   },
                   icon: const Icon(
@@ -240,9 +250,6 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
       ),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 
   _buildDropButton2(String? value, List<String> items, Function callback) {
     return DropdownButtonHideUnderline(
@@ -278,4 +285,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
               padding: EdgeInsets.only(left: 14, right: 14),
             )));
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

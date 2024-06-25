@@ -156,7 +156,7 @@ class _SettingPageState extends State<SettingPage> {
               });
             })),
         _buildItem(
-            S.current.settingYoutubeMerge,
+            S.current.settingMergeAudio,
             Switch.adaptive(
                 activeColor: AppTheme.white,
                 inactiveThumbColor: Colors.white,
