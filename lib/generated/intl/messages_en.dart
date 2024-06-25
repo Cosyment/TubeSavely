@@ -65,7 +65,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Converting"),
         "statusDownloadFailed":
             MessageLookupByLibrary.simpleMessage("Download failed"),
-        "statusDownloadProgress": MessageLookupByLibrary.simpleMessage("下载中"),
+        "statusDownloadProgress":
+            MessageLookupByLibrary.simpleMessage("Downloading"),
         "statusFailed": MessageLookupByLibrary.simpleMessage("Process failed"),
         "statusMergeFailed":
             MessageLookupByLibrary.simpleMessage("Merge failed"),

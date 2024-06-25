@@ -490,10 +490,10 @@ class S {
     );
   }
 
-  /// `下载中`
+  /// `Downloading`
   String get statusDownloadProgress {
     return Intl.message(
-      '下载中',
+      'Downloading',
       name: 'statusDownloadProgress',
       desc: '',
       args: [],

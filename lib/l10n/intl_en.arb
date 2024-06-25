@@ -44,7 +44,7 @@
   "toastConvertFailed": "Convert failed",
   "toastConvertStart": "Convert started",
   "toastConvertProgress": "Converting",
-  "statusDownloadProgress": "下载中",
+  "statusDownloadProgress": "Downloading",
   "statusDownloadFailed": "Download failed",
   "statusConvertProgress": "Converting",
   "statusConvertFailed": "Convert failed",
