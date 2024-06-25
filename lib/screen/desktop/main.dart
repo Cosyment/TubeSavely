@@ -3,6 +3,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:tubesavely/generated/l10n.dart';
+import 'package:tubesavely/locale/locale_manager.dart';
 import 'package:tubesavely/screen/desktop/pages/about_page.dart';
 import 'package:tubesavely/screen/desktop/pages/home_page.dart';
 import 'package:tubesavely/screen/desktop/pages/setting_page.dart';
@@ -20,14 +21,20 @@ class DesktopApp extends StatefulWidget {
 class _DesktopAppState extends State<DesktopApp> {
   @override
   Widget build(BuildContext context) {
-    return Consumer(builder: (context, themeManager, _) {
-      final themeManager = Provider.of<ThemeManager>(context);
-      // final localeModel = Provider.of<LocaleModel>(context);
+    return Consumer2<ThemeManager, LocaleManager>(builder: (context, themeManager, localeManager, _) {
       return MaterialApp(
         debugShowCheckedModeBanner: false,
         themeMode: themeManager.currentTheme,
         theme: ThemeProvider.lightThemeData,
         darkTheme: ThemeProvider.darkThemeData,
+        localeResolutionCallback: (locale, supportedLocales) {
+          if (locale?.languageCode == 'en') {
+            return const Locale('en', 'US');
+          } else {
+            return locale;
+          }
+        },
+        locale: localeManager.locale,
         localizationsDelegates: const [
           S.delegate,
           GlobalMaterialLocalizations.delegate,

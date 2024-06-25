@@ -51,6 +51,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingRetryCount": MessageLookupByLibrary.simpleMessage(
             "Download Failure Retry Count"),
         "settingTheme": MessageLookupByLibrary.simpleMessage("Theme"),
+        "settingThemeDark": MessageLookupByLibrary.simpleMessage("Dark"),
+        "settingThemeLight": MessageLookupByLibrary.simpleMessage("Light"),
+        "settingThemeSystem": MessageLookupByLibrary.simpleMessage("System"),
         "settingVideoQuality":
             MessageLookupByLibrary.simpleMessage("Video Quality"),
         "settingYoutubeMerge": MessageLookupByLibrary.simpleMessage(
@@ -58,15 +61,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "summary": MessageLookupByLibrary.simpleMessage(
             "TubeSavely proudly supports over 1800 mainstream and niche video platforms at home and abroad, covering popular sites such as YouTube, Instagram, TikTok, Bilibili, Vimeo, and even some lesser-known professional platforms. No matter which corner of the wonderful content you prefer, TubeSavely can become your exclusive bridge, one-click download, easy collection. Using advanced multi-threaded download technology, TubeSavely greatly shortens the download time, and can quickly complete even for very large video files. Say goodbye to long waiting times and let the wonderful content be presented immediately, enjoying the immediate download and watch experience."),
         "toastConvertFailed":
-            MessageLookupByLibrary.simpleMessage("Conversion failed"),
+            MessageLookupByLibrary.simpleMessage("Convert failed"),
         "toastConvertProgress":
             MessageLookupByLibrary.simpleMessage("Converting"),
         "toastConvertStart":
-            MessageLookupByLibrary.simpleMessage("Conversion started"),
+            MessageLookupByLibrary.simpleMessage("Convert started"),
         "toastConvertSuccess":
-            MessageLookupByLibrary.simpleMessage("Conversion successful"),
-        "toastDownloadFailed":
-            MessageLookupByLibrary.simpleMessage("Download failed"),
+            MessageLookupByLibrary.simpleMessage("Convert successful"),
+        "toastDownloadFailed": MessageLookupByLibrary.simpleMessage(
+            "Download failed please try again later"),
+        "toastDownloadInvalid":
+            MessageLookupByLibrary.simpleMessage("Download link invalid"),
         "toastDownloadStart":
             MessageLookupByLibrary.simpleMessage("Download has started"),
         "toastDownloadSuccess":
@@ -75,6 +80,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Please copy the video link first"),
         "toastLinkInvalid": MessageLookupByLibrary.simpleMessage(
             "Please paste the correct link"),
+        "toastVideoExecuteError": MessageLookupByLibrary.simpleMessage(
+            "Video information parsing exception, please confirm if the link is correct"),
         "videoSettings": MessageLookupByLibrary.simpleMessage("Video Settings"),
         "visitWebsite":
             MessageLookupByLibrary.simpleMessage("Visit Web Version")

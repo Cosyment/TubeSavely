@@ -59,7 +59,8 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
                   S.current.convertTo,
                   style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurface),
                 ),
-                _buildDropButton2(videoFormat, ['MOV', 'AVI', 'MKV', 'MP4', 'FLV', 'WMV', 'RMVB', '3GP', 'MPG', 'MPE', 'M4V'],
+                _buildDropButton2(
+                    videoFormat, VideoFormat.values.map((toElement) => toElement.name.toUpperCase().replaceAll('_', '')).toList(),
                     (value) {
                   setState(() {
                     videoFormat = value;
@@ -147,6 +148,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
             children: [
               Text(
                 file.name,
+                maxLines: 1,
                 style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
               ),
               const SizedBox(
@@ -198,8 +200,8 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
                           statusMap[file.path ?? ''] = ExecuteStatus.Executing;
                         });
                         Converter.convertToFormat(
-                            file.path ?? '', VideoFormat.values.byName(videoFormat == '3GP' ? '_3gp' : videoFormat),
-                            progressCallback: (value) {
+                            file.path ?? '', VideoFormat.values.byName(videoFormat == '3GP' ? '_3gp' : videoFormat.toLowerCase()),
+                            onProgress: (value) {
                           setState(() {
                             progressMap[file.path ?? ''] = value;
                             if (value == 100) {

@@ -117,19 +117,19 @@ class _VideoDetailPagePageState extends State<VideoDetailPage> with SingleTicker
           stateOnlyText = ButtonState.loading;
         });
         if (downloadTypeIndex == 0) {
-          Downloader.combineDownload(videoList?[videoTypeIndex].url ?? '', videoModel?.title ?? '',
+          Downloader.start(videoList?[videoTypeIndex].url ?? '', videoModel?.title ?? '',
               audioUrl: audioList?.length == 0 ? null : audioList?.first.url,
-              resolution: VideoResolutionUtil.format(videoList?[videoTypeIndex].resolution ?? ''), onSuccess: () {
+              resolution: VideoResolutionUtil.format(videoList?[videoTypeIndex].resolution ?? ''), onSuccess: (value) {
             _handleDownloadResult(true);
-          }, onFailure: () {
+          }, onFailure: (error) {
             _handleDownloadResult(false);
           });
         } else {
           Downloader.downloadAudio(
               audioList?.length == 0 ? videoModel?.music ?? '' : audioList?.first.url ?? '', videoModel?.title ?? '',
-              onSuccess: () {
+              onSuccess: (value) {
             _handleDownloadResult(true);
-          }, onFailure: () {
+          }, onFailure: (error) {
             _handleDownloadResult(false);
           });
         }

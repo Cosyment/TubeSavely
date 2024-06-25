@@ -4,11 +4,12 @@ import 'package:tubesavely/extension/extension.dart';
 import '../storage/storage.dart';
 
 class LocaleManager with ChangeNotifier {
-  LocaleManager._();
+  LocaleManager._internal();
 
   static LocaleManager? _instance;
 
-  static LocaleManager get instance => _instance ??= LocaleManager._();
+  static LocaleManager get instance => _instance ??= LocaleManager._internal();
+
   Locale _locale = Locale((Storage().getString(StorageKeys.LANGUAGE_KEY) ?? 'English').toLanguageCode());
 
   Locale get locale => _locale;

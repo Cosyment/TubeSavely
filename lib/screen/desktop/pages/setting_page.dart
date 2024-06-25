@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:tubesavely/extension/extension.dart';
 import 'package:tubesavely/generated/l10n.dart';
 import 'package:tubesavely/locale/locale_manager.dart';
+import 'package:tubesavely/model/emuns.dart';
 import 'package:tubesavely/screen/desktop/main.dart';
 import 'package:tubesavely/storage/storage.dart';
 import 'package:tubesavely/theme/app_theme.dart';
@@ -56,23 +57,16 @@ class _SettingPageState extends State<SettingPage> {
               segments: [
                 ButtonSegment<ThemeMode>(
                   value: ThemeMode.light,
-                  label: Text(
-                    ThemeMode.light.name.capitalizeWords(),
-                  ),
-                  enabled: true,
+                  label: Text(_convertThemeText(ThemeMode.light)),
                 ),
                 ButtonSegment<ThemeMode>(
                   value: ThemeMode.dark,
-                  label: Text(
-                    ThemeMode.dark.name.capitalizeWords(),
-                  ),
+                  label: Text(_convertThemeText(ThemeMode.dark)),
                   // icon: Icon(Icons.safety_check),
                 ),
                 ButtonSegment<ThemeMode>(
                   value: ThemeMode.system,
-                  label: Text(
-                    ThemeMode.system.name.capitalizeWords(),
-                  ),
+                  label: Text(_convertThemeText(ThemeMode.system)),
                   // icon: Icon(Icons.safety_check),
                 )
               ],
@@ -88,7 +82,7 @@ class _SettingPageState extends State<SettingPage> {
             )),
         _buildItem(
             S.current.settingLanguage,
-            _buildDropButton2(language, ['简体中文', 'English', '日本語', '한국어'], (value) {
+            _buildDropButton2(language, ['English', '简体中文', '日本語', '한국어'], (value) {
               setState(() {
                 language = value;
                 Storage().set(StorageKeys.LANGUAGE_KEY, value);
@@ -144,17 +138,18 @@ class _SettingPageState extends State<SettingPage> {
                     Storage().set(StorageKeys.AUTO_RECODE_KEY, value);
                   });
                 })),
-        _buildItem(
-            S.current.settingRetryCount,
-            _buildDropButton2(retryCount.toString(), ['1', '2', '3', '4', '5'], (value) {
-              setState(() {
-                retryCount = int.parse(value);
-                Storage().set(StorageKeys.RETRY_COUNT_KEY, retryCount);
-              });
-            })),
+        // _buildItem(
+        //     S.current.settingRetryCount,
+        //     _buildDropButton2(retryCount.toString(), ['1', '2', '3', '4', '5'], (value) {
+        //       setState(() {
+        //         retryCount = int.parse(value);
+        //         Storage().set(StorageKeys.RETRY_COUNT_KEY, retryCount);
+        //       });
+        //     })),
         _buildItem(
             S.current.settingDownloadQuality,
-            _buildDropButton2(downloadQuality, ['360P', '720P', '1080P', '1920P', '2K', '4K'], (value) {
+            _buildDropButton2(
+                downloadQuality, VideoQuality.values.map((toElement) => toElement.name.replaceAll('_', '')).toList(), (value) {
               setState(() {
                 downloadQuality = value;
                 Storage().set(StorageKeys.DOWNLOAD_QUALITY_KEY, value);
@@ -176,7 +171,8 @@ class _SettingPageState extends State<SettingPage> {
                 })),
         _buildItem(
             S.current.settingConvertFormat,
-            _buildDropButton2(videoFormat, ['MOV', 'AVI', 'MKV', 'MP4', 'FLV', 'WMV', 'RMVB', '3GP', 'MPG', 'MPE', 'M4V'],
+            _buildDropButton2(
+                videoFormat, VideoFormat.values.map((toElement) => toElement.name.toUpperCase().replaceAll('_', '')).toList(),
                 (value) {
               setState(() {
                 videoFormat = value;
@@ -196,6 +192,17 @@ class _SettingPageState extends State<SettingPage> {
         })
       ],
     );
+  }
+
+  _convertThemeText(ThemeMode themeMode) {
+    switch (themeMode) {
+      case ThemeMode.light:
+        return S.current.settingThemeLight;
+      case ThemeMode.dark:
+        return S.current.settingThemeDark;
+      case ThemeMode.system:
+        return S.current.settingThemeSystem;
+    }
   }
 
   _buildTitle(String title) {
@@ -251,7 +258,7 @@ class _SettingPageState extends State<SettingPage> {
         child: DropdownButton2<String>(
             isExpanded: false,
             // hint: Text(
-            //   'Select Item',
+            //   '',
             //   style: TextStyle(
             //     fontSize: 14,
             //     color: Theme.of(context).hintColor,

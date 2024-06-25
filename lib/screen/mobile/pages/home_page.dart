@@ -1,16 +1,12 @@
-import 'dart:ui' as ui;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shake_animation_widget/shake_animation_widget.dart';
-// import 'package:tubesavely/generated/l10n.dart';
+import 'package:tubesavely/generated/l10n.dart';
 import 'package:tubesavely/screen/mobile/pages/video_detail_page.dart';
 import 'package:tubesavely/theme/app_theme.dart';
 
 class HomePage extends StatefulWidget {
-  static ui.FragmentShader? shader;
-
   const HomePage({super.key});
 
   @override
@@ -63,10 +59,10 @@ class _HomePageState extends State<HomePage> {
               appBar: AppBar(
                 leading: const SizedBox(width: 50),
                 backgroundColor: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
-                // title: Text(
-                //   S.current.appName,
-                //   style: TextStyle(color: isLightMode ? AppTheme.nearlyBlack : AppTheme.white),
-                // ),
+                title: Text(
+                  S.current.appName,
+                  style: TextStyle(color: isLightMode ? AppTheme.nearlyBlack : AppTheme.white),
+                ),
               ),
               backgroundColor: isLightMode ? AppTheme.white : AppTheme.nearlyBlack,
               body: CustomScrollView(

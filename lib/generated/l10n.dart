@@ -180,6 +180,36 @@ class S {
     );
   }
 
+  /// `Dark`
+  String get settingThemeDark {
+    return Intl.message(
+      'Dark',
+      name: 'settingThemeDark',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Light`
+  String get settingThemeLight {
+    return Intl.message(
+      'Light',
+      name: 'settingThemeLight',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `System`
+  String get settingThemeSystem {
+    return Intl.message(
+      'System',
+      name: 'settingThemeSystem',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Language`
   String get settingLanguage {
     return Intl.message(
@@ -330,6 +360,16 @@ class S {
     );
   }
 
+  /// `Video information parsing exception, please confirm if the link is correct`
+  String get toastVideoExecuteError {
+    return Intl.message(
+      'Video information parsing exception, please confirm if the link is correct',
+      name: 'toastVideoExecuteError',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Download has started`
   String get toastDownloadStart {
     return Intl.message(
@@ -350,40 +390,50 @@ class S {
     );
   }
 
-  /// `Download failed`
+  /// `Download failed please try again later`
   String get toastDownloadFailed {
     return Intl.message(
-      'Download failed',
+      'Download failed please try again later',
       name: 'toastDownloadFailed',
       desc: '',
       args: [],
     );
   }
 
-  /// `Conversion successful`
+  /// `Download link invalid`
+  String get toastDownloadInvalid {
+    return Intl.message(
+      'Download link invalid',
+      name: 'toastDownloadInvalid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Convert successful`
   String get toastConvertSuccess {
     return Intl.message(
-      'Conversion successful',
+      'Convert successful',
       name: 'toastConvertSuccess',
       desc: '',
       args: [],
     );
   }
 
-  /// `Conversion failed`
+  /// `Convert failed`
   String get toastConvertFailed {
     return Intl.message(
-      'Conversion failed',
+      'Convert failed',
       name: 'toastConvertFailed',
       desc: '',
       args: [],
     );
   }
 
-  /// `Conversion started`
+  /// `Convert started`
   String get toastConvertStart {
     return Intl.message(
-      'Conversion started',
+      'Convert started',
       name: 'toastConvertStart',
       desc: '',
       args: [],

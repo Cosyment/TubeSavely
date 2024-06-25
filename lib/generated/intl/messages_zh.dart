@@ -46,6 +46,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingRecode": MessageLookupByLibrary.simpleMessage("自动重编码视频"),
         "settingRetryCount": MessageLookupByLibrary.simpleMessage("下载失败重试"),
         "settingTheme": MessageLookupByLibrary.simpleMessage("主题"),
+        "settingThemeDark": MessageLookupByLibrary.simpleMessage("深色"),
+        "settingThemeLight": MessageLookupByLibrary.simpleMessage("浅色"),
+        "settingThemeSystem": MessageLookupByLibrary.simpleMessage("跟随系统"),
         "settingVideoQuality": MessageLookupByLibrary.simpleMessage("视频质量"),
         "settingYoutubeMerge":
             MessageLookupByLibrary.simpleMessage("Youtube视频自动合并音频"),
@@ -55,11 +58,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "toastConvertProgress": MessageLookupByLibrary.simpleMessage("转换中"),
         "toastConvertStart": MessageLookupByLibrary.simpleMessage("开始转换"),
         "toastConvertSuccess": MessageLookupByLibrary.simpleMessage("转换成功"),
-        "toastDownloadFailed": MessageLookupByLibrary.simpleMessage("下载失败"),
+        "toastDownloadFailed":
+            MessageLookupByLibrary.simpleMessage("下载失败，请稍后再试"),
+        "toastDownloadInvalid": MessageLookupByLibrary.simpleMessage("下载链接无效"),
         "toastDownloadStart": MessageLookupByLibrary.simpleMessage("开始下载"),
         "toastDownloadSuccess": MessageLookupByLibrary.simpleMessage("下载成功"),
         "toastLinkEmpty": MessageLookupByLibrary.simpleMessage("请先复制视频链接"),
         "toastLinkInvalid": MessageLookupByLibrary.simpleMessage("请粘贴正确的链接"),
+        "toastVideoExecuteError":
+            MessageLookupByLibrary.simpleMessage("视频信息解析异常，请确认地址是否正确"),
         "videoSettings": MessageLookupByLibrary.simpleMessage("视频设置"),
         "visitWebsite": MessageLookupByLibrary.simpleMessage("访问网页版")
       };

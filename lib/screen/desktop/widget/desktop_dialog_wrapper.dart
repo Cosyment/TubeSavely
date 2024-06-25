@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tubesavely/theme/theme_manager.dart';
 import 'package:tubesavely/utils/platform_util.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -15,6 +16,13 @@ class DesktopDialogWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Brightness brightness = MediaQuery.of(context).platformBrightness;
+    ThemeMode themeMode = ThemeManager.instance.currentTheme;
+    if (themeMode == ThemeMode.light) {
+      brightness = Brightness.light;
+    } else if (themeMode == ThemeMode.dark) {
+      brightness = Brightness.dark;
+    }
+
     return Dialog(
         child: Container(
             constraints: BoxConstraints(minWidth: 350, maxWidth: width),
@@ -29,10 +37,7 @@ class DesktopDialogWrapper extends StatelessWidget {
                   mainAxisAlignment: PlatformUtil.isMacOS ? MainAxisAlignment.start : MainAxisAlignment.end,
                   children: [
                     WindowCaptionButton.close(
-                      // brightness: brightness,
-                      icon: const Icon(
-                        Icons.close,
-                      ),
+                      brightness: brightness,
                       onPressed: () {
                         Navigator.pop(context);
                       },

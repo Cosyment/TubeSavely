@@ -10,7 +10,7 @@ class ToastUtil {
   }
 
   static error(String msg) {
-    EasyLoading.showError(msg, duration: const Duration(seconds: 1));
+    EasyLoading.showError(msg, duration: const Duration(milliseconds: 1500));
   }
 
   static loading({String msg = 'loading'}) {

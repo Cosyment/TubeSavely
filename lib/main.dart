@@ -32,9 +32,14 @@ void main() async {
   if (PlatformUtil.isMobile) {
     await ScreenUtil.ensureScreenSize();
     MediaKit.ensureInitialized();
-    ChangeNotifierProvider(
-      create: (context) => ThemeManager(),
-      child: const MyApp(),
+    runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => ThemeManager.instance),
+          ChangeNotifierProvider(create: (_) => LocaleManager.instance),
+        ],
+        child: const MyApp(),
+      ),
     );
   } else {
     windowManager.ensureInitialized();
@@ -51,17 +56,11 @@ void main() async {
       await windowManager.show();
       await windowManager.focus();
     });
-    // runApp(
-    //   ChangeNotifierProvider(
-    //     create: (context) => ThemeManager(),
-    //     child: const DesktopApp(),
-    //   ),
-    // );
 
     runApp(
       MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => ThemeManager()),
+          ChangeNotifierProvider(create: (_) => ThemeManager.instance),
           ChangeNotifierProvider(create: (_) => LocaleManager.instance),
         ],
         child: const DesktopApp(),
@@ -76,8 +75,6 @@ void main() async {
   if (Storage().getString(StorageKeys.CACHE_DIR_KEY) == null) {
     Storage().set(StorageKeys.CACHE_DIR_KEY, (await getApplicationDocumentsDirectory()).path);
   }
-
-  // S.delegate.load(Locale((Storage().getString(StorageKeys.LANGUAGE_KEY) ?? 'English').parseLanguageCode()));
 }
 
 class MyApp extends StatefulWidget {
@@ -91,12 +88,20 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, designSize: const Size(750, 1378));
-    return Consumer<ThemeManager>(builder: (context, themeManager, _) {
+    return Consumer2<ThemeManager, LocaleManager>(builder: (context, themeManager, localeManager, _) {
       return MaterialApp(
           debugShowCheckedModeBanner: false,
           themeMode: themeManager.currentTheme,
           theme: ThemeProvider.lightThemeData,
           darkTheme: ThemeProvider.darkThemeData,
+          localeResolutionCallback: (locale, supportedLocales) {
+            if (locale?.languageCode == 'en') {
+              return const Locale('en', 'US');
+            } else {
+              return locale;
+            }
+          },
+          locale: localeManager.locale,
           localizationsDelegates: const [
             S.delegate,
             GlobalMaterialLocalizations.delegate,

@@ -48,6 +48,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingRetryCount":
             MessageLookupByLibrary.simpleMessage("ダウンロード失敗時の再試行回数"),
         "settingTheme": MessageLookupByLibrary.simpleMessage("テーマ"),
+        "settingThemeDark": MessageLookupByLibrary.simpleMessage("ダーク"),
+        "settingThemeLight": MessageLookupByLibrary.simpleMessage("ライト"),
+        "settingThemeSystem": MessageLookupByLibrary.simpleMessage("システム"),
         "settingVideoQuality": MessageLookupByLibrary.simpleMessage("ビデオ品質"),
         "settingYoutubeMerge":
             MessageLookupByLibrary.simpleMessage("YouTubeビデオの音声を自動結合"),
@@ -57,7 +60,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "toastConvertProgress": MessageLookupByLibrary.simpleMessage("変換中"),
         "toastConvertStart": MessageLookupByLibrary.simpleMessage("変換を開始しました"),
         "toastConvertSuccess": MessageLookupByLibrary.simpleMessage("変換成功"),
-        "toastDownloadFailed": MessageLookupByLibrary.simpleMessage("ダウンロード失敗"),
+        "toastDownloadFailed":
+            MessageLookupByLibrary.simpleMessage("ダウンロードに失敗しました。後で再試行してください"),
+        "toastDownloadInvalid":
+            MessageLookupByLibrary.simpleMessage("ダウンロードリンクが無効です"),
         "toastDownloadStart":
             MessageLookupByLibrary.simpleMessage("ダウンロードを開始しました"),
         "toastDownloadSuccess":
@@ -66,6 +72,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("ビデオリンクをコピーしてください"),
         "toastLinkInvalid":
             MessageLookupByLibrary.simpleMessage("正しいリンクを貼り付けてください"),
+        "toastVideoExecuteError":
+            MessageLookupByLibrary.simpleMessage("ビデオ情報解析異常、リンクが正しいか確認してください"),
         "videoSettings": MessageLookupByLibrary.simpleMessage("ビデオダウンロード＆変換設定"),
         "visitWebsite": MessageLookupByLibrary.simpleMessage("ウェブバージョンを訪れる")
       };

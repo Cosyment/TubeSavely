@@ -39,7 +39,7 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
         Urls.shortVideoParse,
         params: {'url': url},
         (jsonData) => VideoModel.fromJson(jsonData),
-        exception: (e) => {debugPrint('parse exception $e')});
+        exception: (e) => {debugPrint('parse exception $e'), ToastUtil.error(S.current.toastVideoExecuteError)});
 
     setState(() {
       videoModelList.add(videoModel);
@@ -60,12 +60,6 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
 
       ToastUtil.dismiss();
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    // getClipboardData();
   }
 
   @override
@@ -110,7 +104,6 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
           margin: const EdgeInsets.only(top: 10, bottom: 20),
           padding: const EdgeInsets.symmetric(vertical: 0),
           decoration: BoxDecoration(
-            // color: Colors.white,
             border: Border.all(color: Theme.of(context).dividerColor),
             borderRadius: BorderRadius.circular(8),
           ),
@@ -180,6 +173,7 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
             children: [
               Text(
                 model.title ?? '',
+                maxLines: 1,
                 style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
               ),
               const SizedBox(
@@ -232,12 +226,16 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
                           statusMap[model.url ?? ''] = ExecuteStatus.Executing;
                         });
                         statusMap[model.url ?? ''] = ExecuteStatus.Executing;
-                        Downloader.combineDownload(model.url ?? '', model.title ?? '', onProgress: (value) {
+                        Downloader.start(model.url ?? '', model.title ?? '', onProgress: (value) {
                           setState(() {
                             progressMap[model.url ?? ''] = value;
                             if (value == 100) {
                               statusMap[model.url ?? ''] = ExecuteStatus.Success;
                             }
+                          });
+                        }, onFailure: (error) {
+                          setState(() {
+                            statusMap[model.url ?? ''] = ExecuteStatus.Idle;
                           });
                         });
                       },

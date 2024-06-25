@@ -48,6 +48,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "settingRetryCount":
             MessageLookupByLibrary.simpleMessage("다운로드 실패 재시도 횟수"),
         "settingTheme": MessageLookupByLibrary.simpleMessage("테마"),
+        "settingThemeDark": MessageLookupByLibrary.simpleMessage("다크"),
+        "settingThemeLight": MessageLookupByLibrary.simpleMessage("라이트"),
+        "settingThemeSystem": MessageLookupByLibrary.simpleMessage("시스템"),
         "settingVideoQuality": MessageLookupByLibrary.simpleMessage("동영상 품질"),
         "settingYoutubeMerge":
             MessageLookupByLibrary.simpleMessage("YouTube 동영상 오디오 자동 병합"),
@@ -57,12 +60,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "toastConvertProgress": MessageLookupByLibrary.simpleMessage("변환 중"),
         "toastConvertStart": MessageLookupByLibrary.simpleMessage("변환 시작"),
         "toastConvertSuccess": MessageLookupByLibrary.simpleMessage("변환 성공"),
-        "toastDownloadFailed": MessageLookupByLibrary.simpleMessage("다운로드 실패"),
+        "toastDownloadFailed": MessageLookupByLibrary.simpleMessage(
+            "다운로드에 실패했습니다. 나중에 다시 시도하십시오."),
+        "toastDownloadInvalid":
+            MessageLookupByLibrary.simpleMessage("다운로드 링크가 잘못되었습니다."),
         "toastDownloadStart": MessageLookupByLibrary.simpleMessage("다운로드 시작"),
         "toastDownloadSuccess": MessageLookupByLibrary.simpleMessage("다운로드 성공"),
         "toastLinkEmpty": MessageLookupByLibrary.simpleMessage("동영상 링크를 복사하세요"),
         "toastLinkInvalid":
             MessageLookupByLibrary.simpleMessage("올바른 링크를 붙여넣으세요"),
+        "toastVideoExecuteError": MessageLookupByLibrary.simpleMessage(
+            "비디오 정보 확인 예외, 링크가 올바른지 확인하십시오."),
         "videoSettings":
             MessageLookupByLibrary.simpleMessage("동영상 다운로드 및 변환 설정"),
         "visitWebsite": MessageLookupByLibrary.simpleMessage("웹 버전 방문")
