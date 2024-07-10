@@ -43,14 +43,15 @@ void main() async {
     );
   } else {
     windowManager.ensureInitialized();
-    WindowOptions windowOptions = const WindowOptions(
-      size: Size(950, 650),
-      minimumSize: Size(800, 600),
+    WindowOptions windowOptions = WindowOptions(
+      size: const Size(950, 650),
+      minimumSize: const Size(800, 600),
       center: true,
       backgroundColor: Colors.transparent,
       windowButtonVisibility: true,
       skipTaskbar: false,
-      titleBarStyle: TitleBarStyle.hidden,
+      titleBarStyle:
+          PlatformUtil.isMacOS ? TitleBarStyle.hidden : TitleBarStyle.normal,
     );
     windowManager.waitUntilReadyToShow(windowOptions, () async {
       await windowManager.show();
@@ -73,7 +74,8 @@ void main() async {
   }
 
   if (Storage().getString(StorageKeys.CACHE_DIR_KEY) == null) {
-    Storage().set(StorageKeys.CACHE_DIR_KEY, (await getApplicationDocumentsDirectory()).path);
+    Storage().set(StorageKeys.CACHE_DIR_KEY,
+        (await getApplicationDocumentsDirectory()).path);
   }
 }
 
@@ -88,7 +90,8 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, designSize: const Size(750, 1378));
-    return Consumer2<ThemeManager, LocaleManager>(builder: (context, themeManager, localeManager, _) {
+    return Consumer2<ThemeManager, LocaleManager>(
+        builder: (context, themeManager, localeManager, _) {
       return MaterialApp(
           debugShowCheckedModeBanner: false,
           themeMode: themeManager.currentTheme,
@@ -129,7 +132,8 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor, statusBarColor: Colors.transparent));
+        systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor,
+        statusBarColor: Colors.transparent));
 
     drawerIndex = DrawerIndex.Home;
     screenView = const HomePage();
@@ -143,7 +147,9 @@ class _MainPageState extends State<MainPage> {
     var brightness = MediaQuery.of(context).platformBrightness;
     bool isLightMode = brightness == Brightness.light;
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        systemNavigationBarColor: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack, statusBarColor: Colors.transparent));
+        systemNavigationBarColor:
+            isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
+        statusBarColor: Colors.transparent));
 
     return SafeArea(
       top: false,
@@ -212,7 +218,8 @@ class _MainPageState extends State<MainPage> {
 }
 
 void _showAppReview() async {
-  if (!Storage().getBool(StorageKeys.SHOW_APPREVIEW_KEY) && (PlatformUtil.isMobile || PlatformUtil.isMacOS)) {
+  if (!Storage().getBool(StorageKeys.SHOW_APPREVIEW_KEY) &&
+      (PlatformUtil.isMobile || PlatformUtil.isMacOS)) {
     if (await InAppReview.instance.isAvailable()) {
       if (PlatformUtil.isIOS || PlatformUtil.isMacOS) {
         InAppReview.instance.openStoreListing(appStoreId: '6503423677');

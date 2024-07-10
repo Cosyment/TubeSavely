@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:tubesavely/generated/l10n.dart';
 import 'package:tubesavely/screen/desktop/main.dart';
+import 'package:tubesavely/utils/platform_util.dart';
 
 import 'convert_page.dart';
 import 'download_page.dart';
@@ -27,16 +28,23 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    currentSegment = pages.first is DownloadPage ? SegmentType.download : SegmentType.convert;
+    currentSegment = pages.first is DownloadPage
+        ? SegmentType.download
+        : SegmentType.convert;
     buttonSegments = pages
         .map((item) => ButtonSegment<SegmentType>(
-              value: item is DownloadPage ? SegmentType.download : SegmentType.convert,
+              value: item is DownloadPage
+                  ? SegmentType.download
+                  : SegmentType.convert,
               label: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
                   child: Row(
                     children: [
                       Icon(
-                        item is DownloadPage ? Icons.save_alt : Icons.cached_outlined,
+                        item is DownloadPage
+                            ? Icons.save_alt
+                            : Icons.cached_outlined,
                         size: 25,
                       ),
                       // Text(
@@ -57,7 +65,8 @@ class _HomePageState extends State<HomePage> {
         top: true,
         child: Scaffold(
           body: Container(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            padding: EdgeInsets.symmetric(
+                vertical: PlatformUtil.isMacOS ? 10 : 0, horizontal: 10),
             color: Theme.of(context).colorScheme.surface,
             child: Column(
               children: [
@@ -68,14 +77,17 @@ class _HomePageState extends State<HomePage> {
                         const SizedBox(
                           width: 60,
                           height: 80,
-                          child: Image(image: AssetImage('assets/images/ic_logo.png')),
+                          child: Image(
+                              image: AssetImage('assets/images/ic_logo.png')),
                         ),
                         const SizedBox(
                           width: 10,
                         ),
                         Text(
                           S.current.appName,
-                          style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 20),
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                              fontSize: 20),
                         ),
                         const SizedBox(
                           width: 5,
@@ -85,7 +97,8 @@ class _HomePageState extends State<HomePage> {
                             builder: (context, snapshot) {
                               return Text(
                                 '${snapshot.data?.version}',
-                                style: const TextStyle(fontSize: 15, color: Colors.grey),
+                                style: const TextStyle(
+                                    fontSize: 15, color: Colors.grey),
                               );
                             }),
                       ],
@@ -100,15 +113,19 @@ class _HomePageState extends State<HomePage> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(50.0),
                                 ),
-                                side: BorderSide(width: 0.5, color: Theme.of(context).primaryColor),
-                                selectedBackgroundColor: Theme.of(context).primaryColor,
+                                side: BorderSide(
+                                    width: 0.5,
+                                    color: Theme.of(context).primaryColor),
+                                selectedBackgroundColor:
+                                    Theme.of(context).primaryColor,
                                 selectedForegroundColor: Colors.white,
                                 foregroundColor: Theme.of(context).primaryColor,
                               ),
                               segments: buttonSegments,
                               showSelectedIcon: false,
                               selected: {currentSegment},
-                              onSelectionChanged: (Set<SegmentType> newSelection) {
+                              onSelectionChanged:
+                                  (Set<SegmentType> newSelection) {
                                 setState(() {
                                   currentSegment = newSelection.first;
                                   controller.jumpToPage(currentSegment.index);
@@ -127,7 +144,10 @@ class _HomePageState extends State<HomePage> {
                                 },
                                 icon: Icon(
                                   Icons.settings,
-                                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurface
+                                      .withOpacity(0.5),
                                 )),
                             IconButton(
                                 onPressed: () {
@@ -135,7 +155,10 @@ class _HomePageState extends State<HomePage> {
                                 },
                                 icon: Icon(
                                   Icons.info_outlined,
-                                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurface
+                                      .withOpacity(0.5),
                                 ))
                           ],
                         )),
