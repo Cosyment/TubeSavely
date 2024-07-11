@@ -131,9 +131,9 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor,
-        statusBarColor: Colors.transparent));
+    // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    //     systemNavigationBarColor: Colors.transparent,
+    //     statusBarColor: Colors.transparent));
 
     drawerIndex = DrawerIndex.Home;
     screenView = const HomePage();

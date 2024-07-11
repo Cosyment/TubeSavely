@@ -32,7 +32,7 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    namespace "com.xhx.video.saver"
+    namespace "com.xhx.tubesavely"
     compileSdk 34
     ndkVersion flutter.ndkVersion
 
@@ -53,7 +53,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.xhx.video.saver"
+        applicationId "com.xhx.tubesavely"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdk 24
@@ -62,11 +62,11 @@ android {
         versionName flutterVersionName
         multiDexEnabled true
 
-        ndk {
-            //选择要添加的对应 cpu 类型的 .so 库。
-            abiFilters 'arm64-v8a'
-//            abiFilters 'armeabi-v7a' //'arm64-v8a', 'armeabi',
-        }
+//        ndk {
+//            //选择要添加的对应 cpu 类型的 .so 库。
+////            abiFilters 'arm64-v8a'
+////            abiFilters 'armeabi-v7a' //'arm64-v8a', 'armeabi',
+//        }
     }
 
     signingConfigs {

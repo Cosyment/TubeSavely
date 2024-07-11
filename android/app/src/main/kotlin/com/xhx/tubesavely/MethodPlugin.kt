@@ -1,4 +1,4 @@
-package com.xhx.video.saver
+package com.xhx.tubesavely
 
 import android.app.Activity
 import android.content.Intent
@@ -7,7 +7,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 //import com.umeng.commonsdk.UMConfigure
-import com.xhx.video.saver.AppInfo.getAppChannelId
+import com.xhx.tubesavely.AppInfo.getAppChannelId
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -20,7 +20,7 @@ class MethodPlugin : MethodChannel.MethodCallHandler, FlutterPlugin, ActivityAwa
 
     private var activity: Activity? = null
     private var channel: MethodChannel? = null
-    private val FLUTTERPLUGIN = "com.xhx.video.saver/plugin"
+    private val FLUTTERPLUGIN = "com.xhx.tubesavely/plugin"
     private var flutterResult: MethodChannel.Result? = null
 
     @androidx.annotation.RequiresApi(Build.VERSION_CODES.DONUT)

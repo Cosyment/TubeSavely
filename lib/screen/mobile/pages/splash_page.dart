@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tubesavely/main.dart';
+import 'package:tubesavely/screen/mobile/pages/home_page.dart';
 import 'package:tubesavely/theme/app_theme.dart';
 
 class SplashPage extends StatefulWidget {
@@ -41,7 +42,7 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
   }
 
   Future<bool> _mockCheckForSession() async {
-    await Future.delayed(const Duration(milliseconds: 2400), () {});
+    await Future.delayed(const Duration(milliseconds: 3400), () {});
     return true;
   }
 
