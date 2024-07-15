@@ -145,7 +145,6 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
               onPressed: () async {
                 videoModelList.forEach((model) async {
-                  print('--------->>>>${statusMap[model.original_url ?? '']}');
                   if (statusMap[model.original_url ?? ''] == null) {
                     _download(model);
                   }

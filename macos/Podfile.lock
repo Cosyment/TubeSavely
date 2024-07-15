@@ -7,6 +7,8 @@ PODS:
     - ffmpeg-kit-macos-full-gpl (= 6.0)
     - FlutterMacOS
   - FlutterMacOS (1.0.0)
+  - in_app_review (0.2.0):
+    - FlutterMacOS
   - media_kit_libs_macos_video (1.0.4):
     - FlutterMacOS
   - media_kit_native_event_loop (1.0.0):
@@ -38,6 +40,7 @@ PODS:
 DEPENDENCIES:
   - ffmpeg_kit_flutter_full_gpl (from `Flutter/ephemeral/.symlinks/plugins/ffmpeg_kit_flutter_full_gpl/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
+  - in_app_review (from `Flutter/ephemeral/.symlinks/plugins/in_app_review/macos`)
   - media_kit_libs_macos_video (from `Flutter/ephemeral/.symlinks/plugins/media_kit_libs_macos_video/macos`)
   - media_kit_native_event_loop (from `Flutter/ephemeral/.symlinks/plugins/media_kit_native_event_loop/macos`)
   - media_kit_video (from `Flutter/ephemeral/.symlinks/plugins/media_kit_video/macos`)
@@ -60,6 +63,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/ffmpeg_kit_flutter_full_gpl/macos
   FlutterMacOS:
     :path: Flutter/ephemeral
+  in_app_review:
+    :path: Flutter/ephemeral/.symlinks/plugins/in_app_review/macos
   media_kit_libs_macos_video:
     :path: Flutter/ephemeral/.symlinks/plugins/media_kit_libs_macos_video/macos
   media_kit_native_event_loop:
@@ -89,6 +94,7 @@ SPEC CHECKSUMS:
   ffmpeg-kit-macos-full-gpl: c9bd04ddd4dc777db0ecda4e342bb4f5ad972157
   ffmpeg_kit_flutter_full_gpl: 29a39b7a0cef8199794e41bcef72cadff167c2a5
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
+  in_app_review: a850789fad746e89bce03d4aeee8078b45a53fd0
   media_kit_libs_macos_video: b3e2bbec2eef97c285f2b1baa7963c67c753fb82
   media_kit_native_event_loop: 81fd5b45192b72f8b5b69eaf5b540f45777eb8d5
   media_kit_video: c75b07f14d59706c775778e4dd47dd027de8d1e5

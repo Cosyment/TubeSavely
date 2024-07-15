@@ -59,11 +59,11 @@ class _HomeDrawerState extends State<HomeDrawer> {
       //   labelName: '给个好评',
       //   icon: const Icon(Icons.recommend_outlined),
       // ),
-      // DrawerList(
-      //   index: DrawerIndex.Settings,
-      //   labelName: 'Settings',
-      //   icon: const Icon(Icons.settings_outlined),
-      // ),
+      DrawerList(
+        index: DrawerIndex.Settings,
+        labelName: 'Settings',
+        icon: const Icon(Icons.settings_outlined),
+      ),
       DrawerList(
         index: DrawerIndex.More,
         labelName: 'More',
