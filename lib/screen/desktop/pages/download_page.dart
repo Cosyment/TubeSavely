@@ -40,7 +40,10 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
         Urls.shortVideoParse,
         params: {'url': url},
         (jsonData) => VideoModel.fromJson(jsonData),
-        exception: (e) => {debugPrint('parse exception $e'), ToastUtil.error(S.current.toastVideoExecuteError)});
+        exception: (e) => {
+              debugPrint('parse exception $e'),
+              if (e.code == 401) {ToastUtil.error(e.message)} else {ToastUtil.error(S.current.toastVideoExecuteError)}
+            });
 
     setState(() {
       videoModelList.add(videoModel);

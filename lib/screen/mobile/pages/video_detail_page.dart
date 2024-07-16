@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:tubesavely/core/downloader/downloader.dart';
+import 'package:tubesavely/generated/l10n.dart';
 import 'package:tubesavely/http/http_request.dart';
 import 'package:tubesavely/model/pair.dart';
 import 'package:tubesavely/model/video_model.dart';
@@ -14,6 +15,8 @@ import 'package:tubesavely/utils/resolution_util.dart';
 import 'package:tubesavely/widget/iconed_button.dart';
 import 'package:tubesavely/widget/progress_button.dart';
 import 'package:tubesavely/widget/radio_group.dart';
+
+import '../../../utils/toast_util.dart';
 
 class VideoDetailPage extends StatefulWidget {
   final String? url;
@@ -46,7 +49,11 @@ class _VideoDetailPagePageState extends State<VideoDetailPage> with SingleTicker
         Urls.shortVideoParse,
         params: {'url': url},
         (jsonData) => VideoModel.fromJson(jsonData),
-        exception: (e) => {debugPrint('parse exception $e')});
+        exception: (e) => {
+              debugPrint('parse exception $e'),
+              if (e.code == 401) {ToastUtil.error(e.message)} else {ToastUtil.error(S.current.toastVideoExecuteError)},
+              Navigator.pop(context)
+            });
 
     setState(() {
       //过滤全部全部视频

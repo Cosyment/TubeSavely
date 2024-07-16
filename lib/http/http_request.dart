@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:tubesavely/http/request_exception.dart';
 
 import '../utils/constants.dart';
 import 'extend_http_client.dart';
@@ -12,14 +13,14 @@ class HttpRequest {
   static final SafeHttpClient _httpClient = SafeHttpClient(http.Client());
 
   static Future<dynamic> request<T>(String url, T Function(dynamic) fromJson,
-      {method = 'GET', Map<String, dynamic>? params, Function(Object)? exception}) async {
+      {method = 'GET', Map<String, dynamic>? params, Function(RequestException)? exception}) async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     var headers = {
       'appName': packageInfo.appName,
       'platform': Platform.operatingSystem,
       'version': packageInfo.version,
       'buildNumber': packageInfo.buildNumber,
-      'systemVersion': Platform.operatingSystemVersion,
+      // 'systemVersion': Platform.operatingSystemVersion,
     };
     http.Response? response;
 
@@ -46,13 +47,12 @@ class HttpRequest {
           return fromJson(data);
         }
       } else {
-        return fromJson('');
+        exception?.call(RequestException(content['code'], errorMessage));
       }
     } catch (e) {
       debugPrint(e.toString());
       errorMessage = 'server internal exception';
-      exception?.call(e);
+      exception?.call(RequestException(-1, errorMessage));
     }
-    throw Exception(errorMessage);
   }
 }
