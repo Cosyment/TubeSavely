@@ -16,7 +16,9 @@ import 'package:tubesavely/utils/toast_util.dart';
 
 class Downloader {
   static Future<String> get baseOutputPath async =>
-      Storage().getString(StorageKeys.CACHE_DIR_KEY) ?? (await getTemporaryDirectory()).path;
+      Storage().getString(StorageKeys.CACHE_DIR_KEY) ??
+      (await getDownloadsDirectory())?.path ??
+      (await getApplicationCacheDirectory()).path;
 
   static start(String videoUrl, String fileName,
       {String? audioUrl,

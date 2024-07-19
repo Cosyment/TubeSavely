@@ -8,8 +8,7 @@ import 'package:tubesavely/core/ffmpeg/ffmpeg_executor.dart';
 import 'package:tubesavely/generated/l10n.dart';
 import 'package:tubesavely/model/emuns.dart';
 import 'package:tubesavely/storage/storage.dart';
-import 'package:tubesavely/utils/platform_util.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+import 'package:tubesavely/utils/common_util.dart';
 
 class ConvertPage extends StatefulWidget {
   const ConvertPage({super.key});
@@ -225,7 +224,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
                       )),
               IconButton(
                   onPressed: () async {
-                    launchUrlString(Uri.file((await Converter.baseOutputPath ?? ''), windows: PlatformUtil.isWindows).toString());
+                    CommonUtil.openDesktopDirectory((await Converter.baseOutputPath ?? ''));
                   },
                   icon: const Icon(
                     Icons.folder_open,

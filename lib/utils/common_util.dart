@@ -1,3 +1,8 @@
+import 'dart:io';
+
+import 'package:flutter/widgets.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+
 class CommonUtil {
   static String formatSize(num bytes, {int fractionDigits = 2}) {
     if (bytes <= 0.0) return '';
@@ -19,5 +24,29 @@ class CommonUtil {
       result /= 1099511627776;
     }
     return '${result.toStringAsFixed(fractionDigits)} $suffix';
+  }
+
+  static void openDesktopDirectory(String path) async {
+    if (Platform.isMacOS) {
+      _open('open', ['-R', path.padRight(path.length + 1, path)]);
+    } else if (Platform.isWindows) {
+      _open('explorer', [path]);
+    } else if (Platform.isLinux) {
+      _open('xdg-open', [path]);
+    } else {
+      print('Platform not supported');
+      launchUrlString(Uri.file((path), windows: Platform.isWindows).toString());
+    }
+  }
+
+  static void _open(String cmd, List<String> args) {
+    Process.run(cmd, args).then((ProcessResult result) {
+      if (result.exitCode == 0) {
+        debugPrint('Directory opened successfully');
+      } else {
+        debugPrint(result.stderr);
+        launchUrlString(Uri.file((args.last), windows: Platform.isWindows).toString());
+      }
+    });
   }
 }

@@ -9,11 +9,10 @@ import 'package:tubesavely/model/emuns.dart';
 import 'package:tubesavely/model/pair.dart';
 import 'package:tubesavely/model/video_model.dart';
 import 'package:tubesavely/storage/storage.dart';
+import 'package:tubesavely/utils/common_util.dart';
 import 'package:tubesavely/utils/constants.dart';
-import 'package:tubesavely/utils/platform_util.dart';
 import 'package:tubesavely/utils/resolution_util.dart';
 import 'package:tubesavely/utils/toast_util.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class DownloadPage extends StatefulWidget {
   const DownloadPage({super.key});
@@ -290,10 +289,8 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
                         color: Theme.of(context).primaryColor.withOpacity(0.8),
                       )),
               IconButton(
-                  onPressed: () {
-                    launchUrlString(
-                        Uri.file(Storage().getString(StorageKeys.CACHE_DIR_KEY) ?? '', windows: PlatformUtil.isWindows)
-                            .toString());
+                  onPressed: () async {
+                    CommonUtil.openDesktopDirectory(Storage().getString(StorageKeys.CACHE_DIR_KEY) ?? '');
                   },
                   icon: const Icon(
                     Icons.folder_open,
