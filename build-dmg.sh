@@ -14,10 +14,17 @@ TMP_DIR=$(mktemp -d)  # 创建临时目录
 
 # 确保应用已经构建
 echo "确保macOS应用已经构建在路径：${APP_PATH}"
-if [ ! -d "${APP_PATH}" ]; then
-  echo "构建macOS应用..."
-  cd "$FLUTTER_PROJECT_PATH" || exit
-  flutter build macos --release
+#if [ ! -d "${APP_PATH}" ]; then
+#  echo "构建macOS应用..."
+#  cd "$FLUTTER_PROJECT_PATH" || exit
+#  flutter build macos --release
+#fi
+
+flutter build macos --release
+
+if [ "${DMG_PATH}" ]; then
+  echo "删除已编译版本"
+  rm -f "${DMG_PATH}"
 fi
 
 # 复制.app文件到临时目录

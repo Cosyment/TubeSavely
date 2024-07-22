@@ -50,3 +50,4 @@ app.*.map.json
 /macos/DerivedData/
 /macos/Pods/
 /macos/Podfile.lock
+/devtools_options.yaml

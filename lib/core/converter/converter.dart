@@ -14,8 +14,8 @@ class Converter {
   static Future<String> get baseOutputPath async =>
       '${Storage().getString(StorageKeys.CACHE_DIR_KEY) ?? (await getTemporaryDirectory()).path}/Convert';
 
-  static Future<String?> convertToFormat(String videoPath, VideoFormat format,
-      {ProgressCallback? onProgress, FailureCallback? onFailure}) async {
+  static convertToFormat(String videoPath, VideoFormat format,
+      {ProgressCallback? onProgress, SuccessCallback? onSuccess, FailureCallback? onFailure}) async {
     Directory baseDirectory = Directory(await baseOutputPath);
     if (!baseDirectory.existsSync()) {
       baseDirectory.createSync(recursive: true);
@@ -28,8 +28,8 @@ class Converter {
         await FFmpegExecutor.convert(videoPath, outputPath: outputPath, onProgress: onProgress, onFailure: onFailure);
     if (savePath != null) {
       ToastUtil.success(S.current.toastConvertSuccess);
+      onSuccess?.call(savePath);
       return savePath;
     }
-    return null;
   }
 }

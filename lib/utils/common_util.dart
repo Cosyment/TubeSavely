@@ -28,7 +28,7 @@ class CommonUtil {
 
   static void openDesktopDirectory(String path) async {
     if (Platform.isMacOS) {
-      _open('open', ['-R', path.padRight(path.length + 1, path)]);
+      _open('open', ['-R', path.padRight(path.length + 1, '/')]);
     } else if (Platform.isWindows) {
       _open('explorer', [path]);
     } else if (Platform.isLinux) {
