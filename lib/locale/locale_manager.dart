@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:tubesavely/extension/extension.dart';
-
-import '../storage/storage.dart';
+import 'package:tubesavely/storage/storage.dart';
 
 class LocaleManager with ChangeNotifier {
   LocaleManager._internal();

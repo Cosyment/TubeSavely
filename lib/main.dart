@@ -43,7 +43,8 @@ void main() async {
       ),
     );
   } else {
-    windowManager.ensureInitialized();
+    // 必须加上这一行。
+    await windowManager.ensureInitialized();
     WindowOptions windowOptions = WindowOptions(
       size: const Size(950, 650),
       minimumSize: const Size(800, 600),
