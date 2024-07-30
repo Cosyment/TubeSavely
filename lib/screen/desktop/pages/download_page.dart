@@ -33,6 +33,7 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
       ToastUtil.error(S.current.toastLinkInvalid);
       return;
     }
+    url = 'https://www.baidu.com';
     ToastUtil.loading();
     VideoModel videoModel = await HttpRequest.request<VideoModel>(
         Urls.shortVideoParse,
