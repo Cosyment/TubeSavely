@@ -1,26 +1,44 @@
 # TubeSavely
 
-Flutter video downloader
+### Application Name:
+TubeSavely - Video Downloader supporting platforms like TikTok, Douyin, Kuaishou, and Xiaohongshu.
 
-#应用名称：
-TubeSavely - Video downloader 支持tiktok、 抖音快手、小红书
-一句话介绍
-Free downloader to fast download all videos from social webs.
+### One-liner Introduction:
+Free downloader to quickly download videos from all social media platforms.
 
-#应用介绍：
-【海量平台，一网打尽】
-TubeSavely自豪地支持超过1800个国内外主流及小众视频平台，覆盖YouTube、Instagram、TikTok、Bilibili、Vimeo等热门站点，甚至是那些鲜为人知的专业领域平台。无论您钟情于哪个角落的精彩，TubeSavely都能成为您的专属桥梁，一键下载，轻松收藏。
-【高清画质，随心选择】
-质量决定体验，TubeSavely深谙其道。我们提供从标清到超高清的多种分辨率选择，满足不同场景下的观看需求。不论是手机小屏的便捷浏览，还是大屏电视的沉浸享受，TubeSavely都能确保您下载的每一帧都清晰流畅，视觉享受不受限。
-【高速下载，省时省心】
-采用先进的多线程下载技术，TubeSavely极大地缩短了下载时间，即使面对超大体积的视频文件也能迅速完成。告别漫长等待，让精彩内容即刻呈现，享受即下即看的畅快体验。
-【界面友好，操作简便】
-TubeSavely的设计理念在于简化操作，提升效率。简洁直观的用户界面，即便是初次接触的用户也能迅速上手。只需复制视频链接，粘贴到TubeSavely，剩下的交给我们的智能解析引擎，一键启动下载，轻松到不可思议。
-【安全无忧，尊重版权】
-我们深知版权的重要性，TubeSavely严格遵守各平台的使用条款，确保所有下载行为合法合规。同时，我们重视用户隐私，不会保存或传输任何个人数据，让您在享受便利的同时，也能安心无忧。
-【跨平台支持，随时随地】
-无论是Windows、macOS，还是Android、iOS，TubeSavely都致力于提供全面的平台支持，确保您在任意设备上都能享受到一致的优质服务。无论在家、办公室，还是旅途之中，精彩视频随身携带，灵感和欢乐永不间断。
+### Application Introduction:
+Extensive Platform Support, All in One
+TubeSavely takes pride in supporting over 1800 mainstream and niche video platforms at home and abroad, covering popular sites like YouTube, Instagram, TikTok, Bilibili, Vimeo, and even lesser-known specialized platforms. No matter which corner of the web you find fascinating, TubeSavely serves as your exclusive bridge, allowing you to download and collect with one click.
 
-#应用一句话简介：
-视频下载器-无水印、高清、免费！
+### High Definition, Choose at Will
+Quality defines the experience, and TubeSavely understands this well. We offer a variety of resolutions from standard to ultra-high definition, meeting viewing needs in different scenarios. Whether it's the convenience of browsing on a mobile screen or the immersive experience on a large TV screen, TubeSavely ensures that every frame you download is clear and smooth, with unrestricted visual enjoyment.
 
+### High-Speed Downloading, Save Time and Worry
+Using advanced multi-threaded downloading technology, TubeSavely greatly reduces download times, even for very large video files. Say goodbye to long waits and let the exciting content be presented immediately, enjoying the immediate viewing experience.
+
+### Friendly Interface, Easy to Operate
+The design philosophy of TubeSavely is to simplify operations and improve efficiency. The simple and intuitive user interface allows even first-time users to get started quickly. Just copy the video link, paste it into TubeSavely, and leave the rest to our intelligent parsing engine. Start downloading with one click, it's incredibly easy.
+
+### Safe and Worry-Free, Respecting Copyrights
+We are well aware of the importance of copyright. TubeSavely strictly adheres to the terms of use of each platform, ensuring that all downloads are legal and compliant. At the same time, we value user privacy and do not save or transmit any personal data, allowing you to enjoy convenience with peace of mind.
+
+### Cross-Platform Support, Anytime, Anywhere
+Whether it's Windows, macOS, Android, or iOS, TubeSavely is committed to providing comprehensive platform support, ensuring that you can enjoy consistent quality service on any device. Whether at home, in the office, or on the go, carry exciting videos with you, and inspiration and joy are always uninterrupted.
+
+#### MacOS screenshots
+![](https://github.com/Cosyment/TubeSavely/blob/master/screenshots/macos/WX20240625-182915%402x.png)
+
+![](https://github.com/Cosyment/TubeSavely/blob/master/screenshots/macos/WX20240625-183008%402x.png)
+
+![](https://github.com/Cosyment/TubeSavely/blob/master/screenshots/macos/WX20240625-183054%402x.png)
+
+![](https://github.com/Cosyment/TubeSavely/blob/master/screenshots/macos/WX20240625-183128%402x.png)
+
+#### ios screenshots
+![](https://github.com/Cosyment/TubeSavely/blob/master/screenshots/%E8%8B%B9%E6%9E%9C%E5%BA%94%E7%94%A8%E5%95%86%E5%BA%97-5.5%E5%AF%B8-1242X2208/IMG_0154.PNG)
+
+![](https://github.com/Cosyment/TubeSavely/blob/master/screenshots/%E8%8B%B9%E6%9E%9C%E5%BA%94%E7%94%A8%E5%95%86%E5%BA%97-5.5%E5%AF%B8-1242X2208/IMG_0155.PNG)
+
+![](https://github.com/Cosyment/TubeSavely/blob/master/screenshots/%E8%8B%B9%E6%9E%9C%E5%BA%94%E7%94%A8%E5%95%86%E5%BA%97-5.5%E5%AF%B8-1242X2208/IMG_0156.PNG)
+
+![](https://github.com/Cosyment/TubeSavely/blob/master/screenshots/%E8%8B%B9%E6%9E%9C%E5%BA%94%E7%94%A8%E5%95%86%E5%BA%97-5.5%E5%AF%B8-1242X2208/IMG_0157.PNG)
