@@ -51,3 +51,6 @@ app.*.map.json
 /macos/Pods/
 /macos/Podfile.lock
 /devtools_options.yaml
+
+/private_keys/
+upload-appstore.sh
