@@ -1,6 +1,5 @@
 # TubeSavely
 
-### Application Name:
 TubeSavely - Video Downloader supporting platforms like TikTok, Douyin, Kuaishou, and Xiaohongshu.
 
 ### One-liner Introduction:
