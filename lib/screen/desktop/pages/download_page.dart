@@ -6,14 +6,14 @@ import 'package:tubesavely/extension/extension.dart';
 import 'package:tubesavely/generated/l10n.dart';
 import 'package:tubesavely/http/http_request.dart';
 import 'package:tubesavely/model/emuns.dart';
+import 'package:tubesavely/model/execute_model.dart';
 import 'package:tubesavely/model/pair.dart';
 import 'package:tubesavely/model/video_model.dart';
 import 'package:tubesavely/storage/storage.dart';
+import 'package:tubesavely/utils/common_util.dart';
 import 'package:tubesavely/utils/constants.dart';
-import 'package:tubesavely/utils/platform_util.dart';
 import 'package:tubesavely/utils/resolution_util.dart';
 import 'package:tubesavely/utils/toast_util.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class DownloadPage extends StatefulWidget {
   const DownloadPage({super.key});
@@ -26,21 +26,23 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
   List<VideoModel> videoModelList = [];
   List<String> taskList = [];
 
-  Map<String, double> progressMap = {};
-  Map<String, String> progressTextMap = {};
-  Map<String, ExecuteStatus> statusMap = {};
+  Map<String, ExecuteModel> executeModelMap = {};
 
   void _extractVideo(String url) async {
     if (!url.isValidUrl()) {
       ToastUtil.error(S.current.toastLinkInvalid);
       return;
     }
+    url = 'https://www.baidu.com';
     ToastUtil.loading();
     VideoModel videoModel = await HttpRequest.request<VideoModel>(
         Urls.shortVideoParse,
         params: {'url': url},
         (jsonData) => VideoModel.fromJson(jsonData),
-        exception: (e) => {debugPrint('parse exception $e'), ToastUtil.error(S.current.toastVideoExecuteError)});
+        exception: (e) => {
+              debugPrint('parse exception $e'),
+              if (e.code == 401) {ToastUtil.error(e.message)} else {ToastUtil.error(S.current.toastVideoExecuteError)}
+            });
 
     setState(() {
       videoModelList.add(videoModel);
@@ -70,9 +72,8 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
 
   void _download(VideoModel model) async {
     setState(() {
-      progressMap[model.original_url ?? ''] = 0;
-      statusMap[model.original_url ?? ''] = ExecuteStatus.Executing;
-      progressTextMap[model.original_url ?? ''] = S.current.statusDownloadProgress;
+      executeModelMap[model.original_url ?? ''] = ExecuteModel(
+          key: model.original_url, progress: 0, progressText: S.current.statusDownloadProgress, status: ExecuteStatus.Executing);
     });
 
     final quality = Storage().getString(StorageKeys.DOWNLOAD_QUALITY_KEY);
@@ -81,28 +82,33 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
     FormatModel? target = videoList?.firstWhere((item) => VideoResolutionUtil.format(item.resolution ?? '') == quality,
         orElse: () => videoList.first);
 
+    ExecuteModel? executeModel = executeModelMap[model.original_url ?? ""];
     Downloader.start(target?.url ?? '', model.title ?? '',
         audioUrl: audioList?.isEmpty == true ? null : audioList?[1].url,
         resolution: VideoResolutionUtil.format(target?.resolution ?? ''), onProgress: (type, value) {
       setState(() {
-        progressMap[model.original_url ?? ''] = value;
+        executeModel?.progress = value;
         if (type == ProgressType.download) {
-          progressTextMap[model.original_url ?? ''] = S.current.statusDownloadProgress;
+          executeModel?.progressText = S.current.statusDownloadProgress;
         } else if (type == ProgressType.recode) {
-          progressTextMap[model.original_url ?? ''] = S.current.statusRecodeProgress;
+          executeModel?.progressText = S.current.statusRecodeProgress;
         } else if (type == ProgressType.merge) {
-          progressTextMap[model.original_url ?? ''] = S.current.statusMergeProgress;
+          executeModel?.progressText = S.current.statusMergeProgress;
         }
         if (value >= 100) {
-          statusMap[model.original_url ?? ''] = ExecuteStatus.Success;
-          progressTextMap[model.original_url ?? ''] = S.current.statusComplete;
+          executeModel?.status = ExecuteStatus.Success;
+          executeModel?.progressText = S.current.statusComplete;
         }
       });
+    }, onSuccess: (path) {
+      executeModel?.path = path;
+      executeModel?.status = ExecuteStatus.Success;
     }, onFailure: (error) {
       setState(() {
-        statusMap[model.original_url ?? ''] = ExecuteStatus.Idle;
-        progressMap[model.original_url ?? ''] = 0;
-        progressTextMap[model.original_url ?? ''] = S.current.statusFailed;
+        executeModel?.status = ExecuteStatus.Idle;
+        executeModel?.progress = 0;
+        executeModel?.progressText = S.current.statusFailed;
+        ToastUtil.error(S.current.statusFailed);
       });
     });
   }
@@ -145,8 +151,7 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
               onPressed: () async {
                 videoModelList.forEach((model) async {
-                  print('--------->>>>${statusMap[model.original_url ?? '']}');
-                  if (statusMap[model.original_url ?? ''] == null) {
+                  if (executeModelMap[model.original_url]?.status == null) {
                     _download(model);
                   }
                 });
@@ -249,7 +254,7 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
                 children: [
                   Expanded(
                       child: LinearProgressIndicator(
-                    value: (progressMap[model.original_url] ?? 0) / 100,
+                    value: (executeModelMap[model.original_url]?.progress ?? 0) / 100,
                     minHeight: 2,
                     color: Theme.of(context).primaryColor,
                     borderRadius: BorderRadius.circular(50),
@@ -259,7 +264,7 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
                     width: 10,
                   ),
                   Text(
-                      '${progressTextMap[model.original_url] ?? ''} ${(progressMap[model.original_url]?.toStringAsFixed(2) ?? 0)}%',
+                      '${executeModelMap[model.original_url]?.progressText ?? ''} ${(executeModelMap[model.original_url]?.progress?.toStringAsFixed(2) ?? 0)}%',
                       style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)))
                 ],
               )
@@ -267,7 +272,7 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
           )),
           Row(
             children: [
-              statusMap[model.original_url ?? ''] == ExecuteStatus.Executing
+              executeModelMap[model.original_url]?.status == ExecuteStatus.Executing
                   ? Container(
                       width: 40,
                       height: 40,
@@ -288,10 +293,9 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
                         color: Theme.of(context).primaryColor.withOpacity(0.8),
                       )),
               IconButton(
-                  onPressed: () {
-                    launchUrlString(
-                        Uri.file(Storage().getString(StorageKeys.CACHE_DIR_KEY) ?? '', windows: PlatformUtil.isWindows)
-                            .toString());
+                  onPressed: () async {
+                    CommonUtil.openDesktopDirectory(
+                        executeModelMap[model.original_url]?.path ?? Storage().getString(StorageKeys.CACHE_DIR_KEY) ?? '');
                   },
                   icon: const Icon(
                     Icons.folder_open,
@@ -301,9 +305,7 @@ class _DownloadPageState extends State<DownloadPage> with AutomaticKeepAliveClie
                   onPressed: () {
                     setState(() {
                       videoModelList.remove(model);
-                      statusMap.remove(model.original_url ?? '');
-                      progressMap.remove(model.original_url ?? '');
-                      progressTextMap.remove(model.original_url ?? '');
+                      executeModelMap.remove(model.original_url);
                       taskList.remove(model.original_url);
                     });
                   },

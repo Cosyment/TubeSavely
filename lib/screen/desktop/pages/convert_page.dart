@@ -7,9 +7,10 @@ import 'package:tubesavely/core/converter/converter.dart';
 import 'package:tubesavely/core/ffmpeg/ffmpeg_executor.dart';
 import 'package:tubesavely/generated/l10n.dart';
 import 'package:tubesavely/model/emuns.dart';
+import 'package:tubesavely/model/execute_model.dart';
 import 'package:tubesavely/storage/storage.dart';
-import 'package:tubesavely/utils/platform_util.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+import 'package:tubesavely/utils/common_util.dart';
+import 'package:tubesavely/utils/toast_util.dart';
 
 class ConvertPage extends StatefulWidget {
   const ConvertPage({super.key});
@@ -21,9 +22,8 @@ class ConvertPage extends StatefulWidget {
 class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClientMixin<ConvertPage> {
   String videoFormat = Storage().getString(StorageKeys.CONVERT_FORMAT_KEY) ?? 'MP4';
   List<PlatformFile> videoList = [];
-  Map<String, double> progressMap = {};
-  Map<String, String> progressTextMap = {};
-  Map<String, ExecuteStatus> statusMap = {};
+
+  Map<String, ExecuteModel> executeModelMap = {};
 
   _pickVideo() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(dialogTitle: S.current.pickVideo, type: FileType.video);
@@ -36,24 +36,28 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
 
   _convert(PlatformFile file) {
     setState(() {
-      progressMap[file.path ?? ''] = 0;
-      statusMap[file.path ?? ''] = ExecuteStatus.Executing;
-      progressTextMap[file.path ?? ''] = S.current.statusConvertProgress;
+      executeModelMap[file.path ?? ''] = ExecuteModel(
+          key: file.path, progress: 0, progressText: S.current.statusConvertProgress, status: ExecuteStatus.Executing);
     });
+
+    ExecuteModel? executeModel = executeModelMap[file.path ?? ''];
     Converter.convertToFormat(
         file.path ?? '', VideoFormat.values.byName(videoFormat == '3GP' ? '_3gp' : videoFormat.toLowerCase()),
         onProgress: (type, value) {
       setState(() {
-        progressMap[file.path ?? ''] = value;
-        progressTextMap[file.path ?? ''] = S.current.statusConvertProgress;
+        executeModel?.progress = value;
+        executeModel?.progressText = S.current.statusConvertProgress;
         if (value >= 100) {
-          statusMap[file.path ?? ''] = ExecuteStatus.Success;
-          progressTextMap[file.path ?? ''] = S.current.statusComplete;
+          executeModel?.status = ExecuteStatus.Success;
+          executeModel?.progressText = S.current.statusComplete;
         }
       });
+    }, onSuccess: (path) {
+      executeModel?.path = path;
     }, onFailure: (error) {
-      statusMap[file.path ?? ''] = ExecuteStatus.Idle;
-      progressTextMap[file.path ?? ''] = S.current.statusConvertFailed;
+      executeModel?.status = ExecuteStatus.Idle;
+      executeModel?.progressText = S.current.statusConvertFailed;
+      ToastUtil.error(S.current.statusConvertFailed);
     });
   }
 
@@ -189,7 +193,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
                 children: [
                   Expanded(
                       child: LinearProgressIndicator(
-                    value: (progressMap[file.path ?? ''] ?? 0) / 100,
+                    value: (executeModelMap[file.path]?.progress ?? 0) / 100,
                     minHeight: 2,
                     color: Theme.of(context).primaryColor,
                     borderRadius: BorderRadius.circular(50),
@@ -198,7 +202,8 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
                   const SizedBox(
                     width: 10,
                   ),
-                  Text('${progressTextMap[file.path ?? ''] ?? ''} ${(progressMap[file.path ?? '']?.toStringAsFixed(2) ?? 0)}%',
+                  Text(
+                      '${executeModelMap[file.path]?.progressText ?? ''} ${(executeModelMap[file.path]?.progress?.toStringAsFixed(2) ?? 0)}%',
                       style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)))
                 ],
               )
@@ -206,7 +211,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
           )),
           Row(
             children: [
-              statusMap[file.path ?? ''] == ExecuteStatus.Executing
+              executeModelMap[file.path]?.status == ExecuteStatus.Executing
                   ? Container(
                       width: 40,
                       height: 40,
@@ -225,7 +230,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
                       )),
               IconButton(
                   onPressed: () async {
-                    launchUrlString(Uri.file((await Converter.baseOutputPath ?? ''), windows: PlatformUtil.isWindows).toString());
+                    CommonUtil.openDesktopDirectory(executeModelMap[file.path]?.path ?? (await Converter.baseOutputPath ?? ''));
                   },
                   icon: const Icon(
                     Icons.folder_open,
@@ -235,9 +240,7 @@ class _ConvertPageState extends State<ConvertPage> with AutomaticKeepAliveClient
                   onPressed: () {
                     setState(() {
                       videoList.remove(file);
-                      statusMap.remove(file.path ?? '');
-                      progressMap.remove(file.path ?? '');
-                      progressTextMap.remove(file.path ?? '');
+                      executeModelMap.remove(file.path);
                     });
                   },
                   icon: const Icon(

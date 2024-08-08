@@ -31,6 +31,7 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+pubspec.lock
 
 # Symbolication related
 app.*.symbols
@@ -42,7 +43,11 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/local.properties
 /ios/DerivedData/
 /ios/Pods/
+/ios/Podfile.lock
 /macos/DerivedData/
 /macos/Pods/
+/macos/Podfile.lock
+/devtools_options.yaml
