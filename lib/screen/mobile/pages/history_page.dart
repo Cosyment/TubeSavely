@@ -26,13 +26,17 @@ class _HistoryPageState extends State<HistoryPage> {
             child: Scaffold(
               appBar: AppBar(
                 leading: const SizedBox(width: 50),
-                backgroundColor: isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
+                backgroundColor:
+                    isLightMode ? AppTheme.nearlyWhite : AppTheme.nearlyBlack,
                 title: Text(
                   'History',
-                  style: TextStyle(color: isLightMode ? AppTheme.nearlyBlack : AppTheme.white),
+                  style: TextStyle(
+                      color:
+                          isLightMode ? AppTheme.nearlyBlack : AppTheme.white),
                 ),
               ),
-              backgroundColor: isLightMode ? AppTheme.white : AppTheme.nearlyBlack,
+              backgroundColor:
+                  isLightMode ? AppTheme.white : AppTheme.nearlyBlack,
               body: Center(
                 child: Image.asset('assets/images/ic_empty.png'),
               ),

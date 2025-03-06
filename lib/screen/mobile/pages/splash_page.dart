@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tubesavely/main.dart';
-import 'package:tubesavely/screen/mobile/pages/home_page.dart';
 import 'package:tubesavely/theme/app_theme.dart';
 
 class SplashPage extends StatefulWidget {
@@ -66,9 +65,9 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
                 baseColor: AppTheme.accentColor,
                 highlightColor: Colors.white,
                 child: Image.asset(
-                  'assets/ic_logo_small.webp',
-                  width: 255,
-                  height: 255,
+                  'assets/images/ic_logo.png',
+                  width: 150,
+                  height: 150,
                 ),
               )),
               Positioned(
