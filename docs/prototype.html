@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TubeSavely - 原型设计</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .screen {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #444;
+            margin-top: 0;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        ul {
+            padding-left: 20px;
+            margin: 0;
+        }
+        li {
+            margin: 10px 0;
+            color: #666;
+        }
+        .feature {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>TubeSavely 应用原型设计</h1>
+    <div class="container">
+        <!-- 用户认证模块 -->
+        <div class="screen">
+            <h2>登录/注册界面</h2>
+            <ul>
+                <li>登录选项：
+                    <ul>
+                        <li>手机号+验证码登录</li>
+                        <li>邮箱+密码登录</li>
+                        <li>第三方账号快捷登录（Google、Apple）</li>
+                    </ul>
+                </li>
+                <li>注册流程：
+                    <ul>
+                        <li>手机号/邮箱验证</li>
+                        <li>设置密码</li>
+                        <li>完善个人信息</li>
+                    </ul>
+                </li>
+                <li>找回密码功能</li>
+            </ul>
+        </div>
+
+        <!-- 个人中心 -->
+        <div class="screen">
+            <h2>个人中心</h2>
+            <ul>
+                <li>用户信息展示：
+                    <ul>
+                        <li>头像</li>
+                        <li>昵称</li>
+                        <li>会员等级</li>
+                        <li>注册时间</li>
+                    </ul>
+                </li>
+                <li>账户信息：
+                    <ul>
+                        <li>积分余额</li>
+                        <li>会员有效期</li>
+                        <li>下载次数统计</li>
+                    </ul>
+                </li>
+                <li>安全设置：
+                    <ul>
+                        <li>修改密码</li>
+                        <li>绑定手机/邮箱</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 充值系统 -->
+        <div class="screen">
+            <h2>充值界面</h2>
+            <ul>
+                <li>充值选项：
+                    <ul>
+                        <li>积分充值套餐</li>
+                        <li>会员订阅套餐</li>
+                    </ul>
+                </li>
+                <li>支付方式：
+                    <ul>
+                        <li>支付宝</li>
+                        <li>微信支付</li>
+                        <li>PayPal</li>
+                        <li>信用卡支付</li>
+                    </ul>
+                </li>
+                <li>交易记录查询</li>
+            </ul>
+        </div>
+
+        <!-- 积分商城 -->
+        <div class="screen">
+            <h2>积分商城</h2>
+            <ul>
+                <li>兑换商品：
+                    <ul>
+                        <li>下载次数包</li>
+                        <li>会员时长</li>
+                        <li>高级功能解锁</li>
+                    </ul>
+                </li>
+                <li>积分获取方式：
+                    <ul>
+                        <li>每日签到</li>
+                        <li>邀请好友</li>
+                        <li>完成任务</li>
+                        <li>充值赠送</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 主界面 -->
+        <div class="screen">
+            <h2>视频下载主界面</h2>
+            <ul>
+                <li>URL输入框</li>
+                <li>支持的平台列表</li>
+                <li>下载选项设置：
+                    <ul>
+                        <li>清晰度选择</li>
+                        <li>格式选择</li>
+                        <li>下载位置设置</li>
+                    </ul>
+                </li>
+                <li>下载进度显示</li>
+                <li>历史记录查看</li>
+            </ul>
+        </div>
+
+        <!-- 设置界面 -->
+        <div class="screen">
+            <h2>设置界面</h2>
+            <ul>
+                <li>基本设置：
+                    <ul>
+                        <li>语言切换</li>
+                        <li>主题设置</li>
+                        <li>存储路径</li>
+                    </ul>
+                </li>
+                <li>下载设置：
+                    <ul>
+                        <li>默认清晰度</li>
+                        <li>默认格式</li>
+                        <li>并发下载数</li>
+                    </ul>
+                </li>
+                <li>通知设置</li>
+                <li>关于信息</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

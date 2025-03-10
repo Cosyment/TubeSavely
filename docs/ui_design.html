@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TubeSavely UI设计</title>
+    <style>
+        :root {
+            --primary-color: #8B5CF6;
+            --accent-gradient: linear-gradient(135deg, #8B5CF6, #EC4899);
+            --card-dark: #1E293B;
+            --background: #0F172A;
+            --text-primary: #F8FAFC;
+            --text-secondary: #94A3B8;
+            --card-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 20px;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2em;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+        }
+
+        .screens-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(335px, 1fr));
+            gap: 30px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .screen {
+            width: 100%;
+            max-width: 375px;
+            height: 812px;
+            background: linear-gradient(145deg, var(--card-dark), rgba(30, 41, 59, 0.7));
+            border-radius: 16px;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+            gap: 10px;
+            margin: 0 auto;
+        }
+
+        .screen h2 {
+            font-size: 1.5em;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .ui-preview {
+            width: 100%;
+            margin: 0 auto;
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+            gap: 20px;
+            box-sizing: border-box;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 15px;
+            font-size: 14px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        .button {
+            padding: 12px 24px;
+            font-size: 14px;
+            border-radius: 8px;
+            background: var(--accent-gradient);
+            color: var(--text-primary);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .button:hover {
+            opacity: 0.9;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            width: 100%;
+            box-sizing: border-box;
+            flex-wrap: wrap;
+        }
+
+        select {
+            font-size: 14px;
+            margin-left: auto;
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .package-card {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .platform-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .download-progress {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 60%;
+            background: var(--accent-gradient);
+            border-radius: 4px;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .payment-method-item {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .social-login {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .social-button {
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            color: var(--primary-color);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255,255,255,0.1);
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .history-item {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            width: 100%;
+            box-sizing: border-box;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            position: relative;
+        }
+
+        .tab.active {
+            color: var(--primary-color);
+        }
+
+        .tab.active:after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary-color);
+        }
+
+        /* iPhone状态栏样式 */
+        .iphone-status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 15px;
+            background-color: rgba(30,41,59,0.7);
+            color: white;
+            font-family: -apple-system, "SF Pro Text", sans-serif;
+            font-size: 14px;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            margin: -20px -20px 0;
+            height: 24px;
+        }
+
+        .status-time {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .status-icons {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .signal-icon {
+            width: 18px;
+            height: 12px;
+            background-image: url("data:image/svg+xml,%3Csvg width='18' height='12' viewBox='0 0 18 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 9h2v2H1V9zm4-3h2v5H5V6zm4-3h2v8H9V3zm4-3h2v11h-2V0z' fill='white'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .wifi-icon {
+            width: 16px;
+            height: 12px;
+            background-image: url("data:image/svg+xml,%3Csvg width='16' height='12' viewBox='0 0 16 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 9.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM3.5 6.5a6 6 0 019 0l1.4-1.4a8 8 0 00-11.8 0L3.5 6.5zm3 3a3 3 0 013 0l1.4-1.4a5 5 0 00-5.8 0l1.4 1.4z' fill='white'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .battery-icon {
+            width: 25px;
+            height: 12px;
+            background-image: url("data:image/svg+xml,%3Csvg width='25' height='12' viewBox='0 0 25 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 2a2 2 0 012-2h15a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V2zm2 1v6h15V3H4zm19-1a1 1 0 011 1v4a1 1 0 01-1 1v-6z' fill='white'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        /* 标题栏样式 */
+        h2 {
+            font-family: -apple-system, "SF Pro Display", sans-serif;
+            font-size: 17px;
+            font-weight: 600;
+            text-align: center;
+            color: var(--text-primary);
+            margin: 12px 0;
+            letter-spacing: -0.5px;
+        }
+
+        .screen {
+            background: var(--card-dark);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .ui-preview {
+            width: 100%;
+            margin: 0 auto;
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+            gap: 20px;
+            box-sizing: border-box;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 15px;
+            font-size: 14px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        .button {
+            padding: 12px 24px;
+            font-size: 14px;
+            border-radius: 8px;
+            background: var(--accent-gradient);
+            color: var(--text-primary);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .button:hover {
+            opacity: 0.9;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            width: 100%;
+            box-sizing: border-box;
+            flex-wrap: wrap;
+        }
+
+        select {
+            font-size: 14px;
+            margin-left: auto;
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .package-card {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .platform-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .download-progress {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 60%;
+            background: var(--accent-gradient);
+            border-radius: 4px;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .payment-method-item {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .social-login {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .social-button {
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            color: var(--primary-color);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255,255,255,0.1);
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .history-item {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            width: 100%;
+            box-sizing: border-box;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            position: relative;
+        }
+
+        .tab.active {
+            color: var(--primary-color);
+        }
+
+        .tab.active:after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary-color);
+        }
+
+        /* iPhone状态栏样式 */
+        .iphone-status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 15px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            font-size: 12px;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            margin: -20px -20px 0;
+            height: 24px;
+        }
+
+        .status-time {
+            font-weight: 500;
+        }
+
+        .status-icons {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .signal-icon, .wifi-icon, .battery-icon {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TubeSavely UI设计</h1>
+        
+        <div class="screens-container">
+            <!-- 登录/注册界面 -->
+            <div class="screen">
+                <div class="iphone-status-bar">
+                    <span class="status-time">9:41</span>
+                    <div class="status-icons">
+                        <span class="signal-icon"></span>
+                        <span class="wifi-icon"></span>
+                        <span class="battery-icon"></span>
+                    </div>
+                </div>
+                <h2>登录/注册界面</h2>
+                <div class="ui-preview">
+                    <div style="background: rgba(30, 41, 59, 0.7); padding: 35px; border-radius: 20px; box-shadow: var(--card-shadow);">
+                        <input type="email" class="input-field" placeholder="邮箱地址">
+                        <input type="password" class="input-field" placeholder="密码">
+                        <button class="button" style="width: 100%;">登录</button>
+                        <div style="text-align: center; margin: 25px 0; color: var(--text-secondary); position: relative;">
+                            <span style="background: var(--card-dark); padding: 0 15px; position: relative; z-index: 1;">其他登录方式</span>
+                            <div style="height: 1px; background: rgba(255,255,255,0.1); position: absolute; width: 100%; top: 50%; z-index: 0;"></div>
+                        </div>
+                        <div class="social-login">
+                            <button class="social-button" style="background: #DB4437;">Google</button>
+                            <button class="social-button" style="background: #000000;">Apple</button>
+                        </div>
+                        <div style="text-align: center; margin-top: 20px;">
+                            <a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 14px;">找回密码</a>
+                            <span style="color: var(--text-secondary); margin: 0 10px;">|</span>
+                            <a href="#" style="color: var(--text-secondary); text-decoration: none; font-size: 14px;">注册账号</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 个人中心 -->
+            <div class="screen">
+                <div class="iphone-status-bar">
+                    <span class="status-time">9:41</span>
+                    <div class="status-icons">
+                        <span class="signal-icon"></span>
+                        <span class="wifi-icon"></span>
+                        <span class="battery-icon"></span>
+                    </div>
+                </div>
+                <h2>个人中心</h2>
+                <div class="ui-preview">
+                    <div style="text-align: center;">
+                        <div style="width: 120px; height: 120px; background: var(--accent-gradient); border-radius: 50%; margin: 0 auto 20px; position: relative; overflow: hidden;">
+                            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.1); backdrop-filter: blur(5px);"></div>
+                        </div>
+                        <h3 style="margin: 0; font-size: 1.5em;">用户名</h3>
+                        <div style="color: var(--text-secondary); margin-top: 5px;">高级会员</div>
+                        <div style="color: var(--text-secondary); font-size: 12px; margin-top: 5px;">注册时间: 2023-06-15</div>
+                    </div>
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">1000</div>
+                            <div style="color: var(--text-secondary);">积分</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">30</div>
+                            <div style="color: var(--text-secondary);">会员天数</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">50</div>
+                            <div style="color: var(--text-secondary);">下载次数</div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 style="margin-bottom: 20px;">安全设置</h3>
+                        <div class="menu-item">
+                            <span>修改密码</span>
+                            <button class="button" style="margin-left: auto; padding: 5px 10px; font-size: 12px;">修改</button>
+                        </div>
+                        <div class="menu-item">
+                            <span>绑定手机/邮箱</span>
+                            <button class="button" style="margin-left: auto; padding: 5px 10px; font-size: 12px;">绑定</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 主界面 -->
+            <div class="screen">
+                <div class="iphone-status-bar">
+                    <span class="status-time">9:41</span>
+                    <div class="status-icons">
+                        <span class="signal-icon"></span>
+                        <span class="wifi-icon"></span>
+                        <span class="battery-icon"></span>
+                    </div>
+                </div>
+                <h2>视频下载主界面</h2>
+                <div class="ui-preview">
+                    <input type="url" class="input-field" placeholder="请输入视频URL">
+                    <div style="margin: 20px 0;">
+                        <div style="margin-bottom: 15px; color: var(--text-secondary);">支持的平台</div>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                            <div class="platform-item">YouTube</div>
+                            <div class="platform-item">Bilibili</div>
+                            <div class="platform-item">抖音</div>
+                        </div>
+                    </div>
+                    <div style="background: rgba(30,41,59,0.7); padding: 20px; border-radius: 15px; margin: 20px 0;">
+                        <h3 style="margin-top: 0;">下载选项</h3>
+                        <div class="menu-item">
+                            <span>清晰度选择</span>
+                            <select>
+                                <option>MP4</option>
+                                <option>MKV</option>
+                                <option>MP3</option>
+                            </select>
+                        </div>
+                        <div class="menu-item">
+                            <span>下载位置</span>
+                            <button class="button" style="margin-left: auto; padding: 5px 10px;">选择文件夹</button>
+                        </div>
+                    </div>
+                    <div style="margin: 20px 0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span>下载进度</span>
+                            <span>60%</span>
+                        </div>
+                        <div class="download-progress">
+                            <div class="progress-bar"></div>
+                        </div>
+                    </div>
+                    <button class="button" style="width: 100%;">开始下载</button>
+                    <div style="margin-top: 20px;">
+                        <h3>历史记录</h3>
+                        <div class="history-item">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>视频标题</span>
+                                <span style="color: var(--primary-color);">已完成</span>
+                            </div>
+                            <div style="color: var(--text-secondary); font-size: 12px; margin: 5px 0;">https://www.youtube.com/watch?v=example</div>
+                            <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary);">
+                                <span>1080P MP4</span>
+                                <span>2023-06-20 14:30</span>
+                            </div>
+                        </div>
+                        <div class="history-item">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>视频标题</span>
+                                <span style="color: var(--primary-color);">已完成</span>
+                            </div>
+                            <div style="color: var(--text-secondary); font-size: 12px; margin: 5px 0;">https://www.bilibili.com/video/example</div>
+                            <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary);">
+                                <span>720P MP4</span>
+                                <span>2023-06-18 09:15</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 设置界面 -->
+            <div class="screen">
+                <div class="iphone-status-bar">
+                    <div class="status-time">9:41</div>
+                    <div class="status-icons">
+                        <div class="signal-icon">📶</div>
+                        <div class="wifi-icon">📡</div>
+                        <div class="battery-icon">🔋 100%</div>
+                    </div>
+                </div>
+                <h2>设置界面</h2>
+                <div class="ui-preview">
+                    <div style="background: rgba(30,41,59,0.7); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                        <h3 style="margin-top: 0;">基本设置</h3>
+                        <div class="menu-item">
+                            <span>语言切换</span>
+                            <select>
+                                <option>简体中文</option>
+                                <option>English</option>
+                                <option>日本語</option>
+                                <option>한국어</option>
+                            </select>
+                        </div>
+                        <div class="menu-item">
+                            <span>主题设置</span>
+                            <select>
+                                <option>深色模式</option>
+                                <option>浅色模式</option>
+                                <option>跟随系统</option>
+                            </select>
+                        </div>
+                        <div class="menu-item">
+                            <span>存储路径</span>
+                            <button class="button" style="margin-left: auto; padding: 5px 10px;">选择文件夹</button>
+                        </div>
+                    </div>
+                    <div style="background: rgba(30,41,59,0.7); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                        <h3 style="margin-top: 0;">下载设置</h3>
+                        <div class="menu-item">
+                            <span>默认清晰度</span>
+                            <select>
+                                <option>1080P</option>
+                                <option>720P</option>
+                                <option>480P</option>
+                            </select>
+                        </div>
+                        <div class="menu-item">
+                            <span>默认格式</span>
+                            <select>
+                                <option>MP4</option>
+                                <option>MKV</option>
+                                <option>MP3</option>
+                            </select>
+                        </div>
+                        <div class="menu-item">
+                            <span>并发下载数</span>
+                            <select>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="background: rgba(30,41,59,0.7); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                        <h3 style="margin-top: 0;">通知设置</h3>
+                        <div class="menu-item">
+                            <span>下载完成通知</span>
+                            <label class="switch" style="margin-left: auto;">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="menu-item">
+                            <span>应用更新通知</span>
+                            <label class="switch" style="margin-left: auto;">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div style="background: rgba(30,41,59,0.7); padding: 20px; border-radius: 15px;">
+                        <h3 style="margin-top: 0;">关于信息</h3>
+                        <div class="menu-item">
+                            <span>版本</span>
+                            <span style="margin-left: auto; color: var(--text-secondary);">v1.0.0</span>
+                        </div>
+                        <div class="menu-item">
+                            <span>检查更新</span>
+                            <button class="button" style="margin-left: auto; padding: 5px 10px;">检查</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 充值界面 -->
+            <div class="screen">
+                <div class="iphone-status-bar">
+                    <div class="status-time">9:41</div>
+                    <div class="status-icons">
+                        <div class="signal-icon">📶</div>
+                        <div class="wifi-icon">📡</div>
+                        <div class="battery-icon">🔋 100%</div>
+                    </div>
+                </div>
+                <h2>充值界面</h2>
+                <div class="ui-preview">
+                    <div class="tab-container">
+                        <div class="tab active">积分充值</div>
+                        <div class="tab">会员订阅</div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                        <div class="package-card">
+                            <h3 style="margin-top: 0; font-size: 16px;">基础套餐</h3>
+                            <div style="font-size: 1.5em; color: var(--primary-color); margin: 5px 0;">¥30</div>
+                            <div style="color: var(--text-secondary); margin-bottom: 10px; font-size: 13px;">300积分</div>
+                            <button class="button" style="width: 100%; padding: 8px;">购买</button>
+                        </div>
+                        <div class="package-card">
+                            <h3 style="margin-top: 0; font-size: 16px;">高级套餐</h3>
+                            <div style="font-size: 1.5em; color: var(--primary-color); margin: 5px 0;">¥88</div>
+                            <div style="color: var(--text-secondary); margin-bottom: 10px; font-size: 13px;">1000积分</div>
+                            <button class="button" style="width: 100%; padding: 8px;">购买</button>
+                        </div>
+                        <div class="package-card">
+                            <h3 style="margin-top: 0; font-size: 16px;">至尊套餐</h3>
+                            <div style="font-size: 1.5em; color: var(--primary-color); margin: 5px 0;">¥198</div>
+                            <div style="color: var(--text-secondary); margin-bottom: 10px; font-size: 13px;">2500积分</div>
+                            <button class="button" style="width: 100%; padding: 8px;">购买</button>
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <h3>支付方式</h3>
+                        <div class="payment-methods">
+                            <div class="payment-method-item">支付宝</div>
+                            <div class="payment-method-item">微信支付</div>
+                            <div class="payment-method-item">PayPal</div>
+                            <div class="payment-method-item">信用卡</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <h3>交易记录</h3>
+                        <div class="history-item">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>基础套餐</span>
+                                <span style="color: var(--primary-color);">¥30</span>
+                            </div>
+                            <div style="color: var(--text-secondary); font-size: 12px; margin: 5px 0;">支付宝</div>
+                            <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary);">
+                                <span>交易成功</span>
+                                <span>2023-06-20 14:30</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 积分商城 -->
+            <div class="screen">
+                <div class="iphone-status-bar">
+                    <div class="status-time">9:41</div>
+                    <div class="status-icons">
+                        <div class="signal-icon">📶</div>
+                        <div class="wifi-icon">📡</div>
+                        <div class="battery-icon">🔋 100%</div>
+                    </div>
+                </div>
+                <h2>积分商城</h2>
+                <div class="ui-preview">
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                        <div class="package-card">
+                            <h3 style="margin-top: 0; font-size: 16px;">下载次数包</h3>
+                            <div style="font-size: 1.5em; color: var(--primary-color); margin: 5px 0;">50次</div>
+                            <div style="color: var(--text-secondary); margin-bottom: 10px; font-size: 13px;">500积分</div>
+                            <button class="button" style="width: 100%; padding: 8px;">兑换</button>
+                        </div>
+                        <div class="package-card">
+                            <h3 style="margin-top: 0; font-size: 16px;">会员时长</h3>
+                            <div style="font-size: 1.5em; color: var(--primary-color); margin: 5px 0;">30天</div>
+                            <div style="color: var(--text-secondary); margin-bottom: 10px; font-size: 13px;">800积分</div>
+                            <button class="button" style="width: 100%; padding: 8px;">兑换</button>
+                        </div>
+                        <div class="package-card">
+                            <h3 style="margin-top: 0; font-size: 16px;">高级功能解锁</h3>
+                            <div style="font-size: 1.5em; color: var(--primary-color); margin: 5px 0;">永久</div>
+                            <div style="color: var(--text-secondary); margin-bottom: 10px; font-size: 13px;">1500积分</div>
+                            <button class="button" style="width: 100%; padding: 8px;">兑换</button>
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <h3>积分历史</h3>
+                        <div class="history-item">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>每日签到</span>
+                                <span style="color: var(--primary-color);">+10积分</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary);">
+                                <span>积分获取</span>
+                                <span>2023-06-25 09:30</span>
+                            </div>
+                        </div>
+                        <div class="history-item">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>下载次数包</span>
+                                <span style="color: #EC4899;">-500积分</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary);">
+                                <span>积分消费</span>
+                                <span>2023-06-20 15:45</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

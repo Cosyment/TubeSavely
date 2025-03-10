@@ -24,7 +24,6 @@ class _WebViewState extends State<WebViewPage> {
   Widget build(BuildContext context) {
     var brightness = MediaQuery.of(context).platformBrightness;
     bool isLightMode = brightness == Brightness.light;
-    late final PlatformWebViewControllerCreationParams params;
     final WebViewController controller =
         WebViewController.fromPlatformCreationParams(const PlatformWebViewControllerCreationParams());
     controller
