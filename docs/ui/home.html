@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TubeSavely - 首页</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .page-content {
+            height: 797px;
+            overflow-y: auto;
+        }
+        
+        /* 高级感增强样式 */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+        
+        .premium-shadow {
+            box-shadow: 0 8px 24px rgba(79, 70, 229, 0.12), 0 3px 8px rgba(79, 70, 229, 0.08);
+        }
+        
+        .premium-gradient {
+            background: linear-gradient(135deg, #4F46E5, #7C3AED);
+        }
+        
+        .premium-gradient-light {
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.05), rgba(124, 58, 237, 0.05));
+        }
+        
+        .premium-text {
+            background: linear-gradient(135deg, #4F46E5, #7C3AED);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .premium-border {
+            border: 1px solid rgba(79, 70, 229, 0.2);
+        }
+        
+        .shine-effect {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .shine-effect::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+            transform: rotate(30deg);
+            animation: shine 6s infinite linear;
+            pointer-events: none;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(30deg); }
+            100% { transform: translateX(100%) rotate(30deg); }
+        }
+        
+        .hover-scale {
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .hover-scale:hover {
+            transform: scale(1.03);
+        }
+        
+        .btn-premium {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+        }
+        
+        .btn-premium:hover {
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .btn-premium:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 8px rgba(79, 70, 229, 0.2);
+        }
+    </style>
+    <script src="common.js"></script>
+</head>
+<body>
+    <div class="page-content">
+        <div class="flex flex-col h-full bg-gradient-to-b from-white to-gray-50">
+            <!-- 顶部导航栏 -->
+            <div class="px-4 py-3 glass-effect sticky top-0 z-10 border-b border-gray-100 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <h1 class="text-xl font-bold premium-text">TubeSavely</h1>
+                    <div class="flex space-x-2">
+                        <button class="p-1.5 rounded-full hover:bg-gray-100 transition-all duration-300 relative">
+                            <div class="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center shadow-sm">
+                                <span class="text-white text-[10px]">2</span>
+                            </div>
+                            <i class="fas fa-bell text-gray-600 text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 主要内容区域 -->
+            <div class="flex-1 px-5 py-8 space-y-8">
+                <!-- URL输入框 -->
+                <div class="relative">
+                    <div class="flex premium-shadow rounded-2xl overflow-hidden transition-all duration-500 hover:shadow-2xl transform hover:-translate-y-1 bg-white shine-effect">
+                        <input type="text" placeholder="输入视频链接..." 
+                               class="flex-1 p-4 border-0 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-700 bg-white"
+                               style="font-size: 15px">
+                        <button class="px-6 premium-gradient text-white font-medium hover:opacity-90 transition-all duration-300 focus:outline-none flex items-center justify-center space-x-2 relative overflow-hidden btn-premium">
+                            <i class="fas fa-download text-sm mr-1.5"></i>
+                            <span class="text-sm">下载</span>
+                        </button>
+                    </div>
+                    <div class="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-3/4 h-3 bg-black opacity-5 blur-xl rounded-full"></div>
+                </div>
+
+                <!-- 快捷功能区 -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-4 rounded-2xl text-white flex items-center space-x-3 premium-shadow hover-scale cursor-pointer">
+                        <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                            <i class="fas fa-crown text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-base">升级会员</h3>
+                            <p class="text-xs text-white/90">享受更多特权</p>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-br from-blue-500 via-cyan-500 to-teal-500 p-4 rounded-2xl text-white flex items-center space-x-3 premium-shadow hover-scale cursor-pointer" data-action="recharge">
+                        <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                            <i class="fas fa-coins text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-base">充值积分</h3>
+                            <p class="text-xs text-white/90">畅享下载体验</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 下载选项 -->
+                <div class="bg-white rounded-2xl p-6 premium-shadow hover-scale premium-border">
+                    <h2 class="text-lg font-semibold mb-5 flex items-center premium-text"><i class="fas fa-sliders-h mr-2"></i>下载选项</h2>
+                    <div class="space-y-6">
+                        <!-- 清晰度选择 -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-3">清晰度</label>
+                            <div class="flex flex-wrap gap-3">
+                                <button class="px-6 py-3 premium-gradient text-white rounded-xl font-medium shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 btn-premium">1080P</button>
+                                <button class="px-6 py-3 bg-white border border-gray-200 text-gray-700 rounded-xl font-medium shadow-sm hover:shadow transition-all duration-300 hover:border-indigo-300 hover:text-indigo-500">720P</button>
+                                <button class="px-6 py-3 bg-white border border-gray-200 text-gray-700 rounded-xl font-medium shadow-sm hover:shadow transition-all duration-300 hover:border-indigo-300 hover:text-indigo-500">480P</button>
+                            </div>
+                        </div>
+                        <!-- 格式选择 -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-3">格式</label>
+                            <div class="flex flex-wrap gap-3">
+                                <button class="px-6 py-3 premium-gradient text-white rounded-xl font-medium shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 btn-premium">MP4</button>
+                                <button class="px-6 py-3 bg-white border border-gray-200 text-gray-700 rounded-xl font-medium shadow-sm hover:shadow transition-all duration-300 hover:border-indigo-300 hover:text-indigo-500">MKV</button>
+                                <button class="px-6 py-3 bg-white border border-gray-200 text-gray-700 rounded-xl font-medium shadow-sm hover:shadow transition-all duration-300 hover:border-indigo-300 hover:text-indigo-500">MP3</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 支持的平台 -->
+                <div class="bg-white rounded-2xl p-6 premium-shadow hover-scale premium-border">
+                    <h2 class="text-lg font-semibold mb-5 flex items-center premium-text"><i class="fas fa-globe mr-2"></i>支持的平台</h2>
+                    <div class="grid grid-cols-4 gap-5">
+                        <div class="flex flex-col items-center group cursor-pointer transform transition-all duration-300 hover:-translate-y-1">
+                            <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center mb-3 shadow-sm group-hover:shadow-md transition-all duration-300 overflow-hidden premium-border">
+                                <img src="https://www.youtube.com/favicon.ico" alt="YouTube" class="w-10 h-10 group-hover:scale-110 transition-all duration-300">
+                            </div>
+                            <span class="text-sm font-medium text-gray-700 group-hover:text-red-500 transition-all duration-300">YouTube</span>
+                        </div>
+                        <div class="flex flex-col items-center group cursor-pointer transform transition-all duration-300 hover:-translate-y-1">
+                            <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center mb-3 shadow-sm group-hover:shadow-md transition-all duration-300 overflow-hidden premium-border">
+                                <img src="https://www.bilibili.com/favicon.ico" alt="Bilibili" class="w-10 h-10 group-hover:scale-110 transition-all duration-300">
+                            </div>
+                            <span class="text-sm font-medium text-gray-700 group-hover:text-blue-500 transition-all duration-300">Bilibili</span>
+                        </div>
+                        <div class="flex flex-col items-center group cursor-pointer transform transition-all duration-300 hover:-translate-y-1">
+                            <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center mb-3 shadow-sm group-hover:shadow-md transition-all duration-300 overflow-hidden premium-border">
+                                <img src="https://www.tiktok.com/favicon.ico" alt="TikTok" class="w-10 h-10 group-hover:scale-110 transition-all duration-300">
+                            </div>
+                            <span class="text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-all duration-300">TikTok</span>
+                        </div>
+                        <div class="flex flex-col items-center group cursor-pointer transform transition-all duration-300 hover:-translate-y-1">
+                            <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-50 to-purple-100 flex items-center justify-center mb-3 shadow-sm group-hover:shadow-md transition-all duration-300 overflow-hidden premium-border">
+                                <img src="https://www.instagram.com/favicon.ico" alt="Instagram" class="w-10 h-10 group-hover:scale-110 transition-all duration-300">
+                            </div>
+                            <span class="text-sm font-medium text-gray-700 group-hover:text-purple-500 transition-all duration-300">Instagram</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

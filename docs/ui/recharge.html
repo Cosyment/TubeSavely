@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TubeSavely - 充值中心</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .page-content {
+            height: 797px;
+            overflow-y: auto;
+        }
+    </style>
+    <script src="common.js"></script>
+</head>
+<body>
+    <div class="page-content">
+        <div class="flex flex-col h-full bg-white">
+        <!-- 顶部导航栏 -->
+        <div class="px-4 py-3 border-b border-gray-200 bg-white sticky top-0 z-10 shadow-sm">
+            <div class="flex items-center">
+                <button class="p-2 rounded-full hover:bg-gray-100 hover:text-indigo-600 transition-all duration-300 mr-2">
+                    <i class="fas fa-arrow-left text-gray-600"></i>
+                </button>
+                <h1 class="text-xl font-bold gradient-text">充值中心</h1>
+            </div>
+        </div>
+
+        <!-- 主要内容区域 -->
+        <div class="flex-1 px-4 py-6 space-y-6 overflow-auto bg-gradient-to-b from-white to-gray-50">
+            <!-- 当前余额 -->
+            <div class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl p-6 text-white shadow-lg transform transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
+                <p class="text-white/80 font-medium">当前积分余额</p>
+                <h2 class="text-4xl font-bold mt-2 flex items-baseline">1,280 <span class="text-lg ml-2 text-white/70">积分</span></h2>
+                <div class="mt-4 flex items-center space-x-2">
+                    <i class="fas fa-info-circle"></i>
+                    <span class="text-sm text-white/80">可用于兑换会员和高级功能</span>
+                </div>
+            </div>
+
+            <!-- 充值套餐 -->
+            <div>
+                <h3 class="text-lg font-medium mb-4 flex items-center"><i class="fas fa-tags mr-2 text-indigo-500"></i>选择充值套餐</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- 套餐1 -->
+                    <!-- 套餐1 -->
+                    <div class="border-2 border-indigo-500 rounded-xl p-4 relative shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 bg-gradient-to-br from-indigo-50 to-white package-item">
+                        <div class="absolute -top-2 -right-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs px-3 py-1 rounded-full shadow-md">
+                            <i class="fas fa-crown mr-1"></i>推荐
+                        </div>
+                        <h4 class="font-medium text-gray-900">初级套餐</h4>
+                        <div class="mt-2 mb-3 flex items-baseline">
+                            <span class="text-2xl font-bold text-indigo-600">¥30</span>
+                            <span class="text-gray-500 text-sm line-through ml-2">¥38</span>
+                            <span class="ml-2 text-xs bg-red-100 text-red-600 px-1.5 py-0.5 rounded-sm font-medium">省8元</span>
+                        </div>
+                        <p class="text-sm text-gray-600 flex items-center"><i class="fas fa-coins mr-1 text-yellow-500"></i>获得3000积分</p>
+                    </div>
+                    
+                    <!-- 套餐2 -->
+                    <div class="border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md hover:border-indigo-300 transition-all duration-300 transform hover:-translate-y-1 package-item">
+                        <h4 class="font-medium text-gray-900">中级套餐</h4>
+                        <div class="mt-2 mb-3 flex items-baseline">
+                            <span class="text-2xl font-bold text-indigo-600">¥68</span>
+                            <span class="text-gray-500 text-sm line-through ml-2">¥88</span>
+                            <span class="ml-2 text-xs bg-red-100 text-red-600 px-1.5 py-0.5 rounded-sm font-medium">省20元</span>
+                        </div>
+                        <p class="text-sm text-gray-600 flex items-center"><i class="fas fa-coins mr-1 text-yellow-500"></i>获得7000积分</p>
+                    </div>
+                    
+                    <!-- 套餐3 -->
+                    <div class="border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md hover:border-indigo-300 transition-all duration-300 transform hover:-translate-y-1 package-item">
+                        <h4 class="font-medium text-gray-900">高级套餐</h4>
+                        <div class="mt-2 mb-3 flex items-baseline">
+                            <span class="text-2xl font-bold text-indigo-600">¥128</span>
+                            <span class="text-gray-500 text-sm line-through ml-2">¥168</span>
+                            <span class="ml-2 text-xs bg-red-100 text-red-600 px-1.5 py-0.5 rounded-sm font-medium">省40元</span>
+                        </div>
+                        <p class="text-sm text-gray-600 flex items-center"><i class="fas fa-coins mr-1 text-yellow-500"></i>获得15000积分</p>
+                    </div>
+                    
+                    <!-- 套餐4 -->
+                    <div class="border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md hover:border-indigo-300 transition-all duration-300 transform hover:-translate-y-1 package-item">
+                        <h4 class="font-medium text-gray-900">至尊套餐</h4>
+                        <div class="mt-2 mb-3 flex items-baseline">
+                            <span class="text-2xl font-bold text-indigo-600">¥298</span>
+                            <span class="text-gray-500 text-sm line-through ml-2">¥398</span>
+                            <span class="ml-2 text-xs bg-red-100 text-red-600 px-1.5 py-0.5 rounded-sm font-medium">省100元</span>
+                        </div>
+                        <p class="text-sm text-gray-600 flex items-center"><i class="fas fa-coins mr-1 text-yellow-500"></i>获得40000积分</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 支付方式 -->
+            <div>
+                <h3 class="text-lg font-medium mb-4">选择支付方式</h3>
+                <div class="space-y-3">
+                    <label class="block cursor-pointer">
+                        <div class="flex items-center justify-between p-4 border border-indigo-300 rounded-xl bg-indigo-50 shadow-sm hover:shadow transition-all duration-300">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm">
+                                    <img src="https://www.alipay.com/favicon.ico" alt="支付宝" class="w-7 h-7">
+                                </div>
+                                <span class="font-medium text-gray-800">支付宝</span>
+                            </div>
+                            <div class="relative">
+                                <input type="radio" name="payment" class="w-5 h-5 text-indigo-600 focus:ring-indigo-500" checked>
+                                <span class="absolute -top-1 -right-1 w-3 h-3 bg-indigo-500 rounded-full opacity-0 animate-ping"></span>
+                            </div>
+                        </div>
+                    </label>
+                    <label class="block cursor-pointer">
+                        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-xl hover:border-indigo-300 hover:bg-indigo-50 transition-all duration-300">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm">
+                                    <img src="https://weixin.qq.com/favicon.ico" alt="微信支付" class="w-7 h-7">
+                                </div>
+                                <span class="font-medium text-gray-800">微信支付</span>
+                            </div>
+                            <input type="radio" name="payment" class="w-5 h-5 text-indigo-600 focus:ring-indigo-500">
+                        </div>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- 确认支付按钮 -->
+            <button class="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium rounded-xl mt-8 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden">
+                <span class="relative z-10 flex items-center justify-center">
+                    <i class="fas fa-lock mr-2"></i>
+                    确认支付
+                </span>
+            </button>
+            
+            <!-- 安全提示 -->
+            <div class="mt-4 text-center text-xs text-gray-500 flex items-center justify-center">
+                <i class="fas fa-shield-alt mr-1 text-indigo-500"></i>
+                支付信息已加密，请放心支付
+            </div>
+        </div>
+    </div>
+</body>
+</html>
