@@ -4,6 +4,13 @@
 
 TubeSavely 是一个跨平台的视频下载工具，支持 iOS、Android、macOS、Windows 和 Linux 等多个平台。本项目将使用 GetX 框架进行重写，以提高代码质量和可维护性。
 
+### 1.1 开发环境
+
+| 类别 | 版本 | 说明 |
+|------|----------|------|
+| Flutter SDK | 3.6.0 | 最新稳定版 |
+| Dart SDK | 3.24.5 | 与 Flutter 3.6.0 对应的 Dart 版本 |
+
 ## 2. 技术栈规范
 
 ### 2.1 核心技术
@@ -29,13 +36,15 @@ dependencies:
     sdk: flutter
 
   # GetX 核心
-  get: ^4.6.6
+  get: ^4.7.2  # 最新稳定版
+  # get: ^5.0.0-release-candidate-9.3.2  # 预发布版本，如需尝试最新特性可使用
   get_storage: ^2.1.1
 
   # 网络和数据
   http: ^1.2.2
   path_provider: ^2.1.3
   sqflite_common_ffi: ^2.3.3
+  dio: ^5.4.3+1
 
   # UI 相关
   flutter_screenutil: ^5.9.0
@@ -43,6 +52,7 @@ dependencies:
   cached_network_image: ^3.3.1
   flutter_easyloading: ^3.0.5
   flutter_animate: ^4.5.0
+  lottie: ^3.1.2
 
   # 功能组件
   package_info_plus: ^8.0.1
@@ -53,10 +63,18 @@ dependencies:
   media_kit_video: ^1.2.4
   media_kit_libs_video: ^1.0.4
   ffmpeg_kit_flutter_full_gpl: ^6.0.3
+  file_picker: ^8.0.5
+  image_gallery_saver: ^2.0.3
+  open_file: ^3.3.2
+  window_manager: ^0.3.9
 
   # 支付相关
   in_app_purchase: ^3.1.13  # iOS/macOS 内购
   flutter_stripe: ^10.1.0    # Stripe 支付
+
+  # 国际化
+  intl: ^0.19.0
+  intl_utils: ^2.8.7
 ```
 
 ## 3. 项目结构规范
@@ -518,10 +536,24 @@ await Stripe.instance.confirmPayment(
 
 ### 19.2 环境配置
 
-- 开发环境：用于日常开发
-- 测试环境：用于功能测试
-- 预发布环境：用于发布前验证
-- 生产环境：用于最终用户使用
+- 开发环境：
+  - Flutter SDK: 3.6.0
+  - Dart SDK: 3.24.5
+  - IDE: Android Studio / VS Code
+  - 用于日常开发
+
+- 测试环境：
+  - 与开发环境相同
+  - 用于功能测试
+
+- 预发布环境：
+  - 与生产环境相同
+  - 用于发布前验证
+
+- 生产环境：
+  - Flutter SDK: 3.6.0
+  - Dart SDK: 3.24.5
+  - 用于最终用户使用
 
 ## 20. 平台特定配置
 
@@ -777,5 +809,13 @@ final backgroundColor = Theme.of(context).colorScheme.background;
 ## 27. 总结
 
 本规范文档为 TubeSavely 项目的重写提供了全面的指导，包括技术选型、代码规范、UI 设计、功能模块、API 接口、支付系统等方面。开发团队应严格遵循这些规范，确保项目的质量和一致性。
+
+### 27.1 技术栈更新
+
+本文档于 2024 年 5 月更新，采用了最新的技术栈：
+
+- Flutter SDK: 3.6.0
+- Dart SDK: 3.24.5
+- GetX: 4.7.2 (最新稳定版)
 
 随着项目的进展，本规范可能会进行更新和完善，以适应新的需求和技术变化。所有团队成员都应该定期查阅最新版本的规范文档。
