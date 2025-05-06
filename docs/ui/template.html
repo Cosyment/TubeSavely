@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TubeSavely - 模板</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .device-frame {
+            width: 390px;
+            height: 844px;
+            border-radius: 54px;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            margin: 20px;
+            box-shadow: 0 0 0 11px #1a1a1a, 0 0 0 13px #000, 0 0 34px rgba(0, 0, 0, 0.1);
+        }
+        .status-bar {
+            height: 44px;
+            background: #fff;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            color: #333;
+            font-size: 12px;
+        }
+        .notch {
+            width: 120px;
+            height: 30px;
+            background: #fff;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            z-index: 1;
+        }
+        .time {
+            position: absolute;
+            left: 28px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+        .status-icons {
+            position: absolute;
+            right: 28px;
+            display: flex;
+            gap: 5px;
+            font-size: 12px;
+        }
+        .content-area {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, 390px);
+            gap: 16px;
+            padding: 16px;
+            background: #f8fafc;
+        }
+        .page-content {
+            height: 800px;
+            overflow-y: auto;
+            background-color: #ffffff;
+            transition: opacity 0.3s ease;
+        }
+        
+        /* 美化滚动条 */
+        .page-content::-webkit-scrollbar {
+            width: 4px;
+        }
+        .page-content::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.02);
+        }
+        .page-content::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.08);
+            border-radius: 2px;
+        }
+        .page-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="content-area">
+        <div class="device-frame">
+            <div class="status-bar">
+                <div class="notch"></div>
+                <div class="time">9:41</div>
+                <div class="status-icons">
+                    <i class="fas fa-signal"></i>
+                    <i class="fas fa-wifi"></i>
+                    <i class="fas fa-battery-full"></i>
+                </div>
+            </div>
+            <div class="page-content">
+                <!-- 页面内容放这里 -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+    // 添加页面过渡动画
+    document.addEventListener('DOMContentLoaded', function() {
+        const pageContent = document.querySelector('.page-content');
+        pageContent.style.opacity = '0';
+        setTimeout(() => {
+            pageContent.style.opacity = '1';
+        }, 100);
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TubeSavely UI设计</title>
+    <style>
+        :root {
+            --primary-color: #8B5CF6;
+            --accent-gradient: linear-gradient(135deg, #8B5CF6, #EC4899);
+            --card-dark: #1E293B;
+            --text-primary: #F8FAFC;
+            --text-secondary: #94A3B8;
+            --card-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+
+
+
+        body {
+            background-color: #0F172A;
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 20px;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 375px;
+            margin: 0 auto;
+            padding: 0 15px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2em;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+        }
+
+        .screens-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .screen {
+            width: 100%;
+            background: linear-gradient(145deg, var(--card-dark), rgba(30, 41, 59, 0.7));
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .screen h2 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .ui-preview {
+            padding: 15px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            font-size: 14px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            margin-bottom: 15px;
+        }
+
+        .button {
+            padding: 12px 24px;
+            font-size: 14px;
+            border-radius: 8px;
+        }
+
+        .menu-item {
+            padding: 12px 0;
+            font-size: 14px;
+        }
+
+        select {
+            font-size: 14px;
+        }
+
+        .package-card {
+            padding: 15px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TubeSavely UI设计</h1>
+        
+        <div class="screens-container">
+            <!-- 登录/注册界面 -->
+            <div class="screen">
+                <h2>登录/注册界面</h2>
+                <div class="ui-preview">
+                    <div style="background: rgba(30, 41, 59, 0.7); padding: 35px; border-radius: 20px; box-shadow: var(--card-shadow);">
+                        <input type="email" class="input-field" placeholder="邮箱地址">
+                        <input type="password" class="input-field" placeholder="密码">
+                        <button class="button" style="width: 100%;">登录</button>
+                        <div style="text-align: center; margin: 25px 0; color: var(--text-secondary); position: relative;">
+                            <span style="background: var(--card-dark); padding: 0 15px; position: relative; z-index: 1;">其他登录方式</span>
+                            <div style="height: 1px; background: rgba(255,255,255,0.1); position: absolute; width: 100%; top: 50%; z-index: 0;"></div>
+                        </div>
+                        <div class="social-login">
+                            <button class="social-button" style="background: #DB4437;">Google</button>
+                            <button class="social-button" style="background: #000000;">Apple</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 个人中心 -->
+            <div class="screen">
+                <h2>个人中心</h2>
+                <div class="ui-preview">
+                    <div style="text-align: center;">
+                        <div style="width: 120px; height: 120px; background: var(--accent-gradient); border-radius: 50%; margin: 0 auto 20px; position: relative; overflow: hidden;">
+                            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.1); backdrop-filter: blur(5px);"></div>
+                        </div>
+                        <h3 style="margin: 0; font-size: 1.5em;">用户名</h3>
+                        <div style="color: var(--text-secondary); margin-top: 5px;">高级会员</div>
+                    </div>
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">1000</div>
+                            <div style="color: var(--text-secondary);">积分</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">30</div>
+                            <div style="color: var(--text-secondary);">天</div>
+                        </div>
+                        <div class="stat-item">
+                            <div style="font-size: 2em; color: var(--primary-color);">50次</div>
+                                <div style="color: var(--text-secondary);">500积分</div>
+                            </div>
+                            <div class="package-card">
+                                <div style="font-size: 1.2em; margin-bottom: 10px;">会员时长</div>
+                                <div style="font-size: 2em; color: var(--primary-color);">7天</div>
+                                <div style="color: var(--text-secondary);">1000积分</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 style="margin-bottom: 20px;">积分获取方式</h3>
+                        <div class="menu-item">
+                            <span>每日签到</span>
+                            <span style="margin-left: auto; color: var(--primary-color);">+10积分</span>
+                        </div>
+                        <div class="menu-item">
+                            <span>邀请好友</span>
+                            <span style="margin-left: auto; color: var(--primary-color);">+50积分</span>
+                        </div>
+                        <div class="menu-item">
+                            <span>完成任务</span>
+                            <span style="margin-left: auto; color: var(--primary-color);">+20积分</span>
+                        </div>
+                        <div class="menu-item">
+                            <span>充值赠送</span>
+                            <span style="margin-left: auto; color: var(--primary-color);">+100积分</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 主界面 -->
+            <div class="screen">
+                <h2>视频下载主界面</h2>
+                <div class="ui-preview">
+                    <input type="url" class="input-field" placeholder="请输入视频URL">
+                    <div style="margin: 20px 0;">
+                        <div style="margin-bottom: 15px; color: var(--text-secondary);">支持的平台</div>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                            <div class="platform-item" style="text-align: center; padding: 15px; background: rgba(255, 255, 255, 0.05); border-radius: 8px;">YouTube</div>
+                            <div class="platform-item" style="text-align: center; padding: 15px; background: rgba(255, 255, 255, 0.05); border-radius: 8px;">Bilibili</div>
+                            <div class="platform-item" style="text-align: center; padding: 15px; background: rgba(255, 255, 255, 0.05); border-radius: 8px;">抖音</div>
+                        </div>
+                    </div>
+                    <div style="background: rgba(30,41,59,0.7); padding: 20px; border-radius: 15px; margin: 20px 0;">
+                        <h3 style="margin-top: 0;">下载选项</h3>
+                        <div class="menu-item">
+                            <span>清晰度选择</span>
+                            <select style="margin-left: auto; background: transparent; color: var(--text-primary); border: 1px solid rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 5px;">
+                                <option>1080P</option>
+                                <option>720P</option>
+                                <option>480P</option>
+                            </select>
+                        </div>
+                        <div class="menu-item">
+                            <span>格式选择</span>
+                            <select style="margin-left: auto; background: transparent; color: var(--text-primary); border: 1px solid rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 5px;">
+                                <option>MP4</option>
+                                <option>MKV</option>
+                                <option>MP3</option>
+                            </select>
+                        </div>
+                        <div class="menu-item">
+                            <span>下载位置</span>
+                            <button class="button" style="margin-left: auto; padding: 5px 10px;">选择文件夹</button>
+                        </div>
+                    </div>
+                    <div style="margin: 20px 0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span>下载进度</span>
+                            <span>60%</span>
+                        </div>
+                        <div class="download-progress">
+                            <div class="progress-bar"></div>
+                        </div>
+                    </div>
+                    <button class="button" style="width: 100%;">开始下载</button>
+                </div>
+            </div>
+
+            <!-- 设置界面 -->
+            <div class="screen">
+                <h2>设置界面</h2>
+                <div class="ui-preview">
+                    <div style="background: rgba(30,41,59,0.7); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                        <h3 style="margin-top: 0;">基本设置</h3>
+                        <div class="menu-item">
+                            <span>语言切换</span>
+                            <select style="margin-left: auto; background: transparent; color: var(--text-primary); border: 1px solid rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 5px;">
+                                <option>简体中文</option>
+                                <option>English</option>
+                                <option>日本語</option>
+                            </select>
+                        </div>
+                        <div class="menu-item">
+                            <span>主题设置</span>
+                            <select style="margin-left: auto; background: transparent; color: var(--text-primary); border: 1px solid rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 5px;">
+                                <option>深色模式</option>
+                                <option>浅色模式</option>
+                            </select>
+                        </div>
+                        <div class="menu-item">
+                            <span>存储路径</span>
+                            <button class="button" style="margin-left: auto; padding: 5px 10px;">选择文件夹</button>
+                        </div>
+                    </div>
+                    <div style="background: rgba(30,41,59,0.7); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                        <h3 style="margin-top: 0;">下载设置</h3>
+                        <div class="menu-item">
+                            <span>默认清晰度</span>
+                            <select style="margin-left: auto; background: transparent; color: var(--text-primary); border: 1px solid rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 5px;">
+                                <option>1080P</option>
+                                <option>720P</option>
+                            </select>
+                        </div>
+                        <div class="menu-item">
+                            <span>默认格式</span>
+                            <select style="margin-left: auto; background: transparent; color: var(--text-primary); border: 1px solid rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 5px;">
+                                <option>MP4</option>
+                                <option>MP3</option>
+                            </select>
+                        </div>
+                        <div class="menu-item">
+                            <span>并发下载数</span>
+                            <select style="margin-left: auto; background: transparent; color: var(--text-primary); border: 1px solid rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 5px;">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="background: rgba(30,41,59,0.7); padding: 20px; border-radius: 15px;">
+                        <h3 style="margin-top: 0;">其他设置</h3>
+                        <div class="menu-item">
+                            <span>通知设置</span>
+                            <label class="switch" style="margin-left: auto;">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="menu-item">
+                            <span>关于信息</span>
+                            <span style="margin-left: auto; color: var(--text-secondary);">v1.0.0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<style>
+    .screen {
+        width: 375px;
+        height: 812px;
+        margin: 20px auto;
+        padding: 20px;
+        box-sizing: border-box;
+        background: var(--background);
+        color: var(--text-primary);
+        overflow-y: auto;
+        display: grid;
+        grid-template-rows: auto 1fr;
+        gap: 20px;
+    }
+
+    .ui-preview {
+        max-width: 100%;
+        margin: 0 auto;
+        display: grid;
+        grid-template-rows: auto auto 1fr;
+        gap: 20px;
+    }
+
+    .input-field {
+        width: 100%;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .menu-item {
+        display: flex;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .package-card {
+        background: rgba(255,255,255,0.1);
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+
+    .payment-methods {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+    }
+</style>
+<!-- 充值界面 -->
+<div class="screen">
+    <h2>充值界面</h2>
+    <div class="ui-preview">
+        <!-- 充值套餐选择 -->
+        <div style="background: rgba(30,41,59,0.7); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+            <h3 style="margin-top: 0;">积分充值套餐</h3>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                <div class="package-card" style="text-align: center;">
+                    <div style="font-size: 1.2em; margin-bottom: 10px;">基础套餐</div>
+                    <div style="font-size: 2em; color: var(--primary-color);">1000积分</div>
+                    <div style="color: var(--text-secondary);">¥10</div>
+                </div>
+                <div class="package-card" style="text-align: center;">
+                    <div style="font-size: 1.2em; margin-bottom: 10px;">进阶套餐</div>
+                    <div style="font-size: 2em; color: var(--primary-color);">3000积分</div>
+                    <div style="color: var(--text-secondary);">¥25</div>
+                </div>
+                <div class="package-card" style="text-align: center;">
+                    <div style="font-size: 1.2em; margin-bottom: 10px;">豪华套餐</div>
+                    <div style="font-size: 2em; color: var(--primary-color);">10000积分</div>
+                    <div style="color: var(--text-secondary);">¥68</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 会员订阅套餐 -->
+        <div style="background: rgba(30,41,59,0.7); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+            <h3 style="margin-top: 0;">会员订阅套餐</h3>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                <div class="package-card" style="text-align: center;">
+                    <div style="font-size: 1.2em; margin-bottom: 10px;">月度会员</div>
+                    <div style="font-size: 2em; color: var(--primary-color);">¥30/月</div>
+                    <div style="color: var(--text-secondary);">每月3000积分</div>
+                </div>
+                <div class="package-card" style="text-align: center;">
+                    <div style="font-size: 1.2em; margin-bottom: 10px;">季度会员</div>
+                    <div style="font-size: 2em; color: var(--primary-color);">¥78/季</div>
+                    <div style="color: var(--text-secondary);">每月3500积分</div>
+                </div>
+                <div class="package-card" style="text-align: center;">
+                    <div style="font-size: 1.2em; margin-bottom: 10px;">年度会员</div>
+                    <div style="font-size: 2em; color: var(--primary-color);">¥258/年</div>
+                    <div style="color: var(--text-secondary);">每月4000积分</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 支付方式 -->
+        <div style="background: rgba(30,41,59,0.7); padding: 20px; border-radius: 15px;">
+            <h3 style="margin-top: 0;">支付方式</h3>
+            <div class="payment-methods" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px;">
+                <div class="payment-method-item" style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; text-align: center; cursor: pointer;">
+                    <div style="color: #00A1E9;">支付宝</div>
+                </div>
+                <div class="payment-method-item" style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; text-align: center; cursor: pointer;">
+                    <div style="color: #41B035;">微信支付</div>
+                </div>
+                <div class="payment-method-item" style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; text-align: center; cursor: pointer;">
+                    <div style="color: #0070BA;">PayPal</div>
+                </div>
+                <div class="payment-method-item" style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; text-align: center; cursor: pointer;">
+                    <div style="color: var(--text-primary);">信用卡</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 确认支付按钮 -->
+        <button class="button" style="width: 100%; margin-top: 20px;">确认支付</button>
+    </div>
+</div>
