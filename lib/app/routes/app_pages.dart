@@ -12,6 +12,8 @@ import '../modules/tasks/bindings/tasks_binding.dart';
 import '../modules/tasks/views/tasks_view.dart';
 import '../modules/video_detail/bindings/video_detail_binding.dart';
 import '../modules/video_detail/views/video_detail_view.dart';
+import '../modules/video_player/bindings/video_player_binding.dart';
+import '../modules/video_player/views/video_player_view.dart';
 
 part 'app_routes.dart';
 
@@ -50,6 +52,11 @@ class AppPages {
       name: _Paths.TASKS,
       page: () => TasksView(),
       binding: TasksBinding(),
+    ),
+    GetPage(
+      name: _Paths.VIDEO_PLAYER,
+      page: () => VideoPlayerView(),
+      binding: VideoPlayerBinding(),
     ),
   ];
 }

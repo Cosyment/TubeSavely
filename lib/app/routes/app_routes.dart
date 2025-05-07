@@ -10,6 +10,7 @@ abstract class Routes {
   static const TASKS = _Paths.TASKS;
   static const PAYMENT = _Paths.PAYMENT;
   static const MORE = _Paths.MORE;
+  static const VIDEO_PLAYER = _Paths.VIDEO_PLAYER;
 }
 
 abstract class _Paths {
@@ -22,4 +23,5 @@ abstract class _Paths {
   static const TASKS = '/tasks';
   static const PAYMENT = '/payment';
   static const MORE = '/more';
+  static const VIDEO_PLAYER = '/video-player';
 }

@@ -9,11 +9,13 @@ import '../data/repositories/download_repository.dart';
 import '../data/repositories/user_repository.dart';
 import '../data/repositories/video_repository.dart';
 import '../data/repositories/video_converter_repository.dart';
+import '../data/repositories/video_player_repository.dart';
 import 'theme_service.dart';
 import 'translation_service.dart';
 import 'video_parser_service.dart';
 import 'download_service.dart';
 import 'video_converter_service.dart';
+import 'video_player_service.dart';
 
 /// 初始化所有服务
 Future<void> initServices() async {
@@ -46,11 +48,16 @@ Future<void> initServices() async {
   final videoConverterService = await VideoConverterService().init();
   Get.put(videoConverterService, permanent: true);
 
+  // 初始化并注册视频播放服务
+  final videoPlayerService = await VideoPlayerService().init();
+  Get.put(videoPlayerService, permanent: true);
+
   // 注册仓库
   Get.put(UserRepository(), permanent: true);
   Get.put(VideoRepository(), permanent: true);
   Get.put(DownloadRepository(), permanent: true);
   Get.put(VideoConverterRepository(), permanent: true);
+  Get.put(VideoPlayerRepository(), permanent: true);
 
   print('所有服务初始化完成');
 }

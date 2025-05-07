@@ -113,34 +113,56 @@ class VideoDetailView extends GetView<VideoDetailController> {
   Widget _buildVideoPreview() {
     final video = controller.video.value!;
 
-    return Container(
-      width: double.infinity,
-      height: 200.h,
-      color: Colors.black,
-      child: video.thumbnail != null
-          ? CachedNetworkImage(
-              imageUrl: video.thumbnail!,
-              fit: BoxFit.cover,
-              placeholder: (context, url) => const Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primaryColor),
-                ),
-              ),
-              errorWidget: (context, url, error) => Center(
-                child: Icon(
-                  Icons.error,
-                  color: Colors.white,
-                  size: 40.sp,
-                ),
-              ),
-            )
-          : Center(
-              child: Icon(
-                Icons.video_library,
-                color: Colors.white,
-                size: 40.sp,
-              ),
+    return GestureDetector(
+      onTap: () => controller.playVideo(),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            width: double.infinity,
+            height: 200.h,
+            color: Colors.black,
+            child: video.thumbnail != null
+                ? CachedNetworkImage(
+                    imageUrl: video.thumbnail!,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => const Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            AppTheme.primaryColor),
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => Center(
+                      child: Icon(
+                        Icons.error,
+                        color: Colors.white,
+                        size: 40.sp,
+                      ),
+                    ),
+                  )
+                : Center(
+                    child: Icon(
+                      Icons.video_library,
+                      color: Colors.white,
+                      size: 40.sp,
+                    ),
+                  ),
+          ),
+          Container(
+            width: 60.w,
+            height: 60.w,
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.5),
+              shape: BoxShape.circle,
             ),
+            child: Icon(
+              Icons.play_arrow,
+              color: Colors.white,
+              size: 40.sp,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -378,11 +400,48 @@ class VideoDetailView extends GetView<VideoDetailController> {
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Column(
         children: [
+          // 播放按钮
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: controller.playVideo,
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 12.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                backgroundColor: AppTheme.accentColor,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.play_arrow,
+                    size: 20.sp,
+                    color: Colors.white,
+                  ),
+                  SizedBox(width: 8.w),
+                  Text(
+                    '播放视频',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 12.h),
+          // 下载按钮
           SizedBox(
             width: double.infinity,
             child: Obx(() {
               return ElevatedButton(
-                onPressed: controller.isDownloading.value ? null : controller.downloadVideo,
+                onPressed: controller.isDownloading.value
+                    ? null
+                    : controller.downloadVideo,
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 12.h),
                   shape: RoundedRectangleBorder(
@@ -398,7 +457,8 @@ class VideoDetailView extends GetView<VideoDetailController> {
                             width: 20.w,
                             height: 20.w,
                             child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
                               strokeWidth: 2.w,
                             ),
                           ),
