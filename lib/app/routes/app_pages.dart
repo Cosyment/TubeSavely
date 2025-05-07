@@ -14,6 +14,10 @@ import '../modules/video_detail/bindings/video_detail_binding.dart';
 import '../modules/video_detail/views/video_detail_view.dart';
 import '../modules/video_player/bindings/video_player_binding.dart';
 import '../modules/video_player/views/video_player_view.dart';
+import '../modules/login/bindings/login_binding.dart';
+import '../modules/login/views/login_view.dart';
+import '../modules/profile/bindings/profile_binding.dart';
+import '../modules/profile/views/profile_view.dart';
 
 part 'app_routes.dart';
 
@@ -57,6 +61,16 @@ class AppPages {
       name: _Paths.VIDEO_PLAYER,
       page: () => VideoPlayerView(),
       binding: VideoPlayerBinding(),
+    ),
+    GetPage(
+      name: _Paths.LOGIN,
+      page: () => LoginView(),
+      binding: LoginBinding(),
+    ),
+    GetPage(
+      name: _Paths.PROFILE,
+      page: () => ProfileView(),
+      binding: ProfileBinding(),
     ),
   ];
 }

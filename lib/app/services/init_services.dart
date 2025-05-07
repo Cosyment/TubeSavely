@@ -16,6 +16,7 @@ import 'video_parser_service.dart';
 import 'download_service.dart';
 import 'video_converter_service.dart';
 import 'video_player_service.dart';
+import 'user_service.dart';
 
 /// 初始化所有服务
 Future<void> initServices() async {
@@ -51,6 +52,10 @@ Future<void> initServices() async {
   // 初始化并注册视频播放服务
   final videoPlayerService = await VideoPlayerService().init();
   Get.put(videoPlayerService, permanent: true);
+
+  // 初始化并注册用户服务
+  final userService = await UserService().init();
+  Get.put(userService, permanent: true);
 
   // 注册仓库
   Get.put(UserRepository(), permanent: true);

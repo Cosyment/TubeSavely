@@ -83,6 +83,10 @@ class HomeView extends GetView<HomeController> {
                 onPressed: () => Get.toNamed('/tasks'),
               ),
               IconButton(
+                icon: Icon(Icons.person, size: 24.sp),
+                onPressed: () => Get.toNamed('/profile'),
+              ),
+              IconButton(
                 icon: Icon(Icons.settings, size: 24.sp),
                 onPressed: () => Get.toNamed('/settings'),
               ),
@@ -371,7 +375,8 @@ class HomeView extends GetView<HomeController> {
             ),
             SizedBox(height: 16.h),
             // 视频信息
-            if (controller.currentVideo.value != null) _buildVideoInfo(controller.currentVideo.value!),
+            if (controller.currentVideo.value != null)
+              _buildVideoInfo(controller.currentVideo.value!),
             SizedBox(height: 16.h),
             // 清晰度选择
             Text(
