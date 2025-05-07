@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TubeSavely Mobile Design</title>
+    <style>
+        :root {
+            --primary: #6366F1;
+            --secondary: #8B5CF6;
+            --accent: #EC4899;
+            --background: #FFFFFF;
+            --surface: #F3F4F6;
+            --text-primary: #1F2937;
+            --text-secondary: #6B7280;
+        }
+
+        .dark {
+            --background: #1E293B;
+            --surface: #334155;
+            --text-primary: #F3F4F6;
+            --text-secondary: #94A3B8;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+        }
+
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            background: var(--background);
+            border-radius: 40px;
+            overflow: hidden;
+            position: relative;
+            margin: 20px auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .status-bar {
+            height: 44px;
+            background: var(--background);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 84px;
+            background: var(--surface);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item span:first-child {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .nav-item span:last-child {
+            font-size: 12px;
+        }
+
+        .main-content {
+            height: calc(100% - 128px);
+            padding: 20px;
+            overflow-y: auto;
+            padding-bottom: 100px; /* 为底部导航留出空间 */
+        }
+
+        .url-input-container {
+            margin: 20px auto;
+            padding: 0 20px;
+            max-width: 600px;
+        }
+        
+        .url-input {
+            width: calc(100% - 40px); /* 考虑padding */
+            min-height: 56px;
+            background: var(--surface);
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 16px;
+            padding: 15px 20px;
+            font-size: 16px;
+            resize: none;
+            overflow: hidden;
+            line-height: 1.5;
+            margin: 0 auto;
+        }
+
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin: 24px 20px;
+        }
+
+        .platform-item {
+            background: var(--surface);
+            padding: 16px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .platform-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .platform-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+
+        .platform-icon img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+
+        .download-list {
+            margin-top: 24px;
+        }
+
+        .download-item {
+            background: var(--surface);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: rgba(99, 102, 241, 0.2);
+            border-radius: 2px;
+            margin-top: 8px;
+        }
+
+        .progress {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 2px;
+            width: 60%;
+        }
+
+        .page {
+            display: none;
+            height: calc(100% - 128px); /* 减去状态栏和底部导航的高度 */
+            overflow-y: auto;
+        }
+        
+        .page.active {
+            display: block;
+        }
+
+        .download-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 28px;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 20px;
+            width: 100%;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .download-btn:active {
+            transform: scale(0.98);
+        }
+
+        .task-page, .file-page, .settings-page {
+            padding: 20px;
+        }
+
+        .settings-item {
+            background: var(--surface);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* 用户中心样式 */
+        .user-profile {
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary), #8066ff);
+            border-radius: 20px;
+            margin: 15px;
+            color: white;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: white;
+            margin-right: 15px;
+        }
+
+        .vip-badge {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            border-radius: 15px;
+            padding: 3px 10px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        .membership-card {
+            background: linear-gradient(45deg, #2a2a2a, #3a3a3a);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px;
+            color: white;
+        }
+
+        .membership-features {
+            margin: 15px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: var(--surface);
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+
+        .subscribe-btn {
+            background: linear-gradient(45deg, var(--primary), #8066ff);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 15px 30px;
+            width: calc(100% - 30px);
+            margin: 15px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="status-bar">
+            <span>9:41</span>
+            <div>
+                <span>📶</span>
+                <span>📶</span>
+                <span>🔋</span>
+            </div>
+        </div>
+
+        <!-- 首页 -->
+        <div class="page active" id="home-page">
+            <div class="main-content">
+                <h1>视频下载</h1>
+                <div class="url-input-container">
+                    <input type="text" class="url-input" placeholder="输入视频链接">
+                </div>
+                <button class="download-btn">开始下载</button>
+                
+                <h2>支持平台</h2>
+                <div class="platform-grid">
+                    <div class="platform-item">
+                        <div class="platform-icon" style="background: #FF0000;">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PHBhdGggZmlsbD0iI0ZGRiIgZD0iTTQzLjIsMzMuOWMtMC40LDIuMS0yLjEsMy43LTQuMiw0Yy0zLjMsMC41LTguOCwxLjEtMTUsMC45Yy02LjEtMC4xLTExLjYtMC43LTE0LjktMS4yYy0yLjEtMC4zLTMuOC0yLTQuMi00LjFjLTAuNS0yLjgtMS4xLTcuNy0wLjktMTIuOGMwLjItNS4xLDAuOS0xMCwxLjQtMTIuOGMwLjQtMi4xLDIuMS0zLjcsNC4yLTRjMy4zLTAuNSw4LjgtMS4xLDE1LTAuOWM2LjIsMC4yLDExLjYsMC43LDE0LjksMS4yYzIuMSwwLjMsMy44LDIsNC4yLDQuMWMwLjUsMi44LDEuMSw3LjcsMC45LDEyLjhDNDQuNCwyNi4yLDQzLjcsMzEuMSw0My4yLDMzLjl6IE0yMCwxNlYzMmwxMi04TDIwLDE2eiIvPjwvc3ZnPg==" alt="YouTube">
+                        </div>
+                        <span>YouTube</span>
+                    </div>
+                    <div class="platform-item">
+                        <div class="platform-icon" style="background: #00A1D6;">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PHBhdGggZmlsbD0iI0ZGRiIgZD0iTTM2LjUsMTIuNWMtMC41LTEuNS0xLjUtMi41LTMtM2MtMi41LTEtMTItMS0xMi0xcy05LjUsMC0xMiwxYy0xLjUsMC41LTIuNSwxLjUtMywyLjljLTEsMi41LTEsMTIuNS0xLDEyLjVzMCwxMCwxLDEyLjVjMC41LDEuNSwxLjUsMi41LDMsM2MyLjUsMSwxMiwxLDEyLDFzOS41LDAsMTItMWMxLjUtMC41LDIuNS0xLjUsMy0zYzEtMi41LDEtMTIuNSwxLTEyLjVTMzcuNSwxNSwzNi41LDEyLjV6IE0yMCwyOVYxN2w5LDZMMjAsMjl6Ii8+PC9zdmc+" alt="Bilibili">
+                        </div>
+                        <span>Bilibili</span>
+                    </div>
+                    <div class="platform-item">
+                        <div class="platform-icon" style="background: #000000;">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PHBhdGggZmlsbD0iI0ZGRiIgZD0iTTM4LDE0LjVjLTEuNCwwLjYtMi45LDEtNC41LDEuMmMxLjYtMSwyLjgtMi42LDMuNC00LjRjLTEuNSwwLjktMy4yLDEuNS01LDEuOWMtMS40LTEuNS0zLjQtMi41LTUuNi0yLjVjLTQuMiwwLTcuNiwzLjQtNy42LDcuNmMwLDAuNiwwLjEsMS4yLDAuMiwxLjhjLTYuMy0wLjMtMTEuOS0zLjMtMTUuNi03LjljLTAuNywxLjEtMS4xLDIuNC0xLjEsMy44YzAsMi42LDEuMyw0LjksMy4zLDYuM2MtMS4yLDAtMi40LTAuNC0zLjQtMC45YzAsMCwwLDAuMSwwLDAuMWMwLDMuNywyLjYsNi44LDYuMSw3LjVjLTAuNiwwLjItMS4zLDAuMy0yLDAuM2MtMC41LDAtMSwwLTEuNS0wLjFjMSwzLjEsMy44LDUuMyw3LjEsNS40Yy0yLjYsMi4xLTUuOSwzLjMtOS41LDMuM2MtMC42LDAtMS4yLDAtMS45LTAuMWMzLjQsMi4yLDcuNCwzLjUsMTEuNywzLjVjMTQuMSwwLDIxLjktMTEuNywyMS45LTIxLjljMC0wLjMsMC0wLjcsMC0xQzM1LjgsMTcuNCwzNywxNi4xLDM4LDE0LjV6Ii8+PC9zdmc+" alt="TikTok">
+                        </div>
+                        <span>TikTok</span>
+                    </div>
+                    <div class="platform-item">
+                        <div class="platform-icon" style="background: #1DA1F2;">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PHBhdGggZmlsbD0iI0ZGRiIgZD0iTTM4LDE0LjVjLTEuNCwwLjYtMi45LDEtNC41LDEuMmMxLjYtMSwyLjgtMi42LDMuNC00LjRjLTEuNSwwLjktMy4yLDEuNS01LDEuOWMtMS40LTEuNS0zLjQtMi41LTUuNi0yLjVjLTQuMiwwLTcuNiwzLjQtNy42LDcuNmMwLDAuNiwwLjEsMS4yLDAuMiwxLjhjLTYuMy0wLjMtMTEuOS0zLjMtMTUuNi03LjljLTAuNywxLjEtMS4xLDIuNC0xLjEsMy44YzAsMi42LDEuMyw0LjksMy4zLDYuM2MtMS4yLDAtMi40LTAuNC0zLjQtMC45YzAsMCwwLDAuMSwwLDAuMWMwLDMuNywyLjYsNi44LDYuMSw3LjVjLTAuNiwwLjItMS4zLDAuMy0yLDAuM2MtMC41LDAtMSwwLTEuNS0wLjFjMSwzLjEsMy44LDUuMyw3LjEsNS40Yy0yLjYsMi4xLTUuOSwzLjMtOS41LDMuM2MtMC42LDAtMS4yLDAtMS45LTAuMWMzLjQsMi4yLDcuNCwzLjUsMTEuNywzLjVjMTQuMSwwLDIxLjktMTEuNywyMS45LTIxLjljMC0wLjMsMC0wLjcsMC0xQzM1LjgsMTcuNCwzNywxNi4xLDM4LDE0LjV6Ii8+PC9zdmc+" alt="Twitter">
+                        </div>
+                        <span>Twitter</span>
+                    </div>
+                </div>
+
+                <h2>最近下载</h2>
+                <div class="download-list">
+                    <div class="download-item">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>视频标题.mp4</span>
+                            <span>60%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 任务页面 -->
+        <div class="page" id="task-page">
+            <div class="main-content">
+                <h1>下载任务</h1>
+                <div class="download-list">
+                    <!-- 示例任务 -->
+                    <div class="download-item">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>正在下载的视频.mp4</span>
+                            <span>45%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 45%"></div>
+                        </div>
+                    </div>
+                    <div class="download-item">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>等待下载的视频.mp4</span>
+                            <span>等待中</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 文件页面 -->
+        <div class="page" id="file-page">
+            <div class="main-content">
+                <h1>下载文件</h1>
+                <div class="download-list">
+                    <!-- 示例文件 -->
+                    <div class="download-item">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>已下载的视频1.mp4</span>
+                            <span>1.2GB</span>
+                        </div>
+                    </div>
+                    <div class="download-item">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>已下载的视频2.mp4</span>
+                            <span>800MB</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 设置页面 -->
+        <div class="page" id="settings-page">
+            <div class="main-content">
+                <h1>设置</h1>
+                <div class="settings-item">
+                    <span>深色模式</span>
+                    <label class="switch">
+                        <input type="checkbox" id="theme-switch">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="settings-item">
+                    <span>自动下载</span>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="settings-item">
+                    <span>下载提醒</span>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="settings-item">
+                    <span>应用版本</span>
+                    <span>1.0.0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用户中心页面 -->
+        <div class="page" id="user-page">
+            <div class="main-content">
+                <div class="user-profile">
+                    <div class="user-info">
+                        <div class="avatar"></div>
+                        <div>
+                            <h2>用户名 <span class="vip-badge">VIP</span></h2>
+                            <p>ID: 888888</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <div>
+                            <h3>剩余积分</h3>
+                            <p>1280</p>
+                        </div>
+                        <div>
+                            <h3>会员有效期</h3>
+                            <p>2024-12-31</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="membership-card">
+                    <h2>🎖️ 高级会员</h2>
+                    <p>解锁所有高级功能</p>
+                    <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                        <div>
+                            <h3>¥28.8</h3>
+                            <p>月付</p>
+                        </div>
+                        <div>
+                            <h3>¥188</h3>
+                            <p>年付</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="membership-features">
+                    <h2>会员特权</h2>
+                    <div class="feature-item">
+                        <div class="feature-icon">⚡</div>
+                        <div>
+                            <h3>极速下载</h3>
+                            <p>无限速下载，支持批量下载</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🎬</div>
+                        <div>
+                            <h3>8K画质</h3>
+                            <p>支持最高8K画质下载</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">💫</div>
+                        <div>
+                            <h3>无广告</h3>
+                            <p>纯净无广告体验</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="subscribe-btn">立即开通会员</button>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item active" data-page="home-page">
+                <span>🏠</span>
+                <span>首页</span>
+            </div>
+            <div class="nav-item" data-page="task-page">
+                <span>📥</span>
+                <span>任务</span>
+            </div>
+            <div class="nav-item" data-page="file-page">
+                <span>📁</span>
+                <span>文件</span>
+            </div>
+            <div class="nav-item" data-page="user-page">
+                <span>👤</span>
+                <span>我的</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 页面切换功能
+            const navItems = document.querySelectorAll('.nav-item');
+            const pages = document.querySelectorAll('.page');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // 更新导航栏状态
+                    navItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 切换页面
+                    const targetPageId = this.getAttribute('data-page');
+                    pages.forEach(page => {
+                        if (page.id === targetPageId) {
+                            page.style.display = 'block';
+                        } else {
+                            page.style.display = 'none';
+                        }
+                    });
+                });
+            });
+
+            // 下载按钮功能
+            const downloadBtn = document.querySelector('.download-btn');
+            const urlInput = document.querySelector('.url-input');
+
+            function simulateDownload() {
+                const url = urlInput.value.trim();
+                if (!url) {
+                    alert('请输入视频链接');
+                    return;
+                }
+
+                const downloadList = document.querySelector('.download-list');
+                const downloadItem = document.createElement('div');
+                downloadItem.className = 'download-item';
+                downloadItem.innerHTML = `
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>${url.substring(0, 30)}...</span>
+                        <span>0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 0%"></div>
+                    </div>
+                `;
+
+                downloadList.insertBefore(downloadItem, downloadList.firstChild);
+
+                let progress = 0;
+                const progressBar = downloadItem.querySelector('.progress');
+                const progressText = downloadItem.querySelector('span:last-child');
+                
+                const interval = setInterval(() => {
+                    progress += 5;
+                    if (progress <= 100) {
+                        progressBar.style.width = `${progress}%`;
+                        progressText.textContent = `${progress}%`;
+                    } else {
+                        clearInterval(interval);
+                    }
+                }, 200);
+
+                urlInput.value = '';
+            }
+
+            downloadBtn.addEventListener('click', simulateDownload);
+            urlInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    simulateDownload();
+                }
+            });
+
+            // URL输入框交互
+            urlInput.addEventListener('focus', function() {
+                this.style.boxShadow = '0 0 0 2px rgba(99, 102, 241, 0.2)';
+            });
+            urlInput.addEventListener('blur', function() {
+                this.style.boxShadow = 'none';
+            });
+
+            // 平台项目点击效果
+            const platformItems = document.querySelectorAll('.platform-item');
+            platformItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 200);
+                });
+            });
+
+            // 深色模式切换
+            const themeSwitch = document.getElementById('theme-switch');
+            themeSwitch.addEventListener('change', function() {
+                document.body.classList.toggle('dark');
+            });
+
+            // 键盘快捷键
+            document.addEventListener('keypress', function(e) {
+                if (e.key.toLowerCase() === 'd') {
+                    themeSwitch.checked = !themeSwitch.checked;
+                    document.body.classList.toggle('dark');
+                }
+            });
+
+            // 自适应输入框高度
+            const urlInput = document.querySelector('.url-input');
+            urlInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+
+            // 会员订阅按钮点击事件
+            const subscribeBtn = document.querySelector('.subscribe-btn');
+            subscribeBtn.addEventListener('click', function() {
+                alert('正在跳转到支付...');
+            });
+
+            // 添加用户信息相关功能
+            function updateUserInfo() {
+                // 这里可以添加获取用户信息的逻辑
+                console.log('更新用户信息');
+            }
+
+            // 页面加载时更新用户信息
+            document.addEventListener('DOMContentLoaded', function() {
+                updateUserInfo();
+            });
+        });
+    </script>
+</body>
+</html>
+

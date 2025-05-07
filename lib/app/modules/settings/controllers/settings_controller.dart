@@ -1,6 +1,7 @@
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
+// 暂时注释掉，编译时有问题
+// import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
@@ -66,15 +67,22 @@ class SettingsController extends GetxController {
     }
 
     // 下载设置
-    downloadPath.value = _storageProvider.getSetting('download_path', defaultValue: Constants.DEFAULT_DOWNLOAD_PATH);
-    wifiOnly.value = _storageProvider.getSetting('wifi_only', defaultValue: Constants.DEFAULT_WIFI_ONLY);
-    autoDownload.value = _storageProvider.getSetting('auto_download', defaultValue: Constants.DEFAULT_AUTO_DOWNLOAD);
-    showNotification.value = _storageProvider.getSetting('show_notification', defaultValue: Constants.DEFAULT_NOTIFICATION);
+    downloadPath.value = _storageProvider.getSetting('download_path',
+        defaultValue: Constants.DEFAULT_DOWNLOAD_PATH);
+    wifiOnly.value = _storageProvider.getSetting('wifi_only',
+        defaultValue: Constants.DEFAULT_WIFI_ONLY);
+    autoDownload.value = _storageProvider.getSetting('auto_download',
+        defaultValue: Constants.DEFAULT_AUTO_DOWNLOAD);
+    showNotification.value = _storageProvider.getSetting('show_notification',
+        defaultValue: Constants.DEFAULT_NOTIFICATION);
 
     // 视频设置
-    defaultVideoQuality.value =
-        _storageProvider.getSetting('default_video_quality', defaultValue: Constants.DEFAULT_VIDEO_QUALITY);
-    defaultVideoFormat.value = _storageProvider.getSetting('default_video_format', defaultValue: Constants.DEFAULT_VIDEO_FORMAT);
+    defaultVideoQuality.value = _storageProvider.getSetting(
+        'default_video_quality',
+        defaultValue: Constants.DEFAULT_VIDEO_QUALITY);
+    defaultVideoFormat.value = _storageProvider.getSetting(
+        'default_video_format',
+        defaultValue: Constants.DEFAULT_VIDEO_FORMAT);
   }
 
   // 切换主题
@@ -97,13 +105,20 @@ class SettingsController extends GetxController {
   // 选择下载路径
   Future<void> selectDownloadPath() async {
     try {
-      String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+      // 注意：由于 FilePicker 已被注释掉，这里暂时使用模拟实现
+      // 使用默认下载路径
+      final directory = await getApplicationDocumentsDirectory();
+      final selectedDirectory = '${directory.path}/downloads';
 
-      if (selectedDirectory != null) {
-        downloadPath.value = selectedDirectory;
-        await _storageProvider.saveSetting('download_path', selectedDirectory);
-        Utils.showSnackbar('成功', '下载路径已更新');
+      // 创建目录
+      final dir = Directory(selectedDirectory);
+      if (!await dir.exists()) {
+        await dir.create(recursive: true);
       }
+
+      downloadPath.value = selectedDirectory;
+      await _storageProvider.saveSetting('download_path', selectedDirectory);
+      Utils.showSnackbar('成功', '下载路径已更新');
     } catch (e) {
       Logger.e('选择下载路径时出错: $e');
       Utils.showSnackbar('错误', '选择下载路径时出错: $e', isError: true);

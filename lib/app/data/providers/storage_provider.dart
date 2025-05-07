@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import '../models/download_task_model.dart';
@@ -106,6 +107,17 @@ class StorageProvider extends GetxService {
     } catch (e) {
       return [];
     }
+  }
+
+  // 主题设置
+  Future<void> saveThemeMode(ThemeMode mode) async {
+    await _box.write(Constants.STORAGE_THEME_KEY, mode.index);
+  }
+
+  ThemeMode? getThemeMode() {
+    final index = _box.read<int>(Constants.STORAGE_THEME_KEY);
+    if (index == null) return null;
+    return ThemeMode.values[index];
   }
 
   // 应用设置

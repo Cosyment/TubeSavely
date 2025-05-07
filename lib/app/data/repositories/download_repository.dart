@@ -1,11 +1,16 @@
 import 'package:get/get.dart';
+import 'package:background_downloader/background_downloader.dart';
 import '../models/download_task_model.dart';
 import '../models/video_model.dart';
+import '../providers/storage_provider.dart';
 import '../../services/download_service.dart';
 import '../../utils/logger.dart';
+import '../../utils/utils.dart';
 
 class DownloadRepository {
   final DownloadService _downloadService = Get.find<DownloadService>();
+  final StorageProvider _storageProvider = Get.find<StorageProvider>();
+  final FileDownloader _downloader = FileDownloader();
 
   // 获取下载任务列表
   List<DownloadTaskModel> getDownloadTasks() {
@@ -72,27 +77,20 @@ class DownloadRepository {
       await _storageProvider.addDownloadTask(task);
 
       // 创建后台下载任务
-      final Task bgTask = DownloadTask(
+      final downloadDirectory =
+          savePath ?? _downloadService.getDefaultDownloadPath();
+      final DownloadTask bgTask = DownloadTask(
         url: downloadUrl,
         filename: fileName,
-        directory: savePath,
+        directory: downloadDirectory,
         baseDirectory: BaseDirectory.applicationDocuments,
         updates: Updates.statusAndProgress,
         requiresWiFi:
-            _storageProvider.getSetting('wifi_only', defaultValue: true),
+            _storageProvider.getSetting('wifi_only', defaultValue: true) ??
+                false,
         retries: 3,
         allowPause: true,
-      );
-
-      // 注册任务状态回调
-      _downloader.registerCallbacks(
-        taskId: bgTask.taskId,
-        onStatus: (id, status) {
-          _updateTaskStatus(taskId, status);
-        },
-        onProgress: (id, progress) {
-          _updateTaskProgress(taskId, progress);
-        },
+        metaData: taskId,
       );
 
       // 开始下载
@@ -108,32 +106,9 @@ class DownloadRepository {
   // 暂停下载任务
   Future<bool> pauseDownloadTask(String taskId) async {
     try {
-      final tasks = _storageProvider.getDownloadTasks();
-      final taskIndex = tasks.indexWhere((task) => task.id == taskId);
-
-      if (taskIndex != -1) {
-        final task = tasks[taskIndex];
-
-        // 暂停后台下载任务
-        final bgTask = TaskRecord(taskId: taskId, url: task.url, filename: '');
-        final result = await _downloader.pause(bgTask);
-
-        if (result) {
-          // 更新任务状态
-          final updatedTask = task.copyWith(
-            status: DownloadStatus.paused,
-            updatedAt: DateTime.now(),
-          );
-
-          tasks[taskIndex] = updatedTask;
-          await _storageProvider.saveDownloadTasks(tasks);
-        }
-
-        return result;
-      }
-
-      return false;
+      return await _downloadService.pauseTask(taskId);
     } catch (e) {
+      Utils.showSnackbar('暂停失败', '暂停下载任务时出错: $e', isError: true);
       return false;
     }
   }
@@ -141,32 +116,9 @@ class DownloadRepository {
   // 恢复下载任务
   Future<bool> resumeDownloadTask(String taskId) async {
     try {
-      final tasks = _storageProvider.getDownloadTasks();
-      final taskIndex = tasks.indexWhere((task) => task.id == taskId);
-
-      if (taskIndex != -1) {
-        final task = tasks[taskIndex];
-
-        // 恢复后台下载任务
-        final bgTask = TaskRecord(taskId: taskId, url: task.url, filename: '');
-        final result = await _downloader.resume(bgTask);
-
-        if (result) {
-          // 更新任务状态
-          final updatedTask = task.copyWith(
-            status: DownloadStatus.downloading,
-            updatedAt: DateTime.now(),
-          );
-
-          tasks[taskIndex] = updatedTask;
-          await _storageProvider.saveDownloadTasks(tasks);
-        }
-
-        return result;
-      }
-
-      return false;
+      return await _downloadService.resumeTask(taskId);
     } catch (e) {
+      Utils.showSnackbar('恢复失败', '恢复下载任务时出错: $e', isError: true);
       return false;
     }
   }
@@ -174,32 +126,9 @@ class DownloadRepository {
   // 取消下载任务
   Future<bool> cancelDownloadTask(String taskId) async {
     try {
-      final tasks = _storageProvider.getDownloadTasks();
-      final taskIndex = tasks.indexWhere((task) => task.id == taskId);
-
-      if (taskIndex != -1) {
-        final task = tasks[taskIndex];
-
-        // 取消后台下载任务
-        final bgTask = TaskRecord(taskId: taskId, url: task.url, filename: '');
-        final result = await _downloader.cancel(bgTask);
-
-        if (result) {
-          // 更新任务状态
-          final updatedTask = task.copyWith(
-            status: DownloadStatus.canceled,
-            updatedAt: DateTime.now(),
-          );
-
-          tasks[taskIndex] = updatedTask;
-          await _storageProvider.saveDownloadTasks(tasks);
-        }
-
-        return result;
-      }
-
-      return false;
+      return await _downloadService.cancelTask(taskId);
     } catch (e) {
+      Utils.showSnackbar('取消失败', '取消下载任务时出错: $e', isError: true);
       return false;
     }
   }
@@ -207,78 +136,10 @@ class DownloadRepository {
   // 删除下载任务
   Future<bool> deleteDownloadTask(String taskId) async {
     try {
-      // 先取消任务
-      await cancelDownloadTask(taskId);
-
-      // 从存储中删除任务
-      await _storageProvider.removeDownloadTask(taskId);
-
-      return true;
+      return await _downloadService.deleteTask(taskId);
     } catch (e) {
+      Utils.showSnackbar('删除失败', '删除下载任务时出错: $e', isError: true);
       return false;
-    }
-  }
-
-  // 更新任务状态
-  Future<void> _updateTaskStatus(String taskId, TaskStatus status) async {
-    final tasks = _storageProvider.getDownloadTasks();
-    final taskIndex = tasks.indexWhere((task) => task.id == taskId);
-
-    if (taskIndex != -1) {
-      final task = tasks[taskIndex];
-      DownloadStatus newStatus;
-
-      switch (status) {
-        case TaskStatus.enqueued:
-        case TaskStatus.running:
-          newStatus = DownloadStatus.downloading;
-          break;
-        case TaskStatus.paused:
-          newStatus = DownloadStatus.paused;
-          break;
-        case TaskStatus.complete:
-          newStatus = DownloadStatus.completed;
-          break;
-        case TaskStatus.notFound:
-        case TaskStatus.failed:
-          newStatus = DownloadStatus.failed;
-          break;
-        case TaskStatus.canceled:
-          newStatus = DownloadStatus.canceled;
-          break;
-      }
-
-      final updatedTask = task.copyWith(
-        status: newStatus,
-        updatedAt: DateTime.now(),
-        completedAt: newStatus == DownloadStatus.completed
-            ? DateTime.now()
-            : task.completedAt,
-      );
-
-      tasks[taskIndex] = updatedTask;
-      await _storageProvider.saveDownloadTasks(tasks);
-    }
-  }
-
-  // 更新任务进度
-  Future<void> _updateTaskProgress(String taskId, double progress) async {
-    final tasks = _storageProvider.getDownloadTasks();
-    final taskIndex = tasks.indexWhere((task) => task.id == taskId);
-
-    if (taskIndex != -1) {
-      final task = tasks[taskIndex];
-
-      // 计算已下载字节数
-      final downloadedBytes = (task.totalBytes * progress).toInt();
-
-      final updatedTask = task.copyWith(
-        downloadedBytes: downloadedBytes,
-        updatedAt: DateTime.now(),
-      );
-
-      tasks[taskIndex] = updatedTask;
-      await _storageProvider.saveDownloadTasks(tasks);
     }
   }
 }

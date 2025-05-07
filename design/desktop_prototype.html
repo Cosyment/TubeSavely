@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TubeSavely Desktop Design</title>
+    <style>
+        :root {
+            --primary: #6366F1;
+            --secondary: #8B5CF6;
+            --accent: #EC4899;
+            --background: #FFFFFF;
+            --surface: #F3F4F6;
+            --text-primary: #1F2937;
+            --text-secondary: #6B7280;
+        }
+
+        .dark {
+            --background: #1E293B;
+            --surface: #334155;
+            --text-primary: #F3F4F6;
+            --text-secondary: #94A3B8;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+        }
+
+        .window-frame {
+            width: 1200px;
+            height: 800px;
+            background: var(--background);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            margin: 20px auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            display: grid;
+            grid-template-columns: 240px 1fr;
+        }
+
+        .sidebar {
+            background: var(--surface);
+            padding: 20px;
+        }
+
+        .main-area {
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .toolbar {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .url-input {
+            flex: 1;
+            height: 40px;
+            background: var(--surface);
+            border: none;
+            border-radius: 8px;
+            padding: 0 16px;
+            margin-right: 16px;
+        }
+
+        .download-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .download-card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .nav-item {
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-item:hover {
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="window-frame">
+        <div class="sidebar">
+            <h2>TubeSavely</h2>
+            <div class="nav-item active">
+                <span>🏠</span>
+                <span>下载</span>
+            </div>
+            <div class="nav-item">
+                <span>🔄</span>
+                <span>格式转换</span>
+            </div>
+            <div class="nav-item">
+                <span>📥</span>
+                <span>任务列表</span>
+            </div>
+            <div class="nav-item">
+                <span>📁</span>
+                <span>文件管理</span>
+            </div>
+            <div class="nav-item">
+                <span>⚙️</span>
+                <span>设置</span>
+            </div>
+        </div>
+
+        <div class="main-area">
+            <div class="toolbar">
+                <input type="text" class="url-input" placeholder="输入视频链接">
+                <button style="padding: 8px 16px; background: var(--primary); color: white; border: none; border-radius: 8px;">
+                    下载
+                </button>
+            </div>
+
+            <div class="download-grid">
+                <div class="download-card">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                        <span>视频标题.mp4</span>
+                        <span>60%</span>
+                    </div>
+                    <div style="height: 4px; background: rgba(99, 102, 241, 0.2); border-radius: 2px;">
+                        <div style="height: 100%; width: 60%; background: var(--primary); border-radius: 2px;"></div>
+                    </div>
+                </div>
+                <!-- 更多下载卡片 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 1. 侧边栏导航交互
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    navItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // 2. URL输入和下载按钮交互
+            const urlInput = document.querySelector('.url-input');
+            const downloadBtn = document.querySelector('button');
+
+            urlInput.addEventListener('focus', function() {
+                this.style.boxShadow = '0 0 0 2px rgba(99, 102, 241, 0.2)';
+            });
+
+            urlInput.addEventListener('blur', function() {
+                this.style.boxShadow = 'none';
+            });
+
+            // 3. 下载功能实现
+            function addDownloadCard(url) {
+                const downloadGrid = document.querySelector('.download-grid');
+                const card = document.createElement('div');
+                card.className = 'download-card';
+                card.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                        <span>${url.substring(0, 30)}...</span>
+                        <span>0%</span>
+                    </div>
+                    <div style="height: 4px; background: rgba(99, 102, 241, 0.2); border-radius: 2px;">
+                        <div style="height: 100%; width: 0%; background: var(--primary); border-radius: 2px;"></div>
+                    </div>
+                `;
+
+                downloadGrid.insertBefore(card, downloadGrid.firstChild);
+
+                // 模拟下载进度
+                let progress = 0;
+                const progressBar = card.querySelector('div > div');
+                const progressText = card.querySelector('span:last-child');
+                
+                const interval = setInterval(() => {
+                    progress += 2;
+                    if (progress <= 100) {
+                        progressBar.style.width = `${progress}%`;
+                        progressText.textContent = `${progress}%`;
+                    } else {
+                        clearInterval(interval);
+                        // 下载完成后添加操作按钮
+                        card.innerHTML += `
+                            <div style="display: flex; gap: 8px; margin-top: 12px;">
+                                <button style="padding: 4px 8px; background: var(--surface); border: none; border-radius: 4px;">
+                                    打开文件
+                                </button>
+                                <button style="padding: 4px 8px; background: var(--surface); border: none; border-radius: 4px;">
+                                    打开目录
+                                </button>
+                            </div>
+                        `;
+                    }
+                }, 100);
+            }
+
+            // 下载按钮点击事件
+            downloadBtn.addEventListener('click', function() {
+                const url = urlInput.value.trim();
+                if (!url) {
+                    alert('请输入视频链接');
+                    return;
+                }
+                addDownloadCard(url);
+                urlInput.value = '';
+            });
+
+            // 回车键触发下载
+            urlInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    downloadBtn.click();
+                }
+            });
+
+            // 4. 拖放文件支持
+            const mainArea = document.querySelector('.main-area');
+            
+            mainArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = 'rgba(99, 102, 241, 0.1)';
+            });
+
+            mainArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '';
+            });
+
+            mainArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '';
+                
+                // 处理拖放的文件
+                const files = Array.from(e.dataTransfer.files);
+                files.forEach(file => {
+                    addDownloadCard(file.name);
+                });
+            });
+
+            // 5. 深色模式切换
+            let isDarkMode = false;
+            document.addEventListener('keypress', function(e) {
+                if (e.key.toLowerCase() === 'd') {
+                    isDarkMode = !isDarkMode;
+                    document.body.classList.toggle('dark');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

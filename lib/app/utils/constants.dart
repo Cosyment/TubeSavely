@@ -6,6 +6,9 @@ class Constants {
   static const int API_TIMEOUT = 30000; // 30秒
   static const int API_RETRY_COUNT = 3;
 
+  // 第三方API密钥
+  static const String YOUTUBE_API_KEY = ''; // 需要替换为实际的YouTube API密钥
+
   // 存储键
   static const String STORAGE_THEME_KEY = 'theme_mode';
   static const String STORAGE_LOCALE_KEY = 'locale';

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import '../../../../model/video_model.dart';
+import '../../../data/models/video_model.dart';
 import '../../../theme/app_theme.dart';
 import '../controllers/home_controller.dart';
 
@@ -507,7 +507,7 @@ class HomeView extends GetView<HomeController> {
                   ),
                 if (video.duration != null)
                   Text(
-                    '时长: ${video.formattedDuration}',
+                    '时长: ${video.duration! ~/ 60}:${(video.duration! % 60).toString().padLeft(2, '0')}',
                     style: TextStyle(
                       fontSize: 12.sp,
                       color: Get.theme.colorScheme.onSurface.withOpacity(0.7),
