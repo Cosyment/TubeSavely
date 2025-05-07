@@ -5,6 +5,7 @@ import '../models/download_task_model.dart';
 import '../models/user_model.dart';
 import '../models/video_model.dart';
 import '../../utils/constants.dart';
+import '../../services/video_converter_service.dart';
 
 class StorageProvider extends GetxService {
   final _box = GetStorage();
@@ -39,7 +40,8 @@ class StorageProvider extends GetxService {
 
   // 下载历史
   Future<void> saveDownloadHistory(List<VideoModel> videos) async {
-    final List<Map<String, dynamic>> jsonList = videos.map((video) => video.toJson()).toList();
+    final List<Map<String, dynamic>> jsonList =
+        videos.map((video) => video.toJson()).toList();
     await _box.write(Constants.STORAGE_DOWNLOAD_HISTORY, jsonEncode(jsonList));
   }
 
@@ -69,7 +71,8 @@ class StorageProvider extends GetxService {
 
   // 下载任务
   Future<void> saveDownloadTasks(List<DownloadTaskModel> tasks) async {
-    final List<Map<String, dynamic>> jsonList = tasks.map((task) => task.toJson()).toList();
+    final List<Map<String, dynamic>> jsonList =
+        tasks.map((task) => task.toJson()).toList();
     await _box.write(Constants.STORAGE_DOWNLOAD_TASKS, jsonEncode(jsonList));
   }
 
@@ -142,5 +145,44 @@ class StorageProvider extends GetxService {
 
   Future<void> clearAll() async {
     await _box.erase();
+  }
+
+  // 视频转换任务
+  Future<void> saveConversionTasks(List<ConversionTask> tasks) async {
+    final List<Map<String, dynamic>> jsonList =
+        tasks.map((task) => task.toJson()).toList();
+    await _box.write(Constants.STORAGE_CONVERSION_TASKS, jsonEncode(jsonList));
+  }
+
+  Future<void> addConversionTask(ConversionTask task) async {
+    final List<ConversionTask> tasks = getConversionTasks();
+    tasks.add(task);
+    await saveConversionTasks(tasks);
+  }
+
+  Future<void> updateConversionTask(ConversionTask task) async {
+    final List<ConversionTask> tasks = getConversionTasks();
+    final index = tasks.indexWhere((t) => t.id == task.id);
+    if (index != -1) {
+      tasks[index] = task;
+      await saveConversionTasks(tasks);
+    }
+  }
+
+  Future<void> removeConversionTask(String taskId) async {
+    final List<ConversionTask> tasks = getConversionTasks();
+    tasks.removeWhere((task) => task.id == taskId);
+    await saveConversionTasks(tasks);
+  }
+
+  List<ConversionTask> getConversionTasks() {
+    final tasksJson = _box.read<String>(Constants.STORAGE_CONVERSION_TASKS);
+    if (tasksJson == null) return [];
+    try {
+      final List<dynamic> jsonList = jsonDecode(tasksJson);
+      return jsonList.map((json) => ConversionTask.fromJson(json)).toList();
+    } catch (e) {
+      return [];
+    }
   }
 }

@@ -13,6 +13,7 @@ class Constants {
   static const String STORAGE_USER_INFO = 'user_info';
   static const String STORAGE_DOWNLOAD_HISTORY = 'download_history';
   static const String STORAGE_DOWNLOAD_TASKS = 'download_tasks';
+  static const String STORAGE_CONVERSION_TASKS = 'conversion_tasks';
   static const String STORAGE_SETTINGS = 'settings';
 
   // 默认设置
@@ -30,9 +31,25 @@ class Constants {
 
   // 支持的平台
   static const List<Map<String, dynamic>> SUPPORTED_PLATFORMS = [
-    {'name': 'YouTube', 'icon': 'assets/images/youtube.png', 'regex': r'(youtube\.com|youtu\.be)'},
-    {'name': 'Bilibili', 'icon': 'assets/images/bilibili.png', 'regex': r'bilibili\.com'},
-    {'name': 'TikTok', 'icon': 'assets/images/tiktok.png', 'regex': r'(tiktok\.com|douyin\.com)'},
-    {'name': 'Instagram', 'icon': 'assets/images/instagram.png', 'regex': r'instagram\.com'},
+    {
+      'name': 'YouTube',
+      'icon': 'assets/images/youtube.png',
+      'regex': r'(youtube\.com|youtu\.be)'
+    },
+    {
+      'name': 'Bilibili',
+      'icon': 'assets/images/bilibili.png',
+      'regex': r'bilibili\.com'
+    },
+    {
+      'name': 'TikTok',
+      'icon': 'assets/images/tiktok.png',
+      'regex': r'(tiktok\.com|douyin\.com)'
+    },
+    {
+      'name': 'Instagram',
+      'icon': 'assets/images/instagram.png',
+      'regex': r'instagram\.com'
+    },
   ];
 }
