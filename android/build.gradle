@@ -6,8 +6,26 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.1.4'
+        classpath 'com.android.tools.build:gradle:8.2.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+// 设置所有子项目的 Kotlin JVM 目标版本
+subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty('android')) {
+            if (project.android.hasProperty('kotlinOptions')) {
+                project.android.kotlinOptions.jvmTarget = '17'
+            }
+        }
+
+        // 为 Kotlin 任务设置 JVM 目标版本
+        project.tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+            kotlinOptions {
+                jvmTarget = '17'
+            }
+        }
     }
 }
 

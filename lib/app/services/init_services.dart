@@ -2,7 +2,8 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit.dart';
+// 暂时注释掉，编译时有问题
+// import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit.dart';
 import '../data/providers/api_provider.dart';
 import '../data/providers/storage_provider.dart';
 import '../data/repositories/download_repository.dart';
@@ -28,13 +29,13 @@ Future<void> initServices() async {
   // 初始化MediaKit
   MediaKit.ensureInitialized();
 
-  // 确保ScreenUtil已初始化
-  await ScreenUtil.ensureInitialized();
+  // 初始化ScreenUtil
+  // ScreenUtil会在应用启动时自动初始化
 
   // 注册服务
+  Get.put(StorageProvider(), permanent: true);
   Get.put(ThemeService(), permanent: true);
   Get.put(TranslationService(), permanent: true);
-  Get.put(StorageProvider(), permanent: true);
   Get.put(ApiProvider(), permanent: true);
 
   // 初始化并注册视频解析服务
