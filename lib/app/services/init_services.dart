@@ -9,30 +9,40 @@ import '../data/repositories/user_repository.dart';
 import '../data/repositories/video_repository.dart';
 import 'theme_service.dart';
 import 'translation_service.dart';
+import 'video_parser_service.dart';
+import 'download_service.dart';
 
 /// 初始化所有服务
 Future<void> initServices() async {
   print('正在初始化服务...');
-  
+
   // 初始化GetStorage
   await GetStorage.init();
-  
+
   // 初始化MediaKit
   MediaKit.ensureInitialized();
-  
+
   // 确保ScreenUtil已初始化
   await ScreenUtil.ensureInitialized();
-  
+
   // 注册服务
   Get.put(ThemeService(), permanent: true);
   Get.put(TranslationService(), permanent: true);
   Get.put(StorageProvider(), permanent: true);
   Get.put(ApiProvider(), permanent: true);
-  
+
+  // 初始化并注册视频解析服务
+  final videoParserService = await VideoParserService().init();
+  Get.put(videoParserService, permanent: true);
+
+  // 初始化并注册下载服务
+  final downloadService = await DownloadService().init();
+  Get.put(downloadService, permanent: true);
+
   // 注册仓库
   Get.put(UserRepository(), permanent: true);
   Get.put(VideoRepository(), permanent: true);
   Get.put(DownloadRepository(), permanent: true);
-  
+
   print('所有服务初始化完成');
 }
