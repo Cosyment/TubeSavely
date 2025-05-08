@@ -19,9 +19,10 @@ class DownloadService extends GetxService {
   // 当前下载任务列表
   final RxList<DownloadTaskModel> downloadTasks = <DownloadTaskModel>[].obs;
 
+  // 注意：这些字段已经不再使用，因为我们现在使用事件监听器
   // 下载状态监听器
-  final _taskStatusListeners = <String, Function>{};
-  final _taskProgressListeners = <String, Function>{};
+  // final _taskStatusListeners = <String, Function>{};
+  // final _taskProgressListeners = <String, Function>{};
 
   /// 初始化服务
   Future<DownloadService> init() async {
@@ -30,13 +31,24 @@ class DownloadService extends GetxService {
     // 加载已有的下载任务
     downloadTasks.value = _storageProvider.getDownloadTasks();
 
-    // 注册全局下载回调
-    // 注意：在新版本的 background_downloader 中，需要使用不同的方法注册回调
-    // 这里暂时注释掉，等待后续更新
-    // _downloader.registerGlobalCallbacks(
-    //   taskStatusCallback: _onTaskStatusChanged,
-    //   taskProgressCallback: _onTaskProgressChanged,
-    // );
+    // 注册事件监听器
+    _downloader.updates.listen((update) {
+      switch (update) {
+        case TaskStatusUpdate():
+          _onTaskStatusChanged(update.task.taskId, update.status);
+        case TaskProgressUpdate():
+          _onTaskProgressChanged(update.task.taskId, update.progress);
+      }
+    });
+
+    // 配置下载器
+    await configureDownloader();
+
+    // 启动下载器，激活数据库并确保在挂起/终止后正确重启
+    await _downloader.start();
+
+    // 在数据库中跟踪任务
+    await _downloader.trackTasks();
 
     // 恢复未完成的下载任务
     _resumeUnfinishedTasks();
@@ -113,7 +125,7 @@ class DownloadService extends GetxService {
       await _addTask(task);
 
       // 创建后台下载任务
-      final Task bgTask = DownloadTask(
+      final DownloadTask bgTask = DownloadTask(
         url: downloadUrl,
         filename: fileName,
         directory: downloadPath,
@@ -122,13 +134,37 @@ class DownloadService extends GetxService {
         requiresWiFi:
             _storageProvider.getSetting('wifi_only', defaultValue: true) ??
                 false,
-        retries: 3,
+        retries: 5, // 增加重试次数
         allowPause: true,
         metaData: taskId,
+        priority: 5, // 正常优先级
+        group: 'downloads', // 分组管理
       );
 
-      // 注册任务状态回调
-      _registerTaskCallbacks(taskId);
+      // 获取文件大小
+      try {
+        final expectedSize = await bgTask.expectedFileSize();
+        if (expectedSize > 0) {
+          final updatedTask = task.copyWith(
+            totalBytes: expectedSize,
+          );
+          await _updateTask(updatedTask);
+        }
+      } catch (e) {
+        Logger.e('Error getting expected file size: $e');
+      }
+
+      // 如果启用了通知，配置下载通知
+      if (_storageProvider.getSetting('show_notification', defaultValue: true) == true) {
+        _downloader.configureNotification(
+          running: TaskNotification('正在下载', '文件: $fileName'),
+          complete: TaskNotification('下载完成', '文件: $fileName'),
+          error: TaskNotification('下载失败', '文件: $fileName'),
+          paused: TaskNotification('下载暂停', '文件: $fileName'),
+          progressBar: true,
+          tapOpensFile: true,
+        );
+      }
 
       // 开始下载
       await _downloader.enqueue(bgTask);
@@ -152,21 +188,39 @@ class DownloadService extends GetxService {
       if (taskIndex != -1) {
         final task = downloadTasks[taskIndex];
 
-        // 暂停后台下载任务
-        // 注意：在新版本的 background_downloader 中，TaskRecord 的构造函数已更改
-        // 这里暂时注释掉，等待后续更新
-        // final bgTask = TaskRecord(taskId: taskId, url: task.url, filename: '');
-        // final result = await _downloader.pause(bgTask);
+        // 创建下载任务
+        final fileName = '${task.title.replaceAll(RegExp(r'[^\w\s.-]'), '_')}_${task.quality ?? 'default'}.${task.format ?? 'mp4'}';
+        final downloadPath = task.savePath ?? getDefaultDownloadPath();
 
-        // 直接更新任务状态
-        final updatedTask = task.copyWith(
-          status: DownloadStatus.paused,
-          updatedAt: DateTime.now(),
+        final bgTask = DownloadTask(
+          url: task.url,
+          filename: fileName,
+          directory: downloadPath,
+          baseDirectory: BaseDirectory.applicationDocuments,
+          metaData: taskId,
         );
 
-        await _updateTask(updatedTask);
+        // 暂停任务
+        final result = await _downloader.pause(bgTask);
 
-        return true;
+        if (result) {
+          // 更新任务状态
+          final updatedTask = task.copyWith(
+            status: DownloadStatus.paused,
+            updatedAt: DateTime.now(),
+          );
+
+          await _updateTask(updatedTask);
+
+          // 显示通知
+          if (_storageProvider.getSetting('show_notification', defaultValue: true) == true) {
+            _downloader.configureNotification(
+              paused: TaskNotification('下载暂停', '文件: ${task.title}'),
+            );
+          }
+
+          return true;
+        }
       }
 
       return false;
@@ -187,21 +241,59 @@ class DownloadService extends GetxService {
       if (taskIndex != -1) {
         final task = downloadTasks[taskIndex];
 
-        // 恢复后台下载任务
-        // 注意：在新版本的 background_downloader 中，TaskRecord 的构造函数已更改
-        // 这里暂时注释掉，等待后续更新
-        // final bgTask = TaskRecord(taskId: taskId, url: task.url, filename: '');
-        // final result = await _downloader.resume(bgTask);
+        // 创建下载任务
+        final fileName = '${task.title.replaceAll(RegExp(r'[^\w\s.-]'), '_')}_${task.quality ?? 'default'}.${task.format ?? 'mp4'}';
+        final downloadPath = task.savePath ?? getDefaultDownloadPath();
 
-        // 直接更新任务状态
-        final updatedTask = task.copyWith(
-          status: DownloadStatus.downloading,
-          updatedAt: DateTime.now(),
+        final bgTask = DownloadTask(
+          url: task.url,
+          filename: fileName,
+          directory: downloadPath,
+          baseDirectory: BaseDirectory.applicationDocuments,
+          updates: Updates.statusAndProgress,
+          requiresWiFi: _storageProvider.getSetting('wifi_only', defaultValue: true) ?? false,
+          retries: 3,
+          allowPause: true,
+          metaData: taskId,
         );
 
-        await _updateTask(updatedTask);
+        // 检查是否可以恢复
+        bool canResume = false;
+        try {
+          canResume = await _downloader.taskCanResume(bgTask);
+        } catch (e) {
+          Logger.e('Error checking if task can resume: $e');
+        }
 
-        return true;
+        bool result = false;
+        if (canResume) {
+          // 如果可以恢复，则恢复下载
+          result = await _downloader.resume(bgTask);
+          Logger.d('Resumed task: ${task.id}');
+        } else {
+          // 如果不能恢复，则重新开始下载
+          result = await _downloader.enqueue(bgTask);
+          Logger.d('Restarted task: ${task.id}');
+        }
+
+        if (result) {
+          // 更新任务状态
+          final updatedTask = task.copyWith(
+            status: DownloadStatus.downloading,
+            updatedAt: DateTime.now(),
+          );
+
+          await _updateTask(updatedTask);
+
+          // 显示通知
+          if (_storageProvider.getSetting('show_notification', defaultValue: true) == true) {
+            _downloader.configureNotification(
+              running: TaskNotification('正在下载', '文件: ${task.title}'),
+            );
+          }
+
+          return true;
+        }
       }
 
       return false;
@@ -222,19 +314,23 @@ class DownloadService extends GetxService {
       if (taskIndex != -1) {
         final task = downloadTasks[taskIndex];
 
-        // 取消后台下载任务
-        // 注意：在新版本的 background_downloader 中，TaskRecord 的构造函数已更改
-        // 这里暂时注释掉，等待后续更新
-        // final bgTask = TaskRecord(taskId: taskId, url: task.url, filename: '');
-        // final result = await _downloader.cancel(bgTask);
+        // 取消任务
+        await _downloader.cancelTasksWithIds([taskId]);
 
-        // 直接更新任务状态
+        // 更新任务状态
         final updatedTask = task.copyWith(
           status: DownloadStatus.canceled,
           updatedAt: DateTime.now(),
         );
 
         await _updateTask(updatedTask);
+
+        // 显示通知
+        if (_storageProvider.getSetting('show_notification', defaultValue: true) == true) {
+          _downloader.configureNotification(
+            error: TaskNotification('下载取消', '文件: ${task.title}'),
+          );
+        }
 
         return true;
       }
@@ -364,6 +460,9 @@ class DownloadService extends GetxService {
     return downloadDir.path;
   }
 
+  // 注意：这个方法已经不再使用，因为我们现在使用事件监听器
+  // 保留以便兼容旧代码
+  /*
   /// 注册任务回调
   void _registerTaskCallbacks(String taskId) {
     // 注册状态回调
@@ -376,28 +475,55 @@ class DownloadService extends GetxService {
       _onTaskProgressChanged(id, progress);
     };
   }
+  */
 
   /// 任务状态变化回调
-  void _onTaskStatusChanged(dynamic id, dynamic status) async {
+  void _onTaskStatusChanged(String taskId, TaskStatus status) async {
     try {
-      // 注意：在新版本的 background_downloader 中，TaskId 和 TaskStatus 的定义已更改
-      // 这里暂时使用 dynamic 类型，等待后续更新
-
-      // 从元数据中获取任务ID
-      final String? taskId = id.toString();
-      if (taskId == null) return;
-
       final taskIndex = downloadTasks.indexWhere((task) => task.id == taskId);
       if (taskIndex == -1) return;
 
       final task = downloadTasks[taskIndex];
+      DownloadStatus newStatus;
 
-      // 直接设置为下载中状态
-      final DownloadStatus newStatus = DownloadStatus.downloading;
+      // 根据 TaskStatus 设置对应的 DownloadStatus
+      switch (status) {
+        case TaskStatus.enqueued:
+          newStatus = DownloadStatus.pending;
+        case TaskStatus.running:
+          newStatus = DownloadStatus.downloading;
+        case TaskStatus.complete:
+          newStatus = DownloadStatus.completed;
+          // 获取文件大小
+          final file = File(task.savePath ?? '');
+          if (await file.exists()) {
+            final fileSize = await file.length();
+            final updatedTask = task.copyWith(
+              status: newStatus,
+              totalBytes: fileSize,
+              downloadedBytes: fileSize,
+              updatedAt: DateTime.now(),
+              completedAt: DateTime.now(),
+            );
+            await _updateTask(updatedTask);
+            // 显示通知
+            Utils.showSnackbar('下载完成', '文件 ${task.title} 已下载完成');
+            return;
+          }
+        case TaskStatus.failed:
+          newStatus = DownloadStatus.failed;
+        case TaskStatus.canceled:
+          newStatus = DownloadStatus.canceled;
+        case TaskStatus.paused:
+          newStatus = DownloadStatus.paused;
+        default:
+          newStatus = DownloadStatus.downloading;
+      }
 
       final updatedTask = task.copyWith(
         status: newStatus,
         updatedAt: DateTime.now(),
+        completedAt: status == TaskStatus.complete ? DateTime.now() : null,
       );
 
       await _updateTask(updatedTask);
@@ -407,22 +533,35 @@ class DownloadService extends GetxService {
   }
 
   /// 任务进度变化回调
-  void _onTaskProgressChanged(dynamic id, double progress) async {
+  void _onTaskProgressChanged(String taskId, double progress) async {
     try {
-      // 注意：在新版本的 background_downloader 中，TaskId 的定义已更改
-      // 这里暂时使用 dynamic 类型，等待后续更新
-
-      // 从元数据中获取任务ID
-      final String? taskId = id.toString();
-      if (taskId == null) return;
-
       final taskIndex = downloadTasks.indexWhere((task) => task.id == taskId);
       if (taskIndex == -1) return;
 
       final task = downloadTasks[taskIndex];
 
-      // 计算已下载字节数（假设总大小为 1MB）
-      final totalBytes = 1024 * 1024;
+      // 如果是负数，表示特殊状态（失败、取消等）
+      if (progress < 0) {
+        return; // 这些状态已经在 _onTaskStatusChanged 中处理
+      }
+
+      // 获取任务的预期文件大小
+      final DownloadTask downloadTask = DownloadTask(
+        url: task.url,
+        filename: task.title,
+        metaData: task.id,
+      );
+
+      int totalBytes = task.totalBytes;
+      if (totalBytes == 0) {
+        try {
+          final expectedSize = await downloadTask.expectedFileSize();
+          totalBytes = expectedSize > 0 ? expectedSize : 1024 * 1024;
+        } catch (e) {
+          totalBytes = 1024 * 1024; // 默认使用 1MB
+        }
+      }
+
       final downloadedBytes = (totalBytes * progress).toInt();
 
       final updatedTask = task.copyWith(
@@ -432,24 +571,93 @@ class DownloadService extends GetxService {
       );
 
       await _updateTask(updatedTask);
+
+      // 显示通知（如果启用了通知）
+      if (_storageProvider.getSetting('show_notification', defaultValue: true) == true) {
+        // 每 10% 显示一次通知，避免通知过多
+        final progressPercent = (progress * 100).toInt();
+        if (progressPercent % 10 == 0 && progressPercent > 0) {
+          _showProgressNotification(task, progress);
+        }
+      }
     } catch (e) {
       Logger.e('Error in task progress callback: $e');
+    }
+  }
+
+  /// 显示进度通知
+  void _showProgressNotification(DownloadTaskModel task, double progress) {
+    // 使用 background_downloader 的通知功能
+    _downloader.configureNotification(
+      running: TaskNotification('正在下载', '文件: ${task.title} - ${(progress * 100).toInt()}%'),
+      complete: TaskNotification('下载完成', '文件: ${task.title}'),
+      error: TaskNotification('下载失败', '文件: ${task.title}'),
+      paused: TaskNotification('下载暂停', '文件: ${task.title}'),
+      progressBar: true,
+      tapOpensFile: true,
+    );
+  }
+
+  /// 配置下载器
+  Future<void> configureDownloader() async {
+    // 配置持有队列，限制并发下载数量
+    // maxConcurrent: 最大并发任务数
+    // maxConcurrentByHost: 每个主机的最大并发任务数
+    // maxConcurrentByGroup: 每个组的最大并发任务数
+    await _downloader.configure(
+      globalConfig: (Config.holdingQueue, (3, 2, 1)),
+    );
+
+    // 配置超时时间
+    await _downloader.configure(
+      globalConfig: (Config.requestTimeout, 60), // 60秒超时
+    );
+
+    // 检查可用空间
+    await _downloader.configure(
+      globalConfig: (Config.checkAvailableSpace, true),
+    );
+  }
+
+  /// 初始化通知
+  Future<void> initNotifications() async {
+    if (_storageProvider.getSetting('show_notification', defaultValue: true) == true) {
+      // 配置全局通知
+      _downloader.configureNotification(
+        running: TaskNotification('正在下载', '文件: {filename}'),
+        complete: TaskNotification('下载完成', '文件: {filename}'),
+        error: TaskNotification('下载失败', '文件: {filename}'),
+        paused: TaskNotification('下载暂停', '文件: {filename}'),
+        progressBar: true,
+        tapOpensFile: true,
+      );
     }
   }
 
   /// 恢复未完成的下载任务
   Future<void> _resumeUnfinishedTasks() async {
     try {
+      // 初始化通知
+      await initNotifications();
+
+      // 恢复从后台
+      await _downloader.resumeFromBackground();
+
       final unfinishedTasks = downloadTasks
           .where((task) =>
               task.status == DownloadStatus.downloading ||
-              task.status == DownloadStatus.pending)
+              task.status == DownloadStatus.pending ||
+              task.status == DownloadStatus.paused)
           .toList();
 
-      for (final task in unfinishedTasks) {
-        // 注册任务回调
-        _registerTaskCallbacks(task.id);
+      if (unfinishedTasks.isEmpty) {
+        Logger.d('No unfinished tasks to resume');
+        return;
+      }
 
+      Logger.d('Resuming ${unfinishedTasks.length} unfinished tasks');
+
+      for (final task in unfinishedTasks) {
         // 创建后台下载任务
         final fileName =
             '${task.title.replaceAll(RegExp(r'[^\w\s.-]'), '_')}_${task.quality ?? 'default'}.${task.format ?? 'mp4'}';
@@ -471,11 +679,29 @@ class DownloadService extends GetxService {
           metaData: task.id,
         );
 
-        // 恢复下载
-        await _downloader.enqueue(bgTask);
+        // 检查是否可以恢复
+        bool canResume = false;
+        try {
+          canResume = await _downloader.taskCanResume(bgTask);
+        } catch (e) {
+          Logger.e('Error checking if task can resume: $e');
+        }
 
-        Logger.d('Resumed unfinished task: ${task.id}');
+        if (canResume) {
+          // 如果可以恢复，则恢复下载
+          await _downloader.resume(bgTask);
+          Logger.d('Resumed unfinished task: ${task.id}');
+        } else {
+          // 如果不能恢复，则重新开始下载
+          await _downloader.enqueue(bgTask);
+          Logger.d('Restarted unfinished task: ${task.id}');
+        }
       }
+
+      // 重新调度被终止的任务
+      Future.delayed(const Duration(seconds: 5), () {
+        _downloader.rescheduleKilledTasks();
+      });
     } catch (e) {
       Logger.e('Error resuming unfinished tasks: $e');
     }
