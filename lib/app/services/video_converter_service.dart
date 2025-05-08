@@ -1,12 +1,15 @@
 import 'dart:io';
+import 'dart:async';
+import 'dart:math';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit.dart';
-import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
-import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_session.dart';
-import 'package:ffmpeg_kit_flutter_full_gpl/ffprobe_kit.dart';
-import 'package:ffmpeg_kit_flutter_full_gpl/media_information.dart';
-import 'package:ffmpeg_kit_flutter_full_gpl/media_information_session.dart';
+// 暂时注释掉，编译时有问题
+// import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit.dart';
+// import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
+// import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_session.dart';
+// import 'package:ffmpeg_kit_flutter_full_gpl/ffprobe_kit.dart';
+// import 'package:ffmpeg_kit_flutter_full_gpl/media_information.dart';
+// import 'package:ffmpeg_kit_flutter_full_gpl/media_information_session.dart';
 import '../data/models/download_task_model.dart';
 import '../data/providers/storage_provider.dart';
 import '../utils/logger.dart';
@@ -476,14 +479,19 @@ class VideoConverterService extends GetxService {
             await _updateTask(canceledTask);
           } else {
             // 转换失败
-            final errorMessage = await session.getAllLogsAsString();
+            final returnCode = await session.getReturnCode();
+            final errorMessage = await session.getAllLogsAsString() ?? 'Unknown error';
+            final errorSummary = errorMessage.length > 200 ? errorMessage.substring(0, 200) + '...' : errorMessage;
+
             final failedTask = updatedTask.copyWith(
               status: ConversionStatus.failed,
-              errorMessage: errorMessage,
+              errorMessage: 'Error code: ${returnCode?.getValue() ?? 'unknown'}, Message: $errorSummary',
               updatedAt: DateTime.now(),
             );
             await _updateTask(failedTask);
-            Logger.e('Conversion failed: $errorMessage');
+
+            Logger.e('Conversion failed with code ${returnCode?.getValue() ?? 'unknown'}: $errorSummary');
+            Utils.showSnackbar('转换失败', '视频转换失败，请检查源文件格式', isError: true);
           }
 
           // 处理下一个任务
@@ -507,6 +515,10 @@ class VideoConverterService extends GetxService {
               updatedAt: DateTime.now(),
             );
             _updateTask(updatedTask);
+
+            // 打印转换进度
+            final percent = (progress * 100).toStringAsFixed(1);
+            Logger.d('Conversion progress: $percent% for task ${task.id}');
           }
         },
       );
@@ -564,9 +576,30 @@ class VideoConverterService extends GetxService {
     }
 
     // 构建命令
-    String command =
-        '-i "${task.sourceFilePath}" -c:v libx264 -preset medium -b:v ${task.bitrate}k -vf scale=$width:$height -c:a aac -b:a 128k "${task.targetFilePath}"';
+    String command;
 
+    // 根据格式选择不同的编码参数
+    if (task.format == 'mp3') {
+      // 如果是 MP3 格式，只提取音频
+      command = '-i "${task.sourceFilePath}" -vn -c:a libmp3lame -q:a 2 "${task.targetFilePath}"';
+    } else if (task.format == 'mp4') {
+      // MP4 格式使用 H.264 编码
+      command = '-i "${task.sourceFilePath}" -c:v libx264 -preset medium -b:v ${task.bitrate}k '
+          '-vf scale=$width:$height -c:a aac -b:a 128k -movflags +faststart "${task.targetFilePath}"';
+    } else if (task.format == 'webm') {
+      // WebM 格式使用 VP9 编码
+      command = '-i "${task.sourceFilePath}" -c:v libvpx-vp9 -b:v ${task.bitrate}k '
+          '-vf scale=$width:$height -c:a libopus -b:a 128k "${task.targetFilePath}"';
+    } else {
+      // 其他格式使用通用的 H.264 编码
+      command = '-i "${task.sourceFilePath}" -c:v libx264 -preset medium -b:v ${task.bitrate}k '
+          '-vf scale=$width:$height -c:a aac -b:a 128k "${task.targetFilePath}"';
+    }
+
+    // 添加错误检测和容错参数
+    command = '-hide_banner -err_detect ignore_err ' + command;
+
+    Logger.d('FFmpeg command: $command');
     return command;
   }
 

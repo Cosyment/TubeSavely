@@ -3,8 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
-;
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 import '../../../data/providers/storage_provider.dart';
 import '../../../utils/logger.dart';
@@ -56,7 +55,7 @@ class MoreController extends GetxController {
   Future<void> launchUrl(String url) async {
     try {
       final Uri uri = Uri.parse(url);
-      if (!await url_launcher.launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      if (!await url_launcher.launchUrl(uri, mode: url_launcher.LaunchMode.externalApplication)) {
         Utils.showSnackbar('错误', '无法打开链接: $url', isError: true);
       }
     } catch (e) {

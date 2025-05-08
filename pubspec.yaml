@@ -59,7 +59,7 @@ dependencies:
   media_kit: ^1.1.10
   media_kit_video: ^1.2.4
   media_kit_libs_video: ^1.0.4
-  ffmpeg_kit_flutter_full_gpl: ^6.0.3
+  ffmpeg_kit_flutter_full_gpl: ^5.1.0
   file_picker: ^8.0.5
   image_gallery_saver: ^2.0.3
   open_file: ^3.3.2

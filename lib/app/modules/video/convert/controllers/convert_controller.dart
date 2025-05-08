@@ -179,15 +179,63 @@ class ConvertController extends GetxController {
       final convertDir = Directory('${appDir.path}/converted');
 
       if (await convertDir.exists()) {
-        // 在移动平台上，我们可能需要使用不同的方法
-        if (Platform.isAndroid || Platform.isIOS) {
-          Utils.showSnackbar('提示', '在移动平台上无法直接打开文件夹');
+        if (Platform.isAndroid) {
+          // 在 Android 上使用 Storage Access Framework 打开文件夹
+          final List<ConversionTask> tasks = await _videoConverterRepository.getConversionTasks();
+          if (tasks.isNotEmpty) {
+            // 尝试打开最新转换文件的文件夹
+            final completedTasks = tasks.where((task) => task.status == ConversionStatus.completed).toList();
+            if (completedTasks.isEmpty) {
+              Utils.showSnackbar('提示', '没有已完成的转换任务');
+              return;
+            }
+
+            final latestTask = completedTasks.reduce((a, b) =>
+              (a.updatedAt ?? DateTime.now()).isAfter(b.updatedAt ?? DateTime.now()) ? a : b);
+
+            if (latestTask.targetFilePath.isNotEmpty) {
+              final file = File(latestTask.targetFilePath);
+              if (await file.exists()) {
+                // 打开文件所在的文件夹
+                final uri = Uri.file(file.path);
+                await OpenFile.open(file.path);
+                return;
+              }
+            }
+          }
+
+          // 如果没有文件或无法打开，显示提示
+          Utils.showSnackbar('提示', '转换文件保存在: ${convertDir.path}');
+
+        } else if (Platform.isIOS) {
+          // 在 iOS 上使用文件共享打开最新转换的文件
+          final List<ConversionTask> tasks = await _videoConverterRepository.getConversionTasks();
+          if (tasks.isNotEmpty) {
+            final completedTasks = tasks.where((task) => task.status == ConversionStatus.completed);
+            if (completedTasks.isNotEmpty) {
+              final latestTask = completedTasks.reduce((a, b) =>
+                (a.updatedAt ?? DateTime.now()).isAfter(b.updatedAt ?? DateTime.now()) ? a : b);
+
+              if (latestTask.targetFilePath.isNotEmpty) {
+                final file = File(latestTask.targetFilePath);
+                if (await file.exists()) {
+                  await OpenFile.open(file.path);
+                  return;
+                }
+              }
+            }
+          }
+
+          Utils.showSnackbar('提示', '转换文件保存在: ${convertDir.path}');
+
         } else {
-          // 在桌面平台上，我们可以使用open_file打开文件夹
+          // 在桌面平台上，我们可以直接打开文件夹
           await OpenFile.open(convertDir.path);
         }
       } else {
-        Utils.showSnackbar('提示', '输出文件夹不存在');
+        // 如果文件夹不存在，创建它
+        await convertDir.create(recursive: true);
+        Utils.showSnackbar('提示', '输出文件夹已创建: ${convertDir.path}');
       }
     } catch (e) {
       Logger.e('Error opening output folder: $e');
