@@ -1,9 +1,12 @@
 import 'dart:io';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
-// 暂时注释掉，编译时有问题
-// import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit.dart';
-// import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_session.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/ffprobe_kit.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/media_information.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/media_information_session.dart';
 import '../data/models/download_task_model.dart';
 import '../data/providers/storage_provider.dart';
 import '../utils/logger.dart';
@@ -132,6 +135,9 @@ class VideoConverterService extends GetxService {
   // 是否正在转换
   final RxBool isConverting = false.obs;
 
+  // 转换会话管理，用于取消转换
+  final Map<String, FFmpegSession> _conversionSessions = {};
+
   /// 初始化服务
   Future<VideoConverterService> init() async {
     Logger.d('VideoConverterService initialized');
@@ -207,11 +213,26 @@ class VideoConverterService extends GetxService {
       if (taskIndex != -1) {
         final task = conversionTasks[taskIndex];
 
-        // 如果是当前正在执行的任务，则取消执行
-        if (currentTask.value?.id == taskId) {
-          // TODO: 实现取消FFmpeg命令
+        // 只有等待中或转换中的任务才能取消
+        if (task.status != ConversionStatus.pending &&
+            task.status != ConversionStatus.converting) {
+          return false;
+        }
+
+        // 如果是正在转换的任务，取消FFmpeg会话
+        if (task.status == ConversionStatus.converting) {
+          final session = _conversionSessions[taskId];
+          if (session != null) {
+            await session.cancel();
+            _conversionSessions.remove(taskId);
+          }
+
+          // 重置状态
           isConverting.value = false;
           currentTask.value = null;
+
+          // 处理下一个任务
+          _processNextTask();
         }
 
         // 更新任务状态
@@ -398,35 +419,101 @@ class VideoConverterService extends GetxService {
 
   /// 转换视频
   Future<void> _convertVideo(ConversionTask task) async {
+    FFmpegSession? session;
     try {
+      // 检查源文件是否存在
+      final sourceFile = File(task.sourceFilePath);
+      if (!await sourceFile.exists()) {
+        throw Exception('Source file does not exist: ${task.sourceFilePath}');
+      }
+
+      // 获取视频信息
+      final duration = await _getVideoDuration(task.sourceFilePath);
+
       // 构建FFmpeg命令
       final command = _buildFFmpegCommand(task);
-
       Logger.d('Starting video conversion: $command');
 
-      // 注意：由于 FFmpegKit 已被注释掉，这里暂时使用模拟实现
-      // 模拟转换过程
-      await Future.delayed(const Duration(seconds: 2));
+      // 创建目标文件目录
+      final targetFile = File(task.targetFilePath);
+      final targetDir = targetFile.parent;
+      if (!await targetDir.exists()) {
+        await targetDir.create(recursive: true);
+      }
 
-      // 模拟转换成功
-      final updatedTask = task.copyWith(
-        status: ConversionStatus.completed,
-        progress: 1.0,
+      // 更新任务状态为转换中
+      var updatedTask = task.copyWith(
+        status: ConversionStatus.converting,
+        progress: 0.0,
         updatedAt: DateTime.now(),
-        completedAt: DateTime.now(),
+      );
+      await _updateTask(updatedTask);
+
+      // 执行FFmpeg命令
+      session = await FFmpegKit.executeAsync(
+        command,
+        (session) async {
+          // 完成回调
+          final returnCode = await session.getReturnCode();
+
+          if (ReturnCode.isSuccess(returnCode)) {
+            // 转换成功
+            final completedTask = updatedTask.copyWith(
+              status: ConversionStatus.completed,
+              progress: 1.0,
+              updatedAt: DateTime.now(),
+              completedAt: DateTime.now(),
+            );
+            await _updateTask(completedTask);
+
+            Utils.showSnackbar('转换完成', '${task.sourceFilePath.split('/').last} 已转换完成');
+          } else if (ReturnCode.isCancel(returnCode)) {
+            // 转换被取消
+            final canceledTask = updatedTask.copyWith(
+              status: ConversionStatus.canceled,
+              updatedAt: DateTime.now(),
+            );
+            await _updateTask(canceledTask);
+          } else {
+            // 转换失败
+            final errorMessage = await session.getAllLogsAsString();
+            final failedTask = updatedTask.copyWith(
+              status: ConversionStatus.failed,
+              errorMessage: errorMessage,
+              updatedAt: DateTime.now(),
+            );
+            await _updateTask(failedTask);
+            Logger.e('Conversion failed: $errorMessage');
+          }
+
+          // 处理下一个任务
+          isConverting.value = false;
+          currentTask.value = null;
+          _processNextTask();
+        },
+        (log) {
+          // 日志回调
+          Logger.d('FFmpeg log: ${log.getMessage()}');
+        },
+        (statistics) {
+          // 进度回调
+          if (duration > 0) {
+            final timeInMs = statistics.getTime();
+            final progress = timeInMs / (duration * 1000);
+
+            // 更新进度
+            updatedTask = updatedTask.copyWith(
+              progress: progress.clamp(0.0, 1.0),
+              updatedAt: DateTime.now(),
+            );
+            _updateTask(updatedTask);
+          }
+        },
       );
 
-      await _updateTask(updatedTask);
-      Utils.showSnackbar(
-          '转换完成', '${task.sourceFilePath.split('/').last} 已转换完成');
-
-      // 处理下一个任务
-      isConverting.value = false;
-      currentTask.value = null;
-      _processNextTask();
-
       // 保存会话ID，用于取消
-      // TODO: 实现取消功能
+      _conversionSessions[task.id] = session;
+
     } catch (e) {
       Logger.e('Error converting video: $e');
 
@@ -484,9 +571,24 @@ class VideoConverterService extends GetxService {
   }
 
   /// 获取视频时长（秒）
-  int _getDuration(String filePath) {
-    // TODO: 实现获取视频时长
-    // 这里暂时返回一个默认值
-    return 60;
+  Future<double> _getVideoDuration(String filePath) async {
+    try {
+      // 使用FFprobe获取视频信息
+      MediaInformationSession session = await FFprobeKit.getMediaInformation(filePath);
+      MediaInformation? mediaInformation = session.getMediaInformation();
+
+      if (mediaInformation != null) {
+        String? durationStr = mediaInformation.getDuration();
+        if (durationStr != null && durationStr.isNotEmpty) {
+          return double.parse(durationStr);
+        }
+      }
+
+      // 如果无法获取时长，返回默认值
+      return 60.0;
+    } catch (e) {
+      Logger.e('Error getting video duration: $e');
+      return 60.0;
+    }
   }
 }

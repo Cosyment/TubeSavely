@@ -24,6 +24,8 @@ class AppColors {
   static const Color onBackground = Color(0xFF1E293B);
   static const Color onSurface = Color(0xFF334155);
   static const Color onSurfaceVariant = Color(0xFF64748B);
+  static const Color textPrimary = Color(0xFF1E293B);
+  static const Color textSecondary = Color(0xFF64748B);
 
   // 状态色
   static const Color success = Color(0xFF22C55E);

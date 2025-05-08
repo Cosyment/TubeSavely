@@ -33,7 +33,7 @@ class SettingsView extends GetView<SettingsController> {
               SizedBox(height: 8.h),
               _buildLanguageSettings(),
               SizedBox(height: 16.h),
-              
+
               _buildSectionTitle('下载设置'),
               SizedBox(height: 8.h),
               _buildDownloadPathSettings(),
@@ -44,19 +44,21 @@ class SettingsView extends GetView<SettingsController> {
               SizedBox(height: 8.h),
               _buildNotificationSettings(),
               SizedBox(height: 16.h),
-              
+
               _buildSectionTitle('视频设置'),
               SizedBox(height: 8.h),
               _buildVideoQualitySettings(),
               SizedBox(height: 8.h),
               _buildVideoFormatSettings(),
+              SizedBox(height: 8.h),
+              _buildVideoConvertSettings(),
               SizedBox(height: 16.h),
-              
+
               _buildSectionTitle('存储'),
               SizedBox(height: 8.h),
               _buildCacheSettings(),
               SizedBox(height: 16.h),
-              
+
               _buildSectionTitle('关于'),
               SizedBox(height: 8.h),
               _buildAboutSettings(),
@@ -246,7 +248,7 @@ class SettingsView extends GetView<SettingsController> {
   Widget _buildLanguageOption(String name, String languageCode, String countryCode) {
     return Obx(() {
       final isSelected = controller.currentLanguage.value == '${languageCode}_$countryCode';
-      
+
       return ListTile(
         title: Text(
           name,
@@ -431,7 +433,7 @@ class SettingsView extends GetView<SettingsController> {
   Widget _buildQualityOption(int quality) {
     return Obx(() {
       final isSelected = controller.defaultVideoQuality.value == quality;
-      
+
       return ListTile(
         title: Text(
           '${quality}P',
@@ -529,11 +531,29 @@ class SettingsView extends GetView<SettingsController> {
     );
   }
 
+  // 视频转换设置
+  Widget _buildVideoConvertSettings() {
+    return _buildSettingItem(
+      title: '视频格式转换',
+      subtitle: '转换视频格式、分辨率等',
+      leading: Icon(
+        Icons.transform,
+        color: Colors.deepPurple,
+      ),
+      trailing: Icon(
+        Icons.arrow_forward_ios,
+        size: 16.sp,
+        color: Get.theme.colorScheme.onSurface.withOpacity(0.6),
+      ),
+      onTap: () => Get.toNamed('/convert'),
+    );
+  }
+
   // 构建格式选项
   Widget _buildFormatOption(String format) {
     return Obx(() {
       final isSelected = controller.defaultVideoFormat.value == format;
-      
+
       return ListTile(
         title: Text(
           format.toUpperCase(),

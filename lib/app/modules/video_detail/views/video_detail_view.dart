@@ -485,6 +485,40 @@ class VideoDetailView extends GetView<VideoDetailController> {
             }),
           ),
           SizedBox(height: 12.h),
+          // 转换按钮
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => Get.toNamed('/convert'),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 12.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                backgroundColor: Colors.deepPurple,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.transform,
+                    size: 20.sp,
+                    color: Colors.white,
+                  ),
+                  SizedBox(width: 8.w),
+                  Text(
+                    '视频格式转换',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 12.h),
           Row(
             children: [
               Expanded(

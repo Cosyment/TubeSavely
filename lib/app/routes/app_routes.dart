@@ -13,6 +13,7 @@ abstract class Routes {
   static const VIDEO_PLAYER = _Paths.VIDEO_PLAYER;
   static const LOGIN = _Paths.LOGIN;
   static const PROFILE = _Paths.PROFILE;
+  static const CONVERT = _Paths.CONVERT;
 }
 
 abstract class _Paths {
@@ -28,4 +29,5 @@ abstract class _Paths {
   static const VIDEO_PLAYER = '/video-player';
   static const LOGIN = '/login';
   static const PROFILE = '/profile';
+  static const CONVERT = '/convert';
 }
