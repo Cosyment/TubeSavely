@@ -1,13 +1,14 @@
 import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 // import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:open_file/open_file.dart';
-import '../../../data/repositories/video_converter_repository.dart';
-import '../../../services/video_converter_service.dart';
-import '../../../utils/logger.dart';
-import '../../../utils/utils.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:tubesavely/app/data/repositories/video_converter_repository.dart';
+import 'package:tubesavely/app/services/video_converter_service.dart';
+import 'package:tubesavely/app/utils/logger.dart';
+import 'package:tubesavely/app/utils/utils.dart';
 
 class ConvertController extends GetxController {
   final VideoConverterRepository _videoConverterRepository = Get.find<VideoConverterRepository>();
@@ -58,10 +59,7 @@ class ConvertController extends GetxController {
       );
 
       if (result != null && result.files.isNotEmpty) {
-        final files = result.files
-            .where((file) => file.path != null)
-            .map((file) => File(file.path!))
-            .toList();
+        final files = result.files.where((file) => file.path != null).map((file) => File(file.path!)).toList();
 
         if (files.isNotEmpty) {
           selectedFiles.addAll(files);

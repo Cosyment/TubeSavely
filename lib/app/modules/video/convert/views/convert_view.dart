@@ -1,11 +1,11 @@
 // import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../controllers/convert_controller.dart';
-import '../../../services/video_converter_service.dart';
-import '../../../theme/app_colors.dart';
-import '../../../theme/app_text_styles.dart';
+import 'package:get/get.dart';
+import 'package:tubesavely/app/modules/video/convert/controllers/convert_controller.dart';
+import 'package:tubesavely/app/services/video_converter_service.dart';
+import 'package:tubesavely/app/theme/app_colors.dart';
+import 'package:tubesavely/app/theme/app_text_styles.dart';
 
 class ConvertView extends GetView<ConvertController> {
   const ConvertView({Key? key}) : super(key: key);
@@ -287,8 +287,7 @@ class ConvertView extends GetView<ConvertController> {
                 ),
               ],
             ),
-            if (task.status == ConversionStatus.converting ||
-                task.status == ConversionStatus.pending)
+            if (task.status == ConversionStatus.converting || task.status == ConversionStatus.pending)
               Padding(
                 padding: EdgeInsets.only(top: 8.h),
                 child: LinearProgressIndicator(
@@ -310,8 +309,7 @@ class ConvertView extends GetView<ConvertController> {
                       foregroundColor: AppColors.success,
                     ),
                   ),
-                if (task.status == ConversionStatus.pending ||
-                    task.status == ConversionStatus.converting)
+                if (task.status == ConversionStatus.pending || task.status == ConversionStatus.converting)
                   TextButton.icon(
                     onPressed: () => controller.cancelTask(task.id),
                     icon: const Icon(Icons.cancel),

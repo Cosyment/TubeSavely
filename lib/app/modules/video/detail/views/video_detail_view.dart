@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:tubesavely/app/theme/app_theme.dart';
 
-import '../../../theme/app_theme.dart';
 import '../controllers/video_detail_controller.dart';
 
 class VideoDetailView extends GetView<VideoDetailController> {
@@ -128,8 +128,7 @@ class VideoDetailView extends GetView<VideoDetailController> {
                     fit: BoxFit.cover,
                     placeholder: (context, url) => const Center(
                       child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                            AppTheme.primaryColor),
+                        valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primaryColor),
                       ),
                     ),
                     errorWidget: (context, url, error) => Center(
@@ -439,9 +438,7 @@ class VideoDetailView extends GetView<VideoDetailController> {
             width: double.infinity,
             child: Obx(() {
               return ElevatedButton(
-                onPressed: controller.isDownloading.value
-                    ? null
-                    : controller.downloadVideo,
+                onPressed: controller.isDownloading.value ? null : controller.downloadVideo,
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 12.h),
                   shape: RoundedRectangleBorder(
@@ -457,8 +454,7 @@ class VideoDetailView extends GetView<VideoDetailController> {
                             width: 20.w,
                             height: 20.w,
                             child: CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                               strokeWidth: 2.w,
                             ),
                           ),

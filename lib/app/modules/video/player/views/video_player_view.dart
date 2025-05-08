@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import '../../../services/video_player_service.dart';
-import '../../../theme/app_colors.dart';
-import '../../../theme/app_text_styles.dart';
+import 'package:tubesavely/app/services/video_player_service.dart';
+import 'package:tubesavely/app/theme/app_colors.dart';
+import 'package:tubesavely/app/theme/app_text_styles.dart';
+
 import '../controllers/video_player_controller.dart';
 
 /// 视频播放页面
@@ -266,9 +267,7 @@ class VideoPlayerView extends GetView<VideoPlayerController> {
                 children: [
                   // 静音按钮
                   Obx(() {
-                    final IconData icon = controller.isMuted.value
-                        ? Icons.volume_off
-                        : Icons.volume_up;
+                    final IconData icon = controller.isMuted.value ? Icons.volume_off : Icons.volume_up;
                     return IconButton(
                       icon: Icon(icon, color: Colors.white),
                       onPressed: controller.toggleMute,
@@ -277,9 +276,7 @@ class VideoPlayerView extends GetView<VideoPlayerController> {
 
                   // 全屏按钮
                   Obx(() {
-                    final IconData icon = controller.isFullscreen.value
-                        ? Icons.fullscreen_exit
-                        : Icons.fullscreen;
+                    final IconData icon = controller.isFullscreen.value ? Icons.fullscreen_exit : Icons.fullscreen;
                     return IconButton(
                       icon: Icon(icon, color: Colors.white),
                       onPressed: controller.toggleFullscreen,
@@ -299,9 +296,7 @@ class VideoPlayerView extends GetView<VideoPlayerController> {
     return Obx(() {
       final double value = controller.isDraggingProgress.value
           ? controller.dragProgress.value
-          : (controller.duration.value > 0
-              ? controller.position.value / controller.duration.value
-              : 0.0);
+          : (controller.duration.value > 0 ? controller.position.value / controller.duration.value : 0.0);
 
       return SliderTheme(
         data: SliderThemeData(

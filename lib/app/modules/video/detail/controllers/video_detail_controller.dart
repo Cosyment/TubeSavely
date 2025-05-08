@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
-import 'package:flutter/material.dart';
-import '../../../data/models/video_model.dart';
-import '../../../data/repositories/video_repository.dart';
-import '../../../data/repositories/download_repository.dart';
-import '../../../utils/utils.dart';
-import '../../../utils/logger.dart';
+import 'package:tubesavely/app/data/models/video_model.dart';
+import 'package:tubesavely/app/data/repositories/download_repository.dart';
+import 'package:tubesavely/app/data/repositories/video_repository.dart';
+import 'package:tubesavely/app/utils/utils.dart';
+
+import '../../../../utils/logger.dart';
 
 class VideoDetailController extends GetxController {
   final VideoRepository _videoRepository = Get.find<VideoRepository>();

@@ -1,17 +1,16 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
+
 import 'package:get/get.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import '../../../data/models/video_model.dart';
-import '../../../data/repositories/video_player_repository.dart';
-import '../../../services/video_player_service.dart';
-import '../../../utils/logger.dart';
-import '../../../utils/utils.dart';
+import 'package:tubesavely/app/data/models/video_model.dart';
+import 'package:tubesavely/app/data/repositories/video_player_repository.dart';
+import 'package:tubesavely/app/services/video_player_service.dart';
+import 'package:tubesavely/app/utils/logger.dart';
+import 'package:tubesavely/app/utils/utils.dart';
 
 /// 视频播放控制器
 class VideoPlayerController extends GetxController {
-  final VideoPlayerRepository _videoPlayerRepository =
-      Get.find<VideoPlayerRepository>();
+  final VideoPlayerRepository _videoPlayerRepository = Get.find<VideoPlayerRepository>();
 
   // 视频控制器
   late final VideoController videoController;
@@ -156,8 +155,7 @@ class VideoPlayerController extends GetxController {
   void togglePlayPause() {
     if (status.value == PlayerStatus.playing) {
       _videoPlayerRepository.pauseVideo();
-    } else if (status.value == PlayerStatus.paused ||
-        status.value == PlayerStatus.completed) {
+    } else if (status.value == PlayerStatus.paused || status.value == PlayerStatus.completed) {
       _videoPlayerRepository.resumeVideo();
     }
     _resetControlsTimer();

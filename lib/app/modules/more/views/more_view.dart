@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../controllers/more_controller.dart';
+import 'package:get/get.dart';
+import 'package:tubesavely/app/utils/utils.dart';
+
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
+import '../controllers/more_controller.dart';
 
 class MoreView extends GetView<MoreController> {
   const MoreView({Key? key}) : super(key: key);
