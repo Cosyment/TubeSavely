@@ -81,31 +81,118 @@ dependencies:
 
 ```
 lib/
-├── app/                  # 应用层
-│   ├── bindings/         # 依赖注入绑定
-│   ├── controllers/      # GetX 控制器
-│   ├── data/             # 数据层
-│   │   ├── models/       # 数据模型
-│   │   ├── providers/    # 数据提供者
-│   │   └── repositories/ # 数据仓库
-│   ├── modules/          # 功能模块
-│   │   ├── splash/       # 启动页模块
-│   │   ├── home/         # 首页模块
-│   │   ├── video_detail/ # 视频详情模块
-│   │   ├── settings/     # 设置模块
-│   │   ├── history/      # 历史记录模块
-│   │   ├── tasks/        # 任务管理模块
-│   │   ├── payment/      # 支付模块
-│   │   └── more/         # 更多功能模块
-│   ├── routes/           # 路由管理
-│   ├── theme/            # 主题管理
-│   └── utils/            # 工具类
-├── core/                 # 核心功能
-│   ├── downloader/       # 下载功能
-│   ├── ffmpeg/           # FFmpeg 封装
-│   ├── payment/          # 支付功能封装
-│   └── services/         # 全局服务
-├── generated/            # 国际化生成文件
+├── app/                      # 应用层
+│   ├── bindings/             # 依赖注入绑定
+│   ├── controllers/          # GetX 控制器
+│   ├── data/                 # 数据层
+│   │   ├── models/           # 数据模型
+│   │   │   ├── download/     # 下载相关模型
+│   │   │   ├── user/         # 用户相关模型
+│   │   │   ├── video/        # 视频相关模型
+│   │   │   └── common/       # 通用模型
+│   │   ├── providers/        # 数据提供者
+│   │   │   ├── api_provider.dart      # API 数据提供者
+│   │   │   └── storage_provider.dart  # 本地存储提供者
+│   │   └── repositories/     # 数据仓库
+│   │       ├── download_repository.dart    # 下载仓库
+│   │       ├── user_repository.dart        # 用户仓库
+│   │       ├── video_repository.dart       # 视频仓库
+│   │       ├── video_converter_repository.dart  # 视频转换仓库
+│   │       └── video_player_repository.dart    # 视频播放仓库
+│   ├── modules/              # 功能模块
+│   │   ├── splash/           # 启动页模块
+│   │   │   ├── bindings/     # 启动页绑定
+│   │   │   ├── controllers/  # 启动页控制器
+│   │   │   └── views/        # 启动页视图
+│   │   ├── home/             # 首页模块
+│   │   │   ├── bindings/     # 首页绑定
+│   │   │   ├── controllers/  # 首页控制器
+│   │   │   └── views/        # 首页视图
+│   │   ├── main/             # 主页模块
+│   │   │   ├── bindings/     # 主页绑定
+│   │   │   ├── controllers/  # 主页控制器
+│   │   │   └── views/        # 主页视图
+│   │   ├── video/            # 视频相关模块
+│   │   │   ├── detail/       # 视频详情模块
+│   │   │   │   ├── bindings/
+│   │   │   │   ├── controllers/
+│   │   │   │   └── views/
+│   │   │   ├── player/       # 视频播放模块
+│   │   │   │   ├── bindings/
+│   │   │   │   ├── controllers/
+│   │   │   │   └── views/
+│   │   │   └── convert/      # 视频转换模块
+│   │   │       ├── bindings/
+│   │   │       ├── controllers/
+│   │   │       └── views/
+│   │   ├── settings/         # 设置模块
+│   │   │   ├── bindings/
+│   │   │   ├── controllers/
+│   │   │   └── views/
+│   │   ├── history/          # 历史记录模块
+│   │   │   ├── bindings/
+│   │   │   ├── controllers/
+│   │   │   └── views/
+│   │   ├── tasks/            # 任务管理模块
+│   │   │   ├── bindings/
+│   │   │   ├── controllers/
+│   │   │   └── views/
+│   │   ├── login/            # 登录模块
+│   │   │   ├── bindings/
+│   │   │   ├── controllers/
+│   │   │   └── views/
+│   │   ├── profile/          # 个人资料模块
+│   │   │   ├── bindings/
+│   │   │   ├── controllers/
+│   │   │   └── views/
+│   │   ├── payment/          # 支付模块 (计划中)
+│   │   │   ├── bindings/
+│   │   │   ├── controllers/
+│   │   │   └── views/
+│   │   └── more/             # 更多功能模块
+│   │       ├── bindings/
+│   │       ├── controllers/
+│   │       └── views/
+│   ├── routes/               # 路由管理
+│   │   ├── app_pages.dart    # 页面路由定义
+│   │   └── app_routes.dart   # 路由常量
+│   ├── services/             # 服务层
+│   │   ├── download_service.dart     # 下载服务
+│   │   ├── init_services.dart        # 服务初始化
+│   │   ├── theme_service.dart        # 主题服务
+│   │   ├── translation_service.dart  # 翻译服务
+│   │   ├── user_service.dart         # 用户服务
+│   │   ├── video_converter_service.dart  # 视频转换服务
+│   │   ├── video_parser_service.dart     # 视频解析服务
+│   │   └── video_player_service.dart     # 视频播放服务
+│   ├── theme/                # 主题管理
+│   │   ├── app_colors.dart   # 颜色定义
+│   │   ├── app_text_styles.dart  # 文本样式
+│   │   └── app_theme.dart    # 主题定义
+│   └── utils/                # 工具类
+│       ├── constants.dart     # 常量定义
+│       ├── extensions/        # 扩展方法
+│       ├── helpers/           # 辅助函数
+│       └── widgets/           # 通用组件
+├── core/                     # 核心功能
+│   ├── downloader/           # 下载功能
+│   │   ├── download_manager.dart  # 下载管理器
+│   │   └── download_task.dart     # 下载任务
+│   ├── ffmpeg/               # FFmpeg 封装
+│   │   └── ffmpeg_executor.dart   # FFmpeg 执行器
+│   ├── converter/            # 转换功能
+│   │   └── converter.dart         # 转换器
+│   └── payment/              # 支付功能 (计划中)
+│       ├── apple_payment.dart     # Apple 支付
+│       └── stripe_payment.dart    # Stripe 支付
+├── generated/                # 自动生成的代码
+│   ├── intl/                 # 国际化相关
+│   │   ├── messages_all.dart
+│   │   ├── messages_en.dart
+│   │   ├── messages_ja.dart
+│   │   ├── messages_ko.dart
+│   │   └── messages_zh.dart
+│   └── l10n.dart             # 国际化入口
 └── main.dart             # 入口文件
 ```
 
