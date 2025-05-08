@@ -20,6 +20,10 @@ import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
 import '../modules/convert/bindings/convert_binding.dart';
 import '../modules/convert/views/convert_view.dart';
+import '../modules/more/bindings/more_binding.dart';
+import '../modules/more/views/more_view.dart';
+import '../modules/main/bindings/main_binding.dart';
+import '../modules/main/views/main_view.dart';
 
 part 'app_routes.dart';
 
@@ -29,6 +33,11 @@ class AppPages {
   static const INITIAL = '/splash';
 
   static final routes = [
+    GetPage(
+      name: _Paths.MAIN,
+      page: () => const MainView(),
+      binding: MainBinding(),
+    ),
     GetPage(
       name: _Paths.HOME,
       page: () => HomeView(),
@@ -78,6 +87,11 @@ class AppPages {
       name: _Paths.CONVERT,
       page: () => const ConvertView(),
       binding: ConvertBinding(),
+    ),
+    GetPage(
+      name: _Paths.MORE,
+      page: () => const MoreView(),
+      binding: MoreBinding(),
     ),
   ];
 }

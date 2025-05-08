@@ -53,8 +53,8 @@ class SplashController extends GetxController
       final downloadRepo = Get.find<DownloadRepository>();
       Logger.d('DownloadRepository found: ${downloadRepo.runtimeType}');
 
-      Logger.d('All repositories initialized, navigating to home');
-      Get.offAllNamed('/home');
+      Logger.d('All repositories initialized, navigating to main');
+      Get.offAllNamed('/main');
     } catch (e) {
       Logger.e('Error navigating to home: $e');
 
