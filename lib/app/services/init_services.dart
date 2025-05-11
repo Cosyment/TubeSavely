@@ -6,6 +6,7 @@ import '../utils/logger.dart';
 import '../data/providers/api_provider.dart';
 import '../data/providers/storage_provider.dart';
 import '../data/repositories/download_repository.dart';
+import '../data/repositories/payment_repository.dart';
 import '../data/repositories/user_repository.dart';
 import '../data/repositories/video_repository.dart';
 import '../data/repositories/video_converter_repository.dart';
@@ -14,6 +15,7 @@ import 'theme_service.dart';
 import 'translation_service.dart';
 import 'video_parser_service.dart';
 import 'download_service.dart';
+import 'payment_service.dart';
 import 'video_converter_service.dart';
 import 'video_player_service.dart';
 import 'user_service.dart';
@@ -63,12 +65,17 @@ Future<void> initServices() async {
   final userService = await UserService().init();
   Get.put(userService, permanent: true);
 
+  // 初始化并注册支付服务
+  final paymentService = await PaymentService().init();
+  Get.put(paymentService, permanent: true);
+
   // 注册仓库
   Get.put(UserRepository(), permanent: true);
   Get.put(VideoRepository(), permanent: true);
   Get.put(DownloadRepository(), permanent: true);
   Get.put(VideoConverterRepository(), permanent: true);
   Get.put(VideoPlayerRepository(), permanent: true);
+  Get.put(PaymentRepository(), permanent: true);
 
   Logger.i('所有服务初始化完成');
 }

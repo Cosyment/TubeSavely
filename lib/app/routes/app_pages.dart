@@ -10,6 +10,8 @@ import '../modules/main/bindings/main_binding.dart';
 import '../modules/main/views/main_view.dart';
 import '../modules/more/bindings/more_binding.dart';
 import '../modules/more/views/more_view.dart';
+import '../modules/payment/bindings/payment_binding.dart';
+import '../modules/payment/views/payment_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
 import '../modules/settings/bindings/settings_binding.dart';
@@ -40,53 +42,58 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.HOME,
-      page: () => HomeView(),
+      page: () => const HomeView(),
       binding: HomeBinding(),
     ),
     GetPage(
       name: _Paths.SPLASH,
-      page: () => SplashView(),
+      page: () => const SplashView(),
       binding: SplashBinding(),
     ),
     GetPage(
       name: _Paths.VIDEO_DETAIL,
-      page: () => VideoDetailView(),
+      page: () => const VideoDetailView(),
       binding: VideoDetailBinding(),
     ),
     GetPage(
       name: _Paths.SETTINGS,
-      page: () => SettingsView(),
+      page: () => const SettingsView(),
       binding: SettingsBinding(),
     ),
     GetPage(
       name: _Paths.HISTORY,
-      page: () => HistoryView(),
+      page: () => const HistoryView(),
       binding: HistoryBinding(),
     ),
     GetPage(
       name: _Paths.TASKS,
-      page: () => TasksView(),
+      page: () => const TasksView(),
       binding: TasksBinding(),
     ),
     GetPage(
       name: _Paths.VIDEO_PLAYER,
-      page: () => VideoPlayerView(),
+      page: () => const VideoPlayerView(),
       binding: VideoPlayerBinding(),
     ),
     GetPage(
       name: _Paths.LOGIN,
-      page: () => LoginView(),
+      page: () => const LoginView(),
       binding: LoginBinding(),
     ),
     GetPage(
       name: _Paths.PROFILE,
-      page: () => ProfileView(),
+      page: () => const ProfileView(),
       binding: ProfileBinding(),
     ),
     GetPage(
       name: _Paths.CONVERT,
       page: () => const ConvertView(),
       binding: ConvertBinding(),
+    ),
+    GetPage(
+      name: _Paths.PAYMENT,
+      page: () => const PaymentView(),
+      binding: PaymentBinding(),
     ),
     GetPage(
       name: _Paths.MORE,
