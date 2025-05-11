@@ -4,14 +4,17 @@ import 'package:get/get.dart';
 import 'package:tubesavely/app/data/models/payment_model.dart';
 import 'package:tubesavely/app/data/models/user_model.dart';
 import 'package:tubesavely/app/data/repositories/payment_repository.dart';
+import 'package:tubesavely/app/services/stripe_service.dart';
 import 'package:tubesavely/app/services/user_service.dart';
 import 'package:tubesavely/app/utils/logger.dart';
 import 'package:tubesavely/app/utils/utils.dart';
 
 /// 支付控制器
-class PaymentController extends GetxController with GetSingleTickerProviderStateMixin {
+class PaymentController extends GetxController
+    with GetSingleTickerProviderStateMixin {
   final PaymentRepository _paymentRepository = Get.find<PaymentRepository>();
   final UserService _userService = Get.find<UserService>();
+  final StripeService _stripeService = Get.find<StripeService>();
 
   // 标签控制器
   late TabController tabController;
@@ -37,6 +40,9 @@ class PaymentController extends GetxController with GetSingleTickerProviderState
   // 用户信息
   final Rx<UserModel?> userInfo = Rx<UserModel?>(null);
 
+  // 是否支持Google Pay
+  final RxBool isGooglePaySupported = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -50,6 +56,22 @@ class PaymentController extends GetxController with GetSingleTickerProviderState
 
     // 加载用户信息
     loadUserInfo();
+
+    // 检查Google Pay是否可用
+    if (Platform.isAndroid) {
+      checkGooglePaySupport();
+    }
+  }
+
+  /// 检查Google Pay是否可用
+  Future<void> checkGooglePaySupport() async {
+    try {
+      isGooglePaySupported.value = await _stripeService.isGooglePaySupported();
+      Logger.d('Google Pay supported: ${isGooglePaySupported.value}');
+    } catch (e) {
+      Logger.e('Error checking Google Pay support: $e');
+      isGooglePaySupported.value = false;
+    }
   }
 
   /// 加载商品列表
@@ -118,7 +140,7 @@ class PaymentController extends GetxController with GetSingleTickerProviderState
 
       if (order != null) {
         currentOrder.value = order;
-        
+
         // 处理支付
         await processPayment(order);
       } else {
