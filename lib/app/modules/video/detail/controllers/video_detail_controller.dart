@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:tubesavely/app/data/models/video_model.dart';
@@ -36,6 +37,33 @@ class VideoDetailController extends GetxController {
   // 播放状态
   final Rx<PlayerStatus> playerStatus = PlayerStatus.idle.obs;
 
+  // 是否显示控制器
+  final RxBool showControls = true.obs;
+
+  // 控制器隐藏计时器
+  Timer? _hideControlsTimer;
+
+  // 播放进度
+  final RxDouble position = 0.0.obs;
+
+  // 视频总时长
+  final RxDouble duration = 0.0.obs;
+
+  // 是否拖动进度条
+  final RxBool isDraggingProgress = false.obs;
+
+  // 拖动进度值
+  final RxDouble dragProgress = 0.0.obs;
+
+  // 音量
+  final RxDouble volume = 1.0.obs;
+
+  // 是否静音
+  final RxBool isMuted = false.obs;
+
+  // 是否全屏
+  final RxBool isFullscreen = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -58,10 +86,19 @@ class VideoDetailController extends GetxController {
       }
     }
 
-    // 定时更新播放状态
+    // 定时更新播放状态和进度
     Timer.periodic(const Duration(milliseconds: 500), (_) {
+      // 更新播放状态
       playerStatus.value = _videoPlayerRepository.status;
       isPlaying.value = _videoPlayerRepository.status == PlayerStatus.playing;
+
+      // 更新播放进度
+      position.value = _videoPlayerRepository.position;
+      duration.value = _videoPlayerRepository.duration;
+
+      // 更新音量
+      volume.value = _videoPlayerRepository.volume;
+      isMuted.value = _videoPlayerRepository.isMuted;
     });
   }
 
@@ -191,5 +228,92 @@ class VideoDetailController extends GetxController {
     } else {
       _videoPlayerRepository.resumeVideo();
     }
+    _resetControlsTimer();
+  }
+
+  // 显示/隐藏控制器
+  void toggleControls() {
+    showControls.value = !showControls.value;
+    if (showControls.value) {
+      _resetControlsTimer();
+    } else if (_hideControlsTimer != null) {
+      _hideControlsTimer!.cancel();
+      _hideControlsTimer = null;
+    }
+  }
+
+  // 重置控制器隐藏计时器
+  void _resetControlsTimer() {
+    if (_hideControlsTimer != null) {
+      _hideControlsTimer!.cancel();
+    }
+
+    showControls.value = true;
+    _hideControlsTimer = Timer(const Duration(seconds: 3), () {
+      if (isPlaying.value) {
+        showControls.value = false;
+      }
+    });
+  }
+
+  // 跳转到指定位置
+  Future<void> seekTo(double seconds) async {
+    await _videoPlayerRepository.seekTo(seconds);
+    _resetControlsTimer();
+  }
+
+  // 快退10秒
+  Future<void> rewind10Seconds() async {
+    final newPosition = (position.value - 10).clamp(0.0, duration.value);
+    await seekTo(newPosition.toDouble());
+  }
+
+  // 快进10秒
+  Future<void> forward10Seconds() async {
+    final newPosition = (position.value + 10).clamp(0.0, duration.value);
+    await seekTo(newPosition.toDouble());
+  }
+
+  // 开始拖动进度条
+  void startDraggingProgress(double value) {
+    isDraggingProgress.value = true;
+    dragProgress.value = value;
+  }
+
+  // 更新拖动进度
+  void updateDragProgress(double value) {
+    dragProgress.value = value;
+  }
+
+  // 结束拖动进度条
+  Future<void> endDraggingProgress() async {
+    if (duration.value > 0) {
+      final seconds = dragProgress.value * duration.value;
+      await seekTo(seconds);
+    }
+    isDraggingProgress.value = false;
+  }
+
+  // 切换静音
+  Future<void> toggleMute() async {
+    await _videoPlayerRepository.toggleMute();
+    _resetControlsTimer();
+  }
+
+  // 切换全屏
+  void toggleFullscreen() {
+    isFullscreen.value = !isFullscreen.value;
+    _videoPlayerRepository.toggleFullscreen();
+    _resetControlsTimer();
+  }
+
+  // 获取格式化的当前播放时间
+  String getFormattedPosition() {
+    return _videoPlayerRepository.getFormattedPosition();
+  }
+
+  // 获取格式化的视频总时长
+  String getFormattedDuration() {
+    return _videoPlayerRepository.getFormattedDuration();
   }
 }

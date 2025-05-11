@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Utils {
@@ -193,6 +193,8 @@ class Utils {
   ///
   /// [text] 要分享的文本
   static Future<void> shareText(String text) async {
-    await Share.share(text);
+    // 使用剪贴板代替分享功能
+    await Clipboard.setData(ClipboardData(text: text));
+    showSnackbar('已复制', '内容已复制到剪贴板');
   }
 }

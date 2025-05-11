@@ -159,10 +159,10 @@ class DownloadService extends GetxService {
               defaultValue: true) ==
           true) {
         _downloader.configureNotification(
-          running: TaskNotification('正在下载', '文件: $fileName'),
-          complete: TaskNotification('下载完成', '文件: $fileName'),
-          error: TaskNotification('下载失败', '文件: $fileName'),
-          paused: TaskNotification('下载暂停', '文件: $fileName'),
+          running: const TaskNotification('正在下载', '文件: {filename}'),
+          complete: const TaskNotification('下载完成', '文件: {filename}'),
+          error: const TaskNotification('下载失败', '文件: {filename}'),
+          paused: const TaskNotification('下载暂停', '文件: {filename}'),
           progressBar: true,
           tapOpensFile: true,
         );
@@ -220,7 +220,7 @@ class DownloadService extends GetxService {
                   defaultValue: true) ==
               true) {
             _downloader.configureNotification(
-              paused: TaskNotification('下载暂停', '文件: ${task.title}'),
+              paused: const TaskNotification('下载暂停', '文件: {filename}'),
             );
           }
 
@@ -298,7 +298,7 @@ class DownloadService extends GetxService {
                   defaultValue: true) ==
               true) {
             _downloader.configureNotification(
-              running: TaskNotification('正在下载', '文件: ${task.title}'),
+              running: const TaskNotification('正在下载', '文件: {filename}'),
             );
           }
 
@@ -340,7 +340,7 @@ class DownloadService extends GetxService {
                 defaultValue: true) ==
             true) {
           _downloader.configureNotification(
-            error: TaskNotification('下载取消', '文件: ${task.title}'),
+            error: const TaskNotification('下载取消', '文件: {filename}'),
           );
         }
 
@@ -615,23 +615,9 @@ class DownloadService extends GetxService {
 
   /// 配置下载器
   Future<void> configureDownloader() async {
-    // 配置持有队列，限制并发下载数量
-    // maxConcurrent: 最大并发任务数
-    // maxConcurrentByHost: 每个主机的最大并发任务数
-    // maxConcurrentByGroup: 每个组的最大并发任务数
-    await _downloader.configure(
-      globalConfig: (Config.holdingQueue, (3, 2, 1)),
-    );
-
-    // 配置超时时间
-    await _downloader.configure(
-      globalConfig: (Config.requestTimeout, 60), // 60秒超时
-    );
-
-    // 检查可用空间
-    await _downloader.configure(
-      globalConfig: (Config.checkAvailableSpace, true),
-    );
+    // 在 8.0.0 版本中，不需要特殊配置
+    // 使用默认配置
+    Logger.d('Using default downloader configuration');
   }
 
   /// 初始化通知

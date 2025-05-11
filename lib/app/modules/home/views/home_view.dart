@@ -51,7 +51,7 @@ class HomeView extends GetView<HomeController> {
         color: Get.theme.colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withAlpha(13),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -75,56 +75,27 @@ class HomeView extends GetView<HomeController> {
             ),
           ),
           Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
-                icon: Icon(Icons.history, size: 24.sp),
+                icon: Icon(Icons.history, size: 22.sp),
                 onPressed: () => Get.toNamed('/history'),
+                padding: EdgeInsets.all(8.w),
+                constraints: const BoxConstraints(),
               ),
+              SizedBox(width: 4.w),
               IconButton(
-                icon: Icon(Icons.download, size: 24.sp),
+                icon: Icon(Icons.download, size: 22.sp),
                 onPressed: () => Get.toNamed('/tasks'),
+                padding: EdgeInsets.all(8.w),
+                constraints: const BoxConstraints(),
               ),
+              SizedBox(width: 4.w),
               IconButton(
-                icon: Icon(Icons.person, size: 24.sp),
-                onPressed: () => Get.toNamed('/profile'),
-              ),
-              IconButton(
-                icon: Icon(Icons.settings, size: 24.sp),
+                icon: Icon(Icons.settings, size: 22.sp),
                 onPressed: () => Get.toNamed('/settings'),
-              ),
-              IconButton(
-                icon: Stack(
-                  children: [
-                    Icon(Icons.notifications_outlined, size: 24.sp),
-                    Positioned(
-                      right: 0,
-                      top: 0,
-                      child: Container(
-                        padding: EdgeInsets.all(2.w),
-                        decoration: BoxDecoration(
-                          color: AppTheme.errorColor,
-                          shape: BoxShape.circle,
-                        ),
-                        constraints: BoxConstraints(
-                          minWidth: 14.w,
-                          minHeight: 14.w,
-                        ),
-                        child: Text(
-                          '2',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                onPressed: () {
-                  // 处理通知点击
-                },
+                padding: EdgeInsets.all(8.w),
+                constraints: const BoxConstraints(),
               ),
             ],
           ),
@@ -141,7 +112,7 @@ class HomeView extends GetView<HomeController> {
           borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
-              color: AppTheme.primaryColor.withOpacity(0.1),
+              color: AppTheme.primaryColor.withAlpha(26),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -177,7 +148,7 @@ class HomeView extends GetView<HomeController> {
                 borderRadius: BorderRadius.circular(12.r),
                 boxShadow: [
                   BoxShadow(
-                    color: AppTheme.primaryColor.withOpacity(0.3),
+                    color: AppTheme.primaryColor.withAlpha(77),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -273,7 +244,7 @@ class HomeView extends GetView<HomeController> {
           borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
-              color: gradient.colors.first.withOpacity(0.3),
+              color: gradient.colors.first.withAlpha(77),
               blurRadius: 8,
               offset: const Offset(0, 4),
             ),
@@ -285,7 +256,7 @@ class HomeView extends GetView<HomeController> {
               width: 40.w,
               height: 40.w,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withAlpha(51),
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: Icon(
@@ -311,7 +282,7 @@ class HomeView extends GetView<HomeController> {
                   Text(
                     subtitle,
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withAlpha(204),
                       fontSize: 12.sp,
                     ),
                   ),
@@ -338,13 +309,13 @@ class HomeView extends GetView<HomeController> {
           borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withAlpha(13),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
           ],
           border: Border.all(
-            color: AppTheme.primaryColor.withOpacity(0.1),
+            color: AppTheme.primaryColor.withAlpha(26),
             width: 1,
           ),
         ),
@@ -504,7 +475,7 @@ class HomeView extends GetView<HomeController> {
                     '来源: ${video.platform}',
                     style: TextStyle(
                       fontSize: 12.sp,
-                      color: Get.theme.colorScheme.onSurface.withOpacity(0.7),
+                      color: Get.theme.colorScheme.onSurface.withAlpha(179),
                     ),
                   ),
                 if (video.duration != null)
@@ -512,7 +483,7 @@ class HomeView extends GetView<HomeController> {
                     '时长: ${video.duration! ~/ 60}:${(video.duration! % 60).toString().padLeft(2, '0')}',
                     style: TextStyle(
                       fontSize: 12.sp,
-                      color: Get.theme.colorScheme.onSurface.withOpacity(0.7),
+                      color: Get.theme.colorScheme.onSurface.withAlpha(179),
                     ),
                   ),
               ],
@@ -921,8 +892,8 @@ class HomeView extends GetView<HomeController> {
     return Column(
       children: [
         Container(
-          width: 60.w,
-          height: 60.w,
+          width: 50.w,
+          height: 50.w,
           decoration: BoxDecoration(
             color: Get.theme.colorScheme.surface,
             borderRadius: BorderRadius.circular(12.r),
@@ -935,8 +906,8 @@ class HomeView extends GetView<HomeController> {
             borderRadius: BorderRadius.circular(12.r),
             child: CachedNetworkImage(
               imageUrl: icon,
-              width: 40.w,
-              height: 40.w,
+              width: 30.w,
+              height: 30.w,
               fit: BoxFit.contain,
               placeholder: (context, url) => Center(
                 child: CircularProgressIndicator(
@@ -951,11 +922,11 @@ class HomeView extends GetView<HomeController> {
             ),
           ),
         ),
-        SizedBox(height: 8.h),
+        SizedBox(height: 4.h),
         Text(
           name,
           style: TextStyle(
-            fontSize: 12.sp,
+            fontSize: 10.sp,
             fontWeight: FontWeight.w500,
             color: Get.theme.colorScheme.onSurface,
           ),

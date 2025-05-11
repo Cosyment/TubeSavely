@@ -22,7 +22,7 @@ class VideoDetailView extends GetView<VideoDetailController> {
                 '没有视频信息',
                 style: TextStyle(
                   fontSize: 16.sp,
-                  color: Get.theme.colorScheme.onBackground,
+                  color: Get.theme.colorScheme.onSurface,
                 ),
               ),
             );
@@ -63,7 +63,7 @@ class VideoDetailView extends GetView<VideoDetailController> {
         color: Get.theme.colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withAlpha(13),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -124,7 +124,7 @@ class VideoDetailView extends GetView<VideoDetailController> {
             // 视频播放器
             Container(
               width: double.infinity,
-              height: 200.h,
+              height: 220.h,
               color: Colors.black,
               child: AspectRatio(
                 aspectRatio: 16 / 9,
@@ -132,39 +132,23 @@ class VideoDetailView extends GetView<VideoDetailController> {
               ),
             ),
 
-            // 播放/暂停按钮 (点击时显示)
+            // 点击区域，用于显示/隐藏控制器
             Positioned.fill(
               child: GestureDetector(
-                onTap: controller.togglePlayPause,
-                child: Container(
-                  color: Colors.transparent,
-                  child: Center(
-                    child: Obx(() {
-                      if (controller.playerStatus.value ==
-                          PlayerStatus.playing) {
-                        return const SizedBox.shrink(); // 播放时不显示按钮
-                      } else {
-                        return Container(
-                          width: 60.w,
-                          height: 60.w,
-                          decoration: BoxDecoration(
-                            color: Colors.black.withAlpha(128), // 0.5 透明度
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            controller.playerStatus.value == PlayerStatus.paused
-                                ? Icons.play_arrow
-                                : Icons.refresh,
-                            color: Colors.white,
-                            size: 40.sp,
-                          ),
-                        );
-                      }
-                    }),
-                  ),
-                ),
+                onTap: controller.toggleControls,
+                behavior: HitTestBehavior.translucent,
+                child: Container(color: Colors.transparent),
               ),
             ),
+
+            // 控制器
+            Obx(() {
+              if (controller.showControls.value) {
+                return _buildVideoControls();
+              } else {
+                return const SizedBox.shrink();
+              }
+            }),
 
             // 加载指示器
             Obx(() {
@@ -190,7 +174,7 @@ class VideoDetailView extends GetView<VideoDetailController> {
             children: [
               Container(
                 width: double.infinity,
-                height: 200.h,
+                height: 220.h,
                 color: Colors.black,
                 child: video.thumbnail != null
                     ? CachedNetworkImage(
@@ -238,6 +222,234 @@ class VideoDetailView extends GetView<VideoDetailController> {
     });
   }
 
+  // 视频控制器
+  Widget _buildVideoControls() {
+    return Stack(
+      children: [
+        // 顶部控制栏（标题和返回按钮）
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withAlpha(179),
+                  Colors.transparent,
+                ],
+              ),
+            ),
+            child: Row(
+              children: [
+                IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                    size: 20.sp,
+                  ),
+                  onPressed: () {
+                    controller.togglePlayPause();
+                    controller.showControls.value = true;
+                  },
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                ),
+                SizedBox(width: 8.w),
+                Expanded(
+                  child: Text(
+                    controller.video.value?.title ?? '',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        // 中间控制按钮
+        Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // 快退按钮
+              IconButton(
+                icon: Icon(Icons.replay_10, color: Colors.white, size: 36.sp),
+                onPressed: controller.rewind10Seconds,
+              ),
+
+              SizedBox(width: 16.w),
+
+              // 播放/暂停按钮
+              Container(
+                width: 60.w,
+                height: 60.w,
+                decoration: BoxDecoration(
+                  color: Colors.black.withAlpha(128), // 0.5 透明度
+                  shape: BoxShape.circle,
+                ),
+                child: IconButton(
+                  icon: Icon(
+                    controller.playerStatus.value == PlayerStatus.playing
+                        ? Icons.pause
+                        : Icons.play_arrow,
+                    color: Colors.white,
+                    size: 40.sp,
+                  ),
+                  onPressed: controller.togglePlayPause,
+                ),
+              ),
+
+              SizedBox(width: 16.w),
+
+              // 快进按钮
+              IconButton(
+                icon: Icon(Icons.forward_10, color: Colors.white, size: 36.sp),
+                onPressed: controller.forward10Seconds,
+              ),
+            ],
+          ),
+        ),
+
+        // 底部控制栏（进度条、时间、全屏按钮）
+        Positioned(
+          bottom: 0,
+          left: 0,
+          right: 0,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                colors: [
+                  Colors.black.withAlpha(179),
+                  Colors.transparent,
+                ],
+              ),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // 进度条
+                _buildProgressBar(),
+
+                SizedBox(height: 8.h),
+
+                // 时间和控制按钮
+                Row(
+                  children: [
+                    // 当前时间
+                    Text(
+                      controller.getFormattedPosition(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12.sp,
+                      ),
+                    ),
+
+                    SizedBox(width: 8.w),
+
+                    // 总时长
+                    Text(
+                      '/ ${controller.getFormattedDuration()}',
+                      style: TextStyle(
+                        color: Colors.white.withAlpha(179),
+                        fontSize: 12.sp,
+                      ),
+                    ),
+
+                    const Spacer(),
+
+                    // 静音按钮
+                    IconButton(
+                      icon: Icon(
+                        controller.isMuted.value
+                            ? Icons.volume_off
+                            : Icons.volume_up,
+                        color: Colors.white,
+                        size: 20.sp,
+                      ),
+                      onPressed: controller.toggleMute,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+
+                    SizedBox(width: 16.w),
+
+                    // 全屏按钮
+                    IconButton(
+                      icon: Icon(
+                        controller.isFullscreen.value
+                            ? Icons.fullscreen_exit
+                            : Icons.fullscreen,
+                        color: Colors.white,
+                        size: 20.sp,
+                      ),
+                      onPressed: controller.toggleFullscreen,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // 进度条
+  Widget _buildProgressBar() {
+    return Obx(() {
+      double value = 0.0;
+
+      if (controller.duration.value > 0) {
+        if (controller.isDraggingProgress.value) {
+          value = controller.dragProgress.value;
+        } else {
+          value = controller.position.value / controller.duration.value;
+        }
+      }
+
+      return SliderTheme(
+        data: SliderThemeData(
+          trackHeight: 4.h,
+          thumbShape: RoundSliderThumbShape(enabledThumbRadius: 6.r),
+          overlayShape: RoundSliderOverlayShape(overlayRadius: 12.r),
+          activeTrackColor: AppTheme.primaryColor,
+          inactiveTrackColor: Colors.white.withAlpha(77), // 0.3 透明度
+          thumbColor: AppTheme.primaryColor,
+          overlayColor: AppTheme.primaryColor.withAlpha(77), // 0.3 透明度
+        ),
+        child: Slider(
+          value: value.clamp(0.0, 1.0),
+          onChanged: (value) {
+            if (controller.duration.value > 0) {
+              controller.updateDragProgress(value);
+            }
+          },
+          onChangeStart: (value) {
+            controller.startDraggingProgress(value);
+          },
+          onChangeEnd: (value) {
+            controller.endDraggingProgress();
+          },
+        ),
+      );
+    });
+  }
+
   // 视频信息
   Widget _buildVideoInfo() {
     final video = controller.video.value!;
@@ -252,7 +464,7 @@ class VideoDetailView extends GetView<VideoDetailController> {
             style: TextStyle(
               fontSize: 18.sp,
               fontWeight: FontWeight.bold,
-              color: Get.theme.colorScheme.onBackground,
+              color: Get.theme.colorScheme.onSurface,
             ),
           ),
           SizedBox(height: 8.h),
@@ -261,28 +473,28 @@ class VideoDetailView extends GetView<VideoDetailController> {
               Icon(
                 Icons.videocam,
                 size: 16.sp,
-                color: Get.theme.colorScheme.onBackground.withOpacity(0.6),
+                color: Get.theme.colorScheme.onSurface.withAlpha(153),
               ),
               SizedBox(width: 4.w),
               Text(
                 video.platform ?? '未知平台',
                 style: TextStyle(
                   fontSize: 14.sp,
-                  color: Get.theme.colorScheme.onBackground.withOpacity(0.6),
+                  color: Get.theme.colorScheme.onSurface.withAlpha(153),
                 ),
               ),
               SizedBox(width: 16.w),
               Icon(
                 Icons.access_time,
                 size: 16.sp,
-                color: Get.theme.colorScheme.onBackground.withOpacity(0.6),
+                color: Get.theme.colorScheme.onSurface.withAlpha(153),
               ),
               SizedBox(width: 4.w),
               Text(
                 video.formattedDuration,
                 style: TextStyle(
                   fontSize: 14.sp,
-                  color: Get.theme.colorScheme.onBackground.withOpacity(0.6),
+                  color: Get.theme.colorScheme.onSurface.withAlpha(153),
                 ),
               ),
             ],
@@ -294,14 +506,14 @@ class VideoDetailView extends GetView<VideoDetailController> {
                 Icon(
                   Icons.person,
                   size: 16.sp,
-                  color: Get.theme.colorScheme.onBackground.withOpacity(0.6),
+                  color: Get.theme.colorScheme.onSurface.withAlpha(153),
                 ),
                 SizedBox(width: 4.w),
                 Text(
                   '作者: ${video.author}',
                   style: TextStyle(
                     fontSize: 14.sp,
-                    color: Get.theme.colorScheme.onBackground.withOpacity(0.6),
+                    color: Get.theme.colorScheme.onSurface.withAlpha(153),
                   ),
                 ),
               ],
@@ -309,7 +521,7 @@ class VideoDetailView extends GetView<VideoDetailController> {
           ],
           SizedBox(height: 16.h),
           Divider(
-            color: Get.theme.colorScheme.onBackground.withOpacity(0.1),
+            color: Get.theme.colorScheme.onSurface.withAlpha(26),
             thickness: 1,
           ),
         ],
@@ -329,7 +541,7 @@ class VideoDetailView extends GetView<VideoDetailController> {
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.bold,
-              color: Get.theme.colorScheme.onBackground,
+              color: Get.theme.colorScheme.onSurface,
             ),
           ),
           SizedBox(height: 16.h),
@@ -339,7 +551,7 @@ class VideoDetailView extends GetView<VideoDetailController> {
             style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.w500,
-              color: Get.theme.colorScheme.onBackground,
+              color: Get.theme.colorScheme.onSurface,
             ),
           ),
           SizedBox(height: 8.h),
@@ -351,7 +563,7 @@ class VideoDetailView extends GetView<VideoDetailController> {
             style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.w500,
-              color: Get.theme.colorScheme.onBackground,
+              color: Get.theme.colorScheme.onSurface,
             ),
           ),
           SizedBox(height: 8.h),
@@ -431,7 +643,7 @@ class VideoDetailView extends GetView<VideoDetailController> {
         decoration: BoxDecoration(
           gradient: isSelected
               ? LinearGradient(
-                  colors: [
+                  colors: const [
                     AppTheme.primaryColor,
                     AppTheme.accentColor,
                   ],
@@ -442,12 +654,12 @@ class VideoDetailView extends GetView<VideoDetailController> {
           border: isSelected
               ? null
               : Border.all(
-                  color: Get.theme.colorScheme.onSurface.withOpacity(0.1),
+                  color: Get.theme.colorScheme.onSurface.withAlpha(26),
                 ),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: AppTheme.primaryColor.withOpacity(0.3),
+                    color: AppTheme.primaryColor.withAlpha(77),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
