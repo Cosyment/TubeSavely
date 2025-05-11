@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:media_kit_video/media_kit_video.dart';
+import 'package:tubesavely/app/services/video_player_service.dart';
 import 'package:tubesavely/app/theme/app_theme.dart';
 
 import '../controllers/video_detail_controller.dart';
@@ -109,60 +111,131 @@ class VideoDetailView extends GetView<VideoDetailController> {
     );
   }
 
-  // 视频预览
+  // 视频预览/播放区域
   Widget _buildVideoPreview() {
     final video = controller.video.value!;
 
-    return GestureDetector(
-      onTap: () => controller.playVideo(),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            width: double.infinity,
-            height: 200.h,
-            color: Colors.black,
-            child: video.thumbnail != null
-                ? CachedNetworkImage(
-                    imageUrl: video.thumbnail!,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => const Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primaryColor),
-                      ),
-                    ),
-                    errorWidget: (context, url, error) => Center(
-                      child: Icon(
-                        Icons.error,
-                        color: Colors.white,
-                        size: 40.sp,
-                      ),
-                    ),
-                  )
-                : Center(
-                    child: Icon(
-                      Icons.video_library,
-                      color: Colors.white,
-                      size: 40.sp,
-                    ),
+    return Obx(() {
+      if (controller.isPlaying.value) {
+        // 显示视频播放器
+        return Stack(
+          alignment: Alignment.center,
+          children: [
+            // 视频播放器
+            Container(
+              width: double.infinity,
+              height: 200.h,
+              color: Colors.black,
+              child: AspectRatio(
+                aspectRatio: 16 / 9,
+                child: Video(controller: controller.videoController),
+              ),
+            ),
+
+            // 播放/暂停按钮 (点击时显示)
+            Positioned.fill(
+              child: GestureDetector(
+                onTap: controller.togglePlayPause,
+                child: Container(
+                  color: Colors.transparent,
+                  child: Center(
+                    child: Obx(() {
+                      if (controller.playerStatus.value ==
+                          PlayerStatus.playing) {
+                        return const SizedBox.shrink(); // 播放时不显示按钮
+                      } else {
+                        return Container(
+                          width: 60.w,
+                          height: 60.w,
+                          decoration: BoxDecoration(
+                            color: Colors.black.withAlpha(128), // 0.5 透明度
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            controller.playerStatus.value == PlayerStatus.paused
+                                ? Icons.play_arrow
+                                : Icons.refresh,
+                            color: Colors.white,
+                            size: 40.sp,
+                          ),
+                        );
+                      }
+                    }),
                   ),
-          ),
-          Container(
-            width: 60.w,
-            height: 60.w,
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.5),
-              shape: BoxShape.circle,
+                ),
+              ),
             ),
-            child: Icon(
-              Icons.play_arrow,
-              color: Colors.white,
-              size: 40.sp,
-            ),
+
+            // 加载指示器
+            Obx(() {
+              if (controller.playerStatus.value == PlayerStatus.loading) {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(AppTheme.primaryColor),
+                  ),
+                );
+              } else {
+                return const SizedBox.shrink();
+              }
+            }),
+          ],
+        );
+      } else {
+        // 显示缩略图和播放按钮
+        return GestureDetector(
+          onTap: () => controller.playVideo(),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                width: double.infinity,
+                height: 200.h,
+                color: Colors.black,
+                child: video.thumbnail != null
+                    ? CachedNetworkImage(
+                        imageUrl: video.thumbnail!,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => const Center(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                AppTheme.primaryColor),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Center(
+                          child: Icon(
+                            Icons.error,
+                            color: Colors.white,
+                            size: 40.sp,
+                          ),
+                        ),
+                      )
+                    : Center(
+                        child: Icon(
+                          Icons.video_library,
+                          color: Colors.white,
+                          size: 40.sp,
+                        ),
+                      ),
+              ),
+              Container(
+                width: 60.w,
+                height: 60.w,
+                decoration: BoxDecoration(
+                  color: Colors.black.withAlpha(128), // 0.5 透明度
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.play_arrow,
+                  color: Colors.white,
+                  size: 40.sp,
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        );
+      }
+    });
   }
 
   // 视频信息
@@ -399,38 +472,44 @@ class VideoDetailView extends GetView<VideoDetailController> {
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Column(
         children: [
-          // 播放按钮
+          // 播放/暂停按钮
           SizedBox(
             width: double.infinity,
-            child: ElevatedButton(
-              onPressed: controller.playVideo,
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 12.h),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                backgroundColor: AppTheme.accentColor,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.play_arrow,
-                    size: 20.sp,
-                    color: Colors.white,
+            child: Obx(() {
+              final bool isPlaying = controller.isPlaying.value;
+              return ElevatedButton(
+                onPressed: isPlaying
+                    ? controller.togglePlayPause
+                    : controller.playVideo,
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(vertical: 12.h),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.r),
                   ),
-                  SizedBox(width: 8.w),
-                  Text(
-                    '播放视频',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
+                  backgroundColor:
+                      isPlaying ? Colors.orange : AppTheme.accentColor,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      isPlaying ? Icons.pause : Icons.play_arrow,
+                      size: 20.sp,
                       color: Colors.white,
                     ),
-                  ),
-                ],
-              ),
-            ),
+                    SizedBox(width: 8.w),
+                    Text(
+                      isPlaying ? '暂停播放' : '播放视频',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
           ),
           SizedBox(height: 12.h),
           // 下载按钮
@@ -438,7 +517,9 @@ class VideoDetailView extends GetView<VideoDetailController> {
             width: double.infinity,
             child: Obx(() {
               return ElevatedButton(
-                onPressed: controller.isDownloading.value ? null : controller.downloadVideo,
+                onPressed: controller.isDownloading.value
+                    ? null
+                    : controller.downloadVideo,
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 12.h),
                   shape: RoundedRectangleBorder(
@@ -454,7 +535,8 @@ class VideoDetailView extends GetView<VideoDetailController> {
                             width: 20.w,
                             height: 20.w,
                             child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
                               strokeWidth: 2.w,
                             ),
                           ),

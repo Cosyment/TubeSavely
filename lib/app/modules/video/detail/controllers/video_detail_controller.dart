@@ -1,7 +1,12 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 import 'package:tubesavely/app/data/models/video_model.dart';
 import 'package:tubesavely/app/data/repositories/download_repository.dart';
+import 'package:tubesavely/app/data/repositories/video_player_repository.dart';
 import 'package:tubesavely/app/data/repositories/video_repository.dart';
+import 'package:tubesavely/app/services/video_player_service.dart';
 import 'package:tubesavely/app/utils/utils.dart';
 
 import '../../../../utils/logger.dart';
@@ -9,6 +14,8 @@ import '../../../../utils/logger.dart';
 class VideoDetailController extends GetxController {
   final VideoRepository _videoRepository = Get.find<VideoRepository>();
   final DownloadRepository _downloadRepository = Get.find<DownloadRepository>();
+  final VideoPlayerRepository _videoPlayerRepository =
+      Get.find<VideoPlayerRepository>();
 
   // 视频信息
   final Rx<VideoModel?> video = Rx<VideoModel?>(null);
@@ -20,14 +27,22 @@ class VideoDetailController extends GetxController {
   // 下载状态
   final RxBool isDownloading = false.obs;
 
-  // 视频播放控制器
-  // 注意：这里使用了MediaKit，实际使用时需要初始化
-  // final Rx<Player?> player = Rx<Player?>(null);
+  // 视频播放状态
+  final RxBool isPlaying = false.obs;
+
+  // 视频控制器
+  late final VideoController videoController;
+
+  // 播放状态
+  final Rx<PlayerStatus> playerStatus = PlayerStatus.idle.obs;
 
   @override
   void onInit() {
     super.onInit();
     Logger.d('VideoDetailController initialized');
+
+    // 创建视频控制器
+    videoController = _videoPlayerRepository.createVideoController();
 
     // 获取传递的参数
     if (Get.arguments != null && Get.arguments is VideoModel) {
@@ -41,18 +56,21 @@ class VideoDetailController extends GetxController {
       if (video.value!.formats.isNotEmpty) {
         selectedFormat.value = video.value!.formats.first.label;
       }
-
-      // 初始化播放器
-      // initPlayer();
     }
+
+    // 定时更新播放状态
+    Timer.periodic(const Duration(milliseconds: 500), (_) {
+      playerStatus.value = _videoPlayerRepository.status;
+      isPlaying.value = _videoPlayerRepository.status == PlayerStatus.playing;
+    });
   }
 
   @override
   void onClose() {
-    // 释放播放器资源
-    // if (player.value != null) {
-    //   player.value!.dispose();
-    // }
+    // 停止播放
+    if (isPlaying.value) {
+      _videoPlayerRepository.stopVideo();
+    }
     super.onClose();
   }
 
@@ -132,24 +150,46 @@ class VideoDetailController extends GetxController {
   }
 
   // 播放视频
-  void playVideo() {
+  Future<void> playVideo() async {
     if (video.value == null) return;
 
-    // 获取最高质量的视频URL
-    String videoUrl = '';
-    if (video.value!.qualities.isNotEmpty) {
-      videoUrl = video.value!.qualities.first.url;
-    } else if (video.value!.formats.isNotEmpty) {
-      videoUrl = video.value!.formats.first.url;
-    } else {
-      videoUrl = video.value!.url;
-    }
+    try {
+      // 获取最高质量的视频URL
+      String videoUrl = '';
+      if (video.value!.qualities.isNotEmpty) {
+        videoUrl = video.value!.qualities.first.url;
+      } else if (video.value!.formats.isNotEmpty) {
+        videoUrl = video.value!.formats.first.url;
+      } else {
+        videoUrl = video.value!.url;
+      }
 
-    // 跳转到视频播放页面
-    if (videoUrl.isNotEmpty) {
-      Get.toNamed('/video-player', arguments: video.value);
+      // 直接在当前页面播放视频
+      if (videoUrl.isNotEmpty) {
+        if (isPlaying.value) {
+          // 如果已经在播放，则停止当前播放
+          _videoPlayerRepository.stopVideo();
+        }
+
+        // 开始播放新视频
+        await _videoPlayerRepository.playVideo(
+            url: videoUrl, video: video.value);
+        isPlaying.value = true;
+      } else {
+        Utils.showSnackbar('错误', '无法播放视频，未找到有效的视频链接', isError: true);
+      }
+    } catch (e) {
+      Logger.e('播放视频时出错: $e');
+      Utils.showSnackbar('错误', '播放视频时出错: $e', isError: true);
+    }
+  }
+
+  // 暂停/继续播放
+  void togglePlayPause() {
+    if (isPlaying.value) {
+      _videoPlayerRepository.pauseVideo();
     } else {
-      Utils.showSnackbar('错误', '无法播放视频，未找到有效的视频链接', isError: true);
+      _videoPlayerRepository.resumeVideo();
     }
   }
 }
