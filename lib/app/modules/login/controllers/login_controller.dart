@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../../../services/user_service.dart';
 import '../../../utils/logger.dart';
 import '../../../utils/utils.dart';
@@ -180,9 +182,73 @@ class LoginController extends GetxController {
   }
 
   /// 第三方登录 - Apple
-  void loginWithApple() {
-    // TODO: 实现Apple登录
-    Utils.showSnackbar('提示', 'Apple登录功能尚未实现');
+  Future<void> loginWithApple() async {
+    try {
+      isLoading.value = true;
+
+      // 检查是否支持 Apple 登录
+      final isAvailable = await SignInWithApple.isAvailable();
+      if (!isAvailable && Platform.isIOS) {
+        Utils.showSnackbar('错误', '您的设备不支持 Apple 登录', isError: true);
+        return;
+      }
+
+      // 获取 Apple 登录凭证
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+        // 为 Android 设备提供 webAuthenticationOptions
+        webAuthenticationOptions: Platform.isAndroid
+            ? WebAuthenticationOptions(
+                clientId: 'com.xhx.tubesavely.service',
+                redirectUri: Uri.parse(
+                  'https://tubesavely-app.firebaseapp.com/__/auth/handler',
+                ),
+              )
+            : null,
+      );
+
+      // 获取用户信息
+      final String? email = credential.email;
+      final String? givenName = credential.givenName;
+      final String? familyName = credential.familyName;
+      final String? identityToken = credential.identityToken;
+
+      // 如果没有获取到 identityToken，则登录失败
+      if (identityToken == null) {
+        Utils.showSnackbar('错误', 'Apple 登录失败，请稍后重试', isError: true);
+        return;
+      }
+
+      // 构建用户名
+      String? name;
+      if (givenName != null || familyName != null) {
+        name = [givenName, familyName].where((n) => n != null).join(' ');
+      }
+
+      // 调用服务进行登录
+      final success = await _userService.loginWithApple(
+        identityToken: identityToken,
+        email: email,
+        name: name,
+      );
+
+      if (success) {
+        Utils.showSnackbar('成功', 'Apple 登录成功');
+
+        // 跳转到首页
+        Get.offAllNamed('/home');
+      } else {
+        Utils.showSnackbar('错误', 'Apple 登录失败，请稍后重试', isError: true);
+      }
+    } catch (e) {
+      Logger.e('Apple login error: $e');
+      Utils.showSnackbar('错误', 'Apple 登录时出错: $e', isError: true);
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   /// 返回

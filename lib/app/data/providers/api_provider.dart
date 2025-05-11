@@ -100,6 +100,14 @@ class ApiProvider extends GetConnect {
     });
   }
 
+  /// 使用 Apple 登录
+  ///
+  /// [data] 登录数据，包含 identity_token, email, name 等
+  Future<Response<dynamic>> loginWithApple(Map<String, dynamic> data) {
+    Logger.d('User login with Apple');
+    return post('/auth/apple', data);
+  }
+
   /// 获取用户信息
   Future<Response<dynamic>> getUserInfo() {
     Logger.d('Getting user info');
