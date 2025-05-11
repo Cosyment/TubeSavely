@@ -7,6 +7,7 @@ import 'package:tubesavely/app/data/models/payment_model.dart';
 import 'package:tubesavely/app/data/models/user_model.dart';
 import 'package:tubesavely/app/data/providers/api_provider.dart';
 import 'package:tubesavely/app/data/providers/storage_provider.dart';
+import 'package:tubesavely/app/services/stripe_service.dart';
 import 'package:tubesavely/app/utils/logger.dart';
 import 'package:tubesavely/app/utils/utils.dart';
 
@@ -16,6 +17,7 @@ import 'package:tubesavely/app/utils/utils.dart';
 class PaymentService extends GetxService {
   final ApiProvider _apiProvider = Get.find<ApiProvider>();
   final StorageProvider _storageProvider = Get.find<StorageProvider>();
+  late final StripeService _stripeService;
 
   // 商品列表
   final RxList<ProductModel> products = <ProductModel>[].obs;
@@ -36,6 +38,9 @@ class PaymentService extends GetxService {
   /// 初始化服务
   Future<PaymentService> init() async {
     Logger.d('PaymentService initialized');
+
+    // 获取Stripe服务
+    _stripeService = Get.find<StripeService>();
 
     // 初始化In-App Purchase
     _inAppPurchase = InAppPurchase.instance;
@@ -72,7 +77,8 @@ class PaymentService extends GetxService {
 
       if (response.status.isOk && response.body != null) {
         final List<dynamic> data = response.body;
-        products.value = data.map((item) => ProductModel.fromJson(item)).toList();
+        products.value =
+            data.map((item) => ProductModel.fromJson(item)).toList();
       } else {
         Logger.e('Failed to load products: ${response.statusText}');
       }
@@ -87,7 +93,8 @@ class PaymentService extends GetxService {
   ///
   /// [productId] 商品ID
   /// [paymentMethod] 支付方式
-  Future<OrderModel?> createOrder(String productId, PaymentMethod paymentMethod) async {
+  Future<OrderModel?> createOrder(
+      String productId, PaymentMethod paymentMethod) async {
     try {
       isLoading.value = true;
 
@@ -130,8 +137,6 @@ class PaymentService extends GetxService {
           return await _processAlipayPurchase(order);
         case PaymentMethod.wechatPay:
           return await _processWechatPayPurchase(order);
-        default:
-          return false;
       }
     } catch (e) {
       Logger.e('Error processing payment: $e');
@@ -149,7 +154,8 @@ class PaymentService extends GetxService {
           await _inAppPurchase.queryProductDetails({order.productId});
 
       if (productDetailsResponse.error != null) {
-        Logger.e('Error querying product details: ${productDetailsResponse.error}');
+        Logger.e(
+            'Error querying product details: ${productDetailsResponse.error}');
         return false;
       }
 
@@ -167,7 +173,8 @@ class PaymentService extends GetxService {
       if (Platform.isIOS) {
         return await _inAppPurchase.buyConsumable(purchaseParam: purchaseParam);
       } else {
-        return await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
+        return await _inAppPurchase.buyNonConsumable(
+            purchaseParam: purchaseParam);
       }
     } catch (e) {
       Logger.e('Error processing In-App Purchase: $e');
@@ -177,8 +184,21 @@ class PaymentService extends GetxService {
 
   /// 处理Stripe支付
   Future<bool> _processStripePurchase(OrderModel order) async {
-    // TODO: 实现Stripe支付
-    return false;
+    try {
+      // 检查Stripe服务是否已初始化
+      if (!_stripeService.isInitialized) {
+        Logger.e('Stripe service is not initialized');
+        Utils.showSnackbar('错误', 'Stripe服务未初始化', isError: true);
+        return false;
+      }
+
+      // 处理Stripe支付
+      return await _stripeService.processPayment(order);
+    } catch (e) {
+      Logger.e('Error processing Stripe payment: $e');
+      Utils.showSnackbar('错误', '处理Stripe支付时出错: $e', isError: true);
+      return false;
+    }
   }
 
   /// 处理支付宝支付
@@ -202,12 +222,14 @@ class PaymentService extends GetxService {
       } else if (purchaseDetails.status == PurchaseStatus.error) {
         // 购买错误
         Logger.e('Purchase error: ${purchaseDetails.error}');
-        Utils.showSnackbar('错误', '购买失败: ${purchaseDetails.error}', isError: true);
+        Utils.showSnackbar('错误', '购买失败: ${purchaseDetails.error}',
+            isError: true);
       } else if (purchaseDetails.status == PurchaseStatus.purchased ||
           purchaseDetails.status == PurchaseStatus.restored) {
         // 购买成功或恢复购买
-        Logger.d('Purchase ${purchaseDetails.status == PurchaseStatus.purchased ? 'purchased' : 'restored'}: ${purchaseDetails.productID}');
-        
+        Logger.d(
+            'Purchase ${purchaseDetails.status == PurchaseStatus.purchased ? 'purchased' : 'restored'}: ${purchaseDetails.productID}');
+
         // 验证购买
         _verifyPurchase(purchaseDetails);
       } else if (purchaseDetails.status == PurchaseStatus.canceled) {
@@ -238,7 +260,7 @@ class PaymentService extends GetxService {
 
       if (success.status.isOk) {
         Utils.showSnackbar('成功', '购买成功');
-        
+
         // 更新用户信息
         await _updateUserInfo();
       } else {
@@ -255,7 +277,7 @@ class PaymentService extends GetxService {
     try {
       // 获取用户信息
       final response = await _apiProvider.getUserInfo();
-      
+
       if (response.status.isOk && response.body != null) {
         final userModel = UserModel.fromJson(response.body);
         await _storageProvider.saveUserInfo(userModel);
