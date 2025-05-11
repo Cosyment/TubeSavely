@@ -171,8 +171,75 @@ class LoginController extends GetxController {
 
   /// 忘记密码
   void forgotPassword() {
-    // TODO: 实现忘记密码功能
-    Utils.showSnackbar('提示', '忘记密码功能尚未实现');
+    // 显示忘记密码对话框
+    Get.dialog(
+      AlertDialog(
+        title: const Text('忘记密码'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('请输入您的注册邮箱，我们将向您发送重置密码的链接'),
+            const SizedBox(height: 16),
+            TextField(
+              controller: emailController,
+              decoration: const InputDecoration(
+                labelText: '邮箱',
+                hintText: '请输入您的邮箱',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.emailAddress,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('取消'),
+          ),
+          ElevatedButton(
+            onPressed: () => _sendResetPasswordEmail(),
+            child: const Text('发送'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 发送重置密码邮件
+  Future<void> _sendResetPasswordEmail() async {
+    try {
+      // 验证邮箱
+      if (emailController.text.isEmpty) {
+        Utils.showSnackbar('错误', '请输入邮箱', isError: true);
+        return;
+      }
+
+      if (!GetUtils.isEmail(emailController.text)) {
+        Utils.showSnackbar('错误', '请输入有效的邮箱', isError: true);
+        return;
+      }
+
+      // 关闭对话框
+      Get.back();
+
+      // 显示加载中
+      isLoading.value = true;
+
+      // 调用API发送重置密码邮件
+      final success =
+          await _userService.sendResetPasswordEmail(emailController.text);
+
+      if (success) {
+        Utils.showSnackbar('成功', '重置密码邮件已发送，请查收');
+      } else {
+        Utils.showSnackbar('错误', '发送重置密码邮件失败，请稍后重试', isError: true);
+      }
+    } catch (e) {
+      Logger.e('Send reset password email error: $e');
+      Utils.showSnackbar('错误', '发送重置密码邮件时出错: $e', isError: true);
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   /// 第三方登录 - Google

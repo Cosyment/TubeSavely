@@ -97,14 +97,14 @@ class ProfileController extends GetxController {
 
   /// 跳转到会员页面
   void goToMembership() {
-    // TODO: 实现跳转到会员页面
-    Utils.showSnackbar('提示', '会员页面尚未实现');
+    // 跳转到支付页面，并选择会员标签
+    Get.toNamed('/payment', arguments: {'initialTab': 0});
   }
 
   /// 跳转到积分页面
   void goToPoints() {
-    // TODO: 实现跳转到积分页面
-    Utils.showSnackbar('提示', '积分页面尚未实现');
+    // 跳转到支付页面，并选择积分标签
+    Get.toNamed('/payment', arguments: {'initialTab': 1});
   }
 
   /// 跳转到设置页面

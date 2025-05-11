@@ -51,6 +51,17 @@ class PaymentController extends GetxController
     // 初始化标签控制器
     tabController = TabController(length: 2, vsync: this);
 
+    // 检查是否有初始标签参数
+    if (Get.arguments != null && Get.arguments is Map) {
+      final args = Get.arguments as Map;
+      if (args.containsKey('initialTab')) {
+        final initialTab = args['initialTab'] as int;
+        if (initialTab >= 0 && initialTab < tabController.length) {
+          tabController.index = initialTab;
+        }
+      }
+    }
+
     // 加载商品列表
     loadProducts();
 

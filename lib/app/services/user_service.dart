@@ -238,6 +238,22 @@ class UserService extends GetxService {
     }
   }
 
+  /// 发送重置密码邮件
+  ///
+  /// [email] 邮箱
+  Future<bool> sendResetPasswordEmail(String email) async {
+    try {
+      Logger.d('Sending reset password email: $email');
+
+      final response = await _apiProvider.sendResetPasswordEmail(email);
+
+      return response.status.isOk;
+    } catch (e) {
+      Logger.e('Send reset password email error: $e');
+      return false;
+    }
+  }
+
   /// 使用 Apple 登录
   ///
   /// [identityToken] Apple 身份令牌

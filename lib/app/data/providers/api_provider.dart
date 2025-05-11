@@ -178,4 +178,14 @@ class ApiProvider extends GetConnect {
     Logger.d('Getting transactions');
     return get('/transactions');
   }
+
+  /// 发送重置密码邮件
+  ///
+  /// [email] 邮箱
+  Future<Response<dynamic>> sendResetPasswordEmail(String email) {
+    Logger.d('Sending reset password email: $email');
+    return post('/auth/reset-password', {
+      'email': email,
+    });
+  }
 }
