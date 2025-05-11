@@ -21,6 +21,13 @@ class PaymentView extends GetView<PaymentController> {
         ),
         centerTitle: true,
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.receipt_long),
+            onPressed: controller.viewTransactionHistory,
+            tooltip: '交易记录',
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -44,7 +51,7 @@ class PaymentView extends GetView<PaymentController> {
   Widget _buildUserInfo() {
     return Obx(() {
       final user = controller.userInfo.value;
-      
+
       return Container(
         padding: EdgeInsets.all(16.r),
         margin: EdgeInsets.all(16.r),
@@ -101,9 +108,7 @@ class PaymentView extends GetView<PaymentController> {
                 _buildUserInfoItem(
                   '会员状态',
                   user?.isMembershipActive == true ? '有效' : '无效',
-                  user?.isMembershipActive == true
-                      ? Colors.green
-                      : Colors.red,
+                  user?.isMembershipActive == true ? Colors.green : Colors.red,
                 ),
                 _buildUserInfoItem(
                   '会员等级',

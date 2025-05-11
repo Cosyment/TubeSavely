@@ -164,15 +164,37 @@ class PaymentController extends GetxController
       if (success) {
         // 支付成功，更新用户信息
         await loadUserInfo();
+
+        // 导航到支付结果页面
+        Get.toNamed('/payment-result', arguments: {
+          'isSuccess': true,
+          'order': order,
+        });
       } else {
-        Utils.showSnackbar('错误', '支付失败', isError: true);
+        // 导航到支付结果页面
+        Get.toNamed('/payment-result', arguments: {
+          'isSuccess': false,
+          'order': order,
+          'errorMessage': '支付处理失败，请稍后重试',
+        });
       }
     } catch (e) {
       Logger.e('Error processing payment: $e');
-      Utils.showSnackbar('错误', '处理支付时出错: $e', isError: true);
+
+      // 导航到支付结果页面
+      Get.toNamed('/payment-result', arguments: {
+        'isSuccess': false,
+        'order': order,
+        'errorMessage': '处理支付时出错: $e',
+      });
     } finally {
       isLoading.value = false;
     }
+  }
+
+  /// 查看交易记录
+  void viewTransactionHistory() {
+    Get.toNamed('/transaction-history');
   }
 
   /// 获取订单状态

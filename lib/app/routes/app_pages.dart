@@ -11,7 +11,10 @@ import '../modules/main/views/main_view.dart';
 import '../modules/more/bindings/more_binding.dart';
 import '../modules/more/views/more_view.dart';
 import '../modules/payment/bindings/payment_binding.dart';
+import '../modules/payment/bindings/transaction_history_binding.dart';
 import '../modules/payment/views/payment_view.dart';
+import '../modules/payment/views/payment_result_view.dart';
+import '../modules/payment/views/transaction_history_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
 import '../modules/settings/bindings/settings_binding.dart';
@@ -94,6 +97,16 @@ class AppPages {
       name: _Paths.PAYMENT,
       page: () => const PaymentView(),
       binding: PaymentBinding(),
+    ),
+    GetPage(
+      name: _Paths.PAYMENT_RESULT,
+      page: () => const PaymentResultView(),
+      binding: PaymentBinding(),
+    ),
+    GetPage(
+      name: _Paths.TRANSACTION_HISTORY,
+      page: () => const TransactionHistoryView(),
+      binding: TransactionHistoryBinding(),
     ),
     GetPage(
       name: _Paths.MORE,
