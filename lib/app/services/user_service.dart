@@ -157,15 +157,23 @@ class UserService extends GetxService {
     try {
       Logger.d('Updating user info');
 
-      // TODO: 实现API调用更新用户信息
+      // 构建请求数据
+      final data = user.toJson();
 
-      // 更新本地存储
-      await _storageProvider.saveUserInfo(user);
+      // 调用 API
+      final response = await _apiProvider.updateUserInfo(data);
 
-      // 更新当前用户
-      currentUser.value = user;
+      if (response.status.isOk) {
+        // 更新本地存储
+        await _storageProvider.saveUserInfo(user);
 
-      return true;
+        // 更新当前用户
+        currentUser.value = user;
+
+        return true;
+      }
+
+      return false;
     } catch (e) {
       Logger.e('Update user info error: $e');
       return false;
@@ -294,6 +302,50 @@ class UserService extends GetxService {
       return false;
     } catch (e) {
       Logger.e('Login with Apple error: $e');
+      return false;
+    }
+  }
+
+  /// 使用 Google 登录
+  ///
+  /// [idToken] Google ID 令牌
+  /// [email] 邮箱
+  /// [name] 用户名
+  Future<bool> loginWithGoogle({
+    required String idToken,
+    required String email,
+    String? name,
+  }) async {
+    try {
+      Logger.d('User login with Google');
+
+      // 构建请求数据
+      final data = {
+        'id_token': idToken,
+        'email': email,
+        if (name != null) 'name': name,
+      };
+
+      // 调用 API
+      final response = await _apiProvider.loginWithGoogle(data);
+
+      if (response.status.isOk && response.body != null) {
+        // 保存令牌
+        final token = response.body['token'];
+        if (token != null) {
+          await _storageProvider.saveUserToken(token);
+          isLoggedIn.value = true;
+
+          // 获取用户信息
+          await getUserInfo();
+
+          return true;
+        }
+      }
+
+      return false;
+    } catch (e) {
+      Logger.e('Login with Google error: $e');
       return false;
     }
   }

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../../../services/user_service.dart';
 import '../../../utils/logger.dart';
@@ -243,9 +244,61 @@ class LoginController extends GetxController {
   }
 
   /// 第三方登录 - Google
-  void loginWithGoogle() {
-    // TODO: 实现Google登录
-    Utils.showSnackbar('提示', 'Google登录功能尚未实现');
+  Future<void> loginWithGoogle() async {
+    try {
+      isLoading.value = true;
+
+      // 初始化 Google 登录
+      final GoogleSignIn googleSignIn = GoogleSignIn(
+        scopes: [
+          'email',
+          'profile',
+        ],
+      );
+
+      // 尝试登录
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+      // 如果用户取消登录，则返回
+      if (googleUser == null) {
+        Utils.showSnackbar('提示', '已取消 Google 登录');
+        return;
+      }
+
+      // 获取认证信息
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      // 获取 ID 令牌
+      final String? idToken = googleAuth.idToken;
+
+      // 如果没有获取到 ID 令牌，则登录失败
+      if (idToken == null) {
+        Utils.showSnackbar('错误', 'Google 登录失败，请稍后重试', isError: true);
+        return;
+      }
+
+      // 调用服务进行登录
+      final success = await _userService.loginWithGoogle(
+        idToken: idToken,
+        email: googleUser.email,
+        name: googleUser.displayName,
+      );
+
+      if (success) {
+        Utils.showSnackbar('成功', 'Google 登录成功');
+
+        // 跳转到首页
+        Get.offAllNamed('/home');
+      } else {
+        Utils.showSnackbar('错误', 'Google 登录失败，请稍后重试', isError: true);
+      }
+    } catch (e) {
+      Logger.e('Google login error: $e');
+      Utils.showSnackbar('错误', 'Google 登录时出错: $e', isError: true);
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   /// 第三方登录 - Apple

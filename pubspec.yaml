@@ -71,6 +71,8 @@ dependencies:
   crypto: ^3.0.3
   shake_animation_widget: ^3.0.4
   dropdown_button2: ^2.3.9
+  sign_in_with_apple: ^5.0.0
+  google_sign_in: ^6.1.5
 
   # 国际化
   intl: ^0.19.0

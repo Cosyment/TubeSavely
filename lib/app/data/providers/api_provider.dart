@@ -108,10 +108,26 @@ class ApiProvider extends GetConnect {
     return post('/auth/apple', data);
   }
 
+  /// 使用 Google 登录
+  ///
+  /// [data] 登录数据，包含 id_token, email, name 等
+  Future<Response<dynamic>> loginWithGoogle(Map<String, dynamic> data) {
+    Logger.d('User login with Google');
+    return post('/auth/google', data);
+  }
+
   /// 获取用户信息
   Future<Response<dynamic>> getUserInfo() {
     Logger.d('Getting user info');
     return get('/user');
+  }
+
+  /// 更新用户信息
+  ///
+  /// [data] 用户信息
+  Future<Response<dynamic>> updateUserInfo(Map<String, dynamic> data) {
+    Logger.d('Updating user info');
+    return put('/user', data);
   }
 
   /// 获取下载历史
