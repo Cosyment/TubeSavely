@@ -163,4 +163,38 @@ class VideoPlayerRepository {
     final seconds = dur % 60;
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
+
+  /// 设置播放速度
+  ///
+  /// [speed] 播放速度，例如 0.5, 1.0, 1.5, 2.0
+  Future<void> setPlaybackSpeed(double speed) async {
+    try {
+      Logger.d('Setting playback speed: $speed');
+      await _videoPlayerService.setPlaybackSpeed(speed);
+    } catch (e) {
+      Logger.e('Error setting playback speed: $e');
+    }
+  }
+
+  /// 禁用字幕
+  Future<void> disableSubtitles() async {
+    try {
+      Logger.d('Disabling subtitles');
+      await _videoPlayerService.disableSubtitles();
+    } catch (e) {
+      Logger.e('Error disabling subtitles: $e');
+    }
+  }
+
+  /// 设置字幕
+  ///
+  /// [subtitleId] 字幕ID
+  Future<void> setSubtitle(String subtitleId) async {
+    try {
+      Logger.d('Setting subtitle: $subtitleId');
+      await _videoPlayerService.setSubtitle(subtitleId);
+    } catch (e) {
+      Logger.e('Error setting subtitle: $e');
+    }
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Utils {
@@ -13,8 +14,9 @@ class Utils {
       title,
       message,
       snackPosition: SnackPosition.BOTTOM,
-      backgroundColor:
-          isError ? Colors.red.withOpacity(0.9) : Colors.green.withOpacity(0.9),
+      backgroundColor: isError
+          ? Colors.red.withAlpha(230)
+          : Colors.green.withAlpha(230), // 0.9 透明度
       colorText: Colors.white,
       margin: const EdgeInsets.all(16),
       borderRadius: 8,
@@ -185,5 +187,12 @@ class Utils {
   static String formatDateTime(DateTime dateTime,
       {String format = 'yyyy-MM-dd HH:mm:ss'}) {
     return DateFormat(format).format(dateTime);
+  }
+
+  /// 分享文本
+  ///
+  /// [text] 要分享的文本
+  static Future<void> shareText(String text) async {
+    await Share.share(text);
   }
 }

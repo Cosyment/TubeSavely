@@ -45,7 +45,7 @@ class DownloadService extends GetxService {
     await configureDownloader();
 
     // 启动下载器，激活数据库并确保在挂起/终止后正确重启
-    await _downloader.start();
+    // 注意：FileDownloader 不再需要显式调用 start() 方法
 
     // 在数据库中跟踪任务
     await _downloader.trackTasks();
@@ -155,7 +155,9 @@ class DownloadService extends GetxService {
       }
 
       // 如果启用了通知，配置下载通知
-      if (_storageProvider.getSetting('show_notification', defaultValue: true) == true) {
+      if (_storageProvider.getSetting('show_notification',
+              defaultValue: true) ==
+          true) {
         _downloader.configureNotification(
           running: TaskNotification('正在下载', '文件: $fileName'),
           complete: TaskNotification('下载完成', '文件: $fileName'),
@@ -189,7 +191,8 @@ class DownloadService extends GetxService {
         final task = downloadTasks[taskIndex];
 
         // 创建下载任务
-        final fileName = '${task.title.replaceAll(RegExp(r'[^\w\s.-]'), '_')}_${task.quality ?? 'default'}.${task.format ?? 'mp4'}';
+        final fileName =
+            '${task.title.replaceAll(RegExp(r'[^\w\s.-]'), '_')}_${task.quality ?? 'default'}.${task.format ?? 'mp4'}';
         final downloadPath = task.savePath ?? getDefaultDownloadPath();
 
         final bgTask = DownloadTask(
@@ -213,7 +216,9 @@ class DownloadService extends GetxService {
           await _updateTask(updatedTask);
 
           // 显示通知
-          if (_storageProvider.getSetting('show_notification', defaultValue: true) == true) {
+          if (_storageProvider.getSetting('show_notification',
+                  defaultValue: true) ==
+              true) {
             _downloader.configureNotification(
               paused: TaskNotification('下载暂停', '文件: ${task.title}'),
             );
@@ -242,7 +247,8 @@ class DownloadService extends GetxService {
         final task = downloadTasks[taskIndex];
 
         // 创建下载任务
-        final fileName = '${task.title.replaceAll(RegExp(r'[^\w\s.-]'), '_')}_${task.quality ?? 'default'}.${task.format ?? 'mp4'}';
+        final fileName =
+            '${task.title.replaceAll(RegExp(r'[^\w\s.-]'), '_')}_${task.quality ?? 'default'}.${task.format ?? 'mp4'}';
         final downloadPath = task.savePath ?? getDefaultDownloadPath();
 
         final bgTask = DownloadTask(
@@ -251,7 +257,9 @@ class DownloadService extends GetxService {
           directory: downloadPath,
           baseDirectory: BaseDirectory.applicationDocuments,
           updates: Updates.statusAndProgress,
-          requiresWiFi: _storageProvider.getSetting('wifi_only', defaultValue: true) ?? false,
+          requiresWiFi:
+              _storageProvider.getSetting('wifi_only', defaultValue: true) ??
+                  false,
           retries: 3,
           allowPause: true,
           metaData: taskId,
@@ -286,7 +294,9 @@ class DownloadService extends GetxService {
           await _updateTask(updatedTask);
 
           // 显示通知
-          if (_storageProvider.getSetting('show_notification', defaultValue: true) == true) {
+          if (_storageProvider.getSetting('show_notification',
+                  defaultValue: true) ==
+              true) {
             _downloader.configureNotification(
               running: TaskNotification('正在下载', '文件: ${task.title}'),
             );
@@ -326,7 +336,9 @@ class DownloadService extends GetxService {
         await _updateTask(updatedTask);
 
         // 显示通知
-        if (_storageProvider.getSetting('show_notification', defaultValue: true) == true) {
+        if (_storageProvider.getSetting('show_notification',
+                defaultValue: true) ==
+            true) {
           _downloader.configureNotification(
             error: TaskNotification('下载取消', '文件: ${task.title}'),
           );
@@ -573,7 +585,9 @@ class DownloadService extends GetxService {
       await _updateTask(updatedTask);
 
       // 显示通知（如果启用了通知）
-      if (_storageProvider.getSetting('show_notification', defaultValue: true) == true) {
+      if (_storageProvider.getSetting('show_notification',
+              defaultValue: true) ==
+          true) {
         // 每 10% 显示一次通知，避免通知过多
         final progressPercent = (progress * 100).toInt();
         if (progressPercent % 10 == 0 && progressPercent > 0) {
@@ -589,7 +603,8 @@ class DownloadService extends GetxService {
   void _showProgressNotification(DownloadTaskModel task, double progress) {
     // 使用 background_downloader 的通知功能
     _downloader.configureNotification(
-      running: TaskNotification('正在下载', '文件: ${task.title} - ${(progress * 100).toInt()}%'),
+      running: TaskNotification(
+          '正在下载', '文件: ${task.title} - ${(progress * 100).toInt()}%'),
       complete: TaskNotification('下载完成', '文件: ${task.title}'),
       error: TaskNotification('下载失败', '文件: ${task.title}'),
       paused: TaskNotification('下载暂停', '文件: ${task.title}'),
@@ -621,13 +636,14 @@ class DownloadService extends GetxService {
 
   /// 初始化通知
   Future<void> initNotifications() async {
-    if (_storageProvider.getSetting('show_notification', defaultValue: true) == true) {
+    if (_storageProvider.getSetting('show_notification', defaultValue: true) ==
+        true) {
       // 配置全局通知
       _downloader.configureNotification(
-        running: TaskNotification('正在下载', '文件: {filename}'),
-        complete: TaskNotification('下载完成', '文件: {filename}'),
-        error: TaskNotification('下载失败', '文件: {filename}'),
-        paused: TaskNotification('下载暂停', '文件: {filename}'),
+        running: const TaskNotification('正在下载', '文件: {filename}'),
+        complete: const TaskNotification('下载完成', '文件: {filename}'),
+        error: const TaskNotification('下载失败', '文件: {filename}'),
+        paused: const TaskNotification('下载暂停', '文件: {filename}'),
         progressBar: true,
         tapOpensFile: true,
       );
@@ -699,8 +715,10 @@ class DownloadService extends GetxService {
       }
 
       // 重新调度被终止的任务
+      // 注意：FileDownloader 不再需要显式调用 rescheduleKilledTasks() 方法
       Future.delayed(const Duration(seconds: 5), () {
-        _downloader.rescheduleKilledTasks();
+        // 自动恢复任务
+        _resumeUnfinishedTasks();
       });
     } catch (e) {
       Logger.e('Error resuming unfinished tasks: $e');
