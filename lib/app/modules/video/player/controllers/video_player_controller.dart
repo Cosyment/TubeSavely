@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:tubesavely/app/data/models/video_model.dart';
@@ -8,9 +9,23 @@ import 'package:tubesavely/app/services/video_player_service.dart';
 import 'package:tubesavely/app/utils/logger.dart';
 import 'package:tubesavely/app/utils/utils.dart';
 
+/// 字幕轨道
+class SubtitleTrack {
+  final String id;
+  final String language;
+  final String? title;
+
+  SubtitleTrack({
+    required this.id,
+    required this.language,
+    this.title,
+  });
+}
+
 /// 视频播放控制器
 class VideoPlayerController extends GetxController {
-  final VideoPlayerRepository _videoPlayerRepository = Get.find<VideoPlayerRepository>();
+  final VideoPlayerRepository _videoPlayerRepository =
+      Get.find<VideoPlayerRepository>();
 
   // 视频控制器
   late final VideoController videoController;
@@ -47,6 +62,15 @@ class VideoPlayerController extends GetxController {
 
   // 是否全屏
   final RxBool isFullscreen = false.obs;
+
+  // 播放速度
+  final RxDouble playbackSpeed = 1.0.obs;
+
+  // 当前字幕
+  final Rx<SubtitleTrack?> currentSubtitle = Rx<SubtitleTrack?>(null);
+
+  // 可用字幕列表
+  final RxList<SubtitleTrack> availableSubtitles = <SubtitleTrack>[].obs;
 
   @override
   void onInit() {
@@ -155,7 +179,8 @@ class VideoPlayerController extends GetxController {
   void togglePlayPause() {
     if (status.value == PlayerStatus.playing) {
       _videoPlayerRepository.pauseVideo();
-    } else if (status.value == PlayerStatus.paused || status.value == PlayerStatus.completed) {
+    } else if (status.value == PlayerStatus.paused ||
+        status.value == PlayerStatus.completed) {
       _videoPlayerRepository.resumeVideo();
     }
     _resetControlsTimer();
@@ -247,5 +272,120 @@ class VideoPlayerController extends GetxController {
       // 如果不是播放状态，则始终显示控制器
       showControls.value = true;
     }
+  }
+
+  /// 延迟隐藏控制器
+  void hideControlsDelayed() {
+    _hideControlsTimer?.cancel();
+    _hideControlsTimer = Timer(const Duration(seconds: 1), () {
+      showControls.value = false;
+    });
+  }
+
+  /// 设置播放速度
+  Future<void> setPlaybackSpeed(double speed) async {
+    try {
+      await _videoPlayerRepository.setPlaybackSpeed(speed);
+      playbackSpeed.value = speed;
+      _resetControlsTimer();
+    } catch (e) {
+      Logger.e('Error setting playback speed: $e');
+      Utils.showSnackbar('错误', '设置播放速度时出错: $e', isError: true);
+    }
+  }
+
+  /// 设置字幕
+  Future<void> setSubtitle(SubtitleTrack? subtitle) async {
+    try {
+      if (subtitle == null) {
+        await _videoPlayerRepository.disableSubtitles();
+      } else {
+        await _videoPlayerRepository.setSubtitle(subtitle.id);
+      }
+      currentSubtitle.value = subtitle;
+      _resetControlsTimer();
+    } catch (e) {
+      Logger.e('Error setting subtitle: $e');
+      Utils.showSnackbar('错误', '设置字幕时出错: $e', isError: true);
+    }
+  }
+
+  /// 分享视频
+  void shareVideo() {
+    try {
+      if (currentVideo.value != null) {
+        final video = currentVideo.value!;
+        final String shareText = '${video.title}\n${video.url}';
+        Utils.shareText(shareText);
+      }
+    } catch (e) {
+      Logger.e('Error sharing video: $e');
+      Utils.showSnackbar('错误', '分享视频时出错: $e', isError: true);
+    }
+  }
+
+  /// 下载视频
+  void downloadVideo() {
+    try {
+      if (currentVideo.value != null) {
+        final video = currentVideo.value!;
+        Get.toNamed('/download', arguments: video);
+      }
+    } catch (e) {
+      Logger.e('Error downloading video: $e');
+      Utils.showSnackbar('错误', '下载视频时出错: $e', isError: true);
+    }
+  }
+
+  /// 显示视频信息
+  void showVideoInfo() {
+    try {
+      if (currentVideo.value != null) {
+        final video = currentVideo.value!;
+
+        Get.dialog(
+          AlertDialog(
+            title: const Text('视频信息'),
+            content: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('标题: ${video.title}'),
+                  const SizedBox(height: 8),
+                  Text('来源: ${video.platform}'),
+                  if (video.author != null) ...[
+                    const SizedBox(height: 8),
+                    Text('作者: ${video.author}'),
+                  ],
+                  if (video.duration != null) ...[
+                    const SizedBox(height: 8),
+                    Text('时长: ${_formatDuration(video.duration!)}'),
+                  ],
+                  const SizedBox(height: 8),
+                  Text('URL: ${video.url}'),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Get.back(),
+                child: const Text('关闭'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      Logger.e('Error showing video info: $e');
+      Utils.showSnackbar('错误', '显示视频信息时出错: $e', isError: true);
+    }
+  }
+
+  /// 格式化时长
+  String _formatDuration(int seconds) {
+    final int minutes = seconds ~/ 60;
+    final int remainingSeconds = seconds % 60;
+    return '$minutes:${remainingSeconds.toString().padLeft(2, '0')}';
   }
 }

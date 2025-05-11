@@ -104,7 +104,8 @@ class VideoPlayerView extends GetView<VideoPlayerController> {
                   const SizedBox(height: 16),
                   Text(
                     '播放出错',
-                    style: AppTextStyles.bodyLarge.copyWith(color: Colors.white),
+                    style:
+                        AppTextStyles.bodyLarge.copyWith(color: Colors.white),
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(
@@ -193,7 +194,93 @@ class VideoPlayerView extends GetView<VideoPlayerController> {
           IconButton(
             icon: const Icon(Icons.more_vert, color: Colors.white),
             onPressed: () {
-              // TODO: 显示更多选项菜单
+              // 显示更多选项菜单
+              Get.bottomSheet(
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  decoration: BoxDecoration(
+                    color: Get.theme.colorScheme.surface,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16),
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // 标题
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              '更多选项',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.close),
+                              onPressed: () => Get.back(),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const Divider(),
+
+                      // 选项列表
+                      ListTile(
+                        leading: const Icon(Icons.info_outline),
+                        title: const Text('视频信息'),
+                        onTap: () {
+                          Get.back();
+                          if (controller.currentVideo.value != null) {
+                            final video = controller.currentVideo.value!;
+
+                            Get.dialog(
+                              AlertDialog(
+                                title: const Text('视频信息'),
+                                content: SingleChildScrollView(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text('标题: ${video.title}'),
+                                      const SizedBox(height: 8),
+                                      Text('来源: ${video.platform}'),
+                                      if (video.author != null) ...[
+                                        const SizedBox(height: 8),
+                                        Text('作者: ${video.author}'),
+                                      ],
+                                      if (video.duration != null) ...[
+                                        const SizedBox(height: 8),
+                                        Text(
+                                            '时长: ${video.duration! ~/ 60}:${(video.duration! % 60).toString().padLeft(2, '0')}'),
+                                      ],
+                                      const SizedBox(height: 8),
+                                      Text('URL: ${video.url}'),
+                                    ],
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Get.back(),
+                                    child: const Text('关闭'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              );
             },
           ),
         ],
@@ -267,7 +354,9 @@ class VideoPlayerView extends GetView<VideoPlayerController> {
                 children: [
                   // 静音按钮
                   Obx(() {
-                    final IconData icon = controller.isMuted.value ? Icons.volume_off : Icons.volume_up;
+                    final IconData icon = controller.isMuted.value
+                        ? Icons.volume_off
+                        : Icons.volume_up;
                     return IconButton(
                       icon: Icon(icon, color: Colors.white),
                       onPressed: controller.toggleMute,
@@ -276,7 +365,9 @@ class VideoPlayerView extends GetView<VideoPlayerController> {
 
                   // 全屏按钮
                   Obx(() {
-                    final IconData icon = controller.isFullscreen.value ? Icons.fullscreen_exit : Icons.fullscreen;
+                    final IconData icon = controller.isFullscreen.value
+                        ? Icons.fullscreen_exit
+                        : Icons.fullscreen;
                     return IconButton(
                       icon: Icon(icon, color: Colors.white),
                       onPressed: controller.toggleFullscreen,
@@ -296,7 +387,9 @@ class VideoPlayerView extends GetView<VideoPlayerController> {
     return Obx(() {
       final double value = controller.isDraggingProgress.value
           ? controller.dragProgress.value
-          : (controller.duration.value > 0 ? controller.position.value / controller.duration.value : 0.0);
+          : (controller.duration.value > 0
+              ? controller.position.value / controller.duration.value
+              : 0.0);
 
       return SliderTheme(
         data: SliderThemeData(
@@ -304,9 +397,9 @@ class VideoPlayerView extends GetView<VideoPlayerController> {
           thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
           overlayShape: const RoundSliderOverlayShape(overlayRadius: 12),
           activeTrackColor: AppColors.accent,
-          inactiveTrackColor: Colors.white.withOpacity(0.3),
+          inactiveTrackColor: Colors.white.withAlpha(77), // 0.3 透明度
           thumbColor: AppColors.accent,
-          overlayColor: AppColors.accent.withOpacity(0.3),
+          overlayColor: AppColors.accent.withAlpha(77), // 0.3 透明度
         ),
         child: Slider(
           value: value.clamp(0.0, 1.0),
@@ -324,5 +417,241 @@ class VideoPlayerView extends GetView<VideoPlayerController> {
         ),
       );
     });
+  }
+
+  /// 显示更多选项菜单
+  void _showMoreOptionsMenu() {
+    controller.hideControlsDelayed();
+
+    Get.bottomSheet(
+      Container(
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        decoration: BoxDecoration(
+          color: Get.theme.colorScheme.surface,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16),
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // 标题
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '更多选项',
+                    style: AppTextStyles.titleMedium,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Get.back(),
+                  ),
+                ],
+              ),
+            ),
+
+            const Divider(),
+
+            // 选项列表
+            ListTile(
+              leading: const Icon(Icons.speed),
+              title: const Text('播放速度'),
+              onTap: _showPlaybackSpeedOptions,
+            ),
+
+            ListTile(
+              leading: const Icon(Icons.subtitles),
+              title: const Text('字幕'),
+              onTap: _showSubtitleOptions,
+            ),
+
+            ListTile(
+              leading: const Icon(Icons.share),
+              title: const Text('分享'),
+              onTap: () {
+                Get.back();
+                controller.shareVideo();
+              },
+            ),
+
+            ListTile(
+              leading: const Icon(Icons.file_download),
+              title: const Text('下载'),
+              onTap: () {
+                Get.back();
+                controller.downloadVideo();
+              },
+            ),
+
+            ListTile(
+              leading: const Icon(Icons.info_outline),
+              title: const Text('视频信息'),
+              onTap: () {
+                Get.back();
+                controller.showVideoInfo();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 显示播放速度选项
+  void _showPlaybackSpeedOptions() {
+    Get.back();
+
+    final List<double> speeds = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
+
+    Get.bottomSheet(
+      Container(
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        decoration: BoxDecoration(
+          color: Get.theme.colorScheme.surface,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16),
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // 标题
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '播放速度',
+                    style: AppTextStyles.titleMedium,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Get.back(),
+                  ),
+                ],
+              ),
+            ),
+
+            const Divider(),
+
+            // 速度选项
+            Obx(() {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: speeds.map((speed) {
+                  final bool isSelected =
+                      controller.playbackSpeed.value == speed;
+
+                  return ListTile(
+                    title: Text('${speed}x'),
+                    trailing: isSelected
+                        ? const Icon(Icons.check, color: AppColors.primary)
+                        : null,
+                    onTap: () {
+                      controller.setPlaybackSpeed(speed);
+                      Get.back();
+                    },
+                  );
+                }).toList(),
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 显示字幕选项
+  void _showSubtitleOptions() {
+    Get.back();
+
+    Get.bottomSheet(
+      Container(
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        decoration: BoxDecoration(
+          color: Get.theme.colorScheme.surface,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16),
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // 标题
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '字幕',
+                    style: AppTextStyles.titleMedium,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Get.back(),
+                  ),
+                ],
+              ),
+            ),
+
+            const Divider(),
+
+            // 字幕选项
+            Obx(() {
+              final subtitles = controller.availableSubtitles;
+
+              if (subtitles.isEmpty) {
+                return const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text('没有可用的字幕'),
+                );
+              }
+
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // 关闭字幕选项
+                  ListTile(
+                    title: const Text('关闭'),
+                    trailing: controller.currentSubtitle.value == null
+                        ? const Icon(Icons.check, color: AppColors.primary)
+                        : null,
+                    onTap: () {
+                      controller.setSubtitle(null);
+                      Get.back();
+                    },
+                  ),
+
+                  // 字幕列表
+                  ...subtitles.map((subtitle) {
+                    final bool isSelected =
+                        controller.currentSubtitle.value == subtitle;
+
+                    return ListTile(
+                      title: Text(subtitle.language),
+                      trailing: isSelected
+                          ? const Icon(Icons.check, color: AppColors.primary)
+                          : null,
+                      onTap: () {
+                        controller.setSubtitle(subtitle);
+                        Get.back();
+                      },
+                    );
+                  }).toList(),
+                ],
+              );
+            }),
+          ],
+        ),
+      ),
+    );
   }
 }
