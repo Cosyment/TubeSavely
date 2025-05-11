@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Utils {
   Utils._();
 
   /// 显示Snackbar
-  static void showSnackbar(String title, String message, {bool isError = false}) {
+  static void showSnackbar(String title, String message,
+      {bool isError = false}) {
     Get.snackbar(
       title,
       message,
       snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: isError ? Colors.red.withOpacity(0.9) : Colors.green.withOpacity(0.9),
+      backgroundColor:
+          isError ? Colors.red.withOpacity(0.9) : Colors.green.withOpacity(0.9),
       colorText: Colors.white,
       margin: const EdgeInsets.all(16),
       borderRadius: 8,
@@ -107,19 +110,19 @@ class Utils {
         // YouTube URL格式: https://www.youtube.com/watch?v=VIDEO_ID 或 https://youtu.be/VIDEO_ID
         final RegExp regExp1 = RegExp(r'youtube\.com/watch\?v=([^&]+)');
         final RegExp regExp2 = RegExp(r'youtu\.be/([^?&]+)');
-        
+
         final match1 = regExp1.firstMatch(url);
         if (match1 != null && match1.groupCount >= 1) {
           return match1.group(1);
         }
-        
+
         final match2 = regExp2.firstMatch(url);
         if (match2 != null && match2.groupCount >= 1) {
           return match2.group(1);
         }
-        
+
         return null;
-        
+
       case 'bilibili':
         // Bilibili URL格式: https://www.bilibili.com/video/BV1xx411c7mD
         final RegExp regExp = RegExp(r'bilibili\.com/video/([^/?&]+)');
@@ -128,7 +131,7 @@ class Utils {
           return match.group(1);
         }
         return null;
-        
+
       case 'tiktok':
         // TikTok URL格式: https://www.tiktok.com/@username/video/1234567890123456789
         final RegExp regExp = RegExp(r'tiktok\.com/.*?/video/(\d+)');
@@ -137,24 +140,24 @@ class Utils {
           return match.group(1);
         }
         return null;
-        
+
       case 'instagram':
         // Instagram URL格式: https://www.instagram.com/p/CODE/ 或 https://www.instagram.com/reel/CODE/
         final RegExp regExp1 = RegExp(r'instagram\.com/p/([^/?&]+)');
         final RegExp regExp2 = RegExp(r'instagram\.com/reel/([^/?&]+)');
-        
+
         final match1 = regExp1.firstMatch(url);
         if (match1 != null && match1.groupCount >= 1) {
           return match1.group(1);
         }
-        
+
         final match2 = regExp2.firstMatch(url);
         if (match2 != null && match2.groupCount >= 1) {
           return match2.group(1);
         }
-        
+
         return null;
-        
+
       default:
         return null;
     }
@@ -173,5 +176,14 @@ class Utils {
     } else {
       return null;
     }
+  }
+
+  /// 格式化日期时间
+  ///
+  /// [dateTime] 日期时间
+  /// [format] 格式，默认为 'yyyy-MM-dd HH:mm:ss'
+  static String formatDateTime(DateTime dateTime,
+      {String format = 'yyyy-MM-dd HH:mm:ss'}) {
+    return DateFormat(format).format(dateTime);
   }
 }
