@@ -188,4 +188,20 @@ class ApiProvider extends GetConnect {
       'email': email,
     });
   }
+
+  /// 获取支付宝支付参数
+  ///
+  /// [orderId] 订单ID
+  Future<Response<dynamic>> getAlipayParams(String orderId) {
+    Logger.d('Getting Alipay params: $orderId');
+    return get('/payment/alipay/$orderId');
+  }
+
+  /// 获取微信支付参数
+  ///
+  /// [orderId] 订单ID
+  Future<Response<dynamic>> getWechatPayParams(String orderId) {
+    Logger.d('Getting WeChat Pay params: $orderId');
+    return get('/payment/wechat-pay/$orderId');
+  }
 }

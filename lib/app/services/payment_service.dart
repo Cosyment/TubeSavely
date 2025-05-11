@@ -203,14 +203,84 @@ class PaymentService extends GetxService {
 
   /// 处理支付宝支付
   Future<bool> _processAlipayPurchase(OrderModel order) async {
-    // TODO: 实现支付宝支付
-    return false;
+    try {
+      Logger.d('Processing Alipay payment');
+
+      // 获取支付宝支付参数
+      final response = await _apiProvider.getAlipayParams(order.id);
+
+      if (response.status.isOk && response.body != null) {
+        final String orderInfo = response.body['order_info'];
+
+        // 调用支付宝SDK进行支付
+        // 注意：这里需要集成支付宝SDK，这里只是示例代码
+        // final AlipayResult result = await Alipay.pay(orderInfo);
+
+        // 模拟支付结果
+        await Future.delayed(const Duration(seconds: 2));
+        const bool paySuccess = true;
+
+        if (paySuccess) {
+          // 支付成功，验证支付结果
+          final verificationData = {
+            'order_id': order.id,
+            'payment_method': 'alipay',
+          };
+
+          final verificationResponse =
+              await _apiProvider.verifyPayment(verificationData);
+
+          return verificationResponse.status.isOk;
+        }
+      }
+
+      return false;
+    } catch (e) {
+      Logger.e('Error processing Alipay payment: $e');
+      Utils.showSnackbar('错误', '处理支付宝支付时出错: $e', isError: true);
+      return false;
+    }
   }
 
   /// 处理微信支付
   Future<bool> _processWechatPayPurchase(OrderModel order) async {
-    // TODO: 实现微信支付
-    return false;
+    try {
+      Logger.d('Processing WeChat Pay payment');
+
+      // 获取微信支付参数
+      final response = await _apiProvider.getWechatPayParams(order.id);
+
+      if (response.status.isOk && response.body != null) {
+        final Map<String, dynamic> payParams = response.body;
+
+        // 调用微信SDK进行支付
+        // 注意：这里需要集成微信SDK，这里只是示例代码
+        // final WechatPayResult result = await WechatPay.pay(payParams);
+
+        // 模拟支付结果
+        await Future.delayed(const Duration(seconds: 2));
+        const bool paySuccess = true;
+
+        if (paySuccess) {
+          // 支付成功，验证支付结果
+          final verificationData = {
+            'order_id': order.id,
+            'payment_method': 'wechat_pay',
+          };
+
+          final verificationResponse =
+              await _apiProvider.verifyPayment(verificationData);
+
+          return verificationResponse.status.isOk;
+        }
+      }
+
+      return false;
+    } catch (e) {
+      Logger.e('Error processing WeChat Pay payment: $e');
+      Utils.showSnackbar('错误', '处理微信支付时出错: $e', isError: true);
+      return false;
+    }
   }
 
   /// 监听购买更新
