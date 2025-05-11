@@ -19,7 +19,7 @@ class ProfileView extends GetView<ProfileController> {
         ),
         centerTitle: true,
         elevation: 0,
-        backgroundColor: AppColors.primary,
+        backgroundColor: Theme.of(context).primaryColor,
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -39,8 +39,11 @@ class ProfileView extends GetView<ProfileController> {
               SizedBox(height: 16.h),
               _buildFunctionList(),
               SizedBox(height: 16.h),
+              _buildAboutSection(),
+              SizedBox(height: 16.h),
               _buildLogoutButton(),
               SizedBox(height: 32.h),
+              _buildVersionInfo(),
             ],
           ),
         ),
@@ -57,7 +60,7 @@ class ProfileView extends GetView<ProfileController> {
           color: AppColors.primary,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withAlpha(26),
               blurRadius: 10,
               offset: const Offset(0, 5),
             ),
@@ -74,7 +77,7 @@ class ProfileView extends GetView<ProfileController> {
   Widget _buildLoggedInHeader() {
     return Obx(() {
       final user = controller.user.value;
-      
+
       return Column(
         children: [
           // 头像
@@ -120,7 +123,7 @@ class ProfileView extends GetView<ProfileController> {
               vertical: 4.h,
             ),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withAlpha(51),
               borderRadius: BorderRadius.circular(16.r),
             ),
             child: Text(
@@ -189,10 +192,10 @@ class ProfileView extends GetView<ProfileController> {
       if (!controller.isLoggedIn.value) {
         return const SizedBox.shrink();
       }
-      
+
       final user = controller.user.value;
       if (user == null) return const SizedBox.shrink();
-      
+
       return Container(
         margin: EdgeInsets.symmetric(horizontal: 16.w),
         padding: EdgeInsets.all(16.w),
@@ -201,7 +204,7 @@ class ProfileView extends GetView<ProfileController> {
           borderRadius: BorderRadius.circular(12.r),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withAlpha(13),
               blurRadius: 10,
               offset: const Offset(0, 2),
             ),
@@ -237,7 +240,7 @@ class ProfileView extends GetView<ProfileController> {
           Text(
             label,
             style: AppTextStyles.bodyMedium.copyWith(
-              color: Get.theme.colorScheme.onSurface.withOpacity(0.6),
+              color: Get.theme.colorScheme.onSurface.withAlpha(153),
             ),
           ),
           Text(
@@ -260,7 +263,7 @@ class ProfileView extends GetView<ProfileController> {
         borderRadius: BorderRadius.circular(12.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withAlpha(13),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -297,6 +300,12 @@ class ProfileView extends GetView<ProfileController> {
             title: '设置',
             onTap: controller.goToSettings,
           ),
+          _buildDivider(),
+          _buildFunctionItem(
+            icon: Icons.more_horiz,
+            title: '更多',
+            onTap: controller.goToMore,
+          ),
         ],
       ),
     );
@@ -332,7 +341,7 @@ class ProfileView extends GetView<ProfileController> {
             Icon(
               Icons.arrow_forward_ios,
               size: 16.sp,
-              color: Get.theme.colorScheme.onSurface.withOpacity(0.3),
+              color: Get.theme.colorScheme.onSurface.withAlpha(77),
             ),
           ],
         ),
@@ -345,8 +354,132 @@ class ProfileView extends GetView<ProfileController> {
     return Divider(
       height: 1,
       thickness: 1,
-      color: Get.theme.colorScheme.onSurface.withOpacity(0.05),
+      color: Get.theme.colorScheme.onSurface.withAlpha(13),
       indent: 56.w,
+    );
+  }
+
+  /// 构建关于部分
+  Widget _buildAboutSection() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16.w),
+      decoration: BoxDecoration(
+        color: Get.theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(12.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(13),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          _buildFunctionItem(
+            icon: Icons.info_outline,
+            title: '关于应用',
+            onTap: () => _showAboutDialog(),
+          ),
+          _buildDivider(),
+          _buildFunctionItem(
+            icon: Icons.update,
+            title: '检查更新',
+            onTap: () => Get.snackbar('提示', '当前已是最新版本'),
+          ),
+          _buildDivider(),
+          _buildFunctionItem(
+            icon: Icons.privacy_tip_outlined,
+            title: '隐私政策',
+            onTap: () => Get.toNamed('/privacy'),
+          ),
+          _buildDivider(),
+          _buildFunctionItem(
+            icon: Icons.gavel_outlined,
+            title: '服务条款',
+            onTap: () => Get.toNamed('/terms'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 构建版本信息
+  Widget _buildVersionInfo() {
+    return Center(
+      child: Column(
+        children: [
+          Text(
+            '© 2024 TubeSavely Team',
+            style: AppTextStyles.bodySmall.copyWith(
+              color: AppColors.textSecondary,
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            'Made with ❤️ in China',
+            style: AppTextStyles.bodySmall.copyWith(
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 显示关于对话框
+  void _showAboutDialog() {
+    Get.dialog(
+      AlertDialog(
+        title: Text('关于 TubeSavely', style: AppTextStyles.titleMedium),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'TubeSavely 是一款功能强大的视频下载工具，支持多种视频平台，提供高质量的视频下载、格式转换和播放功能。',
+                style: AppTextStyles.bodyMedium,
+              ),
+              SizedBox(height: 16.h),
+              Text(
+                '主要功能：',
+                style: AppTextStyles.bodyMedium.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 8.h),
+              _buildFeatureItem('支持多平台视频下载'),
+              _buildFeatureItem('视频格式转换'),
+              _buildFeatureItem('后台下载支持'),
+              _buildFeatureItem('高清视频播放'),
+              _buildFeatureItem('历史记录管理'),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('关闭'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 功能项
+  Widget _buildFeatureItem(String text) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 4.h),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('• ', style: AppTextStyles.bodyMedium),
+          Expanded(
+            child: Text(text, style: AppTextStyles.bodyMedium),
+          ),
+        ],
+      ),
     );
   }
 
@@ -356,7 +489,7 @@ class ProfileView extends GetView<ProfileController> {
       if (!controller.isLoggedIn.value) {
         return const SizedBox.shrink();
       }
-      
+
       return Container(
         margin: EdgeInsets.symmetric(horizontal: 16.w),
         width: double.infinity,
@@ -377,7 +510,7 @@ class ProfileView extends GetView<ProfileController> {
                   height: 24.w,
                   child: CircularProgressIndicator(
                     strokeWidth: 2.w,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.red),
                   ),
                 )
               : Text(

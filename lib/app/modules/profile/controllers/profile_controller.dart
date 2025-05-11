@@ -122,6 +122,11 @@ class ProfileController extends GetxController {
     Get.toNamed('/tasks');
   }
 
+  /// 跳转到更多页面
+  void goToMore() {
+    Get.toNamed('/more');
+  }
+
   /// 获取会员状态文本
   String getMembershipStatus() {
     if (user.value == null) return '未登录';

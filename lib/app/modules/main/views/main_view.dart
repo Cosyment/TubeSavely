@@ -48,9 +48,9 @@ class MainView extends GetView<MainController> {
           label: '任务',
         ),
         _buildBottomNavigationBarItem(
-          icon: Icons.more_horiz_outlined,
-          activeIcon: Icons.more_horiz,
-          label: '更多',
+          icon: Icons.person_outline,
+          activeIcon: Icons.person,
+          label: '我的',
         ),
       ],
     );
