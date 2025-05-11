@@ -1,9 +1,8 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:media_kit/media_kit.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-// 暂时注释掉，编译时有问题
-// import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit.dart';
+import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
+import '../utils/logger.dart';
 import '../data/providers/api_provider.dart';
 import '../data/providers/storage_provider.dart';
 import '../data/repositories/download_repository.dart';
@@ -21,13 +20,19 @@ import 'user_service.dart';
 
 /// 初始化所有服务
 Future<void> initServices() async {
-  print('正在初始化服务...');
+  Logger.i('正在初始化服务...');
 
   // 初始化GetStorage
   await GetStorage.init();
 
+  // 将GetStorage实例放入Get依赖注入容器
+  Get.put(GetStorage(), permanent: true);
+
   // 初始化MediaKit
   MediaKit.ensureInitialized();
+
+  // 初始化FFmpeg
+  Logger.i('正在初始化FFmpeg...');
 
   // 初始化ScreenUtil
   // ScreenUtil会在应用启动时自动初始化
@@ -65,5 +70,5 @@ Future<void> initServices() async {
   Get.put(VideoConverterRepository(), permanent: true);
   Get.put(VideoPlayerRepository(), permanent: true);
 
-  print('所有服务初始化完成');
+  Logger.i('所有服务初始化完成');
 }

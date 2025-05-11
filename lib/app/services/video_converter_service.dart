@@ -3,14 +3,12 @@ import 'dart:async';
 import 'dart:math';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
-// 暂时注释掉，编译时有问题
-// import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit.dart';
-// import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
-// import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_session.dart';
-// import 'package:ffmpeg_kit_flutter_full_gpl/ffprobe_kit.dart';
-// import 'package:ffmpeg_kit_flutter_full_gpl/media_information.dart';
-// import 'package:ffmpeg_kit_flutter_full_gpl/media_information_session.dart';
-import '../data/models/download_task_model.dart';
+import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
+import 'package:ffmpeg_kit_flutter_new/return_code.dart';
+import 'package:ffmpeg_kit_flutter_new/ffmpeg_session.dart';
+import 'package:ffmpeg_kit_flutter_new/ffprobe_kit.dart';
+import 'package:ffmpeg_kit_flutter_new/media_information.dart';
+import 'package:ffmpeg_kit_flutter_new/media_information_session.dart';
 import '../data/providers/storage_provider.dart';
 import '../utils/logger.dart';
 import '../utils/utils.dart';
@@ -469,7 +467,8 @@ class VideoConverterService extends GetxService {
             );
             await _updateTask(completedTask);
 
-            Utils.showSnackbar('转换完成', '${task.sourceFilePath.split('/').last} 已转换完成');
+            Utils.showSnackbar(
+                '转换完成', '${task.sourceFilePath.split('/').last} 已转换完成');
           } else if (ReturnCode.isCancel(returnCode)) {
             // 转换被取消
             final canceledTask = updatedTask.copyWith(
@@ -480,17 +479,22 @@ class VideoConverterService extends GetxService {
           } else {
             // 转换失败
             final returnCode = await session.getReturnCode();
-            final errorMessage = await session.getAllLogsAsString() ?? 'Unknown error';
-            final errorSummary = errorMessage.length > 200 ? errorMessage.substring(0, 200) + '...' : errorMessage;
+            final errorMessage =
+                await session.getAllLogsAsString() ?? 'Unknown error';
+            final errorSummary = errorMessage.length > 200
+                ? '${errorMessage.substring(0, 200)}...'
+                : errorMessage;
 
             final failedTask = updatedTask.copyWith(
               status: ConversionStatus.failed,
-              errorMessage: 'Error code: ${returnCode?.getValue() ?? 'unknown'}, Message: $errorSummary',
+              errorMessage:
+                  'Error code: ${returnCode?.getValue() ?? 'unknown'}, Message: $errorSummary',
               updatedAt: DateTime.now(),
             );
             await _updateTask(failedTask);
 
-            Logger.e('Conversion failed with code ${returnCode?.getValue() ?? 'unknown'}: $errorSummary');
+            Logger.e(
+                'Conversion failed with code ${returnCode?.getValue() ?? 'unknown'}: $errorSummary');
             Utils.showSnackbar('转换失败', '视频转换失败，请检查源文件格式', isError: true);
           }
 
@@ -503,29 +507,30 @@ class VideoConverterService extends GetxService {
           // 日志回调
           Logger.d('FFmpeg log: ${log.getMessage()}');
         },
-        (statistics) {
+        (statistics) async {
           // 进度回调
           if (duration > 0) {
             final timeInMs = statistics.getTime();
-            final progress = timeInMs / (duration * 1000);
+            if (timeInMs > 0) {
+              final progress = timeInMs / (duration * 1000);
 
-            // 更新进度
-            updatedTask = updatedTask.copyWith(
-              progress: progress.clamp(0.0, 1.0),
-              updatedAt: DateTime.now(),
-            );
-            _updateTask(updatedTask);
+              // 更新进度
+              updatedTask = updatedTask.copyWith(
+                progress: progress.clamp(0.0, 1.0),
+                updatedAt: DateTime.now(),
+              );
+              await _updateTask(updatedTask);
 
-            // 打印转换进度
-            final percent = (progress * 100).toStringAsFixed(1);
-            Logger.d('Conversion progress: $percent% for task ${task.id}');
+              // 打印转换进度
+              final percent = (progress * 100).toStringAsFixed(1);
+              Logger.d('Conversion progress: $percent% for task ${task.id}');
+            }
           }
         },
       );
 
       // 保存会话ID，用于取消
       _conversionSessions[task.id] = session;
-
     } catch (e) {
       Logger.e('Error converting video: $e');
 
@@ -581,23 +586,27 @@ class VideoConverterService extends GetxService {
     // 根据格式选择不同的编码参数
     if (task.format == 'mp3') {
       // 如果是 MP3 格式，只提取音频
-      command = '-i "${task.sourceFilePath}" -vn -c:a libmp3lame -q:a 2 "${task.targetFilePath}"';
+      command =
+          '-i "${task.sourceFilePath}" -vn -c:a libmp3lame -q:a 2 "${task.targetFilePath}"';
     } else if (task.format == 'mp4') {
       // MP4 格式使用 H.264 编码
-      command = '-i "${task.sourceFilePath}" -c:v libx264 -preset medium -b:v ${task.bitrate}k '
+      command =
+          '-i "${task.sourceFilePath}" -c:v libx264 -preset medium -b:v ${task.bitrate}k '
           '-vf scale=$width:$height -c:a aac -b:a 128k -movflags +faststart "${task.targetFilePath}"';
     } else if (task.format == 'webm') {
       // WebM 格式使用 VP9 编码
-      command = '-i "${task.sourceFilePath}" -c:v libvpx-vp9 -b:v ${task.bitrate}k '
+      command =
+          '-i "${task.sourceFilePath}" -c:v libvpx-vp9 -b:v ${task.bitrate}k '
           '-vf scale=$width:$height -c:a libopus -b:a 128k "${task.targetFilePath}"';
     } else {
       // 其他格式使用通用的 H.264 编码
-      command = '-i "${task.sourceFilePath}" -c:v libx264 -preset medium -b:v ${task.bitrate}k '
+      command =
+          '-i "${task.sourceFilePath}" -c:v libx264 -preset medium -b:v ${task.bitrate}k '
           '-vf scale=$width:$height -c:a aac -b:a 128k "${task.targetFilePath}"';
     }
 
     // 添加错误检测和容错参数
-    command = '-hide_banner -err_detect ignore_err ' + command;
+    command = '-hide_banner -err_detect ignore_err $command';
 
     Logger.d('FFmpeg command: $command');
     return command;
@@ -607,7 +616,8 @@ class VideoConverterService extends GetxService {
   Future<double> _getVideoDuration(String filePath) async {
     try {
       // 使用FFprobe获取视频信息
-      MediaInformationSession session = await FFprobeKit.getMediaInformation(filePath);
+      MediaInformationSession session =
+          await FFprobeKit.getMediaInformation(filePath);
       MediaInformation? mediaInformation = session.getMediaInformation();
 
       if (mediaInformation != null) {

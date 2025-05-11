@@ -39,7 +39,8 @@ void main() async {
       center: true,
       backgroundColor: Colors.transparent,
       skipTaskbar: false,
-      titleBarStyle: GetPlatform.isMacOS ? TitleBarStyle.hidden : TitleBarStyle.normal,
+      titleBarStyle:
+          GetPlatform.isMacOS ? TitleBarStyle.hidden : TitleBarStyle.normal,
     );
 
     await windowManager.waitUntilReadyToShow(windowOptions, () async {
@@ -57,7 +58,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(750, 1334),
+      designSize: const Size(360, 690), // 更适合现代设备的设计尺寸
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
@@ -87,5 +88,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
