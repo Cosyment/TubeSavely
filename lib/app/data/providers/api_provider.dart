@@ -144,6 +144,12 @@ class ApiProvider extends GetConnect {
     return get('/platforms');
   }
 
+  /// 获取热门视频
+  Future<Response<dynamic>> getTrendingVideos() {
+    Logger.d('Getting trending videos');
+    return get('/videos/trending');
+  }
+
   // ==================== 会员相关 ====================
 
   /// 获取会员套餐

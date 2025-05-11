@@ -28,6 +28,8 @@ class HomeView extends GetView<HomeController> {
                     SizedBox(height: 24.h),
                     _buildQuickActions(),
                     SizedBox(height: 24.h),
+                    _buildTrendingVideos(),
+                    SizedBox(height: 24.h),
                     _buildDownloadOptions(),
                     SizedBox(height: 24.h),
                     _buildSupportedPlatforms(),
@@ -435,7 +437,7 @@ class HomeView extends GetView<HomeController> {
     return Container(
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
-        color: Get.theme.colorScheme.background,
+        color: Get.theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: Row(
@@ -622,11 +624,11 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
-  // 支持的平台
-  Widget _buildSupportedPlatforms() {
+  // 热门视频
+  Widget _buildTrendingVideos() {
     return Obx(() {
-      if (controller.supportedPlatforms.isEmpty) {
-        return SizedBox.shrink();
+      if (controller.trendingVideos.isEmpty) {
+        return const SizedBox.shrink();
       }
 
       return Container(
@@ -636,13 +638,226 @@ class HomeView extends GetView<HomeController> {
           borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withAlpha(13), // 0.05 透明度
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
           ],
           border: Border.all(
-            color: AppTheme.primaryColor.withOpacity(0.1),
+            color: AppTheme.primaryColor.withAlpha(26), // 0.1 透明度
+            width: 1,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.trending_up,
+                      color: AppTheme.primaryColor,
+                      size: 20.sp,
+                    ),
+                    SizedBox(width: 8.w),
+                    Text(
+                      '热门视频',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                        foreground: Paint()
+                          ..shader = const LinearGradient(
+                            colors: [
+                              AppTheme.primaryColor,
+                              AppTheme.accentColor,
+                            ],
+                          ).createShader(Rect.fromLTWH(0, 0, 120.w, 24.h)),
+                      ),
+                    ),
+                  ],
+                ),
+                TextButton(
+                  onPressed: () {
+                    // 查看更多热门视频
+                  },
+                  child: Text(
+                    '查看更多',
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: AppTheme.primaryColor,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 16.h),
+            SizedBox(
+              height: 180.h,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: controller.trendingVideos.length,
+                itemBuilder: (context, index) {
+                  final video = controller.trendingVideos[index];
+                  return GestureDetector(
+                    onTap: () => controller.openVideoDetail(video),
+                    child: Container(
+                      width: 160.w,
+                      margin: EdgeInsets.only(right: 12.w),
+                      decoration: BoxDecoration(
+                        color: Get.theme.colorScheme.surface,
+                        borderRadius: BorderRadius.circular(12.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withAlpha(13), // 0.05 透明度
+                            blurRadius: 6,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // 缩略图
+                          ClipRRect(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(12.r),
+                              topRight: Radius.circular(12.r),
+                            ),
+                            child: Stack(
+                              children: [
+                                CachedNetworkImage(
+                                  imageUrl: video.thumbnail ?? '',
+                                  width: 160.w,
+                                  height: 90.h,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => Container(
+                                    color: Colors.grey[300],
+                                    child: const Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      Container(
+                                    color: Colors.grey[300],
+                                    child: const Icon(
+                                      Icons.error,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ),
+                                // 时长
+                                if (video.duration != null)
+                                  Positioned(
+                                    right: 8.w,
+                                    bottom: 8.h,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 6.w,
+                                        vertical: 2.h,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.black
+                                            .withAlpha(179), // 0.7 透明度
+                                        borderRadius:
+                                            BorderRadius.circular(4.r),
+                                      ),
+                                      child: Text(
+                                        '${video.duration! ~/ 60}:${(video.duration! % 60).toString().padLeft(2, '0')}',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10.sp,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          // 视频信息
+                          Padding(
+                            padding: EdgeInsets.all(8.w),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  video.title,
+                                  style: TextStyle(
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                SizedBox(height: 4.h),
+                                Text(
+                                  video.author ?? '未知作者',
+                                  style: TextStyle(
+                                    fontSize: 10.sp,
+                                    color: Get.theme.colorScheme.onSurface
+                                        .withAlpha(179), // 0.7 透明度
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                SizedBox(height: 4.h),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.play_arrow,
+                                      size: 12.sp,
+                                      color: AppTheme.primaryColor,
+                                    ),
+                                    SizedBox(width: 2.w),
+                                    Text(
+                                      '${(index + 1) * 1000 + 500}次播放',
+                                      style: TextStyle(
+                                        fontSize: 10.sp,
+                                        color: Get.theme.colorScheme.onSurface
+                                            .withAlpha(179), // 0.7 透明度
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
+  // 支持的平台
+  Widget _buildSupportedPlatforms() {
+    return Obx(() {
+      if (controller.supportedPlatforms.isEmpty) {
+        return const SizedBox.shrink();
+      }
+
+      return Container(
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color: Get.theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(16.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withAlpha(13), // 0.05 透明度
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+          border: Border.all(
+            color: AppTheme.primaryColor.withAlpha(26), // 0.1 透明度
             width: 1,
           ),
         ),
@@ -676,7 +891,7 @@ class HomeView extends GetView<HomeController> {
             SizedBox(height: 16.h),
             GridView.builder(
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,
                 crossAxisSpacing: 16.w,
@@ -709,10 +924,10 @@ class HomeView extends GetView<HomeController> {
           width: 60.w,
           height: 60.w,
           decoration: BoxDecoration(
-            color: Get.theme.colorScheme.background,
+            color: Get.theme.colorScheme.surface,
             borderRadius: BorderRadius.circular(12.r),
             border: Border.all(
-              color: AppTheme.primaryColor.withOpacity(0.1),
+              color: AppTheme.primaryColor.withAlpha(26), // 0.1 透明度
               width: 1,
             ),
           ),

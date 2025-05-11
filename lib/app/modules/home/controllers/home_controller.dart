@@ -24,13 +24,18 @@ class HomeController extends GetxController {
   final RxString selectedFormat = 'MP4'.obs;
 
   // 支持的平台
-  final RxList<Map<String, dynamic>> supportedPlatforms = <Map<String, dynamic>>[].obs;
+  final RxList<Map<String, dynamic>> supportedPlatforms =
+      <Map<String, dynamic>>[].obs;
+
+  // 热门视频
+  final RxList<VideoModel> trendingVideos = <VideoModel>[].obs;
 
   @override
   void onInit() {
     super.onInit();
     Logger.d('HomeController initialized');
     _loadSupportedPlatforms();
+    _loadTrendingVideos();
   }
 
   @override
@@ -134,5 +139,20 @@ class HomeController extends GetxController {
   // 设置格式
   void setFormat(String format) {
     selectedFormat.value = format;
+  }
+
+  // 加载热门视频
+  Future<void> _loadTrendingVideos() async {
+    try {
+      final videos = await _videoRepository.getTrendingVideos();
+      trendingVideos.value = videos;
+    } catch (e) {
+      Logger.e('加载热门视频时出错: $e');
+    }
+  }
+
+  // 打开视频详情
+  void openVideoDetail(VideoModel video) {
+    Get.toNamed('/video-detail', arguments: video);
   }
 }
