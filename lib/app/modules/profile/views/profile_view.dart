@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
 import '../../../utils/utils.dart';
@@ -20,7 +21,6 @@ class ProfileView extends GetView<ProfileController> {
         ),
         centerTitle: true,
         elevation: 0,
-        backgroundColor: Theme.of(context).primaryColor,
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -57,16 +57,6 @@ class ProfileView extends GetView<ProfileController> {
     return Obx(() {
       return Container(
         padding: EdgeInsets.symmetric(vertical: 24.h),
-        decoration: BoxDecoration(
-          color: AppColors.primary,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withAlpha(26),
-              blurRadius: 10,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
         child: controller.isLoggedIn.value
             ? _buildLoggedInHeader()
             : _buildNotLoggedInHeader(),
@@ -88,10 +78,6 @@ class ProfileView extends GetView<ProfileController> {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: Colors.white,
-              border: Border.all(
-                color: Colors.white,
-                width: 2.w,
-              ),
               image: user?.avatar != null
                   ? DecorationImage(
                       image: NetworkImage(user!.avatar!),

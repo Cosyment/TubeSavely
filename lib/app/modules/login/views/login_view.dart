@@ -16,16 +16,6 @@ class LoginView extends GetView<LoginController> {
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Theme.of(context).primaryColor,
-                  Theme.of(context).primaryColor,
-                ],
-              ),
-            ),
             child: Center(
               child: SingleChildScrollView(
                 child: Padding(
@@ -63,7 +53,6 @@ class LoginView extends GetView<LoginController> {
           width: 100.w,
           height: 100.w,
           decoration: BoxDecoration(
-            color: Colors.white,
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
