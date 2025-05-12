@@ -17,6 +17,7 @@ abstract class Routes {
   static const LOGIN = _Paths.LOGIN;
   static const PROFILE = _Paths.PROFILE;
   static const CONVERT = _Paths.CONVERT;
+  static const DEVELOPER = _Paths.DEVELOPER;
 }
 
 abstract class _Paths {
@@ -36,4 +37,5 @@ abstract class _Paths {
   static const LOGIN = '/login';
   static const PROFILE = '/profile';
   static const CONVERT = '/convert';
+  static const DEVELOPER = '/developer';
 }

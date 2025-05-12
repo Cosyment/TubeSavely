@@ -297,6 +297,14 @@ class ProfileView extends GetView<ProfileController> {
             title: '更多',
             onTap: controller.goToMore,
           ),
+          if (controller.isDevModeEnabled()) ...[
+            _buildDivider(),
+            _buildFunctionItem(
+              icon: Icons.developer_mode,
+              title: '开发者测试',
+              onTap: controller.goToDeveloper,
+            ),
+          ],
         ],
       ),
     );

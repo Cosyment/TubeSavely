@@ -77,6 +77,7 @@ android {
 dependencies {
     implementation ("androidx.annotation:annotation-jvm:1.7.0")
     implementation ("androidx.core:core:1.13.1")
+    implementation ("androidx.appcompat:appcompat:1.6.1")
 }
 
 flutter {

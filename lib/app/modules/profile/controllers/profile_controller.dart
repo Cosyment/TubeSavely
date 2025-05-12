@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import '../../../data/models/user_model.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/user_service.dart';
+import '../../../utils/dev_utils.dart';
 import '../../../utils/logger.dart';
 import '../../../utils/utils.dart';
 import '../../main/controllers/main_controller.dart';
@@ -171,6 +172,21 @@ class ProfileController extends GetxController {
       Logger.e('Navigation error: $e');
       Utils.showSnackbar('错误', '导航到更多页面失败', isError: true);
     }
+  }
+
+  /// 跳转到开发者测试页面
+  void goToDeveloper() {
+    try {
+      Get.toNamed(Routes.DEVELOPER);
+    } catch (e) {
+      Logger.e('Navigation error: $e');
+      Utils.showSnackbar('错误', '导航到开发者测试页面失败', isError: true);
+    }
+  }
+
+  /// 是否显示开发者选项
+  bool isDevModeEnabled() {
+    return DevUtils.isDevMode;
   }
 
   /// 获取会员状态文本

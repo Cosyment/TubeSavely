@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tubesavely/app/data/models/payment_model.dart';
@@ -118,7 +119,19 @@ class PaymentController extends GetxController
   /// 加载用户信息
   Future<void> loadUserInfo() async {
     try {
-      userInfo.value = await _userService.getUserInfo();
+      // 先检查用户是否已登录
+      if (_userService.isLoggedIn.value) {
+        // 如果已登录，获取当前用户信息
+        userInfo.value = _userService.currentUser.value;
+
+        // 如果当前用户信息为空，尝试从服务器获取
+        if (userInfo.value == null) {
+          userInfo.value = await _userService.getUserInfo();
+        }
+      } else {
+        // 如果未登录，清空用户信息
+        userInfo.value = null;
+      }
     } catch (e) {
       Logger.e('Error loading user info: $e');
     }
@@ -144,10 +157,31 @@ class PaymentController extends GetxController
     try {
       isLoading.value = true;
 
-      final order = await _paymentRepository.createOrder(
-        selectedProduct.value!.id,
-        selectedPaymentMethod.value,
-      );
+      OrderModel? order;
+
+      // 在开发模式下，模拟创建订单
+      if (kDebugMode) {
+        // 模拟订单创建
+        await Future.delayed(const Duration(seconds: 1));
+
+        // 创建模拟订单
+        order = OrderModel(
+          id: 'order_${DateTime.now().millisecondsSinceEpoch}',
+          productId: selectedProduct.value!.id,
+          userId: userInfo.value?.id ?? 'user_123',
+          amount: selectedProduct.value!.price,
+          currency: selectedProduct.value!.currency,
+          status: 'pending',
+          paymentMethod: selectedPaymentMethod.value,
+          createdAt: DateTime.now(),
+        );
+      } else {
+        // 正常调用创建订单
+        order = await _paymentRepository.createOrder(
+          selectedProduct.value!.id,
+          selectedPaymentMethod.value,
+        );
+      }
 
       if (order != null) {
         currentOrder.value = order;
@@ -170,7 +204,86 @@ class PaymentController extends GetxController
     try {
       isLoading.value = true;
 
-      final success = await _paymentRepository.processPayment(order);
+      // 处理支付
+      bool success;
+
+      // 检查是否选择了Stripe支付方式
+      if (order.paymentMethod == PaymentMethod.stripe) {
+        // 使用Stripe支付
+        success = await _paymentRepository.processPayment(order);
+      } else if (kDebugMode) {
+        // 在开发模式下，模拟其他支付方式的支付成功
+        await Future.delayed(const Duration(seconds: 2));
+        success = true;
+
+        // 模拟更新用户信息
+        if (success && userInfo.value != null) {
+          final user = userInfo.value!;
+
+          // 根据商品类型更新用户信息
+          if (order.productId.contains('membership')) {
+            // 会员商品
+            int level = 1; // 默认高级会员
+            if (order.productId.contains('pro')) {
+              level = 2; // 专业会员
+            }
+
+            // 计算会员到期时间
+            DateTime? expiry;
+            if (user.membershipExpiry != null &&
+                user.membershipExpiry!.isAfter(DateTime.now())) {
+              // 如果当前会员未过期，则在当前到期时间基础上延长
+              expiry = user.membershipExpiry;
+            } else {
+              // 如果当前会员已过期，则从现在开始计算
+              expiry = DateTime.now();
+            }
+
+            // 根据商品ID确定会员时长
+            int days = 30; // 默认30天
+            if (order.productId.contains('quarterly')) {
+              days = 90;
+            } else if (order.productId.contains('yearly')) {
+              days = 365;
+            }
+
+            // 更新会员到期时间
+            expiry = expiry!.add(Duration(days: days));
+
+            // 更新用户信息
+            final updatedUser = user.copyWith(
+              level: level,
+              membershipExpiry: expiry,
+            );
+
+            // 更新用户服务中的用户信息
+            await _userService.mockUpdateUser(updatedUser);
+          } else if (order.productId.contains('points')) {
+            // 积分商品
+            int points = 0;
+            if (order.productId.contains('100')) {
+              points = 100;
+            } else if (order.productId.contains('300')) {
+              points = 330;
+            } else if (order.productId.contains('500')) {
+              points = 600;
+            } else if (order.productId.contains('1000')) {
+              points = 1300;
+            }
+
+            // 更新用户信息
+            final updatedUser = user.copyWith(
+              points: user.points + points,
+            );
+
+            // 更新用户服务中的用户信息
+            await _userService.mockUpdateUser(updatedUser);
+          }
+        }
+      } else {
+        // 正常调用支付处理
+        success = await _paymentRepository.processPayment(order);
+      }
 
       if (success) {
         // 支付成功，更新用户信息

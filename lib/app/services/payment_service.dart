@@ -53,21 +53,149 @@ class PaymentService extends GetxService {
     try {
       isLoading.value = true;
 
-      // 获取商品列表
-      final response = await _apiProvider.getPointsPackages();
+      try {
+        // 尝试从API获取商品列表
+        final response = await _apiProvider.getPointsPackages();
 
-      if (response.status.isOk && response.body != null) {
-        final List<dynamic> data = response.body;
-        products.value =
-            data.map((item) => ProductModel.fromJson(item)).toList();
-      } else {
-        Logger.e('Failed to load products: ${response.statusText}');
+        if (response.status.isOk && response.body != null) {
+          final List<dynamic> data = response.body;
+          products.value =
+              data.map((item) => ProductModel.fromJson(item)).toList();
+        } else {
+          Logger.e('Failed to load products from API: ${response.statusText}');
+          // API加载失败，使用模拟数据
+          _loadMockProducts();
+        }
+      } catch (e) {
+        Logger.e('Error loading products from API: $e');
+        // API加载失败，使用模拟数据
+        _loadMockProducts();
       }
     } catch (e) {
       Logger.e('Error loading products: $e');
     } finally {
       isLoading.value = false;
     }
+  }
+
+  /// 加载模拟商品数据
+  void _loadMockProducts() {
+    Logger.d('Loading mock products');
+
+    // 会员套餐
+    final membershipProducts = [
+      ProductModel(
+        id: 'membership_monthly',
+        title: '月度会员',
+        description: '解锁所有高级功能，有效期30天',
+        price: 18.0,
+        currency: 'CNY',
+        type: ProductType.membership,
+        metadata: {
+          'duration': 30,
+          'level': 1,
+        },
+      ),
+      ProductModel(
+        id: 'membership_quarterly',
+        title: '季度会员',
+        description: '解锁所有高级功能，有效期90天，比月度会员更划算',
+        price: 45.0,
+        currency: 'CNY',
+        type: ProductType.membership,
+        metadata: {
+          'duration': 90,
+          'level': 1,
+        },
+      ),
+      ProductModel(
+        id: 'membership_yearly',
+        title: '年度会员',
+        description: '解锁所有高级功能，有效期365天，最佳性价比',
+        price: 158.0,
+        currency: 'CNY',
+        type: ProductType.membership,
+        metadata: {
+          'duration': 365,
+          'level': 1,
+        },
+      ),
+      ProductModel(
+        id: 'membership_pro_monthly',
+        title: '专业版月度会员',
+        description: '解锁所有专业功能，包括批量下载和高级格式转换，有效期30天',
+        price: 28.0,
+        currency: 'CNY',
+        type: ProductType.membership,
+        metadata: {
+          'duration': 30,
+          'level': 2,
+        },
+      ),
+      ProductModel(
+        id: 'membership_pro_yearly',
+        title: '专业版年度会员',
+        description: '解锁所有专业功能，包括批量下载和高级格式转换，有效期365天',
+        price: 258.0,
+        currency: 'CNY',
+        type: ProductType.membership,
+        metadata: {
+          'duration': 365,
+          'level': 2,
+        },
+      ),
+    ];
+
+    // 积分套餐
+    final pointsProducts = [
+      ProductModel(
+        id: 'points_100',
+        title: '100积分',
+        description: '可用于下载视频和音频',
+        price: 10.0,
+        currency: 'CNY',
+        type: ProductType.points,
+        metadata: {
+          'points': 100,
+        },
+      ),
+      ProductModel(
+        id: 'points_300',
+        title: '300积分',
+        description: '可用于下载视频和音频，赠送30积分',
+        price: 30.0,
+        currency: 'CNY',
+        type: ProductType.points,
+        metadata: {
+          'points': 330,
+        },
+      ),
+      ProductModel(
+        id: 'points_500',
+        title: '500积分',
+        description: '可用于下载视频和音频，赠送100积分',
+        price: 50.0,
+        currency: 'CNY',
+        type: ProductType.points,
+        metadata: {
+          'points': 600,
+        },
+      ),
+      ProductModel(
+        id: 'points_1000',
+        title: '1000积分',
+        description: '可用于下载视频和音频，赠送300积分',
+        price: 100.0,
+        currency: 'CNY',
+        type: ProductType.points,
+        metadata: {
+          'points': 1300,
+        },
+      ),
+    ];
+
+    // 合并商品列表
+    products.value = [...membershipProducts, ...pointsProducts];
   }
 
   /// 创建订单

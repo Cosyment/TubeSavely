@@ -67,7 +67,8 @@ class TransactionHistoryView extends GetView<TransactionHistoryController> {
           SizedBox(height: 24.h),
           ElevatedButton(
             onPressed: () {
-              Get.toNamed('/payment');
+              // 传递initialTab参数，1表示积分充值标签页
+              Get.toNamed('/payment', arguments: {'initialTab': 1});
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
@@ -237,12 +238,15 @@ class TransactionHistoryView extends GetView<TransactionHistoryController> {
             // 详情
             _buildDetailItem('订单编号', transaction.id),
             _buildDetailItem('商品', transaction.productId),
+            _buildDetailItem('金额',
+                '${transaction.amount} ${transaction.currency.toUpperCase()}'),
             _buildDetailItem(
-                '金额', '${transaction.amount} ${transaction.currency.toUpperCase()}'),
-            _buildDetailItem('支付方式', _getPaymentMethodName(transaction.paymentMethod)),
+                '支付方式', _getPaymentMethodName(transaction.paymentMethod)),
             _buildDetailItem('状态', _getStatusName(transaction.status)),
-            _buildDetailItem('创建时间',
-                Utils.formatDateTime(transaction.createdAt, format: 'yyyy-MM-dd HH:mm')),
+            _buildDetailItem(
+                '创建时间',
+                Utils.formatDateTime(transaction.createdAt,
+                    format: 'yyyy-MM-dd HH:mm')),
             if (transaction.completedAt != null)
               _buildDetailItem(
                   '完成时间',

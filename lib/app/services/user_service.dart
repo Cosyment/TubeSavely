@@ -349,4 +349,43 @@ class UserService extends GetxService {
       return false;
     }
   }
+
+  /// 模拟登录（仅用于开发测试）
+  ///
+  /// [user] 用户信息
+  void mockLogin(UserModel user) {
+    try {
+      Logger.d('Mock login: ${user.email}');
+
+      // 保存用户信息到本地
+      _storageProvider.saveUserInfo(user);
+
+      // 保存一个假的令牌
+      _storageProvider
+          .saveUserToken('mock_token_${DateTime.now().millisecondsSinceEpoch}');
+
+      // 更新状态
+      isLoggedIn.value = true;
+      currentUser.value = user;
+    } catch (e) {
+      Logger.e('Mock login error: $e');
+    }
+  }
+
+  /// 模拟更新用户信息（仅用于开发测试）
+  ///
+  /// [user] 用户信息
+  Future<void> mockUpdateUser(UserModel user) async {
+    try {
+      Logger.d('Mock update user: ${user.email}');
+
+      // 保存用户信息到本地
+      await _storageProvider.saveUserInfo(user);
+
+      // 更新当前用户
+      currentUser.value = user;
+    } catch (e) {
+      Logger.e('Mock update user error: $e');
+    }
+  }
 }

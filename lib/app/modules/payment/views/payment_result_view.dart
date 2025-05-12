@@ -126,10 +126,13 @@ class PaymentResultView extends StatelessWidget {
           _buildOrderInfoItem('商品', order.productId),
           _buildOrderInfoItem(
               '金额', '${order.amount} ${order.currency.toUpperCase()}'),
-          _buildOrderInfoItem('支付方式', _getPaymentMethodName(order.paymentMethod)),
+          _buildOrderInfoItem(
+              '支付方式', _getPaymentMethodName(order.paymentMethod)),
           _buildOrderInfoItem('状态', _getStatusName(order.status)),
-          _buildOrderInfoItem('创建时间',
-              Utils.formatDateTime(order.createdAt, format: 'yyyy-MM-dd HH:mm')),
+          _buildOrderInfoItem(
+              '创建时间',
+              Utils.formatDateTime(order.createdAt,
+                  format: 'yyyy-MM-dd HH:mm')),
           if (order.completedAt != null)
             _buildOrderInfoItem(
                 '完成时间',
@@ -201,8 +204,23 @@ class PaymentResultView extends StatelessWidget {
             width: double.infinity,
             child: OutlinedButton(
               onPressed: () {
-                // 重试支付
-                Get.back();
+                // 重试支付，返回到支付页面
+                // 获取参数
+                final Map<String, dynamic> args = Get.arguments ?? {};
+                final OrderModel? order = args['order'];
+
+                // 根据订单类型确定要显示的标签页
+                int initialTab = 0; // 默认显示会员标签页
+                if (order != null) {
+                  // 如果是积分商品，显示积分标签页
+                  if (order.productId.toLowerCase().contains('point') ||
+                      order.productId.toLowerCase().contains('积分')) {
+                    initialTab = 1;
+                  }
+                }
+
+                // 返回到支付页面
+                Get.offNamed('/payment', arguments: {'initialTab': initialTab});
               },
               style: OutlinedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: 12.h),

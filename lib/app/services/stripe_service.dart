@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
@@ -63,18 +64,44 @@ class StripeService extends GetxService {
     required String productId,
   }) async {
     try {
-      // 调用后端 API 创建支付意图
-      final response = await _apiProvider.post('/payment/create-intent', {
-        'amount': amount,
-        'currency': currency,
-        'product_id': productId,
-      });
+      // 在开发模式下，模拟创建支付意图
+      if (kDebugMode) {
+        // 模拟延迟
+        await Future.delayed(const Duration(milliseconds: 800));
 
-      if (response.status.isOk && response.body != null) {
-        return response.body;
+        // 生成一个模拟的支付意图ID
+        final String intentId = 'pi_${DateTime.now().millisecondsSinceEpoch}';
+
+        // 生成一个模拟的客户端密钥
+        final String clientSecret =
+            '$intentId\_secret_${DateTime.now().millisecondsSinceEpoch}';
+
+        // 返回模拟数据
+        return {
+          'id': intentId,
+          'object': 'payment_intent',
+          'amount': amount,
+          'currency': currency,
+          'client_secret': clientSecret,
+          'status': 'requires_payment_method',
+          'created': DateTime.now().millisecondsSinceEpoch ~/ 1000,
+          'product_id': productId,
+          'livemode': false,
+        };
       } else {
-        throw Exception(
-            'Failed to create payment intent: ${response.statusText}');
+        // 调用后端 API 创建支付意图
+        final response = await _apiProvider.post('/payment/create-intent', {
+          'amount': amount,
+          'currency': currency,
+          'product_id': productId,
+        });
+
+        if (response.status.isOk && response.body != null) {
+          return response.body;
+        } else {
+          throw Exception(
+              'Failed to create payment intent: ${response.statusText}');
+        }
       }
     } catch (e) {
       Logger.e('Error creating payment intent: $e');
@@ -98,37 +125,52 @@ class StripeService extends GetxService {
         productId: order.productId,
       );
 
-      // 配置支付表单
-      await Stripe.instance.initPaymentSheet(
-        paymentSheetParameters: SetupPaymentSheetParameters(
-          merchantDisplayName: 'TubeSavely',
-          paymentIntentClientSecret: paymentIntentResult['client_secret'],
-          style: ThemeMode.system,
-          appearance: const PaymentSheetAppearance(
-            colors: PaymentSheetAppearanceColors(
-              primary: Color(0xFF8B5CF6), // 主色调
+      // 在开发模式下，模拟支付成功
+      if (kDebugMode) {
+        // 显示一个模拟的支付表单
+        await Future.delayed(const Duration(seconds: 1));
+
+        // 模拟用户点击支付按钮
+        await Future.delayed(const Duration(seconds: 1));
+
+        // 模拟支付成功
+        Logger.d('模拟Stripe支付成功: ${paymentIntentResult['id']}');
+
+        // 返回支付成功
+        return true;
+      } else {
+        // 配置支付表单
+        await Stripe.instance.initPaymentSheet(
+          paymentSheetParameters: SetupPaymentSheetParameters(
+            merchantDisplayName: 'TubeSavely',
+            paymentIntentClientSecret: paymentIntentResult['client_secret'],
+            style: ThemeMode.system,
+            appearance: const PaymentSheetAppearance(
+              colors: PaymentSheetAppearanceColors(
+                primary: Color(0xFF8B5CF6), // 主色调
+              ),
+            ),
+            googlePay: const PaymentSheetGooglePay(
+              merchantCountryCode: 'US',
+              testEnv: true,
             ),
           ),
-          googlePay: const PaymentSheetGooglePay(
-            merchantCountryCode: 'US',
-            testEnv: true,
-          ),
-        ),
-      );
+        );
 
-      // 显示支付表单
-      await Stripe.instance.presentPaymentSheet();
+        // 显示支付表单
+        await Stripe.instance.presentPaymentSheet();
 
-      // 验证支付
-      final verificationData = {
-        'payment_intent_id': paymentIntentResult['id'],
-        'order_id': order.id,
-      };
+        // 验证支付
+        final verificationData = {
+          'payment_intent_id': paymentIntentResult['id'],
+          'order_id': order.id,
+        };
 
-      final verificationResponse =
-          await _apiProvider.verifyPayment(verificationData);
+        final verificationResponse =
+            await _apiProvider.verifyPayment(verificationData);
 
-      return verificationResponse.status.isOk;
+        return verificationResponse.status.isOk;
+      }
     } on StripeException catch (e) {
       Logger.e('Stripe error: ${e.error.localizedMessage}');
       Utils.showSnackbar(
@@ -153,53 +195,68 @@ class StripeService extends GetxService {
         throw Exception('Stripe is not initialized');
       }
 
-      // 检查 Google Pay 是否可用
-      final isPlatformPaySupported =
-          await Stripe.instance.isPlatformPaySupported();
+      // 在开发模式下，模拟支付成功
+      if (kDebugMode) {
+        // 显示一个模拟的支付表单
+        await Future.delayed(const Duration(seconds: 1));
 
-      if (!isPlatformPaySupported) {
-        Utils.showSnackbar('错误', '您的设备不支持 Google Pay', isError: true);
-        return false;
-      }
+        // 模拟用户点击支付按钮
+        await Future.delayed(const Duration(seconds: 1));
 
-      // 创建支付意图
-      final paymentIntentResult = await createPaymentIntent(
-        amount: (order.amount * 100).toInt(), // 转换为分
-        currency: order.currency.toLowerCase(),
-        productId: order.productId,
-      );
+        // 模拟支付成功
+        Logger.d('模拟Google Pay支付成功: ${order.id}');
 
-      // 配置支付表单
-      await Stripe.instance.initPaymentSheet(
-        paymentSheetParameters: SetupPaymentSheetParameters(
-          merchantDisplayName: 'TubeSavely',
-          paymentIntentClientSecret: paymentIntentResult['client_secret'],
-          style: ThemeMode.system,
-          appearance: const PaymentSheetAppearance(
-            colors: PaymentSheetAppearanceColors(
-              primary: Color(0xFF8B5CF6), // 主色调
+        // 返回支付成功
+        return true;
+      } else {
+        // 检查 Google Pay 是否可用
+        final isPlatformPaySupported =
+            await Stripe.instance.isPlatformPaySupported();
+
+        if (!isPlatformPaySupported) {
+          Utils.showSnackbar('错误', '您的设备不支持 Google Pay', isError: true);
+          return false;
+        }
+
+        // 创建支付意图
+        final paymentIntentResult = await createPaymentIntent(
+          amount: (order.amount * 100).toInt(), // 转换为分
+          currency: order.currency.toLowerCase(),
+          productId: order.productId,
+        );
+
+        // 配置支付表单
+        await Stripe.instance.initPaymentSheet(
+          paymentSheetParameters: SetupPaymentSheetParameters(
+            merchantDisplayName: 'TubeSavely',
+            paymentIntentClientSecret: paymentIntentResult['client_secret'],
+            style: ThemeMode.system,
+            appearance: const PaymentSheetAppearance(
+              colors: PaymentSheetAppearanceColors(
+                primary: Color(0xFF8B5CF6), // 主色调
+              ),
+            ),
+            googlePay: const PaymentSheetGooglePay(
+              merchantCountryCode: 'US',
+              testEnv: true,
             ),
           ),
-          googlePay: const PaymentSheetGooglePay(
-            merchantCountryCode: 'US',
-            testEnv: true,
-          ),
-        ),
-      );
+        );
 
-      // 显示支付表单
-      await Stripe.instance.presentPaymentSheet();
+        // 显示支付表单
+        await Stripe.instance.presentPaymentSheet();
 
-      // 验证支付
-      final verificationData = {
-        'payment_intent_id': paymentIntentResult['id'],
-        'order_id': order.id,
-      };
+        // 验证支付
+        final verificationData = {
+          'payment_intent_id': paymentIntentResult['id'],
+          'order_id': order.id,
+        };
 
-      final verificationResponse =
-          await _apiProvider.verifyPayment(verificationData);
+        final verificationResponse =
+            await _apiProvider.verifyPayment(verificationData);
 
-      return verificationResponse.status.isOk;
+        return verificationResponse.status.isOk;
+      }
     } on StripeException catch (e) {
       Logger.e('Stripe error: ${e.error.localizedMessage}');
       Utils.showSnackbar(
