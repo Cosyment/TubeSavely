@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
+import '../../../utils/utils.dart';
 import '../controllers/profile_controller.dart';
 
 /// 用户信息页面
@@ -391,13 +392,15 @@ class ProfileView extends GetView<ProfileController> {
           _buildFunctionItem(
             icon: Icons.privacy_tip_outlined,
             title: '隐私政策',
-            onTap: () => Get.toNamed('/privacy'),
+            onTap: () =>
+                Utils.launchURL('https://tubesavely.cosyment.com/privacy'),
           ),
           _buildDivider(),
           _buildFunctionItem(
             icon: Icons.gavel_outlined,
             title: '服务条款',
-            onTap: () => Get.toNamed('/terms'),
+            onTap: () =>
+                Utils.launchURL('https://tubesavely.cosyment.com/terms'),
           ),
         ],
       ),

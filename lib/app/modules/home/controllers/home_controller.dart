@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../data/models/video_model.dart';
 import '../../../data/repositories/video_repository.dart';
 import '../../../data/repositories/download_repository.dart';
+import '../../../services/user_service.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/logger.dart';
 
@@ -154,5 +155,31 @@ class HomeController extends GetxController {
   // 打开视频详情
   void openVideoDetail(VideoModel video) {
     Get.toNamed('/video-detail', arguments: video);
+  }
+
+  // 跳转到会员页面
+  void goToMembership() {
+    // 检查用户是否已登录
+    final userService = Get.find<UserService>();
+    if (userService.isLoggedIn.value) {
+      // 跳转到支付页面，并选择会员标签
+      Get.toNamed('/payment', arguments: {'initialTab': 0});
+    } else {
+      // 未登录，先跳转到登录页面
+      Get.toNamed('/login');
+    }
+  }
+
+  // 跳转到积分页面
+  void goToPoints() {
+    // 检查用户是否已登录
+    final userService = Get.find<UserService>();
+    if (userService.isLoggedIn.value) {
+      // 跳转到支付页面，并选择积分标签
+      Get.toNamed('/payment', arguments: {'initialTab': 1});
+    } else {
+      // 未登录，先跳转到登录页面
+      Get.toNamed('/login');
+    }
   }
 }
