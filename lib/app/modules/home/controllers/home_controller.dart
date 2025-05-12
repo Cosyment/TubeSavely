@@ -159,27 +159,37 @@ class HomeController extends GetxController {
 
   // 跳转到会员页面
   void goToMembership() {
-    // 检查用户是否已登录
-    final userService = Get.find<UserService>();
-    if (userService.isLoggedIn.value) {
-      // 跳转到支付页面，并选择会员标签
-      Get.toNamed('/payment', arguments: {'initialTab': 0});
-    } else {
-      // 未登录，先跳转到登录页面
-      Get.toNamed('/login');
+    try {
+      // 检查用户是否已登录
+      final userService = Get.find<UserService>();
+      if (userService.isLoggedIn.value) {
+        // 跳转到支付页面，并选择会员标签
+        Get.toNamed('/payment', arguments: {'initialTab': 0});
+      } else {
+        // 未登录，先跳转到登录页面
+        Get.toNamed('/login');
+      }
+    } catch (e) {
+      Logger.e('导航到会员页面时出错: $e');
+      Utils.showSnackbar('错误', '导航到会员页面失败', isError: true);
     }
   }
 
   // 跳转到积分页面
   void goToPoints() {
-    // 检查用户是否已登录
-    final userService = Get.find<UserService>();
-    if (userService.isLoggedIn.value) {
-      // 跳转到支付页面，并选择积分标签
-      Get.toNamed('/payment', arguments: {'initialTab': 1});
-    } else {
-      // 未登录，先跳转到登录页面
-      Get.toNamed('/login');
+    try {
+      // 检查用户是否已登录
+      final userService = Get.find<UserService>();
+      if (userService.isLoggedIn.value) {
+        // 跳转到支付页面，并选择积分标签
+        Get.toNamed('/payment', arguments: {'initialTab': 1});
+      } else {
+        // 未登录，先跳转到登录页面
+        Get.toNamed('/login');
+      }
+    } catch (e) {
+      Logger.e('导航到积分页面时出错: $e');
+      Utils.showSnackbar('错误', '导航到积分页面失败', isError: true);
     }
   }
 }

@@ -1,9 +1,10 @@
 import 'package:get/get.dart';
 import '../../../data/models/user_model.dart';
+import '../../../routes/app_pages.dart';
 import '../../../services/user_service.dart';
 import '../../../utils/logger.dart';
 import '../../../utils/utils.dart';
-// import '../../../routes/app_routes.dart';
+import '../../main/controllers/main_controller.dart';
 
 /// 用户信息页面控制器
 class ProfileController extends GetxController {
@@ -97,34 +98,79 @@ class ProfileController extends GetxController {
 
   /// 跳转到会员页面
   void goToMembership() {
-    // 跳转到支付页面，并选择会员标签
-    Get.toNamed('/payment', arguments: {'initialTab': 0});
+    try {
+      // 跳转到支付页面，并选择会员标签
+      Get.toNamed(Routes.PAYMENT, arguments: {'initialTab': 0});
+    } catch (e) {
+      Logger.e('Navigation error: $e');
+      Utils.showSnackbar('错误', '导航到会员页面失败', isError: true);
+    }
   }
 
   /// 跳转到积分页面
   void goToPoints() {
-    // 跳转到支付页面，并选择积分标签
-    Get.toNamed('/payment', arguments: {'initialTab': 1});
+    try {
+      // 跳转到支付页面，并选择积分标签
+      Get.toNamed(Routes.PAYMENT, arguments: {'initialTab': 1});
+    } catch (e) {
+      Logger.e('Navigation error: $e');
+      Utils.showSnackbar('错误', '导航到积分页面失败', isError: true);
+    }
   }
 
   /// 跳转到设置页面
   void goToSettings() {
-    Get.toNamed('/settings');
+    try {
+      // 使用Routes类中定义的路由常量
+      Get.toNamed(Routes.SETTINGS);
+    } catch (e) {
+      Logger.e('Navigation error: $e');
+      Utils.showSnackbar('错误', '导航到设置页面失败', isError: true);
+    }
   }
 
   /// 跳转到历史记录页面
   void goToHistory() {
-    Get.toNamed('/history');
+    try {
+      // 如果在主页面中，直接切换标签
+      final mainController = Get.find<MainController>(tag: null);
+      mainController.changePage(1); // 历史记录页面索引为1
+    } catch (e) {
+      // 如果不在主页面中，使用路由导航
+      try {
+        Get.toNamed(Routes.HISTORY);
+      } catch (e) {
+        Logger.e('Navigation error: $e');
+        Utils.showSnackbar('错误', '导航到历史记录页面失败', isError: true);
+      }
+    }
   }
 
   /// 跳转到下载任务页面
   void goToTasks() {
-    Get.toNamed('/tasks');
+    try {
+      // 如果在主页面中，直接切换标签
+      final mainController = Get.find<MainController>(tag: null);
+      mainController.changePage(2); // 任务页面索引为2
+    } catch (e) {
+      // 如果不在主页面中，使用路由导航
+      try {
+        Get.toNamed(Routes.TASKS);
+      } catch (e) {
+        Logger.e('Navigation error: $e');
+        Utils.showSnackbar('错误', '导航到下载任务页面失败', isError: true);
+      }
+    }
   }
 
   /// 跳转到更多页面
   void goToMore() {
-    Get.toNamed('/more');
+    try {
+      Get.toNamed(Routes.MORE);
+    } catch (e) {
+      Logger.e('Navigation error: $e');
+      Utils.showSnackbar('错误', '导航到更多页面失败', isError: true);
+    }
   }
 
   /// 获取会员状态文本

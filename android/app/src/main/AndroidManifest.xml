@@ -11,6 +11,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="TubeSavely"
         android:theme="@style/LaunchTheme"
+        android:enableOnBackInvokedCallback="true"
         android:usesCleartextTraffic="true">
 
         <activity

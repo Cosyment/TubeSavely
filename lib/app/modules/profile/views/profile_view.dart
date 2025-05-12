@@ -230,10 +230,14 @@ class ProfileView extends GetView<ProfileController> {
               color: Get.theme.colorScheme.onSurface.withAlpha(153),
             ),
           ),
-          Text(
-            value,
-            style: AppTextStyles.bodyMedium.copyWith(
-              fontWeight: FontWeight.w500,
+          Flexible(
+            child: Text(
+              value,
+              style: AppTextStyles.bodyMedium.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
+              textAlign: TextAlign.right,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
@@ -421,29 +425,35 @@ class ProfileView extends GetView<ProfileController> {
     Get.dialog(
       AlertDialog(
         title: Text('关于 TubeSavely', style: AppTextStyles.titleMedium),
-        content: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'TubeSavely 是一款功能强大的视频下载工具，支持多种视频平台，提供高质量的视频下载、格式转换和播放功能。',
-                style: AppTextStyles.bodyMedium,
-              ),
-              SizedBox(height: 16.h),
-              Text(
-                '主要功能：',
-                style: AppTextStyles.bodyMedium.copyWith(
-                  fontWeight: FontWeight.bold,
+        content: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: Get.height * 0.6,
+            maxWidth: Get.width * 0.8,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'TubeSavely 是一款功能强大的视频下载工具，支持多种视频平台，提供高质量的视频下载、格式转换和播放功能。',
+                  style: AppTextStyles.bodyMedium,
                 ),
-              ),
-              SizedBox(height: 8.h),
-              _buildFeatureItem('支持多平台视频下载'),
-              _buildFeatureItem('视频格式转换'),
-              _buildFeatureItem('后台下载支持'),
-              _buildFeatureItem('高清视频播放'),
-              _buildFeatureItem('历史记录管理'),
-            ],
+                SizedBox(height: 16.h),
+                Text(
+                  '主要功能：',
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                _buildFeatureItem('支持多平台视频下载'),
+                _buildFeatureItem('视频格式转换'),
+                _buildFeatureItem('后台下载支持'),
+                _buildFeatureItem('高清视频播放'),
+                _buildFeatureItem('历史记录管理'),
+              ],
+            ),
           ),
         ),
         actions: [

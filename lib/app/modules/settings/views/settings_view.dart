@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../routes/app_pages.dart';
 import '../controllers/settings_controller.dart';
 import '../../../theme/app_theme.dart';
 
@@ -33,7 +34,6 @@ class SettingsView extends GetView<SettingsController> {
               SizedBox(height: 8.h),
               _buildLanguageSettings(),
               SizedBox(height: 16.h),
-
               _buildSectionTitle('下载设置'),
               SizedBox(height: 8.h),
               _buildDownloadPathSettings(),
@@ -44,7 +44,6 @@ class SettingsView extends GetView<SettingsController> {
               SizedBox(height: 8.h),
               _buildNotificationSettings(),
               SizedBox(height: 16.h),
-
               _buildSectionTitle('视频设置'),
               SizedBox(height: 8.h),
               _buildVideoQualitySettings(),
@@ -53,12 +52,10 @@ class SettingsView extends GetView<SettingsController> {
               SizedBox(height: 8.h),
               _buildVideoConvertSettings(),
               SizedBox(height: 16.h),
-
               _buildSectionTitle('存储'),
               SizedBox(height: 8.h),
               _buildCacheSettings(),
               SizedBox(height: 16.h),
-
               _buildSectionTitle('关于'),
               SizedBox(height: 8.h),
               _buildAboutSettings(),
@@ -245,9 +242,11 @@ class SettingsView extends GetView<SettingsController> {
   }
 
   // 构建语言选项
-  Widget _buildLanguageOption(String name, String languageCode, String countryCode) {
+  Widget _buildLanguageOption(
+      String name, String languageCode, String countryCode) {
     return Obx(() {
-      final isSelected = controller.currentLanguage.value == '${languageCode}_$countryCode';
+      final isSelected =
+          controller.currentLanguage.value == '${languageCode}_$countryCode';
 
       return ListTile(
         title: Text(
@@ -255,7 +254,9 @@ class SettingsView extends GetView<SettingsController> {
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            color: isSelected ? AppTheme.primaryColor : Get.theme.colorScheme.onSurface,
+            color: isSelected
+                ? AppTheme.primaryColor
+                : Get.theme.colorScheme.onSurface,
           ),
         ),
         trailing: isSelected
@@ -349,7 +350,8 @@ class SettingsView extends GetView<SettingsController> {
           onChanged: (value) => controller.setShowNotification(value),
           activeColor: AppTheme.primaryColor,
         ),
-        onTap: () => controller.setShowNotification(!controller.showNotification.value),
+        onTap: () =>
+            controller.setShowNotification(!controller.showNotification.value),
       );
     });
   }
@@ -440,7 +442,9 @@ class SettingsView extends GetView<SettingsController> {
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            color: isSelected ? AppTheme.primaryColor : Get.theme.colorScheme.onSurface,
+            color: isSelected
+                ? AppTheme.primaryColor
+                : Get.theme.colorScheme.onSurface,
           ),
         ),
         trailing: isSelected
@@ -545,7 +549,7 @@ class SettingsView extends GetView<SettingsController> {
         size: 16.sp,
         color: Get.theme.colorScheme.onSurface.withOpacity(0.6),
       ),
-      onTap: () => Get.toNamed('/convert'),
+      onTap: () => Get.toNamed(Routes.CONVERT),
     );
   }
 
@@ -560,7 +564,9 @@ class SettingsView extends GetView<SettingsController> {
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            color: isSelected ? AppTheme.primaryColor : Get.theme.colorScheme.onSurface,
+            color: isSelected
+                ? AppTheme.primaryColor
+                : Get.theme.colorScheme.onSurface,
           ),
         ),
         trailing: isSelected

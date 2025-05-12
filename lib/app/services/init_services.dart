@@ -43,8 +43,14 @@ Future<void> initServices() async {
 
   // 注册服务
   Get.put(StorageProvider(), permanent: true);
-  Get.put(ThemeService(), permanent: true);
+
+  // 初始化并注册主题服务
+  final themeService = await ThemeService().init();
+  Get.put(themeService, permanent: true);
+
+  // 注册翻译服务
   Get.put(TranslationService(), permanent: true);
+
   Get.put(ApiProvider(), permanent: true);
 
   // 初始化并注册视频解析服务
