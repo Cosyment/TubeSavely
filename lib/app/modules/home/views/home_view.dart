@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import '../../../data/models/video_model.dart';
 import '../../../theme/app_theme.dart';
+import '../../../utils/utils.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -33,11 +34,142 @@ class HomeView extends GetView<HomeController> {
                     _buildDownloadOptions(),
                     SizedBox(height: 24.h),
                     _buildSupportedPlatforms(),
+                    SizedBox(height: 24.h),
+                    _buildVideoTools(),
                   ],
                 ),
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  // 视频工具区
+  Widget _buildVideoTools() {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: Get.theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(16.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(13),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+        border: Border.all(
+          color: AppTheme.primaryColor.withAlpha(26),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.build_circle,
+                color: AppTheme.primaryColor,
+                size: 20.sp,
+              ),
+              SizedBox(width: 8.w),
+              Text(
+                '视频工具',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.bold,
+                  foreground: Paint()
+                    ..shader = const LinearGradient(
+                      colors: [
+                        AppTheme.primaryColor,
+                        AppTheme.accentColor,
+                      ],
+                    ).createShader(Rect.fromLTWH(0, 0, 120.w, 24.h)),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 16.h),
+          Row(
+            children: [
+              Expanded(
+                child: _buildToolCard(
+                  icon: Icons.transform,
+                  title: '格式转换',
+                  subtitle: '转换视频格式',
+                  onTap: () => Get.toNamed('/convert'),
+                ),
+              ),
+              SizedBox(width: 16.w),
+              Expanded(
+                child: _buildToolCard(
+                  icon: Icons.video_settings,
+                  title: '视频编辑',
+                  subtitle: '剪辑、合并视频',
+                  onTap: () => Utils.showSnackbar('提示', '该功能即将上线，敬请期待'),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 工具卡片
+  Widget _buildToolCard({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color: Get.theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(
+            color: AppTheme.primaryColor.withAlpha(26),
+            width: 1,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: EdgeInsets.all(8.w),
+              decoration: BoxDecoration(
+                color: AppTheme.primaryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: Icon(
+                icon,
+                color: AppTheme.primaryColor,
+                size: 24.sp,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 4.h),
+            Text(
+              subtitle,
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: Get.theme.colorScheme.onSurface.withOpacity(0.6),
+              ),
+            ),
+          ],
         ),
       ),
     );
