@@ -8,15 +8,15 @@ import 'package:path_provider/path_provider.dart';
 
 import '../../../data/providers/storage_provider.dart';
 import '../../../services/translation_service.dart';
-import '../../../theme/theme_service.dart';
+import '../../../services/theme_service.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/logger.dart';
 import '../../../utils/utils.dart';
 
 class SettingsController extends GetxController {
-  final StorageProvider _storageProvider = Get.find<StorageProvider>();
-  final ThemeService _themeService = Get.find<ThemeService>();
-  final TranslationService _translationService = Get.find<TranslationService>();
+  late final StorageProvider _storageProvider;
+  late final ThemeService _themeService;
+  late final TranslationService _translationService;
 
   // 主题模式
   final Rx<bool> isDarkMode = false.obs;
@@ -44,11 +44,21 @@ class SettingsController extends GetxController {
     super.onInit();
     Logger.d('SettingsController initialized');
 
-    // 加载设置
-    loadSettings();
+    try {
+      // 初始化依赖项
+      _storageProvider = Get.find<StorageProvider>();
+      _themeService = Get.find<ThemeService>();
+      _translationService = Get.find<TranslationService>();
 
-    // 计算缓存大小
-    calculateCacheSize();
+      // 加载设置
+      loadSettings();
+
+      // 计算缓存大小
+      calculateCacheSize();
+    } catch (e) {
+      Logger.e('SettingsController initialization error: $e');
+      Utils.showSnackbar('错误', '初始化设置控制器时出错: $e', isError: true);
+    }
   }
 
   // 加载设置
