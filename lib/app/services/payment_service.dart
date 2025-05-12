@@ -1,12 +1,9 @@
-import 'dart:async';
-import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:tubesavely/app/data/models/payment_model.dart';
 import 'package:tubesavely/app/data/models/user_model.dart';
 import 'package:tubesavely/app/data/providers/api_provider.dart';
 import 'package:tubesavely/app/data/providers/storage_provider.dart';
+import 'package:tubesavely/app/services/apple_payment_service.dart';
 import 'package:tubesavely/app/services/stripe_service.dart';
 import 'package:tubesavely/app/utils/logger.dart';
 import 'package:tubesavely/app/utils/utils.dart';
@@ -18,6 +15,7 @@ class PaymentService extends GetxService {
   final ApiProvider _apiProvider = Get.find<ApiProvider>();
   final StorageProvider _storageProvider = Get.find<StorageProvider>();
   late final StripeService _stripeService;
+  late final ApplePaymentService _applePaymentService;
 
   // 商品列表
   final RxList<ProductModel> products = <ProductModel>[].obs;
@@ -29,11 +27,8 @@ class PaymentService extends GetxService {
   final RxBool isLoading = false.obs;
 
   // 是否可用
-  final RxBool isAvailable = false.obs;
-
-  // In-App Purchase
-  late final InAppPurchase _inAppPurchase;
-  StreamSubscription<List<PurchaseDetails>>? _subscription;
+  final RxBool isApplePayAvailable = false.obs;
+  final RxBool isStripeAvailable = false.obs;
 
   /// 初始化服务
   Future<PaymentService> init() async {
@@ -41,28 +36,14 @@ class PaymentService extends GetxService {
 
     // 获取Stripe服务
     _stripeService = Get.find<StripeService>();
+    isStripeAvailable.value = _stripeService.isInitialized;
 
-    // 初始化In-App Purchase
-    _inAppPurchase = InAppPurchase.instance;
-    isAvailable.value = await _inAppPurchase.isAvailable();
+    // 获取Apple支付服务
+    _applePaymentService = Get.find<ApplePaymentService>();
+    isApplePayAvailable.value = _applePaymentService.isAvailable.value;
 
-    if (isAvailable.value) {
-      // 监听购买更新
-      _subscription = _inAppPurchase.purchaseStream.listen(
-        _listenToPurchaseUpdated,
-        onDone: () {
-          _subscription?.cancel();
-        },
-        onError: (error) {
-          Logger.e('Error in purchase stream: $error');
-        },
-      );
-
-      // 加载商品列表
-      await loadProducts();
-    } else {
-      Logger.w('In-App Purchase is not available');
-    }
+    // 加载商品列表
+    await loadProducts();
 
     return this;
   }
@@ -129,8 +110,9 @@ class PaymentService extends GetxService {
 
       switch (order.paymentMethod) {
         case PaymentMethod.applePay:
+          return await _processApplePay(order);
         case PaymentMethod.googlePay:
-          return await _processInAppPurchase(order);
+          return await _processGooglePay(order);
         case PaymentMethod.stripe:
           return await _processStripePurchase(order);
         case PaymentMethod.alipay:
@@ -146,38 +128,49 @@ class PaymentService extends GetxService {
     }
   }
 
-  /// 处理In-App Purchase
-  Future<bool> _processInAppPurchase(OrderModel order) async {
+  /// 处理Apple支付
+  Future<bool> _processApplePay(OrderModel order) async {
     try {
-      // 查询商品详情
-      final ProductDetailsResponse productDetailsResponse =
-          await _inAppPurchase.queryProductDetails({order.productId});
-
-      if (productDetailsResponse.error != null) {
-        Logger.e(
-            'Error querying product details: ${productDetailsResponse.error}');
+      if (!isApplePayAvailable.value) {
+        Logger.e('Apple Pay is not available');
+        Utils.showSnackbar('错误', 'Apple Pay不可用', isError: true);
         return false;
       }
 
-      if (productDetailsResponse.productDetails.isEmpty) {
-        Logger.e('No product details found for ${order.productId}');
-        return false;
-      }
-
-      // 购买商品
-      final PurchaseParam purchaseParam = PurchaseParam(
-        productDetails: productDetailsResponse.productDetails.first,
-        applicationUserName: order.userId,
+      // 使用Apple支付服务处理支付
+      return await _applePaymentService.processPayment(
+        order,
+        callback: (success, errorMessage) {
+          if (success) {
+            // 支付成功，更新用户信息
+            _updateUserInfo();
+          } else {
+            // 支付失败
+            Utils.showSnackbar('错误', errorMessage ?? '支付失败', isError: true);
+          }
+        },
       );
-
-      if (Platform.isIOS) {
-        return await _inAppPurchase.buyConsumable(purchaseParam: purchaseParam);
-      } else {
-        return await _inAppPurchase.buyNonConsumable(
-            purchaseParam: purchaseParam);
-      }
     } catch (e) {
-      Logger.e('Error processing In-App Purchase: $e');
+      Logger.e('Error processing Apple Pay: $e');
+      Utils.showSnackbar('错误', '处理Apple Pay支付时出错: $e', isError: true);
+      return false;
+    }
+  }
+
+  /// 处理Google Pay支付
+  Future<bool> _processGooglePay(OrderModel order) async {
+    try {
+      if (!isStripeAvailable.value) {
+        Logger.e('Stripe service is not initialized');
+        Utils.showSnackbar('错误', 'Stripe服务未初始化', isError: true);
+        return false;
+      }
+
+      // 使用Stripe服务处理Google Pay支付
+      return await _stripeService.processGooglePay(order);
+    } catch (e) {
+      Logger.e('Error processing Google Pay: $e');
+      Utils.showSnackbar('错误', '处理Google Pay支付时出错: $e', isError: true);
       return false;
     }
   }
@@ -210,7 +203,8 @@ class PaymentService extends GetxService {
       final response = await _apiProvider.getAlipayParams(order.id);
 
       if (response.status.isOk && response.body != null) {
-        final String orderInfo = response.body['order_info'];
+        // 获取支付参数
+        // final String orderInfo = response.body['order_info'];
 
         // 调用支付宝SDK进行支付
         // 注意：这里需要集成支付宝SDK，这里只是示例代码
@@ -251,7 +245,8 @@ class PaymentService extends GetxService {
       final response = await _apiProvider.getWechatPayParams(order.id);
 
       if (response.status.isOk && response.body != null) {
-        final Map<String, dynamic> payParams = response.body;
+        // 获取支付参数
+        // final Map<String, dynamic> payParams = response.body;
 
         // 调用微信SDK进行支付
         // 注意：这里需要集成微信SDK，这里只是示例代码
@@ -283,65 +278,6 @@ class PaymentService extends GetxService {
     }
   }
 
-  /// 监听购买更新
-  void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
-    for (final purchaseDetails in purchaseDetailsList) {
-      if (purchaseDetails.status == PurchaseStatus.pending) {
-        // 购买中
-        Logger.d('Purchase pending: ${purchaseDetails.productID}');
-      } else if (purchaseDetails.status == PurchaseStatus.error) {
-        // 购买错误
-        Logger.e('Purchase error: ${purchaseDetails.error}');
-        Utils.showSnackbar('错误', '购买失败: ${purchaseDetails.error}',
-            isError: true);
-      } else if (purchaseDetails.status == PurchaseStatus.purchased ||
-          purchaseDetails.status == PurchaseStatus.restored) {
-        // 购买成功或恢复购买
-        Logger.d(
-            'Purchase ${purchaseDetails.status == PurchaseStatus.purchased ? 'purchased' : 'restored'}: ${purchaseDetails.productID}');
-
-        // 验证购买
-        _verifyPurchase(purchaseDetails);
-      } else if (purchaseDetails.status == PurchaseStatus.canceled) {
-        // 购买取消
-        Logger.d('Purchase canceled: ${purchaseDetails.productID}');
-      }
-
-      // 完成购买
-      if (purchaseDetails.pendingCompletePurchase) {
-        _inAppPurchase.completePurchase(purchaseDetails);
-      }
-    }
-  }
-
-  /// 验证购买
-  Future<void> _verifyPurchase(PurchaseDetails purchaseDetails) async {
-    try {
-      // 构建验证数据
-      final Map<String, dynamic> verificationData = {
-        'receipt': purchaseDetails.verificationData.serverVerificationData,
-        'product_id': purchaseDetails.productID,
-        'transaction_id': purchaseDetails.purchaseID,
-        'platform': Platform.isIOS ? 'ios' : 'android',
-      };
-
-      // 验证购买
-      final success = await _apiProvider.verifyPayment(verificationData);
-
-      if (success.status.isOk) {
-        Utils.showSnackbar('成功', '购买成功');
-
-        // 更新用户信息
-        await _updateUserInfo();
-      } else {
-        Utils.showSnackbar('错误', '购买验证失败', isError: true);
-      }
-    } catch (e) {
-      Logger.e('Error verifying purchase: $e');
-      Utils.showSnackbar('错误', '购买验证出错: $e', isError: true);
-    }
-  }
-
   /// 更新用户信息
   Future<void> _updateUserInfo() async {
     try {
@@ -355,11 +291,5 @@ class PaymentService extends GetxService {
     } catch (e) {
       Logger.e('Error updating user info: $e');
     }
-  }
-
-  @override
-  void onClose() {
-    _subscription?.cancel();
-    super.onClose();
   }
 }

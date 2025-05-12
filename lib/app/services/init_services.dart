@@ -17,6 +17,7 @@ import 'video_parser_service.dart';
 import 'download_service.dart';
 import 'payment_service.dart';
 import 'stripe_service.dart';
+import 'apple_payment_service.dart';
 import 'video_converter_service.dart';
 import 'video_player_service.dart';
 import 'user_service.dart';
@@ -69,6 +70,10 @@ Future<void> initServices() async {
   // 初始化并注册Stripe服务
   final stripeService = await StripeService().init();
   Get.put(stripeService, permanent: true);
+
+  // 初始化并注册Apple支付服务
+  final applePaymentService = await ApplePaymentService().init();
+  Get.put(applePaymentService, permanent: true);
 
   // 初始化并注册支付服务
   final paymentService = await PaymentService().init();
